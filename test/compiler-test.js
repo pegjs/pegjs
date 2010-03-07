@@ -309,6 +309,13 @@ test("cache", function() {
   parses(parser, "ac", ["a", "c"]);
 });
 
+test("indempotence", function() {
+  var parser1 = PEG.buildParser('start: "abcd"');
+  var parser2 = PEG.buildParser('start: "abcd"');
+
+  strictEqual(parser1.toSource(), parser2.toSource());
+});
+
 test("error messages", function() {
   var literalParser = PEG.buildParser('start: "abcd"');
   doesNotParseWithMessage(
