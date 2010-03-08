@@ -3,7 +3,7 @@ require "uri"
 
 version = File.read("VERSION").strip
 
-file "lib/runtime-#{version}.min.js" => "lib/runtime.js" do |t|
+file "lib/pegjs-runtime-#{version}.min.js" => "lib/runtime.js" do |t|
   response = Net::HTTP.post_form(
     URI.parse("http://closure-compiler.appspot.com/compile"),
     {
@@ -21,4 +21,4 @@ file "lib/runtime-#{version}.min.js" => "lib/runtime.js" do |t|
   File.open(t.name, "w") { |f| f.write(response.body) }
 end
 
-task :default => "lib/runtime-#{version}.min.js"
+task :default => "lib/pegjs-runtime-#{version}.min.js"
