@@ -365,18 +365,25 @@ test("error messages", function() {
     'Expected digits but end of input found.'
   );
 
-  var choiceParser = PEG.buildParser('start: "a" / "b" / "c"');
+  var choiceParser1 = PEG.buildParser('start: "a" / "b" / "c"');
   doesNotParseWithMessage(
-    choiceParser,
+    choiceParser1,
     "def",
     'Expected "a", "b" or "c" but "d" found.'
+  );
+
+  var choiceParser2 = PEG.buildParser('start: "a" "b" "c" / "a"');
+  doesNotParseWithMessage(
+    choiceParser2,
+    "abd",
+    'Expected "c" but "d" found.'
   );
 
   var emptyParser = PEG.buildParser('start: ');
   doesNotParseWithMessage(
     emptyParser,
     "something",
-    'Expected nothing but "s" found.'
+    'Expected end of input but "s" found.'
   );
 });
 
