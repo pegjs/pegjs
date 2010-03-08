@@ -379,6 +379,20 @@ test("error messages", function() {
     'Expected "c" but "d" found.'
   );
 
+  var notPredicateParser = PEG.buildParser('start: !"a" "b"');
+  doesNotParseWithMessage(
+    notPredicateParser,
+    "c",
+    'Expected "b" but "c" found.'
+  );
+
+  var andPredicateParser = PEG.buildParser('start: &"a" [a-b]');
+  doesNotParseWithMessage(
+    andPredicateParser,
+    "c",
+    'Expected end of input but "c" found.'
+  );
+
   var emptyParser = PEG.buildParser('start: ');
   doesNotParseWithMessage(
     emptyParser,
