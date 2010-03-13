@@ -7,6 +7,7 @@ importPackage(java.lang);
  */
 load(arguments[0] + "/../lib/runtime.js");
 load(arguments[0] + "/../lib/compiler.js");
+load(arguments[0] + "/../lib/metagrammar.js");
 
 var FILE_STDIN  = "-";
 var FILE_STDOUT = "-";

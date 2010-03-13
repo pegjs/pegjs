@@ -21,4 +21,12 @@ file "lib/pegjs-runtime-#{version}.min.js" => "lib/runtime.js" do |t|
   File.open(t.name, "w") { |f| f.write(response.body) }
 end
 
-task :default => "lib/pegjs-runtime-#{version}.min.js"
+file "lib/metagrammar.js" => "lib/metagrammar.pegjs" do |t|
+  system "bin/pegjs --start grammar PEG.grammarParser lib/metagrammar.pegjs"
+end
+
+desc "Build the minified parser runtime"
+task :minify => "lib/pegjs-runtime-#{version}.min.js"
+
+desc "Generate the grammar parser"
+task :metaparser => "lib/metagrammar.js"
