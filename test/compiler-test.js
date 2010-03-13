@@ -892,13 +892,41 @@ with (PEG.Grammar) {
 
   /* Canonical __ is "\n". */
   test("parses __", function() {
-    grammarParserParses('start:"abcd"',    simpleGrammar);
-    grammarParserParses('start: "abcd"',   simpleGrammar);
-    grammarParserParses('start:\n"abcd"',  simpleGrammar);
-    grammarParserParses('start:   "abcd"', simpleGrammar);
+    grammarParserParses('start:"abcd"',              simpleGrammar);
+    grammarParserParses('start: "abcd"',             simpleGrammar);
+    grammarParserParses('start:\n"abcd"',            simpleGrammar);
+    grammarParserParses('start:/* comment */"abcd"', simpleGrammar);
+    grammarParserParses('start:   "abcd"',           simpleGrammar);
   });
 
   /* Trivial character class rules are not tested. */
+
+  /* Canonical comment is "\/* comment *\/". */
+  test("parses comment", function() {
+    grammarParserParses('start:// comment\n"abcd"',  simpleGrammar);
+    grammarParserParses('start:/* comment */"abcd"', simpleGrammar);
+  });
+  /* Canonical singleLineComment is "// comment". */
+  test("parses singleLineComment", function() {
+    grammarParserParses('start://\n"abcd"',    simpleGrammar);
+    grammarParserParses('start://a\n"abcd"',   simpleGrammar);
+    grammarParserParses('start://aaa\n"abcd"', simpleGrammar);
+    grammarParserParses('start: "abcd"//',     simpleGrammar);
+  });
+
+  /* Canonical multiLineComment is "\/* comment *\/". */
+  test("parses multiLineComment", function() {
+    grammarParserParses('start:/**/"abcd"',    simpleGrammar);
+    grammarParserParses('start:/*a*/"abcd"',   simpleGrammar);
+    grammarParserParses('start:/*aaa*/"abcd"', simpleGrammar);
+    grammarParserParses('start:/*\n*/"abcd"',  simpleGrammar);
+    grammarParserParses('start:/***/"abcd"',   simpleGrammar);
+    grammarParserParses('start:/*a/*/"abcd"',  simpleGrammar);
+
+    grammarParserDoesNotParse('start:/*"abcd"');
+    grammarParserDoesNotParse('start:/*/"abcd"');
+    grammarParserDoesNotParse('start:/*/**/*/"abcd"');
+  });
 
   /* Canonical eol is "\n". */
   test("parses eol", function() {
