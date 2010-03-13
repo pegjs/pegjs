@@ -22,7 +22,7 @@ file "lib/pegjs-runtime-#{version}.min.js" => "lib/runtime.js" do |t|
 end
 
 file "lib/metagrammar.js" => "lib/metagrammar.pegjs" do |t|
-  system "bin/pegjs --start grammar PEG.grammarParser lib/metagrammar.pegjs"
+  system "bin/pegjs --start-rule grammar PEG.grammarParser lib/metagrammar.pegjs"
 end
 
 desc "Build the minified parser runtime"

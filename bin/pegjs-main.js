@@ -95,10 +95,10 @@ var args = Array.prototype.slice.call(arguments, 1);
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
     case "-s":
-    case "--start":
+    case "--start-rule":
       nextArg();
       if (args.length === 0) {
-        abort("Missing parameter of the -s/--start option.");
+        abort("Missing parameter of the -s/--start-rule option.");
       }
       startRule = args[0];
       break;
