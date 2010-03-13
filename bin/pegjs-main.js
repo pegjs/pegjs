@@ -50,7 +50,7 @@ function printVersion() {
 }
 
 function printHelp() {
-  print("Usage: pegjs [options] [--] <parserVar> [<input_file>] [<output_file>]");
+  print("Usage: pegjs [options] [--] <parser_var> [<input_file>] [<output_file>]");
   print("");
   print("Generates a parser from the PEG grammar specified in the <input_file> and");
   print("writes it to the <output_file>. The parser object will be stored in a variable");
