@@ -1,4 +1,86 @@
 PEG.js: Parser Generator for JavaScript
 =======================================
+http://pegjs.majda.cz/
 
-Documentation is being written -- please be patient.
+PEG.js is a parser generator for JavaScript based on the parsing expression
+grammar [1] formalism. It is designed to be used either from your browser or
+from the command line (using Rhino [2] JavaScript interpreter).
+
+Requirements
+------------
+Both the parser generator and generated parsers should run well in IE8 and
+recent versions of Firefox, Chrome, Safari and Opera, as well as Rhino
+JavaScript engine. IE6 and IE7 are not supported.
+
+  Note: IE7 might be supported sometime in the future, IE6 probably not.
+
+Usage
+-----
+To use PEG.js, you need to generate a parser from your grammar and then use the
+generated parser in your project.
+
+Generating a Parser
+~~~~~~~~~~~~~~~~~~~
+A parser can be generated either online [3] in your browser or using the command
+line. Let's look at the second option. You need to follow these steps:
+
+  1. Install Java. This is necessary to run Rhino [2] (which is bundled with
+     PEG.js).
+
+  2. Generate the parser using bin/pegjs script on Unix or bin/pegjs.bat batch
+     file on Windows.
+
+For example, to generate a parser from an example grammar in the
+examples/arithmetics.pegjs file on Unix, run:
+
+  $ bin/pegjs arithmeticsParser examples/arithmetics.pegjs
+
+This command will create the parser in the examples/arithmetics.js file and will
+make it available in the "arithmeticsParser" global variable.
+
+The bin/pegjs command has several options that influence the generator--to learn
+more about them, use the --help option.
+
+  Note: In the future, I will probably use Narwhal for the command-line version.
+
+Using the Generated Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Let's assume that you want to use the parser in a web page. To do this, you need
+to:
+
+  1. Download the minified parser runtime [4] and include it into your page:
+
+       <script src="pegjs-runtime-0.2.1.min.js"></script>
+
+  2. Include the generated parser into your page:
+
+       <!-- Replace "example/arithmetics.js" with your parser file -->
+       <script src="example/arithmetics.js"></script>
+
+     This creates a variable with the parser object in the global scope (you can
+     choose name of the variable when generating the parser).
+
+  3. Use the parser, i.e. call the parse method on the parser variable:
+
+       <script>
+         // Replace "arithmeticsParser" with your parser variable
+         document.write(arithmeticsParser.parse("2*(3+4)"));
+       </script>
+
+     The "parse" method of the generated parser will return either the result of
+     the parsing (dependent on the actions you specified in the grammar) or
+     throw PEG.Parser.SyntaxError exception if the input contains a syntax
+     error. The exception has properties "message", "line" and "column", which
+     contain details about the error.
+
+Grammar
+-------
+For detailed description of the grammar see the online documentation [5].
+
+References
+----------
+[1] http://en.wikipedia.org/wiki/Parsing_expression_grammar
+[2] http://www.mozilla.org/rhino/
+[3] http://pegjs.majda.cz/online
+[4] http://pegjs.majda.cz/download#minified-parser-runtime
+[5] http://pegjs.majda.cz/documentation#grammar
