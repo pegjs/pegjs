@@ -50,7 +50,7 @@ to:
 
   1. Download the minified parser runtime [4] and include it into your page:
 
-       <script src="pegjs-runtime-0.2.1.min.js"></script>
+       <script src="pegjs-runtime-0.3.min.js"></script>
 
   2. Include the generated parser into your page:
 
