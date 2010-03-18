@@ -6,11 +6,9 @@
 start             : additive
 
 additive          : multiplicative "+" additive { return $1 + $3; }
-                  / multiplicative "-" additive { return $1 - $3; }
                   / multiplicative
 
 multiplicative    : primary "*" multiplicative { return $1 * $3; }
-                  / primary "/" multiplicative { return $1 / $3; }
                   / primary
 
 primary           : integer
