@@ -4,6 +4,19 @@
 
 module("PEG.ArrayUtils");
 
+test("each", function() {
+  var sum;
+  function increment(x) { sum += x; }
+
+  sum = 0;
+  PEG.ArrayUtils.each([], increment);
+  strictEqual(sum, 0);
+
+  sum = 0;
+  PEG.ArrayUtils.each([1, 2, 3], increment);
+  strictEqual(sum, 6);
+});
+
 test("map", function() {
   function square(x) { return x * x; }
 
