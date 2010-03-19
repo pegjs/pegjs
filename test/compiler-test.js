@@ -113,6 +113,24 @@ test("buildParser reports missing start rule", function() {
   throws(function() { PEG.buildParser({}); }, PEG.Grammar.GrammarError);
 });
 
+test("buildParser reports missing referenced rules", function() {
+  var grammars = [
+    'start: missing',
+    'start: missing "a" "b"',
+    'start: "a" "b" missing',
+    'start: missing | "a" | "b"',
+    'start: "a" | "b" | missing',
+    'start: missing*',
+    'start: !missing',
+    'start: &missing',
+    'start: missing { }'
+  ];
+
+  PEG.ArrayUtils.each(grammars, function(grammar) {
+    throws(function() { PEG.buildParser(grammar); }, PEG.Grammar.GrammarError);
+  });
+});
+
 test("buildParser allows custom start rule", function() {
   var parser = PEG.buildParser('s: "abcd"', "s");
   parses(parser, "abcd", "abcd");
