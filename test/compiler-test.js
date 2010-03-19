@@ -453,12 +453,18 @@ test("arithmetics", function() {
   parses(parser, "(42+43)", 42+43);
 
   /* Test "product" rule. */
+  parses(parser, "42", 42);
   parses(parser, "42*43", 42*43);
   parses(parser, "42*43*44*45", 42*43*44*45);
+  parses(parser, "42/43", 42/43);
+  parses(parser, "42/43/44/45", 42/43/44/45);
 
   /* Test "sum" rule. */
+  parses(parser, "42*43", 42*43);
   parses(parser, "42*43+44*45", 42*43+44*45);
   parses(parser, "42*43+44*45+46*47+48*49", 42*43+44*45+46*47+48*49);
+  parses(parser, "42*43-44*45", 42*43-44*45);
+  parses(parser, "42*43-44*45-46*47-48*49", 42*43-44*45-46*47-48*49);
 
   /* Test "expr" rule. */
   parses(parser, "42+43", 42+43);
