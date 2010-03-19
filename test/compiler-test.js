@@ -131,6 +131,27 @@ test("buildParser reports missing referenced rules", function() {
   });
 });
 
+test("buildParser reports left recursion", function() {
+  var grammars = [
+    /* Direct */
+    'start: start',
+    'start: start "a" "b"',
+    'start: start / "a" / "b"',
+    'start: "a" / "b" / start',
+    'start: start*',
+    'start: !start',
+    'start: &start',
+    'start: start { }',
+
+    /* Indirect */
+    'start: stop\nstop: start'
+  ];
+
+  PEG.ArrayUtils.each(grammars, function(grammar) {
+    throws(function() { PEG.buildParser(grammar); }, PEG.Grammar.GrammarError);
+  });
+});
+
 test("buildParser allows custom start rule", function() {
   var parser = PEG.buildParser('s: "abcd"', "s");
   parses(parser, "abcd", "abcd");
