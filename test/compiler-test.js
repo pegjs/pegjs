@@ -205,6 +205,19 @@ test("classes", function() {
   doesNotParse(nonEmptyClassParser, "");
   doesNotParse(nonEmptyClassParser, "ab");
 
+  var invertedEmptyClassParser = PEG.buildParser('start: []');
+  doesNotParse(invertedEmptyClassParser, "");
+  doesNotParse(invertedEmptyClassParser, "a");
+  doesNotParse(invertedEmptyClassParser, "ab");
+
+  var invertedNonEmptyClassParser = PEG.buildParser('start: [^ab-d]');
+  doesNotParse(invertedNonEmptyClassParser, "a", "a");
+  doesNotParse(invertedNonEmptyClassParser, "b", "b");
+  doesNotParse(invertedNonEmptyClassParser, "c", "c");
+  doesNotParse(invertedNonEmptyClassParser, "d", "d");
+  doesNotParse(invertedNonEmptyClassParser, "");
+  doesNotParse(invertedNonEmptyClassParser, "ab");
+
   /*
    * Test that the parsing position moves forward after successful parsing of
    * a class.

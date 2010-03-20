@@ -276,6 +276,7 @@ with (PEG.Grammar) {
   test("parses class", function() {
     grammarParserParses("start: []",          classGrammar(""));
     grammarParserParses("start: [a-d]",       classGrammar("a-d"));
+    grammarParserParses("start: [^a-d]",      classGrammar("^a-d"));
     grammarParserParses("start: [a]",         classGrammar("a"));
     grammarParserParses("start: [a-de-hi-l]", classGrammar("a-de-hi-l"));
 
