@@ -47,12 +47,7 @@ with (PEG.Grammar) {
   }
 
   function classGrammar(chars) {
-    return oneRuleGrammar(new PEG.Grammar.Choice(
-      PEG.ArrayUtils.map(
-        chars.split(""),
-        function(char) { return new PEG.Grammar.Literal(char); }
-      )
-    ));
+    return oneRuleGrammar(new PEG.Grammar.Class(chars));
   }
 
   var anyGrammar = oneRuleGrammar(new Any());
@@ -169,7 +164,7 @@ with (PEG.Grammar) {
     grammarParserParses('start: a',        identifierGrammar("a"));
     grammarParserParses('start: "abcd"',   literalGrammar("abcd"));
     grammarParserParses('start: .',        anyGrammar);
-    grammarParserParses('start: [a-d]',    classGrammar("abcd"));
+    grammarParserParses('start: [a-d]',    classGrammar("a-d"));
     grammarParserParses('start: ("abcd")', literalGrammar("abcd"));
   });
 
@@ -280,17 +275,17 @@ with (PEG.Grammar) {
   /* Canonical class is "[a-d]". */
   test("parses classCharacterRange", function() {
     grammarParserParses("start: []",          classGrammar(""));
-    grammarParserParses("start: [a-d]",       classGrammar("abcd"));
+    grammarParserParses("start: [a-d]",       classGrammar("a-d"));
     grammarParserParses("start: [a]",         classGrammar("a"));
-    grammarParserParses("start: [a-de-hi-l]", classGrammar("abcdefghijkl"));
+    grammarParserParses("start: [a-de-hi-l]", classGrammar("a-de-hi-l"));
 
-    grammarParserParses("start: [a-d]\n", classGrammar("abcd"));
+    grammarParserParses("start: [a-d]\n", classGrammar("a-d"));
   });
 
   /* Canonical classCharacterRange is "a-d". */
   test("parses classCharacterRange", function() {
-    grammarParserParses("start: [a-d]", classGrammar("abcd"));
-    grammarParserParses("start: [a-a]", classGrammar("a"));
+    grammarParserParses("start: [a-d]", classGrammar("a-d"));
+    grammarParserParses("start: [a-a]", classGrammar("a-a"));
     grammarParserDoesNotParse("start: [b-a]");
   });
 
@@ -302,11 +297,11 @@ with (PEG.Grammar) {
   /* Canonical bracketDelimitedCharacter is "a". */
   test("parses bracketDelimitedCharacter", function() {
     grammarParserParses("start: [a]",       classGrammar("a"));
-    grammarParserParses("start: [\\n]",     classGrammar("\n"));
+    grammarParserParses("start: [\\n]",     classGrammar("\\n"));
     grammarParserParses("start: [\\0]",     classGrammar("\0"));
     grammarParserParses("start: [\\x00]",   classGrammar("\x00"));
     grammarParserParses("start: [\\u0120]", classGrammar("\u0120"));
-    grammarParserParses("start: [\\\n]",    classGrammar("\n"));
+    grammarParserParses("start: [\\\n]",    classGrammar("\\n"));
   });
 
   /* Canonical simpleBracketDelimiedCharacter is "a". */

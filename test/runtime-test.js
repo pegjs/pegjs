@@ -37,4 +37,17 @@ test("quote", function() {
   );
 });
 
+/* ===== PEG.RegExpUtils ===== */
+
+module("PEG.RegExpUtils");
+
+test("quoteForClass", function() {
+  strictEqual(PEG.RegExpUtils.quoteForClass(""), '');
+  strictEqual(PEG.RegExpUtils.quoteForClass("abcd"), 'abcd');
+  strictEqual(
+    PEG.RegExpUtils.quoteForClass("\\/]-\r\u2028\u2029\n\\/]-\r\u2028\u2029\n"),
+    '\\\\\\/\\]\\-\\r\\u2028\\u2029\\n\\\\\\/\\]\\-\\r\\u2028\\u2029\\n'
+  );
+});
+
 })();
