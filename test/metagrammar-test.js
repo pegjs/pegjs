@@ -273,7 +273,7 @@ with (PEG.Grammar) {
   });
 
   /* Canonical class is "[a-d]". */
-  test("parses classCharacterRange", function() {
+  test("parses class", function() {
     grammarParserParses("start: []",          classGrammar(""));
     grammarParserParses("start: [a-d]",       classGrammar("a-d"));
     grammarParserParses("start: [a]",         classGrammar("a"));
