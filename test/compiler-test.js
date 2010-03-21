@@ -378,6 +378,19 @@ test("error messages", function() {
     'Expected end of input but "e" found.'
   );
 
+  var classParser = PEG.buildParser('start: [a-d]');
+  doesNotParseWithMessage(
+    classParser,
+    "",
+    'Expected [a-d] but end of input found.'
+  );
+  var negativeClassParser = PEG.buildParser('start: [^a-d]');
+  doesNotParseWithMessage(
+    negativeClassParser,
+    "",
+    'Expected [^a-d] but end of input found.'
+  );
+
   var anyParser = PEG.buildParser('start: .');
   doesNotParseWithMessage(
     anyParser,
