@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>PEG.js Benchmark Suite</title>
+    <style>
+      body {
+        margin: 2em 4em;
+        font-family: "Trebuchet MS", lucida, sans-serif;
+        line-height: 1.5;
+        color: black; background-color: white;
+      }
+
+      h1 { margin: 0 0 .75em 0; font-size: 200%; }
+
+      table { border-spacing: 0; border-collapse: collapse; }
+      table td, table th { border: 1px solid silver; padding: .25em 1em; }
+      table td .unit { font-size: 75%; color: gray; }
+      table td.input-size  { text-align: right; }
+      table td.parse-time  { text-align: right; }
+      table td.parse-speed { text-align: right; }
+      table tr.columns th { border-color: #404040; color: white; background-color: #404040; }
+      table tr.heading th { background-color: #e0e0e0; }
+      table tr.benchmark-total td { font-weight: bold; }
+      table tr.total td { background-color: #ffff80; font-weight: bold; }
+      table tr.total td .unit { color: #808000; }
+      table tr.total td.parse-speed .value { font-size: 175%; }
+
+      a, a:visited { color: #3d586c; }
+    </style>
+  </head>
+  <body>
+    <h1>PEG.js Benchmark Suite</h1>
+
+    <table id="results-table">
+      <tr class="columns">
+        <th>Test</th>
+        <th>Input Size</th>
+        <th>Average Parse Time</th>
+        <th>Average Parse Speed</th>
+      </tr>
+    </table>
+
+    <script src="../lib/runtime.js"></script>
+    <script src="../lib/compiler.js"></script>
+    <script src="../lib/metagrammar.js"></script>
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery.scrollto/jquery.scrollTo.js"></script>
+    <script>
+      /*
+       * Each input is parsed |RUNS| times and the results are averaged. We do
+       * this for two reasons:
+       *
+       *   1. To warm up the interpreter (PEG.js-generated parsers will be most
+       *      likely used repeatedly, so it makes sense to measure performance
+       *      after warming up).
+       *
+       *   2. To minimize random errors.
+       */
+      var RUNS = 10;
+
+      var benchmarks = [
+        {
+          id:          "json",
+          title:       "JSON",
+          tests: [
+            { file: "example1.json", title: "Example 1" },
+            { file: "example2.json", title: "Example 2" },
+            { file: "example3.json", title: "Example 3" },
+            { file: "example4.json", title: "Example 4" },
+            { file: "example5.json", title: "Example 5" }
+          ]
+        },
+        {
+          id:          "css",
+          title:       "CSS",
+          tests: [
+            { file: "blueprint/src/reset.css",      title: "Blueprint - reset.css (source)"      },
+            { file: "blueprint/src/typography.css", title: "Blueprint - typography.css (source)" },
+            { file: "blueprint/src/forms.css",      title: "Blueprint - forms.css (source)"      },
+            { file: "blueprint/src/grid.css",       title: "Blueprint - grid.css (source)"       },
+            { file: "blueprint/src/print.css",      title: "Blueprint - print.css (source)"      },
+            // Contains syntax errors.
+            // { file: "blueprint/src/ie.css",         title: "Blueprint - ie.css (source)"         },
+            { file: "blueprint/min/screen.css",     title: "Blueprint - screen.css (minified)"   },
+            { file: "blueprint/min/print.css",      title: "Blueprint - print.css (minified)"    },
+            // Contains syntax errors.
+            // { file: "blueprint/min/ie.css",         title: "Blueprint - ie.css (minified)"       },
+            { file: "960.gs/src/reset.css",         title: "960.gs - reset.css (source)"         },
+            { file: "960.gs/src/text.css",          title: "960.gs - text.css (source)"          },
+            { file: "960.gs/src/960.css",           title: "960.gs - 960.css (source)"           },
+            { file: "960.gs/src/960_24_col.css",    title: "960.gs - 960_24_col.css (source)"    },
+            { file: "960.gs/min/reset.css",         title: "960.gs - reset.css (minified)"       },
+            { file: "960.gs/min/text.css",          title: "960.gs - text.css (minified)"        },
+            { file: "960.gs/min/960.css",           title: "960.gs - 960.css (minified)"         },
+            { file: "960.gs/min/960_24_col.css",    title: "960.gs - 960_24_col.css (minified)"  },
+          ]
+        }
+      ];
+
+      $(document).ready(function() {
+        var resultsTable = $("#results-table");
+
+        function appendHeading(heading) {
+          resultsTable.append(
+            "<tr class='heading'><th colspan='4'>" + heading + "</th></tr>"
+          );
+        }
+
+        function appendResult(klass, title, url, inputSize, parseTime) {
+          var KB      = 1024;
+          var MS_IN_S = 1000;
+
+          resultsTable.append(
+              "<tr class='" + klass + "'>"
+            +   "<td class='title'>"
+            +     (url !== null ? "<a href='" + url + "'>" : "")
+            +       title
+            +     (url !== null ? "</a>" : "")
+            +   "</td>"
+            +   "<td class='input-size'>"
+            +     "<span class='value'>"
+            +       (inputSize / KB).toFixed(2)
+            +     "</span>"
+            +     "&nbsp;<span class='unit'>kB</span>"
+            +   "</td>"
+            +   "<td class='parse-time'>"
+            +     "<span class='value'>"
+            +       parseTime.toFixed(2)
+            +     "</span>"
+            +     "&nbsp;<span class='unit'>ms</span>"
+            +   "</td>"
+            +   "<td class='parse-speed'>"
+            +     "<span class='value'>"
+            +       ((inputSize / KB) / (parseTime / MS_IN_S)).toFixed(2)
+            +     "</span>"
+            +     "&nbsp;<span class='unit'>kB/s</span>"
+            +   "</td>"
+            + "</tr>"
+          );
+        }
+
+        function get(url) {
+          return $.ajax({
+            type:     "GET",
+            url:      url,
+            dataType: "text",
+            async:    false
+          }).responseText;
+        }
+
+        var totalInputSize = 0;
+        var totalParseTime = 0;
+
+        for (var i = 0; i < benchmarks.length; i++) {
+          var benchmark = benchmarks[i];
+
+          appendHeading(benchmark.title);
+
+          var grammar = get("../examples/" + benchmark.id + ".pegjs");
+          var parser = PEG.buildParser(grammar);
+
+          var benchmarkInputSize = 0;
+          var benchmarkParseTime = 0;
+
+          for (var j = 0; j < benchmark.tests.length; j++) {
+            var test = benchmark.tests[j];
+            var url = benchmark.id + "/" + test.file;
+
+            var input = get(url);
+
+            var parseTime = 0;
+            for (var k = 0; k < RUNS; k++) {
+              var t = (new Date).getTime();
+              parser.parse(input);
+              parseTime += (new Date).getTime() - t;
+            }
+            var averageParseTime = parseTime / RUNS;
+
+            appendResult(
+              "individual",
+              test.title,
+              url,
+              input.length,
+              averageParseTime
+            );
+
+            benchmarkInputSize += input.length;
+            benchmarkParseTime += averageParseTime;
+          }
+
+          appendResult(
+            "benchmark-total",
+            benchmark.title + " total",
+            null,
+            benchmarkInputSize,
+            benchmarkParseTime
+          );
+
+          totalInputSize += benchmarkInputSize;
+          totalParseTime += benchmarkParseTime;
+        }
+
+        appendResult("total", "Total", null, totalInputSize, totalParseTime);
+
+        $.scrollTo("max", { axis: "y", duration: 500 });
+      });
+    </script>
+  </body>
+</html>

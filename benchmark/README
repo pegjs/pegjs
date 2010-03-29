@@ -1,0 +1,23 @@
+PEG.js Benchmark Suite
+======================
+
+This is the PEG.js benchmark suite. It measures speed of the parsers generated
+by PEG.js on various inputs. Its main goal is to provide data for code generator
+optimization.
+
+Running
+-------
+
+  1. Start a web server and make it serve the PEG.js root directory (one level
+     up from this one).
+
+  2. Point your browser to an URL corresponding to the index.html file.
+
+  3. Wait for the table to fill :-)
+
+If you have Python installed, you can just run the following command in the
+PEG.js root directory
+
+  python -m SimpleHTTPServer
+
+and load http://localhost:8000/benchmark/ in your browser.
