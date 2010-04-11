@@ -3,11 +3,12 @@ require "uri"
 
 version = File.read("VERSION").strip
 
-file "lib/pegjs-runtime-#{version}.min.js" => "lib/runtime.js" do |t|
+desc "Build the minified parser runtime"
+task :minify do
   response = Net::HTTP.post_form(
     URI.parse("http://closure-compiler.appspot.com/compile"),
     {
-      "js_code"           => File.read(t.prerequisites.first),
+      "js_code"           => File.read("lib/runtime.js"),
       "compilation_level" => "SIMPLE_OPTIMIZATIONS",
       "output_format"     => "text",
       "output_info"       => "compiled_code"
@@ -18,15 +19,10 @@ file "lib/pegjs-runtime-#{version}.min.js" => "lib/runtime.js" do |t|
     abort "Error calling Google Closure Compiler API: #{response.message}"
   end
 
-  File.open(t.name, "w") { |f| f.write(response.body) }
+  File.open("lib/pegjs-runtime-#{version}.min.js", "w") { |f| f.write(response.body) }
 end
-
-file "lib/metagrammar.js" => "lib/metagrammar.pegjs" do |t|
-  system "bin/pegjs --start-rule grammar PEG.grammarParser lib/metagrammar.pegjs"
-end
-
-desc "Build the minified parser runtime"
-task :minify => "lib/pegjs-runtime-#{version}.min.js"
 
 desc "Generate the grammar parser"
-task :metaparser => "lib/metagrammar.js"
+task :metaparser do
+  system "bin/pegjs --start-rule grammar PEG.grammarParser lib/metagrammar.pegjs"
+end
