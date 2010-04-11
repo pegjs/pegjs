@@ -434,6 +434,7 @@ with (PEG.Grammar) {
     grammarParserParses('start:\f"abcd"',     simpleGrammar);
     grammarParserParses('start: "abcd"',      simpleGrammar);
     grammarParserParses('start:\u00A0"abcd"', simpleGrammar);
+    grammarParserParses('start:\uFEFF"abcd"', simpleGrammar);
     grammarParserParses('start:\u1680"abcd"', simpleGrammar);
     grammarParserParses('start:\u180E"abcd"', simpleGrammar);
     grammarParserParses('start:\u2000"abcd"', simpleGrammar);
