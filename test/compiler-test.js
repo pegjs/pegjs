@@ -456,6 +456,13 @@ test("error messages", function() {
     "something",
     'Expected end of input but "s" found.'
   );
+
+  var duplicateErrorParser = PEG.buildParser('start: "a" / "a"');
+  doesNotParseWithMessage(
+    duplicateErrorParser,
+    "",
+    'Expected "a" but end of input found.'
+  );
 });
 
 test("error positions", function() {
