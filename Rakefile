@@ -1,8 +1,6 @@
 require "net/http"
 require "uri"
 
-version = File.read("VERSION").strip
-
 desc "Build the minified parser runtime"
 task :minify do
   response = Net::HTTP.post_form(
@@ -19,6 +17,7 @@ task :minify do
     abort "Error calling Google Closure Compiler API: #{response.message}"
   end
 
+  version = File.read("VERSION").strip
   File.open("lib/pegjs-runtime-#{version}.min.js", "w") { |f| f.write(response.body) }
 end
 
