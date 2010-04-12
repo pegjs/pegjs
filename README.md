@@ -39,18 +39,14 @@ The `bin/pegjs` command has several options that influence the generator&mdash;t
 
 Let's assume that you want to use the parser in a web page. To do this, you need to:
 
-  1. Download the [minified parser runtime](http://pegjs.majda.cz/download#minified-parser-runtime) and include it into your page:
-
-         <script src="pegjs-runtime-0.3.min.js"></script>
-
-  2. Include the generated parser into your page:
+  1. Include the generated parser into your page:
 
          <!-- Replace "example/arithmetics.js" with your parser file -->
          <script src="example/arithmetics.js"></script>
 
      This creates a variable with the parser object in the global scope (you can choose name of the variable when generating the parser).
 
-  3. Use the parser, i.e. call the `parse` method on the parser variable:
+  2. Use the parser, i.e. call the `parse` method on the parser variable:
 
          <script>
            // Replace "arithmeticsParser" with your parser variable
