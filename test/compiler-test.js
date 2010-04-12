@@ -61,6 +61,16 @@ global.doesNotParseWithPos = function(parser, input, line, column) {
 
 module("PEG.ArrayUtils");
 
+test("contains", function() {
+  ok(!PEG.ArrayUtils.contains([], 42));
+
+  ok(PEG.ArrayUtils.contains([1, 2, 3], 1));
+  ok(PEG.ArrayUtils.contains([1, 2, 3], 2));
+  ok(PEG.ArrayUtils.contains([1, 2, 3], 3));
+  ok(!PEG.ArrayUtils.contains([1, 2, 3], 42));
+  ok(!PEG.ArrayUtils.contains([1, 2, 3], "2")); // Does it use |===|?
+});
+
 test("each", function() {
   var sum;
   function increment(x) { sum += x; }
