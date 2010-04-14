@@ -255,9 +255,9 @@ test("classes", function() {
   doesNotParse(nonEmptyClassParser, "");
   doesNotParse(nonEmptyClassParser, "ab");
 
-  var invertedEmptyClassParser = PEG.buildParser('start: []');
+  var invertedEmptyClassParser = PEG.buildParser('start: [^]');
   doesNotParse(invertedEmptyClassParser, "");
-  doesNotParse(invertedEmptyClassParser, "a");
+  parses(invertedEmptyClassParser, "a", "a");
   doesNotParse(invertedEmptyClassParser, "ab");
 
   var invertedNonEmptyClassParser = PEG.buildParser('start: [^ab-d]');
