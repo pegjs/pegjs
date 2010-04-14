@@ -327,7 +327,8 @@ with (PEG.Grammar) {
     grammarParserParses('start: "\\n"',  literalGrammar("\n"));
     grammarParserParses('start: "\\r"',  literalGrammar("\r"));
     grammarParserParses('start: "\\t"',  literalGrammar("\t"));
-    grammarParserParses('start: "\\v"',  literalGrammar("\v"));
+    /* IE does not recognize "\v". */
+    grammarParserParses('start: "\\v"',  literalGrammar("\x0B"));
 
     grammarParserParses('start: "\\a"',  literalGrammar("a"));
   });
@@ -430,7 +431,8 @@ with (PEG.Grammar) {
   /* Canonical whitespace is " ". */
   test("parses whitespace", function() {
     grammarParserParses('start:\t"abcd"',     simpleGrammar);
-    grammarParserParses('start:\v"abcd"',     simpleGrammar);
+    /* IE does not recognize "\v". */
+    grammarParserParses('start:\x0B"abcd"',   simpleGrammar);
     grammarParserParses('start:\f"abcd"',     simpleGrammar);
     grammarParserParses('start: "abcd"',      simpleGrammar);
     grammarParserParses('start:\u00A0"abcd"', simpleGrammar);

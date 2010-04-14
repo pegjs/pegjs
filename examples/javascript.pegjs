@@ -230,7 +230,7 @@ SingleEscapeCharacter: ['"\\bfnrtv] {
     .replace("n", "\n")
     .replace("r", "\r")
     .replace("t", "\t")
-    .replace("v", "\v")
+    .replace("v", "\x0B") // IE does not recognize "\v".
 }
 
 NonEscapeCharacter: (!EscapeCharacter / LineTerminator) SourceCharacter {
