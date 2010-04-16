@@ -299,8 +299,8 @@ with (PEG.Grammar) {
   test("parses bracketDelimitedCharacter", function() {
     grammarParserParses("start: [a]",       classGrammar("a"));
     grammarParserParses("start: [\\n]",     classGrammar("\\n"));
-    grammarParserParses("start: [\\0]",     classGrammar("\0"));
-    grammarParserParses("start: [\\x00]",   classGrammar("\x00"));
+    grammarParserParses("start: [\\0]",     classGrammar("\\0"));
+    grammarParserParses("start: [\\x00]",   classGrammar("\\0"));
     grammarParserParses("start: [\\u0120]", classGrammar("\u0120"));
     grammarParserParses("start: [\\\n]",    classGrammar("\\n"));
   });
