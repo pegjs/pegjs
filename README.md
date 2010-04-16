@@ -8,9 +8,7 @@ PEG.js is a parser generator for JavaScript based on the [parsing expression gra
 Requirements
 ------------
 
-Both the parser generator and generated parsers should run well in IE8 and recent versions of Firefox, Chrome, Safari and Opera, as well as Rhino JavaScript engine. IE6 and IE7 are not supported.
-
-**Note:** IE7 might be supported sometime in the future, IE6 probably not.
+Both the parser generator and generated parsers should run well in IE6+ and recent versions of Firefox, Chrome, Safari and Opera, as well as Rhino JavaScript engine.
 
 Usage
 -----
