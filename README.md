@@ -31,28 +31,28 @@ This command will create the parser from the `examples/arithmetics.pegjs` file a
 
 To use the parser in a web page, follow the following example:
 
-  <!DOCTYPE html>
-  <head>
-    <title>Arithmetics Parser Example</title>
-    <script src="examples/arithmetics.js"></script> <!-- Include the parser. -->
-    <script>
-      function calculate(expression) {
-        /* Use the parser to compute a value of an arithmetic expression. */
-        var result;
-        try {
-          result = arithmeticsParser.parse(document.getElementById("expression").value);
-        } catch (e) {
-          result = e.message;
+    <!DOCTYPE html>
+    <head>
+      <title>Arithmetics Parser Example</title>
+      <script src="examples/arithmetics.js"></script> <!-- Include the parser. -->
+      <script>
+        function calculate(expression) {
+          /* Use the parser to compute a value of an arithmetic expression. */
+          var result;
+          try {
+            result = arithmeticsParser.parse(document.getElementById("expression").value);
+          } catch (e) {
+            result = e.message;
+          }
+          document.getElementById("result").innerText = result;
         }
-        document.getElementById("result").innerText = result;
-      }
-    </script>
-  </head>
-  <body>
-    <input type="text" id="expression" value="2*(3+4)">
-    <input type="button" id="calculate" value="Calculate" onclick="calculate();">
-    <div id="result"></div>
-  </body>
+      </script>
+    </head>
+    <body>
+      <input type="text" id="expression" value="2*(3+4)">
+      <input type="button" id="calculate" value="Calculate" onclick="calculate();">
+      <div id="result"></div>
+    </body>
 
 The `parse` method of the generated parser will return either the result of the parsing (dependent on the actions you specified in the grammar) or throw `PEG.Parser.SyntaxError` exception if the input contains a syntax error. The exception has properties `message`, `line` and `column`, which contain details about the error.
 
