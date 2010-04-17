@@ -1,0 +1,58 @@
+0.4 (2010-04-17)
+----------------
+
+Big Changes:
+
+* Improved IE compatibility -- IE6+ is now fully supported.
+* Generated parsers are now standalone (no runtime is required).
+* Added example grammars for JavaScript, CSS and JSON.
+* Added a benchmark suite.
+* Implemented negative character classes (e.g. [^a-z]).
+* Project moved from BitBucket to GitHub.
+
+Small Changes:
+
+* Code generated for the character classes is now regexp-based (= simpler and
+  more scalable).
+* Added \uFEFF (BOM) to the definition of whitespace in the metagrammar.
+* When building a parser, left-recursive rules (both direct and indirect) are
+  reported as errors.
+* When building a parser, missing rules are reported as errors.
+* Expected items in the error messages do not contain duplicates and they are
+  sorted.
+* Fixed several bugs in the example arithmetics grammar.
+* Converted README to GitHub Flavored Markdown and improved it.
+* Added CHANGELOG.
+* Internal code improvements.
+
+0.3 (2010-03-14)
+----------------
+
+* Wrote README.
+* Bootstrapped the grammar parser.
+* Metagrammar recognizes JavaScript-like comments.
+* Changed standard grammar extension from .peg to .pegjs (it is more specific).
+* Simplified the example arithmetics grammar + added comment.
+* Fixed a bug with reporting of invalid ranges such as [b-a] in the metagrammar.
+* Fixed --start vs. --start-rule inconsistency between help and actual option
+  processing code.
+* Avoided ugliness in QUnit output.
+* Fixed typo in help: "parserVar" -> "parser_var".
+* Internal code improvements.
+
+0.2.1 (2010-03-08)
+------------------
+
+* Added "pegjs-" prefix to the name of the minified runtime file.
+
+0.2 (2010-03-08)
+----------------
+
+* Added Rakefile that builds minified runtime using Google Closure Compiler API.
+* Removed trailing commas in object initializers (Google Closure does not like
+  them).
+
+0.1 (2010-03-08)
+----------------
+
+* Initial release.
