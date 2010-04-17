@@ -14,11 +14,6 @@ Features
   * Handles wide class of grammars (strict superset of LL(k) and LR(k))
   * Precise and human-friendly error reporting
 
-Requirements
-------------
-
-Both the parser generator and generated parsers should run well in IE6+ and recent versions of Firefox, Chrome, Safari and Opera, as well as Rhino JavaScript engine.
-
 Usage
 -----
 
@@ -65,3 +60,8 @@ Let's assume that you want to use the parser in a web page. To do this, you need
 Grammar
 -------
 For detailed description of the grammar see the [online documentation](http://pegjs.majda.cz/documentation#grammar).
+
+Compatibility
+-------------
+
+Both the parser generator and generated parsers should run well in IE6+ and recent versions of Firefox, Chrome, Safari and Opera, as well as Rhino JavaScript engine.
