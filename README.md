@@ -5,6 +5,15 @@ PEG.js: Parser Generator for JavaScript
 
 PEG.js is a parser generator for JavaScript based on the [parsing expression grammar](http://en.wikipedia.org/wiki/Parsing_expression_grammar) formalism. It is designed to be used either from your browser or from the command line (using [Rhino](http://www.mozilla.org/rhino/) JavaScript interpreter).
 
+Features
+--------
+
+  * Usable [from your browser](http://pegjs.majda.cz/online) or [from a command-line](http://pegjs.majda.cz/documentation#generating-a-parser)
+  * Simple and expressive [grammar syntax](http://pegjs.majda.cz/documentation#grammar)
+  * No separate lexical analysis step—both lexical and syntactical analysis are handled by one tool
+  * Handles wide class of grammars (strict superset of LL(k) and LR(k))
+  * Precise and human-friendly error reporting
+
 Requirements
 ------------
 
