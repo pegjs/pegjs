@@ -50,7 +50,7 @@ To use the parser in a web page, follow the following example:
     </head>
     <body>
       <input type="text" id="expression" value="2*(3+4)">
-      <input type="button" id="calculate" value="Calculate" onclick="calculate();">
+      <input type="button" value="Calculate" onclick="calculate();">
       <div id="result"></div>
     </body>
 
