@@ -169,6 +169,13 @@ test("generateUniqueIdentifier", function() {
 
 module("PEG");
 
+test("buildParser reports syntax errors in the grammar", function() {
+  throws(
+    function() { PEG.buildParser(''); },
+    PEG.grammarParser.SyntaxError
+  );
+});
+
 test("buildParser reports missing start rule", function() {
   throws(
     function() { PEG.buildParser('notStart: "abcd"'); },
