@@ -87,6 +87,8 @@ e: [eE] [+-]? { return $1 + $2; }
 /*
  * The following rules are not present in the original JSON gramar, but they are
  * assumed to exist implicitly.
+ *
+ * FIXME: Define them according to ECMA-262, 5th ed.
  */
 
 digit: [0-9]
@@ -100,5 +102,5 @@ hexDigit: [0-9a-fA-F]
 _ "whitespace": whitespace*
 
 // Whitespace is undefined in the original JSON grammar, so I assume a simple
-// conventional definition.
+// conventional definition consistent with ECMA-262, 5th ed.
 whitespace: [ \t\n\r]
