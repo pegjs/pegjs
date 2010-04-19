@@ -131,9 +131,11 @@ test("formatCode interpolates variables", function() {
     "foo\nbaz"
   );
 
-  throws(function() {
-    PEG.Compiler.formatCode("foo", "${bar}");
-  }, Error);
+  throws(
+    function() { PEG.Compiler.formatCode("foo", "${bar}"); },
+    Error,
+    { message: "Undefined variable: \"bar\"." }
+  );
 });
 
 test("formatCode filters variables", function() {
@@ -142,9 +144,11 @@ test("formatCode filters variables", function() {
     "foo\n\"baz\""
   );
 
-  throws(function() {
-    PEG.Compiler.formatCode("foo", "${bar|eeek}", { bar: "baz" });
-  }, Error);
+  throws(
+    function() { PEG.Compiler.formatCode("foo", "${bar|eeek}", { bar: "baz" }); },
+    Error,
+    { message: "Unrecognized filter: \"eeek\"." }
+  );
 });
 
 test("formatCode indents multiline parts", function() {
@@ -166,11 +170,19 @@ test("generateUniqueIdentifier", function() {
 module("PEG");
 
 test("buildParser reports invalid grammar object", function() {
-  throws(function() { PEG.buildParser(42); }, PEG.Grammar.GrammarError);
+  throws(
+    function() { PEG.buildParser(42); },
+    PEG.Grammar.GrammarError,
+    { message: "Grammar must be object or string." }
+  );
 });
 
 test("buildParser reports missing start rule", function() {
-  throws(function() { PEG.buildParser({}); }, PEG.Grammar.GrammarError);
+  throws(
+    function() { PEG.buildParser({}); },
+    PEG.Grammar.GrammarError,
+    { message: "Missing \"start\" rule." }
+  );
 });
 
 test("buildParser reports missing referenced rules", function() {
@@ -187,7 +199,11 @@ test("buildParser reports missing referenced rules", function() {
   ];
 
   PEG.ArrayUtils.each(grammars, function(grammar) {
-    throws(function() { PEG.buildParser(grammar); }, PEG.Grammar.GrammarError);
+    throws(
+      function() { PEG.buildParser(grammar); },
+      PEG.Grammar.GrammarError,
+      { message: "Referenced rule \"missing\" does not exist." }
+    );
   });
 });
 
@@ -208,7 +224,11 @@ test("buildParser reports left recursion", function() {
   ];
 
   PEG.ArrayUtils.each(grammars, function(grammar) {
-    throws(function() { PEG.buildParser(grammar); }, PEG.Grammar.GrammarError);
+    throws(
+      function() { PEG.buildParser(grammar); },
+      PEG.Grammar.GrammarError,
+      { message: "Left recursion detected for rule \"start\"." }
+    );
   });
 });
 
