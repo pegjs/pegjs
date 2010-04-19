@@ -4,7 +4,7 @@ var global = this;
 
 /* ===== Helpers ===== */
 
-global.throws = function(block, exceptionType) {
+global.throws = function(block, exceptionType, exceptionProperties) {
   var exception = null;
   try {
     block();
@@ -23,9 +23,11 @@ global.throws = function(block, exceptionType) {
         ? "okay: thrown " + exceptionType.name
         : "failed, thrown " + exception.name + " instead of " + exceptionType.name
     );
-  }
 
-  return exception;
+    for (var property in exceptionProperties) {
+      strictEqual(exception[property], exceptionProperties[property]);
+    }
+  }
 };
 
 global.parses = function(parser, input, expected) {
@@ -37,24 +39,22 @@ global.doesNotParse = function(parser, input) {
 };
 
 global.doesNotParseWithMessage = function(parser, input, message) {
-  var exception = throws(
+  throws(
     function() { parser.parse(input); },
-    parser.SyntaxError
+    parser.SyntaxError,
+    { message: message }
   );
-  if (exception) {
-    strictEqual(exception.message, message);
-  }
 };
 
 global.doesNotParseWithPos = function(parser, input, line, column) {
   var exception = throws(
     function() { parser.parse(input); },
-    parser.SyntaxError
+    parser.SyntaxError,
+    {
+      line:   line,
+      column: column
+    }
   );
-  if (exception) {
-    strictEqual(exception.line, line);
-    strictEqual(exception.column, column);
-  }
 };
 
 /* ===== PEG.ArrayUtils ===== */
