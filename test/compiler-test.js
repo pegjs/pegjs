@@ -169,17 +169,9 @@ test("generateUniqueIdentifier", function() {
 
 module("PEG");
 
-test("buildParser reports invalid grammar object", function() {
-  throws(
-    function() { PEG.buildParser(42); },
-    PEG.Grammar.GrammarError,
-    { message: "Grammar must be object or string." }
-  );
-});
-
 test("buildParser reports missing start rule", function() {
   throws(
-    function() { PEG.buildParser({}); },
+    function() { PEG.buildParser('notStart: "abcd"'); },
     PEG.Grammar.GrammarError,
     { message: "Missing \"start\" rule." }
   );
