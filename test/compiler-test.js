@@ -192,6 +192,7 @@ test("buildParser reports missing referenced rules", function() {
     'start: missing / "a" / "b"',
     'start: "a" / "b" / missing',
     'start: missing*',
+    'start: missing+',
     'start: !missing',
     'start: &missing',
     'start: missing { }'
@@ -214,6 +215,7 @@ test("buildParser reports left recursion", function() {
     'start: start / "a" / "b"',
     'start: "a" / "b" / start',
     'start: start*',
+    'start: start+',
     'start: !start',
     'start: &start',
     'start: start { }',

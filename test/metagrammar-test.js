@@ -149,13 +149,7 @@ with (PEG.Grammar) {
   test("parses suffixed", function() {
     grammarParserParses('start: "abcd"?', oneRuleGrammar(choice));
     grammarParserParses('start: "abcd"*', oneRuleGrammar(new ZeroOrMore(literalAbcd)));
-    grammarParserParses(
-      'start: "abcd"+',
-      oneRuleGrammar(new Action(
-        new Sequence([literalAbcd, new ZeroOrMore(literalAbcd)]),
-        function(first, rest) { return [first].concat(rest); }
-      ))
-    );
+    grammarParserParses('start: "abcd"+', oneRuleGrammar(new OneOrMore(literalAbcd)));
     grammarParserParses('start: "abcd"', literalGrammar("abcd"));
   });
 
