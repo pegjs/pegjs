@@ -137,10 +137,7 @@ with (PEG.Grammar) {
 
   /* Canonical prefixed is "!\"abcd\"". */
   test("parses prefixed", function() {
-    grammarParserParses(
-      'start: &"abcd"?',
-      oneRuleGrammar(new NotPredicate(new NotPredicate(choice)))
-    );
+    grammarParserParses('start: &"abcd"?', oneRuleGrammar(new AndPredicate(choice)));
     grammarParserParses('start: !"abcd"?', oneRuleGrammar(new NotPredicate(choice)));
     grammarParserParses('start: "abcd"?',  oneRuleGrammar(choice));
   });
