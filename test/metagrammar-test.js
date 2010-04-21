@@ -17,12 +17,11 @@ global.grammarParserDoesNotParse = function(input) {
 module("Grammar Parser");
 
 with (PEG.Grammar) {
-  var literalEmpty = new Literal("");
   var literalAbcd  = new Literal("abcd");
   var literalEfgh  = new Literal("efgh");
   var literalIjkl  = new Literal("ijkl");
 
-  var choice = new Choice([literalAbcd, literalEmpty]);
+  var choice = new Optional(literalAbcd);
 
   var notAbcd = new NotPredicate(literalAbcd);
   var notEfgh = new NotPredicate(literalEfgh);
