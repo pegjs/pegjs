@@ -61,6 +61,21 @@ global.doesNotParseWithPos = function(parser, input, line, column) {
 
 module("PEG.ArrayUtils");
 
+test("range", function() {
+  deepEqual(PEG.ArrayUtils.range(-1), []);
+  deepEqual(PEG.ArrayUtils.range(0), []);
+  deepEqual(PEG.ArrayUtils.range(1), [0]);
+  deepEqual(PEG.ArrayUtils.range(2), [0, 1]);
+  deepEqual(PEG.ArrayUtils.range(3), [0, 1, 2]);
+
+  deepEqual(PEG.ArrayUtils.range(0, -1), []);
+  deepEqual(PEG.ArrayUtils.range(0, 0), []);
+  deepEqual(PEG.ArrayUtils.range(0, 1), [0]);
+  deepEqual(PEG.ArrayUtils.range(0, 2), [0, 1]);
+  deepEqual(PEG.ArrayUtils.range(0, 3), [0, 1, 2]);
+  deepEqual(PEG.ArrayUtils.range(-3, 0), [-3, -2, -1]);
+});
+
 test("contains", function() {
   ok(!PEG.ArrayUtils.contains([], 42));
 
