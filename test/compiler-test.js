@@ -202,15 +202,15 @@ test("buildParser reports missing start rule", function() {
 test("buildParser reports missing referenced rules", function() {
   var grammars = [
     'start: missing',
-    'start: missing "a" "b"',
-    'start: "a" "b" missing',
     'start: missing / "a" / "b"',
     'start: "a" / "b" / missing',
+    'start: missing "a" "b"',
+    'start: "a" "b" missing',
+    'start: &missing',
+    'start: !missing',
     'start: missing?',
     'start: missing*',
     'start: missing+',
-    'start: &missing',
-    'start: !missing',
     'start: missing { }'
   ];
 
@@ -227,14 +227,14 @@ test("buildParser reports left recursion", function() {
   var grammars = [
     /* Direct */
     'start: start',
-    'start: start "a" "b"',
     'start: start / "a" / "b"',
     'start: "a" / "b" / start',
+    'start: start "a" "b"',
+    'start: &start',
+    'start: !start',
     'start: start?',
     'start: start*',
     'start: start+',
-    'start: &start',
-    'start: !start',
     'start: start { }',
 
     /* Indirect */
@@ -258,6 +258,120 @@ test("buildParser allows custom start rule", function() {
 /* ===== Generated Parser ===== */
 
 module("Generated Parser");
+
+test("choices", function() {
+  var parser = PEG.buildParser('start: "a" / "b" / "c"');
+  parses(parser, "a", "a");
+  parses(parser, "b", "b");
+  parses(parser, "c", "c");
+  doesNotParse(parser, "");
+  doesNotParse(parser, "ab");
+  doesNotParse(parser, "d");
+});
+
+test("sequences", function() {
+  var emptySequenceParser = PEG.buildParser('start: ');
+  parses(emptySequenceParser, "", []);
+  doesNotParse(emptySequenceParser, "abc");
+
+  var nonEmptySequenceParser = PEG.buildParser('start: "a" "b" "c"');
+  parses(nonEmptySequenceParser, "abc", ["a", "b", "c"]);
+  doesNotParse(nonEmptySequenceParser, "");
+  doesNotParse(nonEmptySequenceParser, "ab");
+  doesNotParse(nonEmptySequenceParser, "abcd");
+  doesNotParse(nonEmptySequenceParser, "efg");
+
+  /*
+   * Test that the parsing position returns after unsuccessful parsing of a
+   * sequence.
+   */
+  var posTestParser = PEG.buildParser('start: ("a" "b") / "a"');
+  parses(posTestParser, "a", "a");
+});
+
+test("and predicate", function() {
+  var parser = PEG.buildParser('start: "a" &"b" "b"');
+  parses(parser, "ab", ["a", "", "b"]);
+  doesNotParse(parser, "ac");
+
+  /*
+   * Test that the parsing position returns after successful parsing of a
+   * predicate is not needed, it is implicit in the tests above.
+   */
+});
+
+test("not predicate", function() {
+  var parser = PEG.buildParser('start: "a" !"b"');
+  parses(parser, "a", ["a", ""]);
+  doesNotParse(parser, "ab");
+
+  /*
+   * Test that the parsing position returns after successful parsing of a
+   * predicate.
+   */
+  var posTestParser = PEG.buildParser('start: "a" !"b" "c"');
+  parses(posTestParser, "ac", ["a", "", "c"]);
+});
+
+test("optional expressions", function() {
+  var parser = PEG.buildParser('start: "a"?');
+  parses(parser, "", "");
+  parses(parser, "a", "a");
+});
+
+test("zero or more expressions", function() {
+  var parser = PEG.buildParser('start: "a"*');
+  parses(parser, "", []);
+  parses(parser, "a", ["a"]);
+  parses(parser, "aaa", ["a", "a", "a"]);
+});
+
+test("one or more expressions", function() {
+  var parser = PEG.buildParser('start: "a"+');
+  doesNotParse(parser, "");
+  parses(parser, "a", ["a"]);
+  parses(parser, "aaa", ["a", "a", "a"]);
+});
+
+test("actions", function() {
+  var singleMatchParser = PEG.buildParser(
+    'start: "a" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }'
+  );
+  parses(singleMatchParser, "a", "A");
+
+  var multiMatchParser = PEG.buildParser(
+    'start: "a" "b" "c" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }'
+  );
+  parses(multiMatchParser, "abc", "ABC");
+
+  var innerMatchParser = PEG.buildParser(
+    'start: "a" ("b" "c" "d" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }) "e"'
+  );
+  parses(innerMatchParser, "abcde", ["a", "BCD", "e"]);
+
+  /* Test that the action is not called when its expression does not match. */
+  var notAMatchParser = PEG.buildParser(
+    'start: "a" { ok(false, "action got called when it should not be"); }'
+  );
+  doesNotParse(notAMatchParser, "b");
+
+  var variablesParser = PEG.buildParser([
+    'start: "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" {',
+    '         return [$1, $2, $3, $4, $5, $6, $7, $8, $9, $10].join("").toUpperCase();',
+    '       }'
+  ].join("\n"));
+  parses(variablesParser, "abcdefghij", "ABCDEFGHIJ");
+});
+
+test("rule references", function() {
+  var parser = PEG.buildParser([
+    'start:   static / dynamic',
+    'static:  "C" / "C++" / "Java" / "C#"',
+    'dynamic: "Ruby" / "Python" / "JavaScript"'
+  ].join("\n"));
+  parses(parser, "Java", "Java");
+  parses(parser, "Python", "Python");
+});
 
 test("literals", function() {
   var parser = PEG.buildParser('start: "abcd"');
@@ -322,120 +436,6 @@ test("classes", function() {
    */
   var posTestParser = PEG.buildParser('start: [ab-d] [ab-d]');
   parses(posTestParser, "ab", ["a", "b"]);
-});
-
-test("sequences", function() {
-  var emptySequenceParser = PEG.buildParser('start: ');
-  parses(emptySequenceParser, "", []);
-  doesNotParse(emptySequenceParser, "abc");
-
-  var nonEmptySequenceParser = PEG.buildParser('start: "a" "b" "c"');
-  parses(nonEmptySequenceParser, "abc", ["a", "b", "c"]);
-  doesNotParse(nonEmptySequenceParser, "");
-  doesNotParse(nonEmptySequenceParser, "ab");
-  doesNotParse(nonEmptySequenceParser, "abcd");
-  doesNotParse(nonEmptySequenceParser, "efg");
-
-  /*
-   * Test that the parsing position returns after unsuccessful parsing of a
-   * sequence.
-   */
-  var posTestParser = PEG.buildParser('start: ("a" "b") / "a"');
-  parses(posTestParser, "a", "a");
-});
-
-test("choices", function() {
-  var parser = PEG.buildParser('start: "a" / "b" / "c"');
-  parses(parser, "a", "a");
-  parses(parser, "b", "b");
-  parses(parser, "c", "c");
-  doesNotParse(parser, "");
-  doesNotParse(parser, "ab");
-  doesNotParse(parser, "d");
-});
-
-test("optional expressions", function() {
-  var parser = PEG.buildParser('start: "a"?');
-  parses(parser, "", "");
-  parses(parser, "a", "a");
-});
-
-test("zero or more expressions", function() {
-  var parser = PEG.buildParser('start: "a"*');
-  parses(parser, "", []);
-  parses(parser, "a", ["a"]);
-  parses(parser, "aaa", ["a", "a", "a"]);
-});
-
-test("one or more expressions", function() {
-  var parser = PEG.buildParser('start: "a"+');
-  doesNotParse(parser, "");
-  parses(parser, "a", ["a"]);
-  parses(parser, "aaa", ["a", "a", "a"]);
-});
-
-test("and predicate", function() {
-  var parser = PEG.buildParser('start: "a" &"b" "b"');
-  parses(parser, "ab", ["a", "", "b"]);
-  doesNotParse(parser, "ac");
-
-  /*
-   * Test that the parsing position returns after successful parsing of a
-   * predicate is not needed, it is implicit in the tests above.
-   */
-});
-
-test("not predicate", function() {
-  var parser = PEG.buildParser('start: "a" !"b"');
-  parses(parser, "a", ["a", ""]);
-  doesNotParse(parser, "ab");
-
-  /*
-   * Test that the parsing position returns after successful parsing of a
-   * predicate.
-   */
-  var posTestParser = PEG.buildParser('start: "a" !"b" "c"');
-  parses(posTestParser, "ac", ["a", "", "c"]);
-});
-
-test("rule references", function() {
-  var parser = PEG.buildParser([
-    'start:   static / dynamic',
-    'static:  "C" / "C++" / "Java" / "C#"',
-    'dynamic: "Ruby" / "Python" / "JavaScript"'
-  ].join("\n"));
-  parses(parser, "Java", "Java");
-  parses(parser, "Python", "Python");
-});
-
-test("actions", function() {
-  var singleMatchParser = PEG.buildParser(
-    'start: "a" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }'
-  );
-  parses(singleMatchParser, "a", "A");
-
-  var multiMatchParser = PEG.buildParser(
-    'start: "a" "b" "c" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }'
-  );
-  parses(multiMatchParser, "abc", "ABC");
-
-  var innerMatchParser = PEG.buildParser(
-    'start: "a" ("b" "c" "d" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }) "e"'
-  );
-  parses(innerMatchParser, "abcde", ["a", "BCD", "e"]);
-
-  /* Test that the action is not called when its expression does not match. */
-  var notAMatchParser = PEG.buildParser(
-    'start: "a" { ok(false, "action got called when it should not be"); }'
-  );
-  doesNotParse(notAMatchParser, "b");
-
-  var variablesParser = PEG.buildParser([
-    'start: "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" {',
-    '         return [$1, $2, $3, $4, $5, $6, $7, $8, $9, $10].join("").toUpperCase();',
-    '       }'
-  ].join("\n"));
-  parses(variablesParser, "abcdefghij", "ABCDEFGHIJ");
 });
 
 test("cache", function() {
