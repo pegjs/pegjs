@@ -1,4 +1,10 @@
 #!/bin/sh
 
-DIR=`dirname "$0"`
+if [ -L "$0" ]; then
+  THIS_FILE=`readlink "$0"`
+else
+  THIS_FILE=$0
+fi
+DIR=`dirname "$THIS_FILE"`
+
 java -jar "$DIR/../vendor/rhino/js.jar" "$DIR/pegjs-main.js" "$DIR" "$@"
