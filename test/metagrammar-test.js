@@ -21,7 +21,7 @@ with (PEG.Grammar) {
   var literalEfgh  = new Literal("efgh");
   var literalIjkl  = new Literal("ijkl");
 
-  var choice = new Optional(literalAbcd);
+  var optional = new Optional(literalAbcd);
 
   var notAbcd = new NotPredicate(literalAbcd);
   var notEfgh = new NotPredicate(literalEfgh);
@@ -136,14 +136,14 @@ with (PEG.Grammar) {
 
   /* Canonical prefixed is "!\"abcd\"". */
   test("parses prefixed", function() {
-    grammarParserParses('start: &"abcd"?', oneRuleGrammar(new AndPredicate(choice)));
-    grammarParserParses('start: !"abcd"?', oneRuleGrammar(new NotPredicate(choice)));
-    grammarParserParses('start: "abcd"?',  oneRuleGrammar(choice));
+    grammarParserParses('start: &"abcd"?', oneRuleGrammar(new AndPredicate(optional)));
+    grammarParserParses('start: !"abcd"?', oneRuleGrammar(new NotPredicate(optional)));
+    grammarParserParses('start: "abcd"?',  oneRuleGrammar(optional));
   });
 
   /* Canonical suffixed is "\"abcd\"?". */
   test("parses suffixed", function() {
-    grammarParserParses('start: "abcd"?', oneRuleGrammar(choice));
+    grammarParserParses('start: "abcd"?', oneRuleGrammar(optional));
     grammarParserParses('start: "abcd"*', oneRuleGrammar(new ZeroOrMore(literalAbcd)));
     grammarParserParses('start: "abcd"+', oneRuleGrammar(new OneOrMore(literalAbcd)));
     grammarParserParses('start: "abcd"', literalGrammar("abcd"));
