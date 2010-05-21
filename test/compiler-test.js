@@ -194,7 +194,7 @@ test("buildParser reports syntax errors in the grammar", function() {
 test("buildParser reports missing start rule", function() {
   throws(
     function() { PEG.buildParser('notStart: "abcd"'); },
-    PEG.Grammar.GrammarError,
+    PEG.GrammarError,
     { message: "Missing \"start\" rule." }
   );
 });
@@ -217,7 +217,7 @@ test("buildParser reports missing referenced rules", function() {
   PEG.ArrayUtils.each(grammars, function(grammar) {
     throws(
       function() { PEG.buildParser(grammar); },
-      PEG.Grammar.GrammarError,
+      PEG.GrammarError,
       { message: "Referenced rule \"missing\" does not exist." }
     );
   });
@@ -244,7 +244,7 @@ test("buildParser reports left recursion", function() {
   PEG.ArrayUtils.each(grammars, function(grammar) {
     throws(
       function() { PEG.buildParser(grammar); },
-      PEG.Grammar.GrammarError,
+      PEG.GrammarError,
       { message: "Left recursion detected for rule \"start\"." }
     );
   });
