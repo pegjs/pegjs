@@ -17,53 +17,129 @@ global.grammarParserDoesNotParse = function(input) {
 module("Grammar Parser");
 
 with (PEG.Grammar) {
-  var literalAbcd  = new Literal("abcd");
-  var literalEfgh  = new Literal("efgh");
-  var literalIjkl  = new Literal("ijkl");
+  function rule(name, displayName, expression) {
+    return {
+      type:        "rule",
+      name:        name,
+      displayName: displayName,
+      expression:  expression
+    };
+  }
 
-  var optional = new Optional(literalAbcd);
+  function choice(alternatives) {
+    return {
+      type:        "choice",
+      alternatives: alternatives
+    };
+  }
 
-  var notAbcd = new NotPredicate(literalAbcd);
-  var notEfgh = new NotPredicate(literalEfgh);
-  var notIjkl = new NotPredicate(literalIjkl);
+  function sequence(elements) {
+    return {
+      type:     "sequence",
+      elements: elements
+    };
+  }
 
-  var sequenceEmpty    = new Sequence([]);
-  var sequenceNots     = new Sequence([notAbcd, notEfgh, notIjkl]);
-  var sequenceLiterals = new Sequence([literalAbcd, literalEfgh, literalIjkl]);
+  function nodeWithExpressionConstructor(type) {
+    return function(expression) {
+      return {
+        type:       type,
+        expression: expression
+      };
+    }
+  }
+
+  var andPredicate = nodeWithExpressionConstructor("and_predicate");
+  var notPredicate = nodeWithExpressionConstructor("not_predicate");
+
+  var optional     = nodeWithExpressionConstructor("optional");
+  var zeroOrMore   = nodeWithExpressionConstructor("zero_or_more");
+  var oneOrMore    = nodeWithExpressionConstructor("one_or_more");
+
+  function action(expression, action) {
+    return {
+      type:       "action",
+      expression: expression,
+      action:     action
+    };
+  };
+
+  function ruleRef(name) {
+    return {
+      type: "rule_ref",
+      name: name
+    };
+  }
+
+  function literal(value) {
+    return {
+      type:  "literal",
+      value: value
+    };
+  }
+
+  function any() {
+    return { type: "any" };
+  }
+
+  function klass(characters) {
+    return {
+      type:       "class",
+      characters: characters
+    };
+  }
+
+  var literalAbcd  = literal("abcd");
+  var literalEfgh  = literal("efgh");
+  var literalIjkl  = literal("ijkl");
+
+  var optionalLiteral = optional(literalAbcd);
+
+  var notAbcd = notPredicate(literalAbcd);
+  var notEfgh = notPredicate(literalEfgh);
+  var notIjkl = notPredicate(literalIjkl);
+
+  var sequenceEmpty    = sequence([]);
+  var sequenceNots     = sequence([notAbcd, notEfgh, notIjkl]);
+  var sequenceLiterals = sequence([literalAbcd, literalEfgh, literalIjkl]);
+
+  var choiceLiterals = choice([literalAbcd, literalEfgh, literalIjkl]);
 
   function oneRuleGrammar(expression) {
-    return { start: new PEG.Grammar.Rule("start", null, expression) };
+    return { start: rule("start", null, expression) };
   }
 
-  var simpleGrammar = oneRuleGrammar(new Literal("abcd"));
+  var simpleGrammar = oneRuleGrammar(literal("abcd"));
 
   function identifierGrammar(identifier) {
-    return oneRuleGrammar(new PEG.Grammar.RuleRef(identifier));
+    return oneRuleGrammar(ruleRef(identifier));
   }
 
+  var literal_ = literal
   function literalGrammar(literal) {
-    return oneRuleGrammar(new PEG.Grammar.Literal(literal));
+    return oneRuleGrammar(literal_(literal));
   }
 
   function classGrammar(chars) {
-    return oneRuleGrammar(new PEG.Grammar.Class(chars));
+    return oneRuleGrammar(klass(chars));
   }
 
-  var anyGrammar = oneRuleGrammar(new Any());
+  var anyGrammar = oneRuleGrammar(any());
 
+  var action_ = action;
   function actionGrammar(action) {
-    return oneRuleGrammar(new PEG.Grammar.Action(new PEG.Grammar.Literal("a"), action));
+    return oneRuleGrammar(action_(literal("a"), action));
   }
 
   /* Canonical grammar is "a: \"abcd\";\nb: \"efgh\";\nc: \"ijkl\";". */
   test("parses grammar", function() {
-    grammarParserParses('a: "abcd"', { a: new Rule("a", null, literalAbcd) });
+    grammarParserParses('a: "abcd"', { a: rule("a", null, literalAbcd) });
     grammarParserParses(
       'a: "abcd"\nb: "efgh"\nc: "ijkl"',
       {
-        a: new Rule("a", null, literalAbcd),
-        b: new Rule("b", null, literalEfgh),
-        c: new Rule("c", null, literalIjkl)
+        a: rule("a", null, literalAbcd),
+        b: rule("b", null, literalEfgh),
+        c: rule("c", null, literalIjkl)
       }
     );
   });
@@ -72,17 +148,12 @@ with (PEG.Grammar) {
   test("parses rule", function() {
     grammarParserParses(
       'start: "abcd" / "efgh" / "ijkl"',
-      oneRuleGrammar(new Choice([literalAbcd, literalEfgh, literalIjkl]))
+      oneRuleGrammar(choiceLiterals)
     );
     grammarParserParses(
       'start "start rule": "abcd" / "efgh" / "ijkl"',
       {
-        start:
-          new Rule(
-            "start",
-            "start rule",
-            new Choice([literalAbcd, literalEfgh, literalIjkl])
-          )
+        start: rule("start", "start rule", choiceLiterals)
       }
     );
   });
@@ -91,7 +162,7 @@ with (PEG.Grammar) {
   test("parses expression", function() {
     grammarParserParses(
       'start: "abcd" / "efgh" / "ijkl"',
-      oneRuleGrammar(new Choice([literalAbcd, literalEfgh, literalIjkl]))
+      oneRuleGrammar(choiceLiterals)
     );
   });
 
@@ -103,7 +174,7 @@ with (PEG.Grammar) {
     );
     grammarParserParses(
       'start: "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl"',
-      oneRuleGrammar(new Choice([
+      oneRuleGrammar(choice([
         sequenceLiterals,
         sequenceLiterals,
         sequenceLiterals
@@ -115,15 +186,15 @@ with (PEG.Grammar) {
   test("parses sequence", function() {
     grammarParserParses(
       'start: { code }',
-      oneRuleGrammar(new Action(sequenceEmpty, " code "))
+      oneRuleGrammar(action(sequenceEmpty, " code "))
     );
     grammarParserParses(
       'start: !"abcd" { code }',
-      oneRuleGrammar(new Action(notAbcd, " code "))
+      oneRuleGrammar(action(notAbcd, " code "))
     );
     grammarParserParses(
       'start: !"abcd" !"efgh" !"ijkl" { code }',
-      oneRuleGrammar(new Action(sequenceNots, " code "))
+      oneRuleGrammar(action(sequenceNots, " code "))
     );
 
     grammarParserParses('start: ',        oneRuleGrammar(sequenceEmpty));
@@ -136,17 +207,17 @@ with (PEG.Grammar) {
 
   /* Canonical prefixed is "!\"abcd\"". */
   test("parses prefixed", function() {
-    grammarParserParses('start: &"abcd"?', oneRuleGrammar(new AndPredicate(optional)));
-    grammarParserParses('start: !"abcd"?', oneRuleGrammar(new NotPredicate(optional)));
-    grammarParserParses('start: "abcd"?',  oneRuleGrammar(optional));
+    grammarParserParses('start: &"abcd"?', oneRuleGrammar(andPredicate(optionalLiteral)));
+    grammarParserParses('start: !"abcd"?', oneRuleGrammar(notPredicate(optionalLiteral)));
+    grammarParserParses('start: "abcd"?',  oneRuleGrammar(optionalLiteral));
   });
 
   /* Canonical suffixed is "\"abcd\"?". */
   test("parses suffixed", function() {
-    grammarParserParses('start: "abcd"?', oneRuleGrammar(optional));
-    grammarParserParses('start: "abcd"*', oneRuleGrammar(new ZeroOrMore(literalAbcd)));
-    grammarParserParses('start: "abcd"+', oneRuleGrammar(new OneOrMore(literalAbcd)));
-    grammarParserParses('start: "abcd"', literalGrammar("abcd"));
+    grammarParserParses('start: "abcd"?', oneRuleGrammar(optionalLiteral));
+    grammarParserParses('start: "abcd"*', oneRuleGrammar(zeroOrMore(literalAbcd)));
+    grammarParserParses('start: "abcd"+', oneRuleGrammar(oneOrMore(literalAbcd)));
+    grammarParserParses('start: "abcd"',  literalGrammar("abcd"));
   });
 
   /* Canonical primary is "\"abcd\"". */
