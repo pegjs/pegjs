@@ -81,10 +81,10 @@ function any() {
   return { type: "any" };
 }
 
-function klass(characters) {
+function klass(chars) {
   return {
-    type:       "class",
-    characters: characters
+    type:  "class",
+    chars: chars
   };
 }
 
