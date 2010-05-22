@@ -81,10 +81,12 @@ function any() {
   return { type: "any" };
 }
 
-function klass(chars) {
+function klass(inverted, parts, rawText) {
   return {
-    type:  "class",
-    chars: chars
+    type:     "class",
+    inverted: inverted,
+    parts:    parts,
+    rawText:  rawText
   };
 }
 
@@ -119,8 +121,8 @@ function literalGrammar(literal) {
   return oneRuleGrammar(literal_(literal));
 }
 
-function classGrammar(chars) {
-  return oneRuleGrammar(klass(chars));
+function classGrammar(inverted, parts, rawText) {
+  return oneRuleGrammar(klass(inverted, parts, rawText));
 }
 
 var anyGrammar = oneRuleGrammar(any());
@@ -224,7 +226,7 @@ test("parses primary", function() {
   grammarParserParses('start: a',        identifierGrammar("a"));
   grammarParserParses('start: "abcd"',   literalGrammar("abcd"));
   grammarParserParses('start: .',        anyGrammar);
-  grammarParserParses('start: [a-d]',    classGrammar("a-d"));
+  grammarParserParses('start: [a-d]',    classGrammar(false, [["a", "d"]], "[a-d]"));
   grammarParserParses('start: ("abcd")', literalGrammar("abcd"));
 });
 
@@ -334,41 +336,44 @@ test("parses simpleSingleQuotedCharacter", function() {
 
 /* Canonical class is "[a-d]". */
 test("parses class", function() {
-  grammarParserParses("start: []",          classGrammar(""));
-  grammarParserParses("start: [a-d]",       classGrammar("a-d"));
-  grammarParserParses("start: [^a-d]",      classGrammar("^a-d"));
-  grammarParserParses("start: [a]",         classGrammar("a"));
-  grammarParserParses("start: [a-de-hi-l]", classGrammar("a-de-hi-l"));
+  grammarParserParses("start: []",     classGrammar(false, [],           "[]"));
+  grammarParserParses("start: [a-d]",  classGrammar(false, [["a", "d"]], "[a-d]"));
+  grammarParserParses("start: [^a-d]", classGrammar(true,  [["a", "d"]], "[^a-d]"));
+  grammarParserParses("start: [a]",    classGrammar(false, ["a"],        "[a]"));
+  grammarParserParses(
+    "start: [a-de-hi-l]",
+    classGrammar(false, [["a", "d"], ["e", "h"], ["i", "l"]], "[a-de-hi-l]")
+  );
 
-  grammarParserParses("start: [a-d]\n", classGrammar("a-d"));
+  grammarParserParses("start: [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d"]));
 });
 
 /* Canonical classCharacterRange is "a-d". */
 test("parses classCharacterRange", function() {
-  grammarParserParses("start: [a-d]", classGrammar("a-d"));
-  grammarParserParses("start: [a-a]", classGrammar("a-a"));
+  grammarParserParses("start: [a-d]", classGrammar(false, [["a", "d"]], "[a-d]"));
+  grammarParserParses("start: [a-a]", classGrammar(false, [["a", "a"]], "[a-d]"));
   grammarParserDoesNotParse("start: [b-a]");
 });
 
 /* Canonical classCharacter is "a". */
 test("parses classCharacter", function() {
-  grammarParserParses("start: [a]", classGrammar("a"));
+  grammarParserParses("start: [a]", classGrammar(false, ["a"], "[a]"));
 });
 
 /* Canonical bracketDelimitedCharacter is "a". */
 test("parses bracketDelimitedCharacter", function() {
-  grammarParserParses("start: [a]",       classGrammar("a"));
-  grammarParserParses("start: [\\n]",     classGrammar("\\n"));
-  grammarParserParses("start: [\\0]",     classGrammar("\\0"));
-  grammarParserParses("start: [\\x00]",   classGrammar("\\0"));
-  grammarParserParses("start: [\\u0120]", classGrammar("\u0120"));
-  grammarParserParses("start: [\\\n]",    classGrammar("\\n"));
+  grammarParserParses("start: [a]",       classGrammar(false, ["a"]));
+  grammarParserParses("start: [\\n]",     classGrammar(false, ["\n"]));
+  grammarParserParses("start: [\\0]",     classGrammar(false, ["\0"]));
+  grammarParserParses("start: [\\x00]",   classGrammar(false, ["\0"]));
+  grammarParserParses("start: [\\u0120]", classGrammar(false, ["\u0120"]));
+  grammarParserParses("start: [\\\n]",    classGrammar(false, ["\n"]));
 });
 
 /* Canonical simpleBracketDelimiedCharacter is "a". */
 test("parses simpleBracketDelimitedCharacter", function() {
-  grammarParserParses("start: [a]",  classGrammar("a"));
-  grammarParserParses("start: [[]",  classGrammar("["));
+  grammarParserParses("start: [a]",  classGrammar(false, ["a"]));
+  grammarParserParses("start: [[]",  classGrammar(false, ["["]));
   grammarParserDoesNotParse("start: []]");
   grammarParserDoesNotParse("start: [\\]");
   grammarParserDoesNotParse("start: [\n]");
