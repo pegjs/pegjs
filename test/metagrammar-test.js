@@ -345,13 +345,13 @@ test("parses class", function() {
     classGrammar(false, [["a", "d"], ["e", "h"], ["i", "l"]], "[a-de-hi-l]")
   );
 
-  grammarParserParses("start: [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d"]));
+  grammarParserParses("start: [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d]"));
 });
 
 /* Canonical classCharacterRange is "a-d". */
 test("parses classCharacterRange", function() {
   grammarParserParses("start: [a-d]", classGrammar(false, [["a", "d"]], "[a-d]"));
-  grammarParserParses("start: [a-a]", classGrammar(false, [["a", "a"]], "[a-d]"));
+  grammarParserParses("start: [a-a]", classGrammar(false, [["a", "a"]], "[a-a]"));
   grammarParserDoesNotParse("start: [b-a]");
 });
 
@@ -362,18 +362,18 @@ test("parses classCharacter", function() {
 
 /* Canonical bracketDelimitedCharacter is "a". */
 test("parses bracketDelimitedCharacter", function() {
-  grammarParserParses("start: [a]",       classGrammar(false, ["a"]));
-  grammarParserParses("start: [\\n]",     classGrammar(false, ["\n"]));
-  grammarParserParses("start: [\\0]",     classGrammar(false, ["\0"]));
-  grammarParserParses("start: [\\x00]",   classGrammar(false, ["\0"]));
-  grammarParserParses("start: [\\u0120]", classGrammar(false, ["\u0120"]));
-  grammarParserParses("start: [\\\n]",    classGrammar(false, ["\n"]));
+  grammarParserParses("start: [a]",       classGrammar(false, ["a"], "[a]"));
+  grammarParserParses("start: [\\n]",     classGrammar(false, ["\n"], "[\\n]"));
+  grammarParserParses("start: [\\0]",     classGrammar(false, ["\0"], "[\\0]"));
+  grammarParserParses("start: [\\x00]",   classGrammar(false, ["\0"], "[\\0]"));
+  grammarParserParses("start: [\\u0120]", classGrammar(false, ["\u0120"], "[\u0120]"));
+  grammarParserParses("start: [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
 });
 
 /* Canonical simpleBracketDelimiedCharacter is "a". */
 test("parses simpleBracketDelimitedCharacter", function() {
-  grammarParserParses("start: [a]",  classGrammar(false, ["a"]));
-  grammarParserParses("start: [[]",  classGrammar(false, ["["]));
+  grammarParserParses("start: [a]",  classGrammar(false, ["a"], "[a]"));
+  grammarParserParses("start: [[]",  classGrammar(false, ["["], "[[]"));
   grammarParserDoesNotParse("start: []]");
   grammarParserDoesNotParse("start: [\\]");
   grammarParserDoesNotParse("start: [\n]");
