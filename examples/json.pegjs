@@ -28,7 +28,7 @@ elements: value ("," _ value)* {
   for (var i = 0; i < $2.length; i++) {
     result.push($2[i][2]);
   }
-  return result;  
+  return result;
 }
 
 value
