@@ -2,34 +2,38 @@
 
 /* ===== Syntactical Elements ===== */
 
-start = _ object { return $2; }
+start
+  = _ object { return $2; }
 
 object
   = "{" _ "}" _         { return {}; }
   / "{" _ members "}" _ { return $3; }
 
-members = pair ("," _ pair)* {
-  var result = {};
-  result[$1[0]] = $1[1];
-  for (var i = 0; i < $2.length; i++) {
-    result[$2[i][2][0]] = $2[i][2][1];
-  }
-  return result;
-}
+members
+  = pair ("," _ pair)* {
+      var result = {};
+      result[$1[0]] = $1[1];
+      for (var i = 0; i < $2.length; i++) {
+        result[$2[i][2][0]] = $2[i][2][1];
+      }
+      return result;
+    }
 
-pair = string ":" _ value { return [$1, $4]; }
+pair
+  = string ":" _ value { return [$1, $4]; }
 
 array
   = "[" _ "]" _          { return []; }
   / "[" _ elements "]" _ { return $3; }
 
-elements = value ("," _ value)* {
-  var result = [$1];
-  for (var i = 0; i < $2.length; i++) {
-    result.push($2[i][2]);
-  }
-  return result;
-}
+elements
+  = value ("," _ value)* {
+      var result = [$1];
+      for (var i = 0; i < $2.length; i++) {
+        result.push($2[i][2]);
+      }
+      return result;
+    }
 
 value
   = string
@@ -47,7 +51,8 @@ string "string"
   = '"' '"' _       { return ""; }
   / '"' chars '"' _ { return $2; }
 
-chars = char+ { return $1.join(""); }
+chars
+  = char+ { return $1.join(""); }
 
 char
   // In the original JSON grammar: "any-Unicode-character-except-"-or-\-or-control-character"
@@ -76,13 +81,17 @@ int
   / "-" digit19 digits { return $1 + $2 + $3; }
   / "-" digit          { return $1 + $2;      }
 
-frac = "." digits { return $1 + $2; }
+frac
+  = "." digits { return $1 + $2; }
 
-exp = e digits { return $1 + $2; }
+exp
+  = e digits { return $1 + $2; }
 
-digits = digit+ { return $1.join(""); }
+digits
+  = digit+ { return $1.join(""); }
 
-e = [eE] [+-]? { return $1 + $2; }
+e
+  = [eE] [+-]? { return $1 + $2; }
 
 /*
  * The following rules are not present in the original JSON gramar, but they are
@@ -91,16 +100,21 @@ e = [eE] [+-]? { return $1 + $2; }
  * FIXME: Define them according to ECMA-262, 5th ed.
  */
 
-digit = [0-9]
+digit
+  = [0-9]
 
-digit19 = [1-9]
+digit19
+  = [1-9]
 
-hexDigit = [0-9a-fA-F]
+hexDigit
+  = [0-9a-fA-F]
 
 /* ===== Whitespace ===== */
 
-_ "whitespace" = whitespace*
+_ "whitespace"
+  = whitespace*
 
 // Whitespace is undefined in the original JSON grammar, so I assume a simple
 // conventional definition consistent with ECMA-262, 5th ed.
-whitespace = [ \t\n\r]
+whitespace
+  = [ \t\n\r]
