@@ -206,6 +206,7 @@ test("buildParser reports missing referenced rules", function() {
     'start = "a" / "b" / missing',
     'start = missing "a" "b"',
     'start = "a" "b" missing',
+    'start = label:missing',
     'start = &missing',
     'start = !missing',
     'start = missing?',
@@ -230,6 +231,7 @@ test("buildParser reports left recursion", function() {
     'start = start / "a" / "b"',
     'start = "a" / "b" / start',
     'start = start "a" "b"',
+    'start = label:start',
     'start = &start',
     'start = !start',
     'start = start?',
@@ -287,6 +289,12 @@ test("sequences", function() {
    */
   var posTestParser = PEG.buildParser('start = ("a" "b") / "a"');
   parses(posTestParser, "a", "a");
+});
+
+test("labels", function() {
+  var parser = PEG.buildParser('start = label:"a"');
+  parses(parser, "a", "a");
+  doesNotParse(parser, "b");
 });
 
 test("and predicate", function() {

@@ -43,6 +43,14 @@ function sequence(elements) {
   };
 }
 
+function labeled(label, expression) {
+  return {
+    type:       "labeled",
+    label:      label,
+    expression: expression
+  };
+}
+
 function nodeWithExpressionConstructor(type) {
   return function(expression) {
     return {
@@ -100,12 +108,12 @@ var literalIjkl  = literal("ijkl");
 
 var optionalLiteral = optional(literalAbcd);
 
-var notAbcd = notPredicate(literalAbcd);
-var notEfgh = notPredicate(literalEfgh);
-var notIjkl = notPredicate(literalIjkl);
+var labeledAbcd = labeled("a", literalAbcd);
+var labeledEfgh = labeled("e", literalEfgh);
+var labeledIjkl = labeled("i", literalIjkl);
 
 var sequenceEmpty    = sequence([]);
-var sequenceNots     = sequence([notAbcd, notEfgh, notIjkl]);
+var sequenceLabeleds = sequence([labeledAbcd, labeledEfgh, labeledIjkl]);
 var sequenceLiterals = sequence([literalAbcd, literalEfgh, literalIjkl]);
 
 var choiceLiterals = choice([literalAbcd, literalEfgh, literalIjkl]);
@@ -194,19 +202,31 @@ test("parses sequence", function() {
     oneRuleGrammar(action(sequenceEmpty, " code "))
   );
   grammarParserParses(
-    'start = !"abcd" { code }',
-    oneRuleGrammar(action(notAbcd, " code "))
+    'start = a:"abcd" { code }',
+    oneRuleGrammar(action(labeledAbcd, " code "))
   );
   grammarParserParses(
-    'start = !"abcd" !"efgh" !"ijkl" { code }',
-    oneRuleGrammar(action(sequenceNots, " code "))
+    'start = a:"abcd" e:"efgh" i:"ijkl" { code }',
+    oneRuleGrammar(action(sequenceLabeleds, " code "))
   );
 
-  grammarParserParses('start = ',        oneRuleGrammar(sequenceEmpty));
-  grammarParserParses('start = !"abcd"', oneRuleGrammar(notAbcd));
+  grammarParserParses('start = ',         oneRuleGrammar(sequenceEmpty));
+  grammarParserParses('start = a:"abcd"', oneRuleGrammar(labeledAbcd));
   grammarParserParses(
-    'start = !"abcd" !"efgh" !"ijkl"',
-    oneRuleGrammar(sequenceNots)
+    'start = a:"abcd" e:"efgh" i:"ijkl"',
+    oneRuleGrammar(sequenceLabeleds)
+  );
+});
+
+/* Canonical labeled is "label:\"abcd\"". */
+test("parses labeled", function() {
+  grammarParserParses(
+    'start = label:!"abcd"',
+    oneRuleGrammar(labeled("label", notPredicate(literalAbcd)))
+  );
+  grammarParserParses(
+    'start = !"abcd"',
+    oneRuleGrammar(notPredicate(literalAbcd))
   );
 });
 
