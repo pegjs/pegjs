@@ -3,34 +3,34 @@
 /* ===== Syntactical Elements ===== */
 
 start
-  = _ object { return $2; }
+  = _ object:object { return object; }
 
 object
-  = "{" _ "}" _         { return {}; }
-  / "{" _ members "}" _ { return $3; }
+  = "{" _ "}" _                 { return {};      }
+  / "{" _ members:members "}" _ { return members; }
 
 members
-  = pair ("," _ pair)* {
+  = head:pair tail:("," _ pair)* {
       var result = {};
-      result[$1[0]] = $1[1];
-      for (var i = 0; i < $2.length; i++) {
-        result[$2[i][2][0]] = $2[i][2][1];
+      result[head[0]] = head[1];
+      for (var i = 0; i < tail.length; i++) {
+        result[tail[i][2][0]] = tail[i][2][1];
       }
       return result;
     }
 
 pair
-  = string ":" _ value { return [$1, $4]; }
+  = name:string ":" _ value:value { return [name, value]; }
 
 array
-  = "[" _ "]" _          { return []; }
-  / "[" _ elements "]" _ { return $3; }
+  = "[" _ "]" _                   { return [];       }
+  / "[" _ elements:elements "]" _ { return elements; }
 
 elements
-  = value ("," _ value)* {
-      var result = [$1];
-      for (var i = 0; i < $2.length; i++) {
-        result.push($2[i][2]);
+  = head:value tail:("," _ value)* {
+      var result = [head];
+      for (var i = 0; i < tail.length; i++) {
+        result.push(tail[i][2]);
       }
       return result;
     }
@@ -48,11 +48,11 @@ value
 /* ===== Lexical Elements ===== */
 
 string "string"
-  = '"' '"' _       { return ""; }
-  / '"' chars '"' _ { return $2; }
+  = '"' '"' _             { return "";    }
+  / '"' chars:chars '"' _ { return chars; }
 
 chars
-  = char+ { return $1.join(""); }
+  = chars:char+ { return chars.join(""); }
 
 char
   // In the original JSON grammar: "any-Unicode-character-except-"-or-\-or-control-character"
@@ -65,33 +65,33 @@ char
   / "\\n"  { return "\n"; }
   / "\\r"  { return "\r"; }
   / "\\t"  { return "\t"; }
-  / "\\u" hexDigit hexDigit hexDigit hexDigit {
-      return String.fromCharCode(parseInt("0x" + $2 + $3 + $4 + $5));
+  / "\\u" h1:hexDigit h2:hexDigit h3:hexDigit h4:hexDigit {
+      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
     }
 
 number "number"
-  = int frac exp _ { return parseFloat($1 + $2 + $3); }
-  / int frac _     { return parseFloat($1 + $2);      }
-  / int exp _      { return parseFloat($1 + $2);      }
-  / int _          { return parseFloat($1);           }
+  = int:int frac:frac exp:exp _ { return parseFloat(int + frac + exp); }
+  / int:int frac:frac _         { return parseFloat(int + frac);       }
+  / int:int exp:exp _           { return parseFloat(int + exp);        }
+  / int:int _                   { return parseFloat(int);              }
 
 int
-  = digit19 digits     { return $1 + $2;      }
-  / digit
-  / "-" digit19 digits { return $1 + $2 + $3; }
-  / "-" digit          { return $1 + $2;      }
+  = digit19:digit19 digits:digits     { return digit19 + digits;       }
+  / digit:digit
+  / "-" digit19:digit19 digits:digits { return "-" + digit19 + digits; }
+  / "-" digit:digit                   { return "-" + digit;            }
 
 frac
-  = "." digits { return $1 + $2; }
+  = "." digits:digits { return "." + digits; }
 
 exp
-  = e digits { return $1 + $2; }
+  = e:e digits:digits { return e + digits; }
 
 digits
-  = digit+ { return $1.join(""); }
+  = digits:digit+ { return digits.join(""); }
 
 e
-  = [eE] [+-]? { return $1 + $2; }
+  = e:[eE] sign:[+-]? { return e + sign; }
 
 /*
  * The following rules are not present in the original JSON gramar, but they are

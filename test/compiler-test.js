@@ -342,33 +342,41 @@ test("one or more expressions", function() {
 });
 
 test("actions", function() {
-  var singleMatchParser = PEG.buildParser(
-    'start = "a" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }'
+  var singleElementUnlabeledParser = PEG.buildParser(
+    'start = "a" { return arguments.length; }'
   );
-  parses(singleMatchParser, "a", "A");
+  parses(singleElementUnlabeledParser, "a", 0);
 
-  var multiMatchParser = PEG.buildParser(
-    'start = "a" "b" "c" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }'
+  var singleElementLabeledParser = PEG.buildParser(
+    'start = a:"a" { return [arguments.length, a]; }'
   );
-  parses(multiMatchParser, "abc", "ABC");
+  parses(singleElementLabeledParser, "a", [1, "a"]);
 
-  var innerMatchParser = PEG.buildParser(
-    'start = "a" ("b" "c" "d" { return Array.prototype.slice.call(arguments).join("").toUpperCase(); }) "e"'
+  var multiElementUnlabeledParser = PEG.buildParser(
+    'start = "a" "b" "c" { return arguments.length; }'
   );
-  parses(innerMatchParser, "abcde", ["a", "BCD", "e"]);
+  parses(multiElementUnlabeledParser, "abc", 0);
+
+  var multiElementLabeledParser = PEG.buildParser(
+    'start = a:"a" "b" c:"c" { return [arguments.length, a, c]; }'
+  );
+  parses(multiElementLabeledParser, "abc", [2, "a", "c"]);
+
+  var innerElementsUnlabeledParser = PEG.buildParser(
+    'start = "a" ("b" "c" "d" { return arguments.length; }) "e"'
+  );
+  parses(innerElementsUnlabeledParser, "abcde", ["a", 0, "e"]);
+
+  var innerElementsLabeledParser = PEG.buildParser(
+    'start = "a" (b:"b" "c" d:"d" { return [arguments.length, b, d]; }) "e"'
+  );
+  parses(innerElementsLabeledParser, "abcde", ["a", [2, "b", "d"], "e"]);
 
   /* Test that the action is not called when its expression does not match. */
   var notAMatchParser = PEG.buildParser(
     'start = "a" { ok(false, "action got called when it should not be"); }'
   );
   doesNotParse(notAMatchParser, "b");
-
-  var variablesParser = PEG.buildParser([
-    'start = "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" {',
-    '          return [$1, $2, $3, $4, $5, $6, $7, $8, $9, $10].join("").toUpperCase();',
-    '        }'
-  ].join("\n"));
-  parses(variablesParser, "abcdefghij", "ABCDEFGHIJ");
 });
 
 test("rule references", function() {
@@ -580,9 +588,9 @@ test("error messages", function() {
 
 test("error positions", function() {
   var parser = PEG.buildParser([
-    'start = line (("\\r" / "\\n" / "\\u2028" / "\\u2029")+ line)*',
-    'line  = digit (" "+   digit)*',
-    'digit = [0-9]+ { return $1.join(""); }'
+    'start  = line (("\\r" / "\\n" / "\\u2028" / "\\u2029")+ line)*',
+    'line   = digits (" "+ digits)*',
+    'digits = digits:[0-9]+ { return digits.join(""); }'
   ].join("\n"));
 
   doesNotParseWithPos(parser, "a", 1, 1);
@@ -611,21 +619,21 @@ test("arithmetics", function() {
    * Expr    ← Sum
    */
   var parser = PEG.buildParser([
-    'Value   = [0-9]+       { return parseInt($1.join("")); }',
-    '        / "(" Expr ")" { return $2; }',
-    'Product = Value (("*" / "/") Value)* {',
-    '            var result = $1;',
-    '            for (var i = 0; i < $2.length; i++) {',
-    '              if ($2[i][0] == "*") { result *= $2[i][1]; }',
-    '              if ($2[i][0] == "/") { result /= $2[i][1]; }',
+    'Value   = digits:[0-9]+     { return parseInt(digits.join("")); }',
+    '        / "(" expr:Expr ")" { return expr; }',
+    'Product = head:Value tail:(("*" / "/") Value)* {',
+    '            var result = head;',
+    '            for (var i = 0; i < tail.length; i++) {',
+    '              if (tail[i][0] == "*") { result *= tail[i][1]; }',
+    '              if (tail[i][0] == "/") { result /= tail[i][1]; }',
     '            }',
     '            return result;',
     '          }',
-    'Sum     = Product (("+" / "-") Product)* {',
-    '            var result = $1;',
-    '            for (var i = 0; i < $2.length; i++) {',
-    '              if ($2[i][0] == "+") { result += $2[i][1]; }',
-    '              if ($2[i][0] == "-") { result -= $2[i][1]; }',
+    'Sum     = head:Product tail:(("+" / "-") Product)* {',
+    '            var result = head;',
+    '            for (var i = 0; i < tail.length; i++) {',
+    '              if (tail[i][0] == "+") { result += tail[i][1]; }',
+    '              if (tail[i][0] == "-") { result -= tail[i][1]; }',
     '            }',
     '            return result;',
     '          }',
@@ -667,9 +675,9 @@ test("non-context-free language", function() {
    * B ← b B? c
    */
   var parser = PEG.buildParser([
-    'S = &(A "c") "a"+ B !("a" / "b" / "c") { return $2.join("") + $3; }',
-    'A = "a" A? "b" { return $1 + $2 + $3; }',
-    'B = "b" B? "c" { return $1 + $2 + $3; }',
+    'S = &(A "c") a:"a"+ B:B !("a" / "b" / "c") { return a.join("") + B; }',
+    'A = a:"a" A:A? b:"b" { return a + A + b; }',
+    'B = b:"b" B:B? c:"c" { return b + B + c; }',
   ].join("\n"), "S");
 
   parses(parser, "abc", "abc");
@@ -693,9 +701,9 @@ test("nested comments", function() {
   var parser = PEG.buildParser([
     'Begin = "(*"',
     'End   = "*)"',
-    'C     = Begin N* End { return $1 + $2.join("") + $3; }',
+    'C     = begin:Begin ns:N* end:End { return begin + ns.join("") + end; }',
     'N     = C',
-    '      / (!Begin !End Z) { return $3; }',
+    '      / !Begin !End z:Z { return z; }',
     'Z     = .'
   ].join("\n"), "C");
 

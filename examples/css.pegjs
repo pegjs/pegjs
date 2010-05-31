@@ -15,106 +15,114 @@
 /* ===== Syntactical Elements ===== */
 
 start
-  = stylesheet comment* { return $1; }
+  = stylesheet:stylesheet comment* { return stylesheet; }
 
 stylesheet
-  = (CHARSET_SYM STRING ";")? (S / CDO / CDC)*
-    (import (CDO S* / CDC S*)*)*
-    ((ruleset / media / page) (CDO S* / CDC S*)*)* {
-      var imports = [];
-      for (var i = 0; i < $3.length; i++) {
-        imports.push($3[i][0]);
+  = charset:(CHARSET_SYM STRING ";")? (S / CDO / CDC)*
+    imports:(import (CDO S* / CDC S*)*)*
+    rules:((ruleset / media / page) (CDO S* / CDC S*)*)* {
+      var importsConverted = [];
+      for (var i = 0; i < imports.length; i++) {
+        importsConverted.push(imports[i][0]);
       }
 
-      var rules = [];
-      for (i = 0; i < $4.length; i++) {
-        rules.push($4[i][0]);
+      var rulesConverted = [];
+      for (i = 0; i < rules.length; i++) {
+        rulesConverted.push(rules[i][0]);
       }
 
       return {
         type:    "stylesheet",
-        charset: $1 !== "" ? $1[1] : null,
-        imports: imports,
-        rules:   rules
+        charset: charset !== "" ? charset[1] : null,
+        imports: importsConverted,
+        rules:   rulesConverted
       };
     }
 
 import
-  = IMPORT_SYM S* (STRING / URI) S* media_list? ";" S* {
+  = IMPORT_SYM S* href:(STRING / URI) S* media:media_list? ";" S* {
       return {
         type:  "import_rule",
-        href:  $3,
-        media: $5 !== "" ? $5 : []
+        href:  href,
+        media: media !== "" ? media : []
       };
     }
 
 media
-  = MEDIA_SYM S* media_list "{" S* ruleset* "}" S* {
+  = MEDIA_SYM S* media:media_list "{" S* rules:ruleset* "}" S* {
       return {
         type:  "media_rule",
-        media: $3,
-        rules: $6
+        media: media,
+        rules: rules
       };
     }
 
 media_list
-  = medium ("," S* medium)* {
-      var result = [$1];
-      for (var i = 0; i < $2.length; i++) {
-        result.push($2[i][2]);
+  = head:medium tail:("," S* medium)* {
+      var result = [head];
+      for (var i = 0; i < tail.length; i++) {
+        result.push(tail[i][2]);
       }
       return result;
     }
 
 medium
-  = IDENT S* { return $1; }
+  = ident:IDENT S* { return ident; }
 
 page
-  = PAGE_SYM S* pseudo_page? "{" S* declaration? (";" S* declaration?)* "}" S* {
-      var declarations = $6 !== "" ? [$6] : [];
-      for (var i = 0; i < $7.length; i++) {
-        if ($7[i][2] !== "") {
-          declarations.push($7[i][2]);
+  = PAGE_SYM S* qualifier:pseudo_page?
+    "{" S*
+    declarationsHead:declaration?
+    declarationsTail:(";" S* declaration?)*
+    "}" S* {
+      var declarations = declarationsHead !== "" ? [declarationsHead] : [];
+      for (var i = 0; i < declarationsTail.length; i++) {
+        if (declarationsTail[i][2] !== "") {
+          declarations.push(declarationsTail[i][2]);
         }
       }
 
       return {
         type:         "page_rule",
-        qualifier:    $3 !== "" ? $3 : null,
+        qualifier:    qualifier !== "" ? qualifier : null,
         declarations: declarations
       };
     }
 
 pseudo_page
-  = ":" IDENT S* { return $2; }
+  = ":" ident:IDENT S* { return ident; }
 
 operator
-  = "/" S* { return $1; }
-  / "," S* { return $1; }
+  = "/" S* { return "/"; }
+  / "," S* { return ","; }
 
 combinator
-  = "+" S* { return $1; }
-  / ">" S* { return $1; }
+  = "+" S* { return "+"; }
+  / ">" S* { return ">"; }
 
 unary_operator
   = "+"
   / "-"
 
 property
-  = IDENT S* { return $1; }
+  = ident:IDENT S* { return ident; }
 
 ruleset
-  = selector ("," S* selector)*
-    "{" S* declaration? (";" S* declaration?)* "}" S* {
-      var selectors = [$1];
-      for (var i = 0; i < $2.length; i++) {
-        selectors.push($2[i][2]);
+  = selectorsHead:selector
+    selectorsTail:("," S* selector)*
+    "{" S*
+    declarationsHead:declaration?
+    declarationsTail:(";" S* declaration?)*
+    "}" S* {
+      var selectors = [selectorsHead];
+      for (var i = 0; i < selectorsTail.length; i++) {
+        selectors.push(selectorsTail[i][2]);
       }
 
-      var declarations = $5 !== "" ? [$5] : [];
-      for (i = 0; i < $6.length; i++) {
-        if ($6[i][2] !== "") {
-          declarations.push($6[i][2]);
+      var declarations = declarationsHead !== "" ? [declarationsHead] : [];
+      for (i = 0; i < declarationsTail.length; i++) {
+        if (declarationsTail[i][2] !== "") {
+          declarations.push(declarationsTail[i][2]);
         }
       }
 
@@ -126,40 +134,40 @@ ruleset
     }
 
 selector
-  = simple_selector S* combinator selector {
+  = left:simple_selector S* combinator:combinator right:selector {
       return {
         type:       "selector",
-        combinator: $3,
-        left:       $1,
-        right:      $4
+        combinator: combinator,
+        left:       left,
+        right:      right
       };
     }
-  / simple_selector S* selector {
+  / left:simple_selector S* right:selector {
       return {
         type:       "selector",
         combinator: " ",
-        left:       $1,
-        right:      $3
+        left:       left,
+        right:      right
       };
     }
-  / simple_selector S* { return $1; }
+  / selector:simple_selector S* { return selector; }
 
 simple_selector
-  = element_name
-    (
-        HASH { return { type: "ID selector", id: $1.substr(1) }; }
+  = element:element_name
+    qualifiers:(
+        id:HASH { return { type: "ID selector", id: id.substr(1) }; }
       / class
       / attrib
       / pseudo
     )* {
       return {
         type:       "simple_selector",
-        element:    $1,
-        qualifiers: $2
+        element:    element,
+        qualifiers: qualifiers
       };
     }
-  / (
-        HASH { return { type: "ID selector", id: $1.substr(1) }; }
+  / qualifiers:(
+        id:HASH { return { type: "ID selector", id: id.substr(1) }; }
       / class
       / attrib
       / pseudo
@@ -167,34 +175,40 @@ simple_selector
       return {
         type:       "simple_selector",
         element:    "*",
-        qualifiers: $1
+        qualifiers: qualifiers
       };
     }
 
 class
-  = "." IDENT { return { type: "class_selector", "class": $2 }; }
+  = "." class:IDENT { return { type: "class_selector", "class": class }; }
 
 element_name
   = IDENT / '*'
 
 attrib
-  = "[" S* IDENT S* (('=' / INCLUDES / DASHMATCH) S* (IDENT / STRING) S*)? "]" {
+  = "[" S*
+    attribute:IDENT S*
+    operatorAndValue:(
+      ('=' / INCLUDES / DASHMATCH) S*
+      (IDENT / STRING) S*
+    )?
+    "]" {
       return {
         type:      "attribute_selector",
-        attribute: $3,
-        operator:  $5 !== "" ? $5[0] : null,
-        value:     $5 !== "" ? $5[2] : null
+        attribute: attribute,
+        operator:  operatorAndValue !== "" ? operatorAndValue[0] : null,
+        value:     operatorAndValue !== "" ? operatorAndValue[2] : null
       };
     }
 
 pseudo
   = ":"
-    (
-        FUNCTION S* (IDENT S*)? ")" {
+    value:(
+        name:FUNCTION S* params:(IDENT S*)? ")" {
           return {
             type:   "function",
-            name:   $1,
-            params: $3 !== "" ? [$3[0]] : []
+            name:   name,
+            params: params !== "" ? [params[0]] : []
           };
         }
       / IDENT
@@ -206,17 +220,17 @@ pseudo
        */
       return {
         type:  "pseudo_selector",
-        value: $2
+        value: value
       };
     }
 
 declaration
-  = property ":" S* expr prio? {
+  = property:property ":" S* expression:expr important:prio? {
       return {
         type:       "declaration",
-        property:   $1,
-        expression: $4,
-        important:  $5 !== "" ? true : false
+        property:   property,
+        expression: expression,
+        important:  important !== "" ? true : false
       };
     }
 
@@ -224,22 +238,22 @@ prio
   = IMPORTANT_SYM S*
 
 expr
-  = term (operator? term)* {
-      var result = $1;
-      for (var i = 0; i < $2.length; i++) {
+  = head:term tail:(operator? term)* {
+      var result = head;
+      for (var i = 0; i < tail.length; i++) {
         result = {
           type:     "expression",
-          operator: $2[i][0],
+          operator: tail[i][0],
           left:     result,
-          right:    $2[i][1]
+          right:    tail[i][1]
         };
       }
       return result;
     }
 
 term
-  = unary_operator?
-    (
+  = operator:unary_operator?
+    value:(
         EMS S*
       / EXS S*
       / LENGTH S*
@@ -248,24 +262,24 @@ term
       / FREQ S*
       / PERCENTAGE S*
       / NUMBER S*
-    )         { return { type: "value",  value: $1 + $2[0] }; }
-  / URI S*    { return { type: "uri",    value: $1         }; }
+    )               { return { type: "value",  value: operator + value[0] }; }
+  / value:URI S*    { return { type: "uri",    value: value               }; }
   / function
   / hexcolor
-  / STRING S* { return { type: "string", value: $1         }; }
-  / IDENT S*  { return { type: "ident",  value: $1         }; }
+  / value:STRING S* { return { type: "string", value: value               }; }
+  / value:IDENT S*  { return { type: "ident",  value: value               }; }
 
 function
-  = FUNCTION S* expr ")" S* {
+  = name:FUNCTION S* params:expr ")" S* {
       return {
         type:   "function",
-        name:   $1,
-        params: $3
+        name:   name,
+        params: params
       };
     }
 
 hexcolor
-  = HASH S* { return { type: "hexcolor", value: $1}; }
+  = value:HASH S* { return { type: "hexcolor", value: value}; }
 
 /* ===== Lexical Elements ===== */
 
@@ -278,13 +292,13 @@ nonascii
   = [\x80-\xFF]
 
 unicode
-  = "\\" h h? h? h? h? h? ("\r\n" / [ \t\r\n\f])? {
-      return String.fromCharCode(parseInt("0x" + $2 + $3 + $4 + $5 + $6 + $7));
+  = "\\" h1:h h2:h? h3:h? h4:h? h5:h? h6:h? ("\r\n" / [ \t\r\n\f])? {
+      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4 + h5 + h6));
     }
 
 escape
   = unicode
-  / "\\" [^\r\n\f0-9a-fA-F] { return $2; }
+  / "\\" char:[^\r\n\f0-9a-fA-F] { return char; }
 
 nmstart
   = [_a-zA-Z]
@@ -297,29 +311,33 @@ nmchar
   / escape
 
 integer
-  = [0-9]+ { return parseInt($1.join("")); }
+  = digits:[0-9]+ { return parseInt(digits.join("")); }
 
 float
-  = [0-9]* "." [0-9]+ { return parseFloat($1.join("") + $2 + $3.join("")); }
+  = before:[0-9]* "." after:[0-9]+ {
+      return parseFloat(before.join("") + "." + after.join(""));
+    }
 
 string1
-  = '"' ([^\n\r\f\\"] / "\\" nl { return $2 } / escape)* '"' {
-      return $2.join("");
+  = '"' chars:([^\n\r\f\\"] / "\\" nl:nl { return nl } / escape)* '"' {
+      return chars.join("");
     }
 
 string2
-  = "'" ([^\n\r\f\\'] / "\\" nl { return $2 } / escape)* "'" {
-      return $2.join("");
+  = "'" chars:([^\n\r\f\\'] / "\\" nl:nl { return nl } / escape)* "'" {
+      return chars.join("");
     }
 
 comment
   = "/*" [^*]* "*"+ ([^/*] [^*]* "*"+)* "/"
 
 ident
-  = "-"? nmstart nmchar* { return $1 + $2 + $3.join(""); }
+  = dash:"-"? nmstart:nmstart nmchars:nmchar* {
+      return dash + nmstart + nmchars.join("");
+    }
 
 name
-  = nmchar+ { return $1.join(""); }
+  = nmchars:nmchar+ { return nmchars.join(""); }
 
 num
   = float
@@ -330,7 +348,7 @@ string
   / string2
 
 url
-  = ([!#$%&*-~] / nonascii / escape)* { return $1.join(""); }
+  = chars:([!#$%&*-~] / nonascii / escape)* { return chars.join(""); }
 
 s
   = [ \t\r\n\f]+
@@ -368,91 +386,91 @@ G
   = [gG]
   / "\\" "0"? "0"? "0"? "0"? "47" ("\r\n" / [ \t\r\n\f])? { return "G"; }
   / "\\" "0"? "0"? "0"? "0"? "67" ("\r\n" / [ \t\r\n\f])? { return "g"; }
-  / "\\" [gG] { return $2; }
+  / "\\" char:[gG] { return char; }
 
 H
-  = [hH]
+  = h:[hH]
   / "\\" "0"? "0"? "0"? "0"? "48" ("\r\n" / [ \t\r\n\f])? { return "H"; }
   / "\\" "0"? "0"? "0"? "0"? "68" ("\r\n" / [ \t\r\n\f])? { return "h"; }
-  / "\\" [hH] { return $2; }
+  / "\\" char:[hH] { return char; }
 
 I
-  = [iI]
+  = i:[iI]
   / "\\" "0"? "0"? "0"? "0"? "49" ("\r\n" / [ \t\r\n\f])? { return "I"; }
   / "\\" "0"? "0"? "0"? "0"? "69" ("\r\n" / [ \t\r\n\f])? { return "i"; }
-  / "\\" [iI] { return $2; }
+  / "\\" char:[iI] { return char; }
 
 K
   = [kK]
   / "\\" "0"? "0"? "0"? "0"? "4" [bB] ("\r\n" / [ \t\r\n\f])? { return "K"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [bB] ("\r\n" / [ \t\r\n\f])? { return "k"; }
-  / "\\" [kK] { return $2; }
+  / "\\" char:[kK] { return char; }
 
 L
   = [lL]
   / "\\" "0"? "0"? "0"? "0"? "4" [cC] ("\r\n" / [ \t\r\n\f])? { return "L"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [cC] ("\r\n" / [ \t\r\n\f])? { return "l"; }
-  / "\\" [lL] { return $2; }
+  / "\\" char:[lL] { return char; }
 
 M
   = [mM]
   / "\\" "0"? "0"? "0"? "0"? "4" [dD] ("\r\n" / [ \t\r\n\f])? { return "M"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [dD] ("\r\n" / [ \t\r\n\f])? { return "m"; }
-  / "\\" [mM] { return $2; }
+  / "\\" char:[mM] { return char; }
 
 N
   = [nN]
   / "\\" "0"? "0"? "0"? "0"? "4" [eE] ("\r\n" / [ \t\r\n\f])? { return "N"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [eE] ("\r\n" / [ \t\r\n\f])? { return "n"; }
-  / "\\" [nN] { return $2; }
+  / "\\" char:[nN] { return char; }
 
 O
   = [oO]
   / "\\" "0"? "0"? "0"? "0"? "4" [fF] ("\r\n" / [ \t\r\n\f])? { return "O"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [fF] ("\r\n" / [ \t\r\n\f])? { return "o"; }
-  / "\\" [oO] { return $2; }
+  / "\\" char:[oO] { return char; }
 
 P
   = [pP]
   / "\\" "0"? "0"? "0"? "0"? "50" ("\r\n" / [ \t\r\n\f])? { return "P"; }
   / "\\" "0"? "0"? "0"? "0"? "70" ("\r\n" / [ \t\r\n\f])? { return "p"; }
-  / "\\" [pP] { return $2; }
+  / "\\" char:[pP] { return char; }
 
 R
   = [rR]
   / "\\" "0"? "0"? "0"? "0"? "52" ("\r\n" / [ \t\r\n\f])? { return "R"; }
   / "\\" "0"? "0"? "0"? "0"? "72" ("\r\n" / [ \t\r\n\f])? { return "r"; }
-  / "\\" [rR] { return $2; }
+  / "\\" char:[rR] { return char; }
 
 S_
   = [sS]
   / "\\" "0"? "0"? "0"? "0"? "53" ("\r\n" / [ \t\r\n\f])? { return "S"; }
   / "\\" "0"? "0"? "0"? "0"? "73" ("\r\n" / [ \t\r\n\f])? { return "s"; }
-  / "\\" [sS] { return $2; }
+  / "\\" char:[sS] { return char; }
 
 T
   = [tT]
   / "\\" "0"? "0"? "0"? "0"? "54" ("\r\n" / [ \t\r\n\f])? { return "T"; }
   / "\\" "0"? "0"? "0"? "0"? "74" ("\r\n" / [ \t\r\n\f])? { return "t"; }
-  / "\\" [tT] { return $2; }
+  / "\\" char:[tT] { return char; }
 
 U
   = [uU]
   / "\\" "0"? "0"? "0"? "0"? "55" ("\r\n" / [ \t\r\n\f])? { return "U"; }
   / "\\" "0"? "0"? "0"? "0"? "75" ("\r\n" / [ \t\r\n\f])? { return "u"; }
-  / "\\" [uU] { return $2; }
+  / "\\" char:[uU] { return char; }
 
 X
   = [xX]
   / "\\" "0"? "0"? "0"? "0"? "58" ("\r\n" / [ \t\r\n\f])? { return "X"; }
   / "\\" "0"? "0"? "0"? "0"? "78" ("\r\n" / [ \t\r\n\f])? { return "x"; }
-  / "\\" [xX] { return $2; }
+  / "\\" char:[xX] { return char; }
 
 Z
   = [zZ]
   / "\\" "0"? "0"? "0"? "0"? "5" [aA] ("\r\n" / [ \t\r\n\f])? { return "Z"; }
   / "\\" "0"? "0"? "0"? "0"? "7" [aA] ("\r\n" / [ \t\r\n\f])? { return "z"; }
-  / "\\" [zZ] { return $2; }
+  / "\\" char:[zZ] { return char; }
 
 /* Tokens */
 
@@ -472,13 +490,13 @@ DASHMATCH "|="
   = comment* "|="
 
 STRING "string"
-  = comment* string { return $2; }
+  = comment* string:string { return string; }
 
 IDENT "identifier"
-  = comment* ident { return $2; }
+  = comment* ident:ident { return ident; }
 
 HASH "hash"
-  = comment* "#" name { return $2 + $3; }
+  = comment* "#" name:name { return "#" + name; }
 
 IMPORT_SYM "@import"
   = comment* "@" I M P O R T
@@ -497,36 +515,40 @@ IMPORTANT_SYM "!important"
   = comment* "!" (s / comment)* I M P O R T A N T { return "!important"; }
 
 EMS "length"
-  = comment* num E M { return $2 + $3 + $4; }
+  = comment* num:num e:E m:M { return num + e + m; }
 
 EXS "length"
-  = comment* num E X { return $2 + $3 + $4; }
+  = comment* num:num e:E x:X { return num + e + x; }
 
 LENGTH "length"
-  = comment* num (P X / C M / M M / I N / P T / P C) {
-      return $2 + $3.join("");
+  = comment* num:num unit:(P X / C M / M M / I N / P T / P C) {
+      return num + unit.join("");
     }
 
 ANGLE "angle"
-  = comment* num (D E G / R A D / G R A D) { return $2 + $3.join(""); }
+  = comment* num:num unit:(D E G / R A D / G R A D) {
+      return num + unit.join("");
+    }
 
 TIME "time"
-  = comment* num (M S_ { return $1 + $2; } / S_) { return $2 + $3; }
+  = comment* num:num unit:(m:M s:S_ { return m + s; } / S_) {
+      return num + unit;
+    }
 
 FREQ "frequency"
-  = comment* num (H Z / K H Z) { return $2 + $3.join(""); }
+  = comment* num:num unit:(H Z / K H Z) { return num + unit.join(""); }
 
 DIMENSION "dimension"
-  = comment* num ident { return $2 + $3; }
+  = comment* num:num unit:ident { return num + unit; }
 
 PERCENTAGE "percentage"
-  = comment* num "%" { return $2 + $3; }
+  = comment* num:num "%" { return num + "%"; }
 
 NUMBER "number"
-  = comment* num { return $2; }
+  = comment* num:num { return num; }
 
 URI "uri"
-  = comment* U R L "(" w (string / url) w ")" { return $7; }
+  = comment* U R L "(" w value:(string / url) w ")" { return value; }
 
 FUNCTION "function"
-  = comment* ident "(" { return $2; }
+  = comment* name:ident "(" { return name; }

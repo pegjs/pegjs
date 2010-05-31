@@ -7,16 +7,16 @@ start
   = additive
 
 additive
-  = multiplicative "+" additive { return $1 + $3; }
+  = left:multiplicative "+" right:additive { return left + right; }
   / multiplicative
 
 multiplicative
-  = primary "*" multiplicative { return $1 * $3; }
+  = left:primary "*" right:multiplicative { return left * right; }
   / primary
 
 primary
   = integer
-  / "(" additive ")" { return $2; }
+  / "(" additive:additive ")" { return additive; }
 
 integer "integer"
-  = [0-9]+ { return parseInt($1.join(""), 10); }
+  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
