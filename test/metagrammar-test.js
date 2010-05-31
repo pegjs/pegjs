@@ -12,6 +12,10 @@ global.grammarParserDoesNotParse = function(input) {
   global.doesNotParse(PEG.grammarParser, input);
 }
 
+global.grammarParserDoesNotParseWithMessage = function(input, message) {
+  global.doesNotParseWithMessage(PEG.grammarParser, input, message);
+}
+
 /* ===== Grammar Parser ===== */
 
 module("Grammar Parser");
@@ -352,7 +356,10 @@ test("parses class", function() {
 test("parses classCharacterRange", function() {
   grammarParserParses("start: [a-d]", classGrammar(false, [["a", "d"]], "[a-d]"));
   grammarParserParses("start: [a-a]", classGrammar(false, [["a", "a"]], "[a-a]"));
-  grammarParserDoesNotParse("start: [b-a]");
+  grammarParserDoesNotParseWithMessage(
+    "start: [b-a]",
+    "Invalid character range: b-a."
+  );
 });
 
 /* Canonical classCharacter is "a". */
