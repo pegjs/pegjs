@@ -152,8 +152,8 @@ FutureReservedWord:
 Literal
   : NullLiteral
   / BooleanLiteral
-  / NumericLiteral { return { type: "NumericLiteral", value: $1    }; }
-  / StringLiteral  { return { type: "StringLiteral",  value: $1[1] }; }
+  / NumericLiteral { return { type: "NumericLiteral", value: $1 }; }
+  / StringLiteral  { return { type: "StringLiteral",  value: $1 }; }
   / RegularExpressionLiteral
 
 NullLiteral: NullToken { return { type: "NullLiteral" }; }
