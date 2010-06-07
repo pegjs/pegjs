@@ -240,7 +240,7 @@ test("buildParser reports left recursion", function() {
     'start = start { }',
 
     /* Indirect */
-    'start = stop\nstop = start'
+    'start = stop; stop = start'
   ];
 
   PEG.ArrayUtils.each(grammars, function(grammar) {

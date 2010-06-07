@@ -144,11 +144,11 @@ function actionGrammar(action) {
   return oneRuleGrammar(action_(literal("a"), action));
 }
 
-/* Canonical grammar is "a: \"abcd\";\nb: \"efgh\";\nc: \"ijkl\";". */
+/* Canonical grammar is "a: \"abcd\"; b: \"efgh\"; c: \"ijkl\";". */
 test("parses grammar", function() {
   grammarParserParses('a = "abcd"', { a: rule("a", null, literalAbcd) });
   grammarParserParses(
-    'a = "abcd"\nb = "efgh"\nc = "ijkl"',
+    'a = "abcd"; b = "efgh"; c = "ijkl"',
     {
       a: rule("a", null, literalAbcd),
       b: rule("b", null, literalEfgh),
@@ -168,6 +168,10 @@ test("parses rule", function() {
     {
       start: rule("start", "start rule", choiceLiterals)
     }
+  );
+  grammarParserParses(
+    'start = "abcd" / "efgh" / "ijkl";',
+    oneRuleGrammar(choiceLiterals)
   );
 });
 
