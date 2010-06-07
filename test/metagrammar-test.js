@@ -67,11 +67,11 @@ var optional     = nodeWithExpressionConstructor("optional");
 var zeroOrMore   = nodeWithExpressionConstructor("zero_or_more");
 var oneOrMore    = nodeWithExpressionConstructor("one_or_more");
 
-function action(expression, action) {
+function action(expression, code) {
   return {
     type:       "action",
     expression: expression,
-    action:     action
+    code:       code
   };
 };
 
