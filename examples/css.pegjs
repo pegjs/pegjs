@@ -180,7 +180,7 @@ simple_selector
     }
 
 class
-  = "." class:IDENT { return { type: "class_selector", "class": class }; }
+  = "." class_:IDENT { return { type: "class_selector", "class": class_ }; }
 
 element_name
   = IDENT / '*'
@@ -298,7 +298,7 @@ unicode
 
 escape
   = unicode
-  / "\\" char:[^\r\n\f0-9a-fA-F] { return char; }
+  / "\\" char_:[^\r\n\f0-9a-fA-F] { return char_; }
 
 nmstart
   = [_a-zA-Z]
@@ -386,91 +386,91 @@ G
   = [gG]
   / "\\" "0"? "0"? "0"? "0"? "47" ("\r\n" / [ \t\r\n\f])? { return "G"; }
   / "\\" "0"? "0"? "0"? "0"? "67" ("\r\n" / [ \t\r\n\f])? { return "g"; }
-  / "\\" char:[gG] { return char; }
+  / "\\" char_:[gG] { return char_; }
 
 H
   = h:[hH]
   / "\\" "0"? "0"? "0"? "0"? "48" ("\r\n" / [ \t\r\n\f])? { return "H"; }
   / "\\" "0"? "0"? "0"? "0"? "68" ("\r\n" / [ \t\r\n\f])? { return "h"; }
-  / "\\" char:[hH] { return char; }
+  / "\\" char_:[hH] { return char_; }
 
 I
   = i:[iI]
   / "\\" "0"? "0"? "0"? "0"? "49" ("\r\n" / [ \t\r\n\f])? { return "I"; }
   / "\\" "0"? "0"? "0"? "0"? "69" ("\r\n" / [ \t\r\n\f])? { return "i"; }
-  / "\\" char:[iI] { return char; }
+  / "\\" char_:[iI] { return char_; }
 
 K
   = [kK]
   / "\\" "0"? "0"? "0"? "0"? "4" [bB] ("\r\n" / [ \t\r\n\f])? { return "K"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [bB] ("\r\n" / [ \t\r\n\f])? { return "k"; }
-  / "\\" char:[kK] { return char; }
+  / "\\" char_:[kK] { return char_; }
 
 L
   = [lL]
   / "\\" "0"? "0"? "0"? "0"? "4" [cC] ("\r\n" / [ \t\r\n\f])? { return "L"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [cC] ("\r\n" / [ \t\r\n\f])? { return "l"; }
-  / "\\" char:[lL] { return char; }
+  / "\\" char_:[lL] { return char_; }
 
 M
   = [mM]
   / "\\" "0"? "0"? "0"? "0"? "4" [dD] ("\r\n" / [ \t\r\n\f])? { return "M"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [dD] ("\r\n" / [ \t\r\n\f])? { return "m"; }
-  / "\\" char:[mM] { return char; }
+  / "\\" char_:[mM] { return char_; }
 
 N
   = [nN]
   / "\\" "0"? "0"? "0"? "0"? "4" [eE] ("\r\n" / [ \t\r\n\f])? { return "N"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [eE] ("\r\n" / [ \t\r\n\f])? { return "n"; }
-  / "\\" char:[nN] { return char; }
+  / "\\" char_:[nN] { return char_; }
 
 O
   = [oO]
   / "\\" "0"? "0"? "0"? "0"? "4" [fF] ("\r\n" / [ \t\r\n\f])? { return "O"; }
   / "\\" "0"? "0"? "0"? "0"? "6" [fF] ("\r\n" / [ \t\r\n\f])? { return "o"; }
-  / "\\" char:[oO] { return char; }
+  / "\\" char_:[oO] { return char_; }
 
 P
   = [pP]
   / "\\" "0"? "0"? "0"? "0"? "50" ("\r\n" / [ \t\r\n\f])? { return "P"; }
   / "\\" "0"? "0"? "0"? "0"? "70" ("\r\n" / [ \t\r\n\f])? { return "p"; }
-  / "\\" char:[pP] { return char; }
+  / "\\" char_:[pP] { return char_; }
 
 R
   = [rR]
   / "\\" "0"? "0"? "0"? "0"? "52" ("\r\n" / [ \t\r\n\f])? { return "R"; }
   / "\\" "0"? "0"? "0"? "0"? "72" ("\r\n" / [ \t\r\n\f])? { return "r"; }
-  / "\\" char:[rR] { return char; }
+  / "\\" char_:[rR] { return char_; }
 
 S_
   = [sS]
   / "\\" "0"? "0"? "0"? "0"? "53" ("\r\n" / [ \t\r\n\f])? { return "S"; }
   / "\\" "0"? "0"? "0"? "0"? "73" ("\r\n" / [ \t\r\n\f])? { return "s"; }
-  / "\\" char:[sS] { return char; }
+  / "\\" char_:[sS] { return char_; }
 
 T
   = [tT]
   / "\\" "0"? "0"? "0"? "0"? "54" ("\r\n" / [ \t\r\n\f])? { return "T"; }
   / "\\" "0"? "0"? "0"? "0"? "74" ("\r\n" / [ \t\r\n\f])? { return "t"; }
-  / "\\" char:[tT] { return char; }
+  / "\\" char_:[tT] { return char_; }
 
 U
   = [uU]
   / "\\" "0"? "0"? "0"? "0"? "55" ("\r\n" / [ \t\r\n\f])? { return "U"; }
   / "\\" "0"? "0"? "0"? "0"? "75" ("\r\n" / [ \t\r\n\f])? { return "u"; }
-  / "\\" char:[uU] { return char; }
+  / "\\" char_:[uU] { return char_; }
 
 X
   = [xX]
   / "\\" "0"? "0"? "0"? "0"? "58" ("\r\n" / [ \t\r\n\f])? { return "X"; }
   / "\\" "0"? "0"? "0"? "0"? "78" ("\r\n" / [ \t\r\n\f])? { return "x"; }
-  / "\\" char:[xX] { return char; }
+  / "\\" char_:[xX] { return char_; }
 
 Z
   = [zZ]
   / "\\" "0"? "0"? "0"? "0"? "5" [aA] ("\r\n" / [ \t\r\n\f])? { return "Z"; }
   / "\\" "0"? "0"? "0"? "0"? "7" [aA] ("\r\n" / [ \t\r\n\f])? { return "z"; }
-  / "\\" char:[zZ] { return char; }
+  / "\\" char_:[zZ] { return char_; }
 
 /* Tokens */
 

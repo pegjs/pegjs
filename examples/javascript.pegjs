@@ -257,13 +257,13 @@ SingleStringCharacters
   = chars:SingleStringCharacter+ { return chars.join(""); }
 
 DoubleStringCharacter
-  = !('"' / "\\" / LineTerminator) char:SourceCharacter { return char;     }
-  / "\\" sequence:EscapeSequence                        { return sequence; }
+  = !('"' / "\\" / LineTerminator) char_:SourceCharacter { return char_;     }
+  / "\\" sequence:EscapeSequence                         { return sequence;  }
   / LineContinuation
 
 SingleStringCharacter
-  = !("'" / "\\" / LineTerminator) char:SourceCharacter { return char;     }
-  / "\\" sequence:EscapeSequence                        { return sequence; }
+  = !("'" / "\\" / LineTerminator) char_:SourceCharacter { return char_;     }
+  / "\\" sequence:EscapeSequence                         { return sequence;  }
   / LineContinuation
 
 LineContinuation
@@ -280,8 +280,8 @@ CharacterEscapeSequence
   / NonEscapeCharacter
 
 SingleEscapeCharacter
-  = char:['"\\bfnrtv] {
-      return char
+  = char_:['"\\bfnrtv] {
+      return char_
         .replace("b", "\b")
         .replace("f", "\f")
         .replace("n", "\n")
@@ -291,7 +291,7 @@ SingleEscapeCharacter
     }
 
 NonEscapeCharacter
-  = (!EscapeCharacter / LineTerminator) char:SourceCharacter { return char; }
+  = (!EscapeCharacter / LineTerminator) char_:SourceCharacter { return char_; }
 
 EscapeCharacter
   = SingleEscapeCharacter
@@ -319,20 +319,20 @@ RegularExpressionLiteral "regular expression"
     }
 
 RegularExpressionBody
-  = char:RegularExpressionFirstChar chars:RegularExpressionChars {
-      return char + chars;
+  = char_:RegularExpressionFirstChar chars:RegularExpressionChars {
+      return char_ + chars;
     }
 
 RegularExpressionChars
   = chars:RegularExpressionChar* { return chars.join(""); }
 
 RegularExpressionFirstChar
-  = ![*\\/[] char:RegularExpressionNonTerminator { return char; }
+  = ![*\\/[] char_:RegularExpressionNonTerminator { return char_; }
   / RegularExpressionBackslashSequence
   / RegularExpressionClass
 
 RegularExpressionChar
-  = ![\\/[] char:RegularExpressionNonTerminator { return char; }
+  = ![\\/[] char_:RegularExpressionNonTerminator { return char_; }
   / RegularExpressionBackslashSequence
   / RegularExpressionClass
 
@@ -341,10 +341,10 @@ RegularExpressionChar
  * "RegularExpressionNonTerminator".
  */
 RegularExpressionBackslashSequence
-  = "\\" char:RegularExpressionNonTerminator { return "\\" + char; }
+  = "\\" char_:RegularExpressionNonTerminator { return "\\" + char_; }
 
 RegularExpressionNonTerminator
-  = !LineTerminator char:SourceCharacter { return char; }
+  = !LineTerminator char_:SourceCharacter { return char_; }
 
 RegularExpressionClass
   = "[" chars:RegularExpressionClassChars "]" { return "[" + chars + "]"; }
@@ -353,7 +353,7 @@ RegularExpressionClassChars
   = chars:RegularExpressionClassChar* { return chars.join(""); }
 
 RegularExpressionClassChar
-  = ![\]\\] char:RegularExpressionNonTerminator { return char; }
+  = ![\]\\] char_:RegularExpressionNonTerminator { return char_; }
   / RegularExpressionBackslashSequence
 
 RegularExpressionFlags

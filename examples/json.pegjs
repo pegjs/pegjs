@@ -70,10 +70,10 @@ char
     }
 
 number "number"
-  = int:int frac:frac exp:exp _ { return parseFloat(int + frac + exp); }
-  / int:int frac:frac _         { return parseFloat(int + frac);       }
-  / int:int exp:exp _           { return parseFloat(int + exp);        }
-  / int:int _                   { return parseFloat(int);              }
+  = int_:int frac:frac exp:exp _ { return parseFloat(int_ + frac + exp); }
+  / int_:int frac:frac _         { return parseFloat(int_ + frac);       }
+  / int_:int exp:exp _           { return parseFloat(int_ + exp);        }
+  / int_:int _                   { return parseFloat(int_);              }
 
 int
   = digit19:digit19 digits:digits     { return digit19 + digits;       }
