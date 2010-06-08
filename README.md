@@ -63,4 +63,11 @@ For detailed description of the grammar see the [online documentation](http://pe
 Compatibility
 -------------
 
-Both the parser generator and generated parsers should run well in IE6+ and recent versions of Firefox, Chrome, Safari and Opera, as well as Rhino JavaScript engine.
+Both the parser generator and generated parsers should run well in the following environments:
+
+  * IE6+
+  * Firefox
+  * Chrome
+  * Safari
+  * Opera
+  * Rhino
