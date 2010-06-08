@@ -205,14 +205,6 @@ test("buildParser reports syntax errors in the grammar", function() {
   );
 });
 
-test("buildParser reports missing start rule", function() {
-  throws(
-    function() { PEG.buildParser('notStart = "abcd"'); },
-    PEG.GrammarError,
-    { message: "Missing \"start\" rule." }
-  );
-});
-
 test("buildParser reports missing referenced rules", function() {
   var grammars = [
     'start = missing',
@@ -645,16 +637,7 @@ test("arithmetics", function() {
    * Expr    ← Sum
    */
   var parser = PEG.buildParser([
-    'Value   = digits:[0-9]+     { return parseInt(digits.join("")); }',
-    '        / "(" expr:Expr ")" { return expr; }',
-    'Product = head:Value tail:(("*" / "/") Value)* {',
-    '            var result = head;',
-    '            for (var i = 0; i < tail.length; i++) {',
-    '              if (tail[i][0] == "*") { result *= tail[i][1]; }',
-    '              if (tail[i][0] == "/") { result /= tail[i][1]; }',
-    '            }',
-    '            return result;',
-    '          }',
+    'Expr    = Sum',
     'Sum     = head:Product tail:(("+" / "-") Product)* {',
     '            var result = head;',
     '            for (var i = 0; i < tail.length; i++) {',
@@ -663,8 +646,17 @@ test("arithmetics", function() {
     '            }',
     '            return result;',
     '          }',
-    'Expr    = Sum'
-  ].join("\n"), "Expr");
+    'Product = head:Value tail:(("*" / "/") Value)* {',
+    '            var result = head;',
+    '            for (var i = 0; i < tail.length; i++) {',
+    '              if (tail[i][0] == "*") { result *= tail[i][1]; }',
+    '              if (tail[i][0] == "/") { result /= tail[i][1]; }',
+    '            }',
+    '            return result;',
+    '          }',
+    'Value   = digits:[0-9]+     { return parseInt(digits.join("")); }',
+    '        / "(" expr:Expr ")" { return expr; }'
+  ].join("\n"));
 
   /* Test "value" rule. */
   parses(parser, "0", 0);
@@ -704,7 +696,7 @@ test("non-context-free language", function() {
     'S = &(A "c") a:"a"+ B:B !("a" / "b" / "c") { return a.join("") + B; }',
     'A = a:"a" A:A? b:"b" { return a + A + b; }',
     'B = b:"b" B:B? c:"c" { return b + B + c; }',
-  ].join("\n"), "S");
+  ].join("\n"));
 
   parses(parser, "abc", "abc");
   parses(parser, "aaabbbccc", "aaabbbccc");
@@ -725,13 +717,13 @@ test("nested comments", function() {
    * Z ← any single character
    */
   var parser = PEG.buildParser([
-    'Begin = "(*"',
-    'End   = "*)"',
     'C     = begin:Begin ns:N* end:End { return begin + ns.join("") + end; }',
     'N     = C',
     '      / !Begin !End z:Z { return z; }',
-    'Z     = .'
-  ].join("\n"), "C");
+    'Z     = .',
+    'Begin = "(*"',
+    'End   = "*)"'
+  ].join("\n"));
 
   parses(parser, "(**)", "(**)");
   parses(parser, "(*abc*)", "(*abc*)");

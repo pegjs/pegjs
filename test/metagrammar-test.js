@@ -128,7 +128,8 @@ var choiceLiterals = choice([literalAbcd, literalEfgh, literalIjkl]);
 function oneRuleGrammar(expression) {
   return {
     initializer: null,
-    rules:       { start: rule("start", null, expression) }
+    rules:       { start: rule("start", null, expression) },
+    startRule:   "start"
   };
 }
 
@@ -158,7 +159,8 @@ var initializerGrammar = {
   initializer: initializer(" code "),
   rules: {
     a: rule("a", null, literalAbcd),
-  }
+  },
+  startRule:   "a"
 };
 
 /* Canonical grammar is "a: \"abcd\"; b: \"efgh\"; c: \"ijkl\";". */
@@ -167,7 +169,8 @@ test("parses grammar", function() {
     'a = "abcd"',
     {
       initializer: null,
-      rules:       { a: rule("a", null, literalAbcd) }
+      rules:       { a: rule("a", null, literalAbcd) },
+      startRule:   "a"
     }
   );
   grammarParserParses('{ code }; a = "abcd"', initializerGrammar);
@@ -179,7 +182,8 @@ test("parses grammar", function() {
         a: rule("a", null, literalAbcd),
         b: rule("b", null, literalEfgh),
         c: rule("c", null, literalIjkl)
-      }
+      },
+      startRule:   "a"
     }
   );
 });
@@ -200,7 +204,8 @@ test("parses rule", function() {
     'start "start rule" = "abcd" / "efgh" / "ijkl"',
     {
       initializer: null,
-      rules:       { start: rule("start", "start rule", choiceLiterals) }
+      rules:       { start: rule("start", "start rule", choiceLiterals) },
+      startRule:   "start"
     }
   );
   grammarParserParses(

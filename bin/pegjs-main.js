@@ -61,7 +61,6 @@ function printHelp() {
   print("omitted, standard input and output are used.");
   print("");
   print("Options:");
-  print("  -s, --start-rule    specify grammar start rule (default: \"start\")");
   print("  -v, --version       print version information and exit");
   print("  -h, --help          print help and exit");
 }
@@ -83,8 +82,6 @@ function abort(message) {
   exitFailure();
 }
 
-var startRule = "start";
-
 /*
  * The trimmed first argument is the script path -- see the beginning of this
  * file.
@@ -93,15 +90,6 @@ var args = Array.prototype.slice.call(arguments, 1);
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
-    case "-s":
-    case "--start-rule":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -s/--start-rule option.");
-      }
-      startRule = args[0];
-      break;
-
     case "-v":
     case "--version":
       printVersion();
@@ -149,7 +137,7 @@ switch (args.length) {
 
 var input = readFile(inputFile);
 try {
-  var parser = PEG.buildParser(input, startRule);
+  var parser = PEG.buildParser(input);
 } catch (e) {
   if (e.line !== undefined && e.column !== undefined) {
     abort(e.line + ":" + e.column + ": " + e.message);
