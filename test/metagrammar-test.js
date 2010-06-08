@@ -20,6 +20,13 @@ global.grammarParserDoesNotParseWithMessage = function(input, message) {
 
 module("Grammar Parser");
 
+function initializer(code) {
+  return {
+    type: "initializer",
+    code: code
+  };
+}
+
 function rule(name, displayName, expression) {
   return {
     type:        "rule",
@@ -119,7 +126,10 @@ var sequenceLiterals = sequence([literalAbcd, literalEfgh, literalIjkl]);
 var choiceLiterals = choice([literalAbcd, literalEfgh, literalIjkl]);
 
 function oneRuleGrammar(expression) {
-  return { start: rule("start", null, expression) };
+  return {
+    initializer: null,
+    rules:       { start: rule("start", null, expression) }
+  };
 }
 
 var simpleGrammar = oneRuleGrammar(literal("abcd"));
@@ -144,17 +154,40 @@ function actionGrammar(action) {
   return oneRuleGrammar(action_(literal("a"), action));
 }
 
+var initializerGrammar = {
+  initializer: initializer(" code "),
+  rules: {
+    a: rule("a", null, literalAbcd),
+  }
+};
+
 /* Canonical grammar is "a: \"abcd\"; b: \"efgh\"; c: \"ijkl\";". */
 test("parses grammar", function() {
-  grammarParserParses('a = "abcd"', { a: rule("a", null, literalAbcd) });
+  grammarParserParses(
+    'a = "abcd"',
+    {
+      initializer: null,
+      rules:       { a: rule("a", null, literalAbcd) }
+    }
+  );
+  grammarParserParses('{ code }; a = "abcd"', initializerGrammar);
   grammarParserParses(
     'a = "abcd"; b = "efgh"; c = "ijkl"',
     {
-      a: rule("a", null, literalAbcd),
-      b: rule("b", null, literalEfgh),
-      c: rule("c", null, literalIjkl)
+      initializer: null,
+      rules: {
+        a: rule("a", null, literalAbcd),
+        b: rule("b", null, literalEfgh),
+        c: rule("c", null, literalIjkl)
+      }
     }
   );
+});
+
+/* Canonical initializer is "{ code }". */
+test("parses initializer", function() {
+  grammarParserParses('{ code }a = "abcd"', initializerGrammar);
+  grammarParserParses('{ code };a = "abcd"', initializerGrammar);
 });
 
 /* Canonical rule is "a: \"abcd\"". */
@@ -166,7 +199,8 @@ test("parses rule", function() {
   grammarParserParses(
     'start "start rule" = "abcd" / "efgh" / "ijkl"',
     {
-      start: rule("start", "start rule", choiceLiterals)
+      initializer: null,
+      rules:       { start: rule("start", "start rule", choiceLiterals) }
     }
   );
   grammarParserParses(

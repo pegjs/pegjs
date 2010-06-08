@@ -379,6 +379,18 @@ test("actions", function() {
   doesNotParse(notAMatchParser, "b");
 });
 
+test("initializer", function() {
+  var variableDefinitionParser = PEG.buildParser(
+    '{ a = 42; }; start = "a" { return a; }'
+  );
+  parses(variableDefinitionParser, "a", 42);
+
+  var functionDefinitionparser = PEG.buildParser(
+    '{ function f() { return 42; } }; start = "a" { return f(); }'
+  );
+  parses(variableDefinitionParser, "a", 42);
+});
+
 test("rule references", function() {
   var parser = PEG.buildParser([
     'start   = static / dynamic',
