@@ -180,6 +180,20 @@ test("generateUniqueIdentifier", function() {
   );
 });
 
+test("resetUniqueIdentifierCounters", function() {
+  var ida1 = PEG.Compiler.generateUniqueIdentifier("a");
+  var ida2 = PEG.Compiler.generateUniqueIdentifier("a");
+  var idb1 = PEG.Compiler.generateUniqueIdentifier("b");
+  var idb2 = PEG.Compiler.generateUniqueIdentifier("b");
+
+  PEG.Compiler.resetUniqueIdentifierCounters();
+
+  strictEqual(PEG.Compiler.generateUniqueIdentifier("a"), ida1);
+  strictEqual(PEG.Compiler.generateUniqueIdentifier("a"), ida2);
+  strictEqual(PEG.Compiler.generateUniqueIdentifier("b"), idb1);
+  strictEqual(PEG.Compiler.generateUniqueIdentifier("b"), idb2);
+});
+
 /* ===== PEG ===== */
 
 module("PEG");
