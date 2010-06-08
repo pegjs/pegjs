@@ -127,6 +127,7 @@ var choiceLiterals = choice([literalAbcd, literalEfgh, literalIjkl]);
 
 function oneRuleGrammar(expression) {
   return {
+    type:        "grammar",
     initializer: null,
     rules:       { start: rule("start", null, expression) },
     startRule:   "start"
@@ -156,6 +157,7 @@ function actionGrammar(action) {
 }
 
 var initializerGrammar = {
+  type:        "grammar",
   initializer: initializer(" code "),
   rules: {
     a: rule("a", null, literalAbcd),
@@ -168,6 +170,7 @@ test("parses grammar", function() {
   grammarParserParses(
     'a = "abcd"',
     {
+      type:        "grammar",
       initializer: null,
       rules:       { a: rule("a", null, literalAbcd) },
       startRule:   "a"
@@ -177,6 +180,7 @@ test("parses grammar", function() {
   grammarParserParses(
     'a = "abcd"; b = "efgh"; c = "ijkl"',
     {
+      type:        "grammar",
       initializer: null,
       rules: {
         a: rule("a", null, literalAbcd),
@@ -203,6 +207,7 @@ test("parses rule", function() {
   grammarParserParses(
     'start "start rule" = "abcd" / "efgh" / "ijkl"',
     {
+      type:        "grammar",
       initializer: null,
       rules:       { start: rule("start", "start rule", choiceLiterals) },
       startRule:   "start"
