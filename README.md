@@ -3,58 +3,51 @@ PEG.js: Parser Generator for JavaScript
 
 <http://pegjs.majda.cz/>
 
-PEG.js is a parser generator for JavaScript based on the [parsing expression grammar](http://en.wikipedia.org/wiki/Parsing_expression_grammar) formalism. It is designed to be used either from your browser or from the command line (using [Rhino](http://www.mozilla.org/rhino/) JavaScript interpreter).
+PEG.js is a parser generator for JavaScript based on the [parsing expression grammar](http://en.wikipedia.org/wiki/Parsing_expression_grammar) formalism. It enables you to easily build fast parsers which process complex data or computer languages. You can use it as an underlying tool when writing various data processors, transformers, interpreters, or compilers.
 
 Features
 --------
 
-  * Usable [from your browser](http://pegjs.majda.cz/online) or [from a command-line](http://pegjs.majda.cz/documentation#generating-a-parser)
+  * Usable [via an online generator](http://pegjs.majda.cz/online), from JavaScript code or [from a command-line](http://pegjs.majda.cz/documentation#generating-a-parser)
   * Simple and expressive [grammar syntax](http://pegjs.majda.cz/documentation#grammar)
-  * No separate lexical analysis step—both lexical and syntactical analysis are handled by one tool
-  * Handles wide class of grammars (strict superset of LL(k) and LR(k))
+  * No separate lexical analysis step — both lexical and syntactical analysis are handled by one tool
+  * Handles wide class of grammars (superset of LL(*k*) and LR(*k*))
   * Precise and human-friendly error reporting
 
 Usage
 -----
 
-To use PEG.js, you need to generate a parser from your grammar and then use the generated parser in your project.
+Using PEG.js is easy:
+
+    var parser = PEG.buildParser("start = ('a' / 'b')+");
+    parser.parse("abba") // returns "abba"
+    parser.parse("abcd") // throws an exception with details about the error
+
+Basically, you need to generate a parser from your grammar and then use it to parse the input.
 
 ### Generating a Parser
 
-To generate a parser, you can use the [online generator](http://pegjs.majda.cz/online) or the command line. For the second option, you need to have Java installed. Than you can generate the parser using the `bin/pegjs` script on Unix or `bin/pegjs.bat` batch file on Windows:
+There are three ways how to generate the parser:
+
+  1. Using the [online generator](http://pegjs.majda.cz/online)
+  2. Using the `PEG.buildParser` function from JavaScript code
+  3. Using the command line
+
+The [online generator](http://pegjs.majda.cz/online) is easiest to use — you just enter your grammar and download the generated parser code. The parser object will be available in a global variable you specify (`parser` by default).
+
+To generate the parser from JavaScript code, include the `lib/compiler.js` file and use the `PEG.buildParser` function. This function accepts a string with a grammar and either returns the built parser object or throws an exception if the grammar is invalid.
+
+To generate the parser from a command line, you need to have Java installed (so that [Rhino](http://www.mozilla.org/rhino/) — which is included in PEG.js — can run). Use the `bin/pegjs` script on Unix or `bin/pegjs.bat` batch file on Windows:
 
     $ bin/pegjs arithmeticsParser examples/arithmetics.pegjs
 
-This command will create the parser from the `examples/arithmetics.pegjs` file and put in into the `examples/arithmetics.js` file. The generated parser will be available in the `arithmeticsParser` global variable. The generator has several useful options&mdash;to learn more about them, use `--help`.
+This command will create the parser from the `examples/arithmetics.pegjs` file and put in into the `examples/arithmetics.js` file. The parser object will be available in the `arithmeticsParser` global variable. To learn more about the generator usage, use  the `--help` option.
 
 ### Using the Generated Parser
 
-To use the parser in a web page, follow the following example:
+To use the generated parser, include the generated file (unless you built the parser straight from the JavaScript code using `PEG.buildParser`) and use the `parse` method on the parser object. This method accepts an input string and either returns the parse result (dependent on the actions you specified in the grammar) or throws `PEG.Parser.SyntaxError` exception if the input contains a syntax error. The exception has properties `message`, `line` and `column`, which contain details about the error.
 
-    <!DOCTYPE html>
-    <head>
-      <title>Arithmetics Parser Example</title>
-      <script src="examples/arithmetics.js"></script> <!-- Include the parser. -->
-      <script>
-        function calculate(expression) {
-          /* Use the parser to compute a value of an arithmetic expression. */
-          var result;
-          try {
-            result = arithmeticsParser.parse(document.getElementById("expression").value);
-          } catch (e) {
-            result = e.message;
-          }
-          document.getElementById("result").innerText = result;
-        }
-      </script>
-    </head>
-    <body>
-      <input type="text" id="expression" value="2*(3+4)">
-      <input type="button" value="Calculate" onclick="calculate();">
-      <div id="result"></div>
-    </body>
-
-The `parse` method of the generated parser will return either the result of the parsing (dependent on the actions you specified in the grammar) or throw `PEG.Parser.SyntaxError` exception if the input contains a syntax error. The exception has properties `message`, `line` and `column`, which contain details about the error.
+The parser object also has the `toSource` method that returns its textual representation.
 
 Grammar
 -------
