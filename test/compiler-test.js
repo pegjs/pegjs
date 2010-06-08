@@ -303,7 +303,7 @@ test("labels", function() {
   doesNotParse(parser, "b");
 });
 
-test("and predicate", function() {
+test("simple and", function() {
   var parser = PEG.buildParser('start = "a" &"b" "b"');
   parses(parser, "ab", ["a", "", "b"]);
   doesNotParse(parser, "ac");
@@ -314,7 +314,7 @@ test("and predicate", function() {
    */
 });
 
-test("not predicate", function() {
+test("simple not", function() {
   var parser = PEG.buildParser('start = "a" !"b"');
   parses(parser, "a", ["a", ""]);
   doesNotParse(parser, "ab");
@@ -325,6 +325,22 @@ test("not predicate", function() {
    */
   var posTestParser = PEG.buildParser('start = "a" !"b" "c"');
   parses(posTestParser, "ac", ["a", "", "c"]);
+});
+
+test("semantic and", function() {
+  var acceptingParser = PEG.buildParser('start = "a" &{ return true; } "b"');
+  parses(acceptingParser, "ab", ["a", "", "b"]);
+
+  var rejectingParser = PEG.buildParser('start = "a" &{ return false; } "b"');
+  doesNotParse(rejectingParser, "ab");
+});
+
+test("semantic not", function() {
+  var acceptingParser = PEG.buildParser('start = "a" !{ return false; } "b"');
+  parses(acceptingParser, "ab", ["a", "", "b"]);
+
+  var rejectingParser = PEG.buildParser('start = "a" !{ return true; } "b"');
+  doesNotParse(rejectingParser, "ab");
 });
 
 test("optional expressions", function() {
@@ -386,15 +402,35 @@ test("actions", function() {
 });
 
 test("initializer", function() {
-  var variableDefinitionParser = PEG.buildParser(
+  var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }'
   );
-  parses(variableDefinitionParser, "a", 42);
+  parses(variableInActionParser, "a", 42);
 
-  var functionDefinitionparser = PEG.buildParser(
+  var functionInActionParser = PEG.buildParser(
     '{ function f() { return 42; } }; start = "a" { return f(); }'
   );
-  parses(variableDefinitionParser, "a", 42);
+  parses(functionInActionParser, "a", 42);
+
+  var variableInSemanticAndParser = PEG.buildParser(
+    '{ a = 42; }; start = "a" &{ return a === 42; }'
+  );
+  parses(variableInSemanticAndParser, "a", ["a", ""]);
+
+  var functionInSemanticAndParser = PEG.buildParser(
+    '{ function f() { return 42; } }; start = "a" &{ return f() === 42; }'
+  );
+  parses(functionInSemanticAndParser, "a", ["a", ""]);
+
+  var variableInSemanticNotParser = PEG.buildParser(
+    '{ a = 42; }; start = "a" !{ return a !== 42; }'
+  );
+  parses(variableInSemanticNotParser, "a", ["a", ""]);
+
+  var functionInSemanticNotParser = PEG.buildParser(
+    '{ function f() { return 42; } }; start = "a" !{ return f() !== 42; }'
+  );
+  parses(functionInSemanticNotParser, "a", ["a", ""]);
 });
 
 test("rule references", function() {
@@ -568,16 +604,16 @@ test("error messages", function() {
     'Expected "c" but "d" found.'
   );
 
-  var notPredicateParser = PEG.buildParser('start = !"a" "b"');
+  var simpleNotParser = PEG.buildParser('start = !"a" "b"');
   doesNotParseWithMessage(
-    notPredicateParser,
+    simpleNotParser,
     "c",
     'Expected "b" but "c" found.'
   );
 
-  var andPredicateParser = PEG.buildParser('start = &"a" [a-b]');
+  var simpleAndParser = PEG.buildParser('start = &"a" [a-b]');
   doesNotParseWithMessage(
-    andPredicateParser,
+    simpleAndParser,
     "c",
     'Expected end of input but "c" found.'
   );

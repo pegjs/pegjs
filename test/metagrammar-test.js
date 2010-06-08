@@ -67,8 +67,20 @@ function nodeWithExpressionConstructor(type) {
   }
 }
 
-var andPredicate = nodeWithExpressionConstructor("and_predicate");
-var notPredicate = nodeWithExpressionConstructor("not_predicate");
+function nodeWithCodeConstructor(type) {
+  return function(code) {
+    return {
+      type: type,
+      code: code
+    };
+  }
+}
+
+var simpleAnd = nodeWithExpressionConstructor("simple_and");
+var simpleNot = nodeWithExpressionConstructor("simple_not");
+
+var semanticAnd = nodeWithCodeConstructor("semantic_and");
+var semanticNot = nodeWithCodeConstructor("semantic_not");
 
 var optional     = nodeWithExpressionConstructor("optional");
 var zeroOrMore   = nodeWithExpressionConstructor("zero_or_more");
@@ -270,19 +282,21 @@ test("parses sequence", function() {
 test("parses labeled", function() {
   grammarParserParses(
     'start = label:!"abcd"',
-    oneRuleGrammar(labeled("label", notPredicate(literalAbcd)))
+    oneRuleGrammar(labeled("label", simpleNot(literalAbcd)))
   );
   grammarParserParses(
     'start = !"abcd"',
-    oneRuleGrammar(notPredicate(literalAbcd))
+    oneRuleGrammar(simpleNot(literalAbcd))
   );
 });
 
 /* Canonical prefixed is "!\"abcd\"". */
 test("parses prefixed", function() {
-  grammarParserParses('start = &"abcd"?', oneRuleGrammar(andPredicate(optionalLiteral)));
-  grammarParserParses('start = !"abcd"?', oneRuleGrammar(notPredicate(optionalLiteral)));
-  grammarParserParses('start = "abcd"?',  oneRuleGrammar(optionalLiteral));
+  grammarParserParses('start = &{ code }', oneRuleGrammar(semanticAnd(" code ")));
+  grammarParserParses('start = &"abcd"?',  oneRuleGrammar(simpleAnd(optionalLiteral)));
+  grammarParserParses('start = !{ code }', oneRuleGrammar(semanticNot(" code ")));
+  grammarParserParses('start = !"abcd"?',  oneRuleGrammar(simpleNot(optionalLiteral)));
+  grammarParserParses('start = "abcd"?',   oneRuleGrammar(optionalLiteral));
 });
 
 /* Canonical suffixed is "\"abcd\"?". */
