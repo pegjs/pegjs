@@ -20,8 +20,8 @@ Usage
 Using PEG.js is easy:
 
     var parser = PEG.buildParser("start = ('a' / 'b')+");
-    parser.parse("abba") // returns "abba"
-    parser.parse("abcd") // throws an exception with details about the error
+    parser.parse("abba"); // returns ["a", "b", "b", "a"]
+    parser.parse("abcd"); // throws an exception with details about the error
 
 Basically, you need to generate a parser from your grammar and then use it to parse the input.
 
