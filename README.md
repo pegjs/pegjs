@@ -8,7 +8,7 @@ PEG.js is a parser generator for JavaScript based on the [parsing expression gra
 Features
 --------
 
-  * Usable [via an online generator](http://pegjs.majda.cz/online), from JavaScript code or [from a command-line](http://pegjs.majda.cz/documentation#generating-a-parser)
+  * Usable [from your browser](http://pegjs.majda.cz/online), from JavaScript code, or [from a command-line](http://pegjs.majda.cz/documentation#generating-a-parser)
   * Simple and expressive [grammar syntax](http://pegjs.majda.cz/documentation#grammar)
   * No separate lexical analysis step — both lexical and syntactical analysis are handled by one tool
   * Handles wide class of grammars (superset of LL(*k*) and LR(*k*))
@@ -45,7 +45,7 @@ This command will create the parser from the `examples/arithmetics.pegjs` file a
 
 ### Using the Generated Parser
 
-To use the generated parser, include the generated file (unless you built the parser straight from the JavaScript code using `PEG.buildParser`) and use the `parse` method on the parser object. This method accepts an input string and either returns the parse result (dependent on the actions you specified in the grammar) or throws `PEG.Parser.SyntaxError` exception if the input contains a syntax error. The exception has properties `message`, `line` and `column`, which contain details about the error.
+To use the generated parser, include the generated file (unless you built the parser straight from the JavaScript code using `PEG.buildParser`) and use the `parse` method on the parser object. This method accepts an input string and either returns the parse result (dependent on the actions you specified in the grammar) or throws `PEG.grammarParser.SyntaxError` exception if the input contains a syntax error. The exception has properties `message`, `line` and `column`, which contain details about the error.
 
 The parser object also has the `toSource` method that returns its textual representation.
 
