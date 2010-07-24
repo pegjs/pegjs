@@ -105,6 +105,9 @@
       ];
 
       $("#run").click(function() {
+
+        /* Results Table Manipulation */
+
         var resultsTable = $("#results-table");
 
         function appendHeading(heading) {
@@ -146,6 +149,8 @@
           );
         }
 
+        /* AJAX */
+
         function get(url) {
           return $.ajax({
             type:     "GET",
@@ -154,6 +159,30 @@
             async:    false
           }).responseText;
         }
+
+        /* Queue */
+
+        var Q = {
+          functions: [],
+
+          add: function(f) {
+            this.functions.push(f);
+          },
+
+          run: function() {
+            if (this.functions.length > 0) {
+              this.functions.shift()();
+
+              /*
+               * We can't use |arguments.callee| here because |this| would get
+               * messed-up in that case.
+               */
+              setTimeout(function() { Q.run() }, 0);
+            }
+          }
+        };
+
+        /* Main */
 
         /*
          * Each input is parsed multiple times and the results are averaged. We
@@ -165,32 +194,57 @@
          *
          *   2. To minimize random errors.
          */
+
         var runCount = parseInt($("#run-count").val());
         if (isNaN(runCount) || runCount <= 0) {
           alert("Number of runs must be a positive integer.");
           return;
         }
 
-        $("#run-count, #run").attr("disabled", "disabled");
+        /*
+         * The benchmark itself is factored out into several functions (some of
+         * them generated), which are enqueued and run one by one using
+         * |setTimeout|. We do this for two reasons:
+         *
+         *   1. To avoid bowser mechanism for interrupting long-running scripts
+         *      to kick-in (or at least to not kick-in that often).
+         *
+         *   2. To ensure progressive rendering of results in the browser (some
+         *      browsers do not render at all when running JavaScript code).
+         *
+         * The enqueued functions share state, which is all stored in the
+         * properties of the |state| object.
+         */
 
-        resultsTable.show();
-        $("#results-table tr").slice(1).remove();
+        var state = {};
 
-        var totalInputSize = 0;
-        var totalParseTime = 0;
+        function initialize() {
+          $("#run-count, #run").attr("disabled", "disabled");
 
-        for (var i = 0; i < benchmarks.length; i++) {
-          var benchmark = benchmarks[i];
+          resultsTable.show();
+          $("#results-table tr").slice(1).remove();
 
-          appendHeading(benchmark.title);
+          state.totalInputSize = 0;
+          state.totalParseTime = 0;
+        }
 
-          var grammar = get("../examples/" + benchmark.id + ".pegjs");
-          var parser = PEG.buildParser(grammar);
+        function benchmarkInitializer(i) {
+          return function() {
+            var benchmark = benchmarks[i];
 
-          var benchmarkInputSize = 0;
-          var benchmarkParseTime = 0;
+            appendHeading(benchmark.title);
 
-          for (var j = 0; j < benchmark.tests.length; j++) {
+            var grammar = get("../examples/" + benchmark.id + ".pegjs");
+            state.parser = PEG.buildParser(grammar);
+
+            state.benchmarkInputSize = 0;
+            state.benchmarkParseTime = 0;
+          };
+        }
+
+        function testRunner(i, j) {
+          return function() {
+            var benchmark = benchmarks[i];
             var test = benchmark.tests[j];
             var url = benchmark.id + "/" + test.file;
 
@@ -199,7 +253,7 @@
             var parseTime = 0;
             for (var k = 0; k < runCount; k++) {
               var t = (new Date).getTime();
-              parser.parse(input);
+              state.parser.parse(input);
               parseTime += (new Date).getTime() - t;
             }
             var averageParseTime = parseTime / runCount;
@@ -212,27 +266,53 @@
               averageParseTime
             );
 
-            benchmarkInputSize += input.length;
-            benchmarkParseTime += averageParseTime;
-          }
-
-          appendResult(
-            "benchmark-total",
-            benchmark.title + " total",
-            null,
-            benchmarkInputSize,
-            benchmarkParseTime
-          );
-
-          totalInputSize += benchmarkInputSize;
-          totalParseTime += benchmarkParseTime;
+            state.benchmarkInputSize += input.length;
+            state.benchmarkParseTime += averageParseTime;
+          };
         }
 
-        appendResult("total", "Total", null, totalInputSize, totalParseTime);
+        function benchmarkFinalizer(i) {
+          return function() {
+            var benchmark = benchmarks[i];
 
-        $.scrollTo("max", { axis: "y", duration: 500 });
+            appendResult(
+              "benchmark-total",
+              benchmark.title + " total",
+              null,
+              state.benchmarkInputSize,
+              state.benchmarkParseTime
+            );
 
-        $("#run-count, #run").removeAttr("disabled");
+            state.totalInputSize += state.benchmarkInputSize;
+            state.totalParseTime += state.benchmarkParseTime;
+          };
+        }
+
+        function finalize() {
+          appendResult(
+            "total",
+            "Total",
+            null,
+            state.totalInputSize,
+            state.totalParseTime
+          );
+
+          $.scrollTo("max", { axis: "y", duration: 500 });
+
+          $("#run-count, #run").removeAttr("disabled");
+        }
+
+        Q.add(initialize);
+        for (var i = 0; i < benchmarks.length; i++) {
+          Q.add(benchmarkInitializer(i));
+          for (var j = 0; j < benchmarks[i].tests.length; j++) {
+            Q.add(testRunner(i, j));
+          }
+          Q.add(benchmarkFinalizer(i));
+        }
+        Q.add(finalize);
+
+        Q.run();
       });
 
       $(document).ready(function() {
