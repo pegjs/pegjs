@@ -5,15 +5,15 @@ var global = this;
 /* ===== Helpers ===== */
 
 global.grammarParserParses = function(input, expected) {
-  global.parses(PEG.grammarParser, input, expected);
+  global.parses(PEG.parser, input, expected);
 };
 
 global.grammarParserDoesNotParse = function(input) {
-  global.doesNotParse(PEG.grammarParser, input);
+  global.doesNotParse(PEG.parser, input);
 }
 
 global.grammarParserDoesNotParseWithMessage = function(input, message) {
-  global.doesNotParseWithMessage(PEG.grammarParser, input, message);
+  global.doesNotParseWithMessage(PEG.parser, input, message);
 }
 
 /* ===== Grammar Parser ===== */
