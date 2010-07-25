@@ -14,6 +14,15 @@ Features
   * Handles wide class of grammars (superset of LL(*k*) and LR(*k*))
   * Precise and human-friendly error reporting
 
+Building
+--------
+
+To build PEG.js, simply run the `rake` command:
+
+    $ rake
+
+Of course, you need to have [Rake](http://rake.rubyforge.org/) installed. The command creates PEG.js library in `lib/peg.js` by processing files in the `src` directory.
+
 Usage
 -----
 

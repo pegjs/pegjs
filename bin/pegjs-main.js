@@ -5,8 +5,7 @@ importPackage(java.lang);
  * Rhino does not have __FILE__ or anything similar so we have to pass the
  * script path from the outside.
  */
-load(arguments[0] + "/../lib/compiler.js");
-load(arguments[0] + "/../lib/metagrammar.js");
+load(arguments[0] + "/../lib/peg.js");
 
 var FILE_STDIN  = "-";
 var FILE_STDOUT = "-";
