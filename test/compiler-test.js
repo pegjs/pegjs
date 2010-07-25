@@ -117,68 +117,6 @@ test("quoteForClass", function() {
   );
 });
 
-/* ===== PEG.Compiler ===== */
-
-module("PEG.Compiler");
-
-test("formatCode joins parts", function() {
-  strictEqual(PEG.Compiler.formatCode("foo", "bar"), "foo\nbar");
-});
-
-test("formatCode interpolates variables", function() {
-  strictEqual(
-    PEG.Compiler.formatCode("foo", "${bar}", { bar: "baz" }),
-    "foo\nbaz"
-  );
-
-  throws(
-    function() { PEG.Compiler.formatCode("foo", "${bar}"); },
-    Error,
-    { message: "Undefined variable: \"bar\"." }
-  );
-});
-
-test("formatCode filters variables", function() {
-  strictEqual(
-    PEG.Compiler.formatCode("foo", "${bar|string}", { bar: "baz" }),
-    "foo\n\"baz\""
-  );
-
-  throws(
-    function() { PEG.Compiler.formatCode("foo", "${bar|eeek}", { bar: "baz" }); },
-    Error,
-    { message: "Unrecognized filter: \"eeek\"." }
-  );
-});
-
-test("formatCode indents multiline parts", function() {
-  strictEqual(
-    PEG.Compiler.formatCode("foo", "${bar}", { bar: "  baz\nqux" }),
-    "foo\n  baz\n  qux"
-  );
-});
-
-test("generateUniqueIdentifier", function() {
-  notStrictEqual(
-    PEG.Compiler.generateUniqueIdentifier("prefix"),
-    PEG.Compiler.generateUniqueIdentifier("prefix")
-  );
-});
-
-test("resetUniqueIdentifierCounters", function() {
-  var ida1 = PEG.Compiler.generateUniqueIdentifier("a");
-  var ida2 = PEG.Compiler.generateUniqueIdentifier("a");
-  var idb1 = PEG.Compiler.generateUniqueIdentifier("b");
-  var idb2 = PEG.Compiler.generateUniqueIdentifier("b");
-
-  PEG.Compiler.resetUniqueIdentifierCounters();
-
-  strictEqual(PEG.Compiler.generateUniqueIdentifier("a"), ida1);
-  strictEqual(PEG.Compiler.generateUniqueIdentifier("a"), ida2);
-  strictEqual(PEG.Compiler.generateUniqueIdentifier("b"), idb1);
-  strictEqual(PEG.Compiler.generateUniqueIdentifier("b"), idb2);
-});
-
 /* ===== PEG ===== */
 
 module("PEG");
