@@ -2,6 +2,16 @@ SRC_DIR = "src"
 LIB_DIR = "lib"
 BIN_DIR = "bin"
 
+PEGJS = "#{BIN_DIR}/pegjs"
+
+SRC_FILES = Dir["#{SRC_DIR}/**/*.js"]
+
+PEGJS_SRC_FILE  = "#{SRC_DIR}/peg.js"
+PEGJS_OUT_FILE  = "#{LIB_DIR}/peg.js"
+
+PARSER_SRC_FILE  = "#{SRC_DIR}/parser.pegjs"
+PARSER_OUT_FILE  = "#{SRC_DIR}/parser.js"
+
 def preprocess(input, base_dir)
   input.split("\n").map do |line|
     if line =~ /^\s*\/\/\s*@include\s*"([^"]*)"\s*$/
@@ -16,16 +26,20 @@ def preprocess(input, base_dir)
   end.join("\n")
 end
 
-desc "Generate the grammar parser"
-task :parser do
-  system "#{BIN_DIR}/pegjs PEG.parser #{SRC_DIR}/parser.pegjs"
+file PARSER_OUT_FILE => PARSER_SRC_FILE do
+  system "#{PEGJS} PEG.parser #{PARSER_SRC_FILE} #{PARSER_OUT_FILE}"
 end
 
-desc "Build the peg.js file"
-task :build do
-  File.open("#{LIB_DIR}/peg.js", "w") do |f|
-    f.write(preprocess(File.read("#{SRC_DIR}/peg.js"), SRC_DIR))
+file PEGJS_OUT_FILE => SRC_FILES do
+  File.open(PEGJS_OUT_FILE, "w") do |f|
+    f.write(preprocess(File.read(PEGJS_SRC_FILE), SRC_DIR))
   end
 end
+
+desc "Generate the grammar parser"
+task :parser => PARSER_OUT_FILE
+
+desc "Build the peg.js file"
+task :build => PEGJS_OUT_FILE
 
 task :default => :build
