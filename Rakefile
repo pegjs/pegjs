@@ -17,7 +17,7 @@ def preprocess(input, base_dir)
 end
 
 desc "Generate the grammar parser"
-task :metaparser do
+task :parser do
   system "#{BIN_DIR}/pegjs PEG.parser #{SRC_DIR}/parser.pegjs"
 end
 
