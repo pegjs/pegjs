@@ -57,66 +57,6 @@ global.doesNotParseWithPos = function(parser, input, line, column) {
   );
 };
 
-/* ===== PEG.ArrayUtils ===== */
-
-module("PEG.ArrayUtils");
-
-test("contains", function() {
-  ok(!PEG.ArrayUtils.contains([], 42));
-
-  ok(PEG.ArrayUtils.contains([1, 2, 3], 1));
-  ok(PEG.ArrayUtils.contains([1, 2, 3], 2));
-  ok(PEG.ArrayUtils.contains([1, 2, 3], 3));
-  ok(!PEG.ArrayUtils.contains([1, 2, 3], 42));
-  ok(!PEG.ArrayUtils.contains([1, 2, 3], "2")); // Does it use |===|?
-});
-
-test("each", function() {
-  var sum;
-  function increment(x) { sum += x; }
-
-  sum = 0;
-  PEG.ArrayUtils.each([], increment);
-  strictEqual(sum, 0);
-
-  sum = 0;
-  PEG.ArrayUtils.each([1, 2, 3], increment);
-  strictEqual(sum, 6);
-});
-
-test("map", function() {
-  function square(x) { return x * x; }
-
-  deepEqual(PEG.ArrayUtils.map([], square), []);
-  deepEqual(PEG.ArrayUtils.map([1, 2, 3], square), [1, 4, 9]);
-});
-
-/* ===== PEG.StringUtils ===== */
-
-module("PEG.StringUtils");
-
-test("quote", function() {
-  strictEqual(PEG.StringUtils.quote(""), '""');
-  strictEqual(PEG.StringUtils.quote("abcd"), '"abcd"');
-  strictEqual(
-    PEG.StringUtils.quote("\"\\\r\u2028\u2029\n\"\\\r\u2028\u2029\n"),
-    '"\\\"\\\\\\r\\u2028\\u2029\\n\\\"\\\\\\r\\u2028\\u2029\\n"'
-  );
-});
-
-/* ===== PEG.RegExpUtils ===== */
-
-module("PEG.RegExpUtils");
-
-test("quoteForClass", function() {
-  strictEqual(PEG.RegExpUtils.quoteForClass(""), '');
-  strictEqual(PEG.RegExpUtils.quoteForClass("abcd"), 'abcd');
-  strictEqual(
-    PEG.RegExpUtils.quoteForClass("\\\0/]-\r\u2028\u2029\n\\\0/]-\r\u2028\u2029\n"),
-    '\\\\\\0\\/\\]\\-\\r\\u2028\\u2029\\n\\\\\\0\\/\\]\\-\\r\\u2028\\u2029\\n'
-  );
-});
-
 /* ===== PEG ===== */
 
 module("PEG");
@@ -144,13 +84,13 @@ test("buildParser reports missing referenced rules", function() {
     'start = missing { }'
   ];
 
-  PEG.ArrayUtils.each(grammars, function(grammar) {
+  for (var i = 0; i < grammars.length; i++) {
     throws(
-      function() { PEG.buildParser(grammar); },
+      function() { PEG.buildParser(grammars[i]); },
       PEG.GrammarError,
       { message: "Referenced rule \"missing\" does not exist." }
     );
-  });
+  }
 });
 
 test("buildParser reports left recursion", function() {
@@ -172,13 +112,13 @@ test("buildParser reports left recursion", function() {
     'start = stop; stop = start'
   ];
 
-  PEG.ArrayUtils.each(grammars, function(grammar) {
+  for (var i = 0; i < grammars.length; i++) {
     throws(
-      function() { PEG.buildParser(grammar); },
+      function() { PEG.buildParser(grammars[i]); },
       PEG.GrammarError,
       { message: "Left recursion detected for rule \"start\"." }
     );
-  });
+  }
 });
 
 test("buildParser allows custom start rule", function() {

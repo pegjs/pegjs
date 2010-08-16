@@ -22,7 +22,7 @@ PEG.compiler.passes = [
 
       function replaceInSubnodes(propertyName) {
         return function(node, from, to) {
-          PEG.ArrayUtils.each(node[propertyName], function(node) {
+          each(node[propertyName], function(node) {
             replace(node, from, to);
           });
         };

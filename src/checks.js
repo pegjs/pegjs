@@ -13,9 +13,7 @@ PEG.compiler.checks = [
     function checkExpression(node) { check(node.expression); }
 
     function checkSubnodes(propertyName) {
-      return function(node) {
-        PEG.ArrayUtils.each(node[propertyName], check);
-      };
+      return function(node) { each(node[propertyName], check); };
     }
 
     var checkFunctions = {
@@ -81,7 +79,7 @@ PEG.compiler.checks = [
 
       choice:
         function(node, appliedRules) {
-          PEG.ArrayUtils.each(node.alternatives, function(alternative) {
+          each(node.alternatives, function(alternative) {
             check(alternative, appliedRules);
           });
         },
@@ -105,7 +103,7 @@ PEG.compiler.checks = [
 
       rule_ref:
         function(node, appliedRules) {
-          if (PEG.ArrayUtils.contains(appliedRules, node.name)) {
+          if (contains(appliedRules, node.name)) {
             throw new PEG.GrammarError(
               "Left recursion detected for rule \"" + node.name + "\"."
             );

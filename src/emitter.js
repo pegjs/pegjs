@@ -32,7 +32,7 @@ PEG.compiler.emitter = function(ast) {
    */
   function formatCode() {
     function interpolateVariablesInParts(parts) {
-      return PEG.ArrayUtils.map(parts, function(part) {
+      return map(parts, function(part) {
         return part.replace(
           /\$\{([a-zA-Z_][a-zA-Z0-9_]*)(\|([a-zA-Z_][a-zA-Z0-9_]*))?\}/g,
           function(match, name, dummy, filter) {
@@ -43,7 +43,7 @@ PEG.compiler.emitter = function(ast) {
 
             if (filter !== undefined && filter != "") { // JavaScript engines differ here.
               if (filter === "string") {
-                return PEG.StringUtils.quote(value);
+                return quote(value);
               } else {
                 throw new Error("Unrecognized filter: \"" + filter + "\".");
               }
@@ -56,13 +56,13 @@ PEG.compiler.emitter = function(ast) {
     }
 
     function indentMultilineParts(parts) {
-      return PEG.ArrayUtils.map(parts, function(part) {
+      return map(parts, function(part) {
         if (!/\n/.test(part)) { return part; }
 
         var firstLineWhitespacePrefix = part.match(/^\s*/)[0];
         var lines = part.split("\n");
         var linesIndented = [lines[0]].concat(
-          PEG.ArrayUtils.map(lines.slice(1), function(line) {
+          map(lines.slice(1), function(line) {
             return firstLineWhitespacePrefix + line;
           })
         );
@@ -118,8 +118,8 @@ PEG.compiler.emitter = function(ast) {
         "      var rightmostMatchFailuresExpected = [];",
         "      var cache = {};",
         "      ",
-        /* This needs to be in sync with PEG.StringUtils.quote. */
-        "      function quoteString(s) {",
+        /* This needs to be in sync with |quote| in utils.js. */
+        "      function quote(s) {",
         "        /*",
         "         * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a",
         "         * string literal except for the closing quote character, backslash,",
@@ -136,8 +136,8 @@ PEG.compiler.emitter = function(ast) {
         "          + '\"';",
         "      }",
         "      ",
-        /* This needs to be in sync with PEG.ArrayUtils.contains. */
-        "      function arrayContains(array, value) {",
+        /* This needs to be in sync with |contains| in utils.js. */
+        "      function contains(array, value) {",
         "        /*",
         "         * Stupid IE does not have Array.prototype.indexOf, otherwise this",
         "         * function would be a one-liner.",
@@ -161,7 +161,7 @@ PEG.compiler.emitter = function(ast) {
         "          rightmostMatchFailuresExpected = [];",
         "        }",
         "        ",
-        "        if (!arrayContains(rightmostMatchFailuresExpected, failure)) {",
+        "        if (!contains(rightmostMatchFailuresExpected, failure)) {",
         "          rightmostMatchFailuresExpected.push(failure);",
         "        }",
         "      }",
@@ -186,7 +186,7 @@ PEG.compiler.emitter = function(ast) {
         "        var expected = buildExpected(rightmostMatchFailuresExpected);",
         "        var actualPos = Math.max(pos, rightmostMatchFailuresPos);",
         "        var actual = actualPos < input.length",
-        "          ? quoteString(input.charAt(actualPos))",
+        "          ? quote(input.charAt(actualPos))",
         "          : 'end of input';",
         "        ",
         "        return 'Expected ' + expected + ' but ' + actual + ' found.';",
@@ -404,7 +404,7 @@ PEG.compiler.emitter = function(ast) {
     sequence: function(node, resultVar) {
       var savedPosVar = UID.next("savedPos");
 
-      var elementResultVars = PEG.ArrayUtils.map(node.elements, function() {
+      var elementResultVars = map(node.elements, function() {
         return UID.next("result")
       });
 
@@ -647,7 +647,7 @@ PEG.compiler.emitter = function(ast) {
         "} else {",
         "  var ${resultVar} = null;",
         "  if (context.reportMatchFailures) {",
-        "    matchFailed(quoteString(${value|string}));",
+        "    matchFailed(quote(${value|string}));",
         "  }",
         "}",
         {
@@ -677,12 +677,12 @@ PEG.compiler.emitter = function(ast) {
       if (node.parts.length > 0) {
         var regexp = "/^["
           + (node.inverted ? "^" : "")
-          + PEG.ArrayUtils.map(node.parts, function(part) {
+          + map(node.parts, function(part) {
               return part instanceof Array
-                ? PEG.RegExpUtils.quoteForClass(part[0])
+                ? quoteForRegexpClass(part[0])
                   + "-"
-                  + PEG.RegExpUtils.quoteForClass(part[1])
-                : PEG.RegExpUtils.quoteForClass(part);
+                  + quoteForRegexpClass(part[1])
+                : quoteForRegexpClass(part);
             }).join("")
           + "]/";
       } else {

@@ -1,7 +1,7 @@
 grammar
   = __ initializer:initializer? rules:rule+ {
       var rulesConverted = {};
-      PEG.ArrayUtils.each(rules, function(rule) { rulesConverted[rule.name] = rule; });
+      each(rules, function(rule) { rulesConverted[rule.name] = rule; });
 
       return {
         type:        "grammar",
@@ -35,7 +35,7 @@ expression
 choice
   = head:sequence tail:(slash sequence)* {
       if (tail.length > 0) {
-        var alternatives = [head].concat(PEG.ArrayUtils.map(
+        var alternatives = [head].concat(map(
             tail,
             function(element) { return element[1]; }
         ));
@@ -232,14 +232,10 @@ simpleSingleQuotedCharacter
 
 class "character class"
   = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" __ {
-      partsConverted = PEG.ArrayUtils.map(parts, function(part) {
-        return part.data;
-      });
+      partsConverted = map(parts, function(part) { return part.data; });
       rawText = "["
         + inverted
-        + PEG.ArrayUtils.map(parts, function(part) {
-            return part.rawText;
-          }).join("")
+        + map(parts, function(part) { return part.rawText; }).join("")
         + "]";
 
       return {
@@ -271,7 +267,7 @@ classCharacter
       return {
         data:    char_,
         // FIXME: Get the raw text from the input directly.
-        rawText: PEG.RegExpUtils.quoteForClass(char_)
+        rawText: quoteForRegexpClass(char_)
       };
     }
 
