@@ -66,7 +66,7 @@ PEG.compiler.checks = [
       grammar:
         function(node, appliedRules) {
           for (var name in node.rules) {
-            check(ast.rules[name], appliedRules);
+            check(node.rules[name], appliedRules);
           }
         },
 

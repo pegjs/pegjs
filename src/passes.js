@@ -32,7 +32,7 @@ PEG.compiler.passes = [
         grammar:
           function(node, from, to) {
             for (var name in node.rules) {
-              replace(ast.rules[name], from, to);
+              replace(node.rules[name], from, to);
             }
           },
 
