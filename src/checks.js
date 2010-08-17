@@ -16,7 +16,7 @@ PEG.compiler.checks = [
       return function(node) { each(node[propertyName], check); };
     }
 
-    var checkFunctions = {
+    var check = buildNodeVisitor({
       grammar:
         function(node) {
           for (var name in node.rules) {
@@ -49,9 +49,7 @@ PEG.compiler.checks = [
       literal:      nop,
       any:          nop,
       "class":      nop
-    };
-
-    function check(node) { checkFunctions[node.type](node); }
+    });
 
     check(ast);
   },
@@ -64,7 +62,7 @@ PEG.compiler.checks = [
       check(node.expression, appliedRules);
     }
 
-    var checkFunctions = {
+    var check = buildNodeVisitor({
       grammar:
         function(node, appliedRules) {
           for (var name in node.rules) {
@@ -114,11 +112,7 @@ PEG.compiler.checks = [
       literal:      nop,
       any:          nop,
       "class":      nop
-    };
-
-    function check(node, appliedRules) {
-      checkFunctions[node.type](node, appliedRules);
-    }
+    });
 
     check(ast, []);
   }

@@ -73,3 +73,15 @@ function quoteForRegexpClass(s) {
     .replace(/\u2029/g, '\\u2029') // paragraph separator
     .replace(/\n/g, '\\n')         // line feed
 }
+
+/*
+ * Builds a node visitor -- a function which takes a node and any number of
+ * other parameters, calls an appropriate function according to the node type,
+ * passes it all its parameters and returns its value. The functions for various
+ * node types are passed in a parameter to |buildNodeVisitor| as a hash.
+ */
+function buildNodeVisitor(functions) {
+  return function(node) {
+    functions[node.type].apply(null, arguments));
+  }
+}

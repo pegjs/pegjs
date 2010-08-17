@@ -90,7 +90,7 @@ PEG.compiler.emitter = function(ast) {
     }
   };
 
-  var emitFunctions = {
+  var emit = buildNodeVisitor({
     grammar: function(node) {
       var initializerCode = node.initializer !== null
         ? emit(node.initializer)
@@ -710,11 +710,7 @@ PEG.compiler.emitter = function(ast) {
         }
       );
     }
-  };
-
-  function emit(node, resultVar) {
-    return emitFunctions[node.type](node, resultVar);
-  }
+  });
 
   return emit(ast);
 };

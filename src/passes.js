@@ -28,7 +28,7 @@ PEG.compiler.passes = [
         };
       }
 
-      var replaceFunctions = {
+      var replace = buildNodeVisitor({
         grammar:
           function(node, from, to) {
             for (var name in node.rules) {
@@ -59,11 +59,7 @@ PEG.compiler.passes = [
         literal:      nop,
         any:          nop,
         "class":      nop
-      };
-
-      function replace(node, from, to) {
-        replaceFunctions[node.type](node, from, to);
-      }
+      });
 
       replace(ast, from, to);
     }
