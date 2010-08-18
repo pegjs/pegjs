@@ -2,21 +2,21 @@
 
 /* ===== Helpers ===== */
 
-global.grammarParserParses = function(input, expected) {
+global.parserParses = function(input, expected) {
   global.parses(PEG.parser, input, expected);
 };
 
-global.grammarParserDoesNotParse = function(input) {
+global.parserDoesNotParse = function(input) {
   global.doesNotParse(PEG.parser, input);
 }
 
-global.grammarParserDoesNotParseWithMessage = function(input, message) {
+global.parserDoesNotParseWithMessage = function(input, message) {
   global.doesNotParseWithMessage(PEG.parser, input, message);
 }
 
-/* ===== Grammar Parser ===== */
+/* ===== PEG.parser ===== */
 
-module("Grammar Parser");
+module("PEG.parser");
 
 function initializer(code) {
   return {
@@ -177,7 +177,7 @@ var initializerGrammar = {
 
 /* Canonical grammar is "a: \"abcd\"; b: \"efgh\"; c: \"ijkl\";". */
 test("parses grammar", function() {
-  grammarParserParses(
+  parserParses(
     'a = "abcd"',
     {
       type:        "grammar",
@@ -186,8 +186,8 @@ test("parses grammar", function() {
       startRule:   "a"
     }
   );
-  grammarParserParses('{ code }; a = "abcd"', initializerGrammar);
-  grammarParserParses(
+  parserParses('{ code }; a = "abcd"', initializerGrammar);
+  parserParses(
     'a = "abcd"; b = "efgh"; c = "ijkl"',
     {
       type:        "grammar",
@@ -204,17 +204,17 @@ test("parses grammar", function() {
 
 /* Canonical initializer is "{ code }". */
 test("parses initializer", function() {
-  grammarParserParses('{ code }a = "abcd"', initializerGrammar);
-  grammarParserParses('{ code };a = "abcd"', initializerGrammar);
+  parserParses('{ code }a = "abcd"', initializerGrammar);
+  parserParses('{ code };a = "abcd"', initializerGrammar);
 });
 
 /* Canonical rule is "a: \"abcd\"". */
 test("parses rule", function() {
-  grammarParserParses(
+  parserParses(
     'start = "abcd" / "efgh" / "ijkl"',
     oneRuleGrammar(choiceLiterals)
   );
-  grammarParserParses(
+  parserParses(
     'start "start rule" = "abcd" / "efgh" / "ijkl"',
     {
       type:        "grammar",
@@ -223,7 +223,7 @@ test("parses rule", function() {
       startRule:   "start"
     }
   );
-  grammarParserParses(
+  parserParses(
     'start = "abcd" / "efgh" / "ijkl";',
     oneRuleGrammar(choiceLiterals)
   );
@@ -231,7 +231,7 @@ test("parses rule", function() {
 
 /* Canonical expression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
 test("parses expression", function() {
-  grammarParserParses(
+  parserParses(
     'start = "abcd" / "efgh" / "ijkl"',
     oneRuleGrammar(choiceLiterals)
   );
@@ -239,11 +239,11 @@ test("parses expression", function() {
 
 /* Canonical choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
 test("parses choice", function() {
-  grammarParserParses(
+  parserParses(
     'start = "abcd" "efgh" "ijkl"',
     oneRuleGrammar(sequenceLiterals)
   );
-  grammarParserParses(
+  parserParses(
     'start = "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl"',
     oneRuleGrammar(choice([
       sequenceLiterals,
@@ -255,22 +255,22 @@ test("parses choice", function() {
 
 /* Canonical sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
 test("parses sequence", function() {
-  grammarParserParses(
+  parserParses(
     'start = { code }',
     oneRuleGrammar(action(sequenceEmpty, " code "))
   );
-  grammarParserParses(
+  parserParses(
     'start = a:"abcd" { code }',
     oneRuleGrammar(action(labeledAbcd, " code "))
   );
-  grammarParserParses(
+  parserParses(
     'start = a:"abcd" e:"efgh" i:"ijkl" { code }',
     oneRuleGrammar(action(sequenceLabeleds, " code "))
   );
 
-  grammarParserParses('start = ',         oneRuleGrammar(sequenceEmpty));
-  grammarParserParses('start = a:"abcd"', oneRuleGrammar(labeledAbcd));
-  grammarParserParses(
+  parserParses('start = ',         oneRuleGrammar(sequenceEmpty));
+  parserParses('start = a:"abcd"', oneRuleGrammar(labeledAbcd));
+  parserParses(
     'start = a:"abcd" e:"efgh" i:"ijkl"',
     oneRuleGrammar(sequenceLabeleds)
   );
@@ -278,166 +278,163 @@ test("parses sequence", function() {
 
 /* Canonical labeled is "label:\"abcd\"". */
 test("parses labeled", function() {
-  grammarParserParses(
+  parserParses(
     'start = label:!"abcd"',
     oneRuleGrammar(labeled("label", simpleNot(literalAbcd)))
   );
-  grammarParserParses(
-    'start = !"abcd"',
-    oneRuleGrammar(simpleNot(literalAbcd))
-  );
+  parserParses('start = !"abcd"', oneRuleGrammar(simpleNot(literalAbcd)));
 });
 
 /* Canonical prefixed is "!\"abcd\"". */
 test("parses prefixed", function() {
-  grammarParserParses('start = &{ code }', oneRuleGrammar(semanticAnd(" code ")));
-  grammarParserParses('start = &"abcd"?',  oneRuleGrammar(simpleAnd(optionalLiteral)));
-  grammarParserParses('start = !{ code }', oneRuleGrammar(semanticNot(" code ")));
-  grammarParserParses('start = !"abcd"?',  oneRuleGrammar(simpleNot(optionalLiteral)));
-  grammarParserParses('start = "abcd"?',   oneRuleGrammar(optionalLiteral));
+  parserParses('start = &{ code }', oneRuleGrammar(semanticAnd(" code ")));
+  parserParses('start = &"abcd"?',  oneRuleGrammar(simpleAnd(optionalLiteral)));
+  parserParses('start = !{ code }', oneRuleGrammar(semanticNot(" code ")));
+  parserParses('start = !"abcd"?',  oneRuleGrammar(simpleNot(optionalLiteral)));
+  parserParses('start = "abcd"?',   oneRuleGrammar(optionalLiteral));
 });
 
 /* Canonical suffixed is "\"abcd\"?". */
 test("parses suffixed", function() {
-  grammarParserParses('start = "abcd"?', oneRuleGrammar(optionalLiteral));
-  grammarParserParses('start = "abcd"*', oneRuleGrammar(zeroOrMore(literalAbcd)));
-  grammarParserParses('start = "abcd"+', oneRuleGrammar(oneOrMore(literalAbcd)));
-  grammarParserParses('start = "abcd"',  literalGrammar("abcd"));
+  parserParses('start = "abcd"?', oneRuleGrammar(optionalLiteral));
+  parserParses('start = "abcd"*', oneRuleGrammar(zeroOrMore(literalAbcd)));
+  parserParses('start = "abcd"+', oneRuleGrammar(oneOrMore(literalAbcd)));
+  parserParses('start = "abcd"',  literalGrammar("abcd"));
 });
 
 /* Canonical primary is "\"abcd\"". */
 test("parses primary", function() {
-  grammarParserParses('start = a',        identifierGrammar("a"));
-  grammarParserParses('start = "abcd"',   literalGrammar("abcd"));
-  grammarParserParses('start = .',        anyGrammar);
-  grammarParserParses('start = [a-d]',    classGrammar(false, [["a", "d"]], "[a-d]"));
-  grammarParserParses('start = ("abcd")', literalGrammar("abcd"));
+  parserParses('start = a',        identifierGrammar("a"));
+  parserParses('start = "abcd"',   literalGrammar("abcd"));
+  parserParses('start = .',        anyGrammar);
+  parserParses('start = [a-d]',    classGrammar(false, [["a", "d"]], "[a-d]"));
+  parserParses('start = ("abcd")', literalGrammar("abcd"));
 });
 
 /* Canonical action is "{ code }". */
 test("parses action", function() {
-  grammarParserParses('start = "a" { code }', actionGrammar(" code "));
+  parserParses('start = "a" { code }', actionGrammar(" code "));
 });
 
 /* Canonical braced is "{ code }". */
 test("parses braced", function() {
-  grammarParserParses('start = "a" {}',    actionGrammar(""));
-  grammarParserParses('start = "a" {a}',   actionGrammar("a"));
-  grammarParserParses('start = "a" {{a}}', actionGrammar("{a}"));
-  grammarParserParses('start = "a" {aaa}', actionGrammar("aaa"));
+  parserParses('start = "a" {}',    actionGrammar(""));
+  parserParses('start = "a" {a}',   actionGrammar("a"));
+  parserParses('start = "a" {{a}}', actionGrammar("{a}"));
+  parserParses('start = "a" {aaa}', actionGrammar("aaa"));
 });
 
 /* Trivial character rules are not tested. */
 
 /* Canonical identifier is "a". */
 test("parses identifier", function() {
-  grammarParserParses('start = a',    identifierGrammar("a"));
-  grammarParserParses('start = z',    identifierGrammar("z"));
-  grammarParserParses('start = A',    identifierGrammar("A"));
-  grammarParserParses('start = Z',    identifierGrammar("Z"));
-  grammarParserParses('start = _',    identifierGrammar("_"));
-  grammarParserParses('start = $',    identifierGrammar("$"));
-  grammarParserParses('start = aa',   identifierGrammar("aa"));
-  grammarParserParses('start = az',   identifierGrammar("az"));
-  grammarParserParses('start = aA',   identifierGrammar("aA"));
-  grammarParserParses('start = aZ',   identifierGrammar("aZ"));
-  grammarParserParses('start = a0',   identifierGrammar("a0"));
-  grammarParserParses('start = a9',   identifierGrammar("a9"));
-  grammarParserParses('start = a_',   identifierGrammar("a_"));
-  grammarParserParses('start = a$',   identifierGrammar("a$"));
-  grammarParserParses('start = abcd', identifierGrammar("abcd"));
+  parserParses('start = a',    identifierGrammar("a"));
+  parserParses('start = z',    identifierGrammar("z"));
+  parserParses('start = A',    identifierGrammar("A"));
+  parserParses('start = Z',    identifierGrammar("Z"));
+  parserParses('start = _',    identifierGrammar("_"));
+  parserParses('start = $',    identifierGrammar("$"));
+  parserParses('start = aa',   identifierGrammar("aa"));
+  parserParses('start = az',   identifierGrammar("az"));
+  parserParses('start = aA',   identifierGrammar("aA"));
+  parserParses('start = aZ',   identifierGrammar("aZ"));
+  parserParses('start = a0',   identifierGrammar("a0"));
+  parserParses('start = a9',   identifierGrammar("a9"));
+  parserParses('start = a_',   identifierGrammar("a_"));
+  parserParses('start = a$',   identifierGrammar("a$"));
+  parserParses('start = abcd', identifierGrammar("abcd"));
 
-  grammarParserParses('start = a\n',  identifierGrammar("a"));
+  parserParses('start = a\n',  identifierGrammar("a"));
 });
 
 /* Canonical literal is "\"abcd\"". */
 test("parses literal", function() {
-  grammarParserParses('start = "abcd"', literalGrammar("abcd"));
-  grammarParserParses("start = 'abcd'", literalGrammar("abcd"));
+  parserParses('start = "abcd"', literalGrammar("abcd"));
+  parserParses("start = 'abcd'", literalGrammar("abcd"));
 });
 
 /* Canonical doubleQuotedLiteral is "\"abcd\"". */
 test("parses doubleQuotedLiteral", function() {
-  grammarParserParses('start = ""',       literalGrammar(""));
-  grammarParserParses('start = "a"',      literalGrammar("a"));
-  grammarParserParses('start = "abc"',    literalGrammar("abc"));
+  parserParses('start = ""',       literalGrammar(""));
+  parserParses('start = "a"',      literalGrammar("a"));
+  parserParses('start = "abc"',    literalGrammar("abc"));
 
-  grammarParserParses('start = "abcd"\n', literalGrammar("abcd"));
+  parserParses('start = "abcd"\n', literalGrammar("abcd"));
 });
 
 /* Canonical doubleQuotedCharacter is "a". */
 test("parses doubleQuotedCharacter", function() {
-  grammarParserParses('start = "a"',       literalGrammar("a"));
-  grammarParserParses('start = "\\n"',     literalGrammar("\n"));
-  grammarParserParses('start = "\\0"',     literalGrammar("\0"));
-  grammarParserParses('start = "\\x00"',   literalGrammar("\x00"));
-  grammarParserParses('start = "\\u0120"', literalGrammar("\u0120"));
-  grammarParserParses('start = "\\\n"',    literalGrammar("\n"));
+  parserParses('start = "a"',       literalGrammar("a"));
+  parserParses('start = "\\n"',     literalGrammar("\n"));
+  parserParses('start = "\\0"',     literalGrammar("\0"));
+  parserParses('start = "\\x00"',   literalGrammar("\x00"));
+  parserParses('start = "\\u0120"', literalGrammar("\u0120"));
+  parserParses('start = "\\\n"',    literalGrammar("\n"));
 });
 
 /* Canonical simpleDoubleQuotedCharacter is "a". */
 test("parses simpleDoubleQuotedCharacter", function() {
-  grammarParserParses('start = "a"',  literalGrammar("a"));
-  grammarParserParses('start = "\'"', literalGrammar("'"));
-  grammarParserDoesNotParse('start = """');
-  grammarParserDoesNotParse('start = "\\"');
-  grammarParserDoesNotParse('start = "\n"');
-  grammarParserDoesNotParse('start = "\r"');
-  grammarParserDoesNotParse('start = "\u2028"');
-  grammarParserDoesNotParse('start = "\u2029"');
+  parserParses('start = "a"',  literalGrammar("a"));
+  parserParses('start = "\'"', literalGrammar("'"));
+  parserDoesNotParse('start = """');
+  parserDoesNotParse('start = "\\"');
+  parserDoesNotParse('start = "\n"');
+  parserDoesNotParse('start = "\r"');
+  parserDoesNotParse('start = "\u2028"');
+  parserDoesNotParse('start = "\u2029"');
 });
 
 /* Canonical singleQuotedLiteral is "'abcd'". */
 test("parses singleQuotedLiteral", function() {
-  grammarParserParses("start = ''",       literalGrammar(""));
-  grammarParserParses("start = 'a'",      literalGrammar("a"));
-  grammarParserParses("start = 'abc'",    literalGrammar("abc"));
+  parserParses("start = ''",       literalGrammar(""));
+  parserParses("start = 'a'",      literalGrammar("a"));
+  parserParses("start = 'abc'",    literalGrammar("abc"));
 
-  grammarParserParses("start = 'abcd'\n", literalGrammar("abcd"));
+  parserParses("start = 'abcd'\n", literalGrammar("abcd"));
 });
 
 /* Canonical singleQuotedCharacter is "a". */
 test("parses singleQuotedCharacter", function() {
-  grammarParserParses("start = 'a'",       literalGrammar("a"));
-  grammarParserParses("start = '\\n'",     literalGrammar("\n"));
-  grammarParserParses("start = '\\0'",     literalGrammar("\0"));
-  grammarParserParses("start = '\\x00'",   literalGrammar("\x00"));
-  grammarParserParses("start = '\\u0120'", literalGrammar("\u0120"));
-  grammarParserParses("start = '\\\n'",    literalGrammar("\n"));
+  parserParses("start = 'a'",       literalGrammar("a"));
+  parserParses("start = '\\n'",     literalGrammar("\n"));
+  parserParses("start = '\\0'",     literalGrammar("\0"));
+  parserParses("start = '\\x00'",   literalGrammar("\x00"));
+  parserParses("start = '\\u0120'", literalGrammar("\u0120"));
+  parserParses("start = '\\\n'",    literalGrammar("\n"));
 });
 
 /* Canonical simpleSingleQuotedCharacter is "a". */
 test("parses simpleSingleQuotedCharacter", function() {
-  grammarParserParses("start = 'a'",  literalGrammar("a"));
-  grammarParserParses("start = '\"'", literalGrammar("\""));
-  grammarParserDoesNotParse("start = '''");
-  grammarParserDoesNotParse("start = '\\'");
-  grammarParserDoesNotParse("start = '\n'");
-  grammarParserDoesNotParse("start = '\r'");
-  grammarParserDoesNotParse("start = '\u2028'");
-  grammarParserDoesNotParse("start = '\u2029'");
+  parserParses("start = 'a'",  literalGrammar("a"));
+  parserParses("start = '\"'", literalGrammar("\""));
+  parserDoesNotParse("start = '''");
+  parserDoesNotParse("start = '\\'");
+  parserDoesNotParse("start = '\n'");
+  parserDoesNotParse("start = '\r'");
+  parserDoesNotParse("start = '\u2028'");
+  parserDoesNotParse("start = '\u2029'");
 });
 
 /* Canonical class is "[a-d]". */
 test("parses class", function() {
-  grammarParserParses("start = []",     classGrammar(false, [],           "[]"));
-  grammarParserParses("start = [a-d]",  classGrammar(false, [["a", "d"]], "[a-d]"));
-  grammarParserParses("start = [^a-d]", classGrammar(true,  [["a", "d"]], "[^a-d]"));
-  grammarParserParses("start = [a]",    classGrammar(false, ["a"],        "[a]"));
-  grammarParserParses(
+  parserParses("start = []",     classGrammar(false, [],           "[]"));
+  parserParses("start = [a-d]",  classGrammar(false, [["a", "d"]], "[a-d]"));
+  parserParses("start = [^a-d]", classGrammar(true,  [["a", "d"]], "[^a-d]"));
+  parserParses("start = [a]",    classGrammar(false, ["a"],        "[a]"));
+  parserParses(
     "start = [a-de-hi-l]",
     classGrammar(false, [["a", "d"], ["e", "h"], ["i", "l"]], "[a-de-hi-l]")
   );
 
-  grammarParserParses("start = [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d]"));
+  parserParses("start = [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d]"));
 });
 
 /* Canonical classCharacterRange is "a-d". */
 test("parses classCharacterRange", function() {
-  grammarParserParses("start = [a-d]", classGrammar(false, [["a", "d"]], "[a-d]"));
-  grammarParserParses("start = [a-a]", classGrammar(false, [["a", "a"]], "[a-a]"));
-  grammarParserDoesNotParse("start = [b-a]");
-  grammarParserDoesNotParseWithMessage(
+  parserParses("start = [a-d]", classGrammar(false, [["a", "d"]], "[a-d]"));
+  parserParses("start = [a-a]", classGrammar(false, [["a", "a"]], "[a-a]"));
+  parserDoesNotParse("start = [b-a]");
+  parserDoesNotParseWithMessage(
     "start = [b-a]",
     "Invalid character range: b-a."
   );
@@ -445,167 +442,167 @@ test("parses classCharacterRange", function() {
 
 /* Canonical classCharacter is "a". */
 test("parses classCharacter", function() {
-  grammarParserParses("start = [a]", classGrammar(false, ["a"], "[a]"));
+  parserParses("start = [a]", classGrammar(false, ["a"], "[a]"));
 });
 
 /* Canonical bracketDelimitedCharacter is "a". */
 test("parses bracketDelimitedCharacter", function() {
-  grammarParserParses("start = [a]",       classGrammar(false, ["a"], "[a]"));
-  grammarParserParses("start = [\\n]",     classGrammar(false, ["\n"], "[\\n]"));
-  grammarParserParses("start = [\\0]",     classGrammar(false, ["\0"], "[\\0]"));
-  grammarParserParses("start = [\\x00]",   classGrammar(false, ["\0"], "[\\0]"));
-  grammarParserParses("start = [\\u0120]", classGrammar(false, ["\u0120"], "[\u0120]"));
-  grammarParserParses("start = [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
+  parserParses("start = [a]",       classGrammar(false, ["a"], "[a]"));
+  parserParses("start = [\\n]",     classGrammar(false, ["\n"], "[\\n]"));
+  parserParses("start = [\\0]",     classGrammar(false, ["\0"], "[\\0]"));
+  parserParses("start = [\\x00]",   classGrammar(false, ["\0"], "[\\0]"));
+  parserParses("start = [\\u0120]", classGrammar(false, ["\u0120"], "[\u0120]"));
+  parserParses("start = [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
 });
 
 /* Canonical simpleBracketDelimiedCharacter is "a". */
 test("parses simpleBracketDelimitedCharacter", function() {
-  grammarParserParses("start = [a]",  classGrammar(false, ["a"], "[a]"));
-  grammarParserParses("start = [[]",  classGrammar(false, ["["], "[[]"));
-  grammarParserDoesNotParse("start = []]");
-  grammarParserDoesNotParse("start = [\\]");
-  grammarParserDoesNotParse("start = [\n]");
-  grammarParserDoesNotParse("start = [\r]");
-  grammarParserDoesNotParse("start = [\u2028]");
-  grammarParserDoesNotParse("start = [\u2029]");
+  parserParses("start = [a]",  classGrammar(false, ["a"], "[a]"));
+  parserParses("start = [[]",  classGrammar(false, ["["], "[[]"));
+  parserDoesNotParse("start = []]");
+  parserDoesNotParse("start = [\\]");
+  parserDoesNotParse("start = [\n]");
+  parserDoesNotParse("start = [\r]");
+  parserDoesNotParse("start = [\u2028]");
+  parserDoesNotParse("start = [\u2029]");
 });
 
 /* Canonical simpleEscapeSequence is "\\n". */
 test("parses simpleEscapeSequence", function() {
-  grammarParserParses('start = "\\\'"', literalGrammar("'"));
-  grammarParserParses('start = "\\""',  literalGrammar("\""));
-  grammarParserParses('start = "\\\\"', literalGrammar("\\"));
-  grammarParserParses('start = "\\b"',  literalGrammar("\b"));
-  grammarParserParses('start = "\\f"',  literalGrammar("\f"));
-  grammarParserParses('start = "\\n"',  literalGrammar("\n"));
-  grammarParserParses('start = "\\r"',  literalGrammar("\r"));
-  grammarParserParses('start = "\\t"',  literalGrammar("\t"));
+  parserParses('start = "\\\'"', literalGrammar("'"));
+  parserParses('start = "\\""',  literalGrammar("\""));
+  parserParses('start = "\\\\"', literalGrammar("\\"));
+  parserParses('start = "\\b"',  literalGrammar("\b"));
+  parserParses('start = "\\f"',  literalGrammar("\f"));
+  parserParses('start = "\\n"',  literalGrammar("\n"));
+  parserParses('start = "\\r"',  literalGrammar("\r"));
+  parserParses('start = "\\t"',  literalGrammar("\t"));
   /* IE does not recognize "\v". */
-  grammarParserParses('start = "\\v"',  literalGrammar("\x0B"));
+  parserParses('start = "\\v"',  literalGrammar("\x0B"));
 
-  grammarParserParses('start = "\\a"',  literalGrammar("a"));
+  parserParses('start = "\\a"',  literalGrammar("a"));
 });
 
 /* Canonical zeroEscapeSequence is "\\0". */
 test("parses zeroEscapeSequence", function() {
-  grammarParserParses('start = "\\0"', literalGrammar("\0"));
-  grammarParserDoesNotParse('start = "\\00"');
-  grammarParserDoesNotParse('start = "\\09"');
+  parserParses('start = "\\0"', literalGrammar("\0"));
+  parserDoesNotParse('start = "\\00"');
+  parserDoesNotParse('start = "\\09"');
 });
 
 /* Canonical hexEscapeSequence is "\\x00". */
 test("parses hexEscapeSequence", function() {
-  grammarParserParses('start = "\\x00"',  literalGrammar("\x00"));
-  grammarParserParses('start = "\\x09"',  literalGrammar("\x09"));
-  grammarParserParses('start = "\\x0a"',  literalGrammar("\x0a"));
-  grammarParserParses('start = "\\x0f"',  literalGrammar("\x0f"));
-  grammarParserParses('start = "\\x0A"',  literalGrammar("\x0A"));
-  grammarParserParses('start = "\\x0F"',  literalGrammar("\x0F"));
-  grammarParserDoesNotParse('start = "\\x0"');
-  grammarParserParses('start = "\\x000"', literalGrammar("\x000"));
+  parserParses('start = "\\x00"',  literalGrammar("\x00"));
+  parserParses('start = "\\x09"',  literalGrammar("\x09"));
+  parserParses('start = "\\x0a"',  literalGrammar("\x0a"));
+  parserParses('start = "\\x0f"',  literalGrammar("\x0f"));
+  parserParses('start = "\\x0A"',  literalGrammar("\x0A"));
+  parserParses('start = "\\x0F"',  literalGrammar("\x0F"));
+  parserDoesNotParse('start = "\\x0"');
+  parserParses('start = "\\x000"', literalGrammar("\x000"));
 });
 
 /* Canonical unicodeEscapeSequence is "\\u0120". */
 test("parses unicodeEscapeSequence", function() {
-  grammarParserParses('start = "\\u0120"',  literalGrammar("\u0120"));
-  grammarParserParses('start = "\\u0129"',  literalGrammar("\u0129"));
-  grammarParserParses('start = "\\u012a"',  literalGrammar("\u012a"));
-  grammarParserParses('start = "\\u012f"',  literalGrammar("\u012f"));
-  grammarParserParses('start = "\\u012A"',  literalGrammar("\u012A"));
-  grammarParserParses('start = "\\u012F"',  literalGrammar("\u012F"));
-  grammarParserDoesNotParse('start = "\\u012"');
-  grammarParserParses('start = "\\u01234"', literalGrammar("\u01234"));
+  parserParses('start = "\\u0120"',  literalGrammar("\u0120"));
+  parserParses('start = "\\u0129"',  literalGrammar("\u0129"));
+  parserParses('start = "\\u012a"',  literalGrammar("\u012a"));
+  parserParses('start = "\\u012f"',  literalGrammar("\u012f"));
+  parserParses('start = "\\u012A"',  literalGrammar("\u012A"));
+  parserParses('start = "\\u012F"',  literalGrammar("\u012F"));
+  parserDoesNotParse('start = "\\u012"');
+  parserParses('start = "\\u01234"', literalGrammar("\u01234"));
 });
 
 /* Canonical eolEscapeSequence is "\\\n". */
 test("parses eolEscapeSequence", function() {
-  grammarParserParses('start = "\\\n"',     literalGrammar("\n"));
-  grammarParserParses('start = "\\\r\n"',   literalGrammar("\r\n"));
-  grammarParserParses('start = "\\\r"',     literalGrammar("\r"));
-  grammarParserParses('start = "\\\u2028"', literalGrammar("\u2028"));
-  grammarParserParses('start = "\\\u2029"', literalGrammar("\u2029"));
+  parserParses('start = "\\\n"',     literalGrammar("\n"));
+  parserParses('start = "\\\r\n"',   literalGrammar("\r\n"));
+  parserParses('start = "\\\r"',     literalGrammar("\r"));
+  parserParses('start = "\\\u2028"', literalGrammar("\u2028"));
+  parserParses('start = "\\\u2029"', literalGrammar("\u2029"));
 });
 
 /* Canonical __ is "\n". */
 test("parses __", function() {
-  grammarParserParses('start ="abcd"',              simpleGrammar);
-  grammarParserParses('start = "abcd"',             simpleGrammar);
-  grammarParserParses('start =\n"abcd"',            simpleGrammar);
-  grammarParserParses('start =/* comment */"abcd"', simpleGrammar);
-  grammarParserParses('start =   "abcd"',           simpleGrammar);
+  parserParses('start ="abcd"',              simpleGrammar);
+  parserParses('start = "abcd"',             simpleGrammar);
+  parserParses('start =\n"abcd"',            simpleGrammar);
+  parserParses('start =/* comment */"abcd"', simpleGrammar);
+  parserParses('start =   "abcd"',           simpleGrammar);
 });
 
 /* Trivial character class rules are not tested. */
 
 /* Canonical comment is "\/* comment *\/". */
 test("parses comment", function() {
-  grammarParserParses('start =// comment\n"abcd"',  simpleGrammar);
-  grammarParserParses('start =/* comment */"abcd"', simpleGrammar);
+  parserParses('start =// comment\n"abcd"',  simpleGrammar);
+  parserParses('start =/* comment */"abcd"', simpleGrammar);
 });
 /* Canonical singleLineComment is "// comment". */
 test("parses singleLineComment", function() {
-  grammarParserParses('start =//\n"abcd"',    simpleGrammar);
-  grammarParserParses('start =//a\n"abcd"',   simpleGrammar);
-  grammarParserParses('start =//aaa\n"abcd"', simpleGrammar);
-  grammarParserParses('start = "abcd"//',     simpleGrammar);
+  parserParses('start =//\n"abcd"',    simpleGrammar);
+  parserParses('start =//a\n"abcd"',   simpleGrammar);
+  parserParses('start =//aaa\n"abcd"', simpleGrammar);
+  parserParses('start = "abcd"//',     simpleGrammar);
 });
 
 /* Canonical multiLineComment is "\/* comment *\/". */
 test("parses multiLineComment", function() {
-  grammarParserParses('start =/**/"abcd"',    simpleGrammar);
-  grammarParserParses('start =/*a*/"abcd"',   simpleGrammar);
-  grammarParserParses('start =/*aaa*/"abcd"', simpleGrammar);
-  grammarParserParses('start =/*\n*/"abcd"',  simpleGrammar);
-  grammarParserParses('start =/***/"abcd"',   simpleGrammar);
-  grammarParserParses('start =/*a/*/"abcd"',  simpleGrammar);
+  parserParses('start =/**/"abcd"',    simpleGrammar);
+  parserParses('start =/*a*/"abcd"',   simpleGrammar);
+  parserParses('start =/*aaa*/"abcd"', simpleGrammar);
+  parserParses('start =/*\n*/"abcd"',  simpleGrammar);
+  parserParses('start =/***/"abcd"',   simpleGrammar);
+  parserParses('start =/*a/*/"abcd"',  simpleGrammar);
 
-  grammarParserDoesNotParse('start =/*"abcd"');
-  grammarParserDoesNotParse('start =/*/"abcd"');
-  grammarParserDoesNotParse('start =/*/**/*/"abcd"');
+  parserDoesNotParse('start =/*"abcd"');
+  parserDoesNotParse('start =/*/"abcd"');
+  parserDoesNotParse('start =/*/**/*/"abcd"');
 });
 
 /* Canonical eol is "\n". */
 test("parses eol", function() {
-  grammarParserParses('start =\n"abcd"',     simpleGrammar);
-  grammarParserParses('start =\r\n"abcd"',   simpleGrammar);
-  grammarParserParses('start =\r"abcd"',     simpleGrammar);
-  grammarParserParses('start =\u2028"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2029"abcd"', simpleGrammar);
+  parserParses('start =\n"abcd"',     simpleGrammar);
+  parserParses('start =\r\n"abcd"',   simpleGrammar);
+  parserParses('start =\r"abcd"',     simpleGrammar);
+  parserParses('start =\u2028"abcd"', simpleGrammar);
+  parserParses('start =\u2029"abcd"', simpleGrammar);
 });
 
 /* Canonical eolChar is "\n". */
 test("parses eolChar", function() {
-  grammarParserParses('start =\n"abcd"',     simpleGrammar);
-  grammarParserParses('start =\r"abcd"',     simpleGrammar);
-  grammarParserParses('start =\u2028"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2029"abcd"', simpleGrammar);
+  parserParses('start =\n"abcd"',     simpleGrammar);
+  parserParses('start =\r"abcd"',     simpleGrammar);
+  parserParses('start =\u2028"abcd"', simpleGrammar);
+  parserParses('start =\u2029"abcd"', simpleGrammar);
 });
 
 /* Canonical whitespace is " ". */
 test("parses whitespace", function() {
-  grammarParserParses('start =\t"abcd"',     simpleGrammar);
+  parserParses('start =\t"abcd"',     simpleGrammar);
   /* IE does not recognize "\v". */
-  grammarParserParses('start =\x0B"abcd"',   simpleGrammar);
-  grammarParserParses('start =\f"abcd"',     simpleGrammar);
-  grammarParserParses('start = "abcd"',      simpleGrammar);
-  grammarParserParses('start =\u00A0"abcd"', simpleGrammar);
-  grammarParserParses('start =\uFEFF"abcd"', simpleGrammar);
-  grammarParserParses('start =\u1680"abcd"', simpleGrammar);
-  grammarParserParses('start =\u180E"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2000"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2001"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2002"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2003"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2004"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2005"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2006"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2007"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2008"abcd"', simpleGrammar);
-  grammarParserParses('start =\u2009"abcd"', simpleGrammar);
-  grammarParserParses('start =\u200A"abcd"', simpleGrammar);
-  grammarParserParses('start =\u202F"abcd"', simpleGrammar);
-  grammarParserParses('start =\u205F"abcd"', simpleGrammar);
-  grammarParserParses('start =\u3000"abcd"', simpleGrammar);
+  parserParses('start =\x0B"abcd"',   simpleGrammar);
+  parserParses('start =\f"abcd"',     simpleGrammar);
+  parserParses('start = "abcd"',      simpleGrammar);
+  parserParses('start =\u00A0"abcd"', simpleGrammar);
+  parserParses('start =\uFEFF"abcd"', simpleGrammar);
+  parserParses('start =\u1680"abcd"', simpleGrammar);
+  parserParses('start =\u180E"abcd"', simpleGrammar);
+  parserParses('start =\u2000"abcd"', simpleGrammar);
+  parserParses('start =\u2001"abcd"', simpleGrammar);
+  parserParses('start =\u2002"abcd"', simpleGrammar);
+  parserParses('start =\u2003"abcd"', simpleGrammar);
+  parserParses('start =\u2004"abcd"', simpleGrammar);
+  parserParses('start =\u2005"abcd"', simpleGrammar);
+  parserParses('start =\u2006"abcd"', simpleGrammar);
+  parserParses('start =\u2007"abcd"', simpleGrammar);
+  parserParses('start =\u2008"abcd"', simpleGrammar);
+  parserParses('start =\u2009"abcd"', simpleGrammar);
+  parserParses('start =\u200A"abcd"', simpleGrammar);
+  parserParses('start =\u202F"abcd"', simpleGrammar);
+  parserParses('start =\u205F"abcd"', simpleGrammar);
+  parserParses('start =\u3000"abcd"', simpleGrammar);
 });
 
 })(this);
