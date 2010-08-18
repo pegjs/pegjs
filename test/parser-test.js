@@ -1,6 +1,4 @@
-(function() {
-
-var global = this;
+(function(global) {
 
 /* ===== Helpers ===== */
 
@@ -610,4 +608,4 @@ test("parses whitespace", function() {
   grammarParserParses('start =\u3000"abcd"', simpleGrammar);
 });
 
-})();
+})(this);

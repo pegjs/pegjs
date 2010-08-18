@@ -1,6 +1,4 @@
-(function() {
-
-var global = this;
+(function(global) {
 
 /* ===== Helpers ===== */
 
@@ -634,4 +632,4 @@ test("nested comments", function() {
   );
 });
 
-})();
+})(this);
