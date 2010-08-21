@@ -55,25 +55,9 @@ global.doesNotParseWithPos = function(parser, input, line, column) {
   );
 };
 
-/* ===== PEG ===== */
+/* ===== PEG.compiler ===== */
 
-module("PEG");
-
-test("buildParser reports syntax errors in the grammar", function() {
-  throws(
-    function() { PEG.buildParser(''); },
-    PEG.parser.SyntaxError
-  );
-});
-
-test("buildParser allows custom start rule", function() {
-  var parser = PEG.buildParser('s = "abcd"', "s");
-  parses(parser, "abcd", "abcd");
-});
-
-/* ===== Generated Parser ===== */
-
-module("Generated Parser");
+module("PEG.compiler");
 
 test("choices", function() {
   var parser = PEG.buildParser('start = "a" / "b" / "c"');
