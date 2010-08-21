@@ -1,21 +1,5 @@
 (function(global) {
 
-/* ===== Helpers ===== */
-
-global.parserParses = function(input, expected) {
-  global.parses(PEG.parser, input, expected);
-};
-
-global.parserDoesNotParse = function(input) {
-  global.doesNotParse(PEG.parser, input);
-}
-
-global.parserDoesNotParseWithMessage = function(input, message) {
-  global.doesNotParseWithMessage(PEG.parser, input, message);
-}
-
-/* ===== PEG.parser ===== */
-
 module("PEG.parser");
 
 function initializer(code) {
