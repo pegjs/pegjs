@@ -8,12 +8,21 @@ PEG.compiler = {
    * cause its malfunction.
    */
   compile: function(ast) {
-    for (var i = 0; i < this.checks.length; i++) {
-      this.checks[i](ast);
+    var CHECK_NAMES = [
+      "missingReferencedRules",
+      "leftRecursion"
+    ];
+
+    var PASS_NAMES = [
+      "proxyRules"
+    ];
+
+    for (var i = 0; i < CHECK_NAMES.length; i++) {
+      this.checks[CHECK_NAMES[i]](ast);
     }
 
-    for (var i = 0; i < this.passes.length; i++) {
-      ast = this.passes[i](ast);
+    for (var i = 0; i < PASS_NAMES.length; i++) {
+      ast = this.passes[PASS_NAMES[i]](ast);
     }
 
     var source = this.emitter(ast);

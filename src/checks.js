@@ -2,12 +2,13 @@
  * Checks made on the grammar AST before compilation. Each check is a function
  * that is passed the AST and does not return anything. If the check passes, the
  * function does not do anything special, otherwise it throws
- * |PEG.GrammarError|. The checks are run in sequence in order of their
- * definition.
+ * |PEG.GrammarError|. The order in which the checks are run is specified in
+ * |PEG.compiler.compile| and should be the same as the order of definitions
+ * here.
  */
-PEG.compiler.checks = [
+PEG.compiler.checks = {
   /* Checks that all referenced rules exist. */
-  function(ast) {
+  missingReferencedRules: function(ast) {
     function nop() {}
 
     function checkExpression(node) { check(node.expression); }
@@ -55,7 +56,7 @@ PEG.compiler.checks = [
   },
 
   /* Checks that no left recursion is present. */
-  function(ast) {
+  leftRecursion: function(ast) {
     function nop() {}
 
     function checkExpression(node, appliedRules) {
@@ -116,4 +117,4 @@ PEG.compiler.checks = [
 
     check(ast, []);
   }
-];
+};
