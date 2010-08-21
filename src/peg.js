@@ -1,7 +1,5 @@
 (function(global, undefined) {
 
-/* ===== PEG ===== */
-
 var PEG = {
   /*
    * Generates a parser from a specified grammar and returns it.
@@ -19,8 +17,6 @@ var PEG = {
   }
 };
 
-/* ===== PEG.GrammarError ===== */
-
 /* Thrown when the grammar contains an error. */
 
 PEG.GrammarError = function(message) {
@@ -30,13 +26,9 @@ PEG.GrammarError = function(message) {
 
 PEG.GrammarError.prototype = Error.prototype;
 
-/* ===== Includes ===== */
-
 // @include "utils.js"
 // @include "parser.js"
 // @include "compiler.js"
-
-/* ===== Export ===== */
 
 global.PEG = PEG;
 

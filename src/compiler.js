@@ -1,5 +1,3 @@
-/* ===== PEG.compiler ===== */
-
 PEG.compiler = {
   /*
    * Generates a parser from a specified grammar AST. Throws |PEG.GrammarError|
@@ -32,8 +30,6 @@ PEG.compiler = {
     return result;
   }
 };
-
-/* ===== Includes ===== */
 
 // @include "checks.js"
 // @include "passes.js"
