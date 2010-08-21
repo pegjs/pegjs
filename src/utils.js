@@ -82,6 +82,6 @@ function quoteForRegexpClass(s) {
  */
 function buildNodeVisitor(functions) {
   return function(node) {
-    functions[node.type].apply(null, arguments));
+    return functions[node.type].apply(null, arguments);
   }
 }
