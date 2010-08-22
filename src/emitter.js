@@ -644,13 +644,14 @@ PEG.compiler.emitter = function(ast) {
         "} else {",
         "  var ${resultVar} = null;",
         "  if (reportMatchFailures) {",
-        "    matchFailed(quote(${value|string}));",
+        "    matchFailed(${valueQuoted|string});",
         "  }",
         "}",
         {
-          value:     node.value,
-          length:    node.value.length,
-          resultVar: resultVar
+          value:       node.value,
+          valueQuoted: quote(node.value),
+          length:      node.value.length,
+          resultVar:   resultVar
         }
       );
     },
