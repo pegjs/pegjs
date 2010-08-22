@@ -32,20 +32,6 @@ PEG.parser = (function(){
           + '"';
       }
       
-      function contains(array, value) {
-        /*
-         * Stupid IE does not have Array.prototype.indexOf, otherwise this
-         * function would be a one-liner.
-         */
-        var length = array.length;
-        for (var i = 0; i < length; i++) {
-          if (array[i] === value) {
-            return true;
-          }
-        }
-        return false;
-      }
-      
       function matchFailed(failure) {
         if (pos < rightmostMatchFailuresPos) {
           return;
@@ -56,9 +42,7 @@ PEG.parser = (function(){
           rightmostMatchFailuresExpected = [];
         }
         
-        if (!contains(rightmostMatchFailuresExpected, failure)) {
-          rightmostMatchFailuresExpected.push(failure);
-        }
+        rightmostMatchFailuresExpected.push(failure);
       }
       
       function parse_grammar() {
@@ -3443,16 +3427,26 @@ PEG.parser = (function(){
       
       function buildErrorMessage() {
         function buildExpected(failuresExpected) {
-          switch (failuresExpected.length) {
+          failuresExpected.sort();
+          
+          var lastFailure = null;
+          var failuresExpectedUnique = [];
+          for (var i = 0; i < failuresExpected.length; i++) {
+            if (failuresExpected[i] !== lastFailure) {
+              failuresExpectedUnique.push(failuresExpected[i]);
+              lastFailure = failuresExpected[i];
+            }
+          }
+          
+          switch (failuresExpectedUnique.length) {
             case 0:
               return 'end of input';
             case 1:
-              return failuresExpected[0];
+              return failuresExpectedUnique[0];
             default:
-              failuresExpected.sort();
-              return failuresExpected.slice(0, failuresExpected.length - 1).join(', ')
+              return failuresExpectedUnique.slice(0, failuresExpectedUnique.length - 1).join(', ')
                 + ' or '
-                + failuresExpected[failuresExpected.length - 1];
+                + failuresExpectedUnique[failuresExpectedUnique.length - 1];
           }
         }
         

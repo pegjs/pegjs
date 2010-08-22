@@ -1,7 +1,3 @@
-/*
- * The code needs to be in sync with the code template in the compilation
- * function for "action" nodes.
- */
 function contains(array, value) {
   /*
    * Stupid IE does not have Array.prototype.indexOf, otherwise this function
