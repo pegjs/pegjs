@@ -505,8 +505,6 @@ PEG.compiler.emitter = function(ast) {
     },
 
     semantic_and: function(node, resultVar) {
-      var savedPosVar = UID.next("savedPos");
-
       return formatCode(
         "var ${resultVar} = (function() {${actionCode}})() ? '' : null;",
         {
@@ -517,8 +515,6 @@ PEG.compiler.emitter = function(ast) {
     },
 
     semantic_not: function(node, resultVar) {
-      var savedPosVar = UID.next("savedPos");
-
       return formatCode(
         "var ${resultVar} = (function() {${actionCode}})() ? null : '';",
         {
