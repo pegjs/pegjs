@@ -114,6 +114,7 @@ PEG.compiler.emitter = function(ast) {
         "     */",
         "    parse: function(input) {",
         "      var pos = 0;",
+        "      var reportMatchFailures = true;",
         "      var rightmostMatchFailuresPos = 0;",
         "      var rightmostMatchFailuresExpected = [];",
         "      var cache = {};",
@@ -225,7 +226,7 @@ PEG.compiler.emitter = function(ast) {
         "      ",
         "      ${initializerCode}",
         "      ",
-        "      var result = parse_${startRule}({ reportMatchFailures: true });",
+        "      var result = parse_${startRule}();",
         "      ",
         "      /*",
         "       * The parser is now in one of the following three states:",
@@ -306,14 +307,14 @@ PEG.compiler.emitter = function(ast) {
 
       if (node.displayName !== null) {
         var setReportMatchFailuresCode = formatCode(
-          "var savedReportMatchFailures = context.reportMatchFailures;",
-          "context.reportMatchFailures = false;"
+          "var savedReportMatchFailures = reportMatchFailures;",
+          "reportMatchFailures = false;"
         );
         var restoreReportMatchFailuresCode = formatCode(
-          "context.reportMatchFailures = savedReportMatchFailures;"
+          "reportMatchFailures = savedReportMatchFailures;"
         );
         var reportMatchFailureCode = formatCode(
-          "if (context.reportMatchFailures && ${resultVar} === null) {",
+          "if (reportMatchFailures && ${resultVar} === null) {",
           "  matchFailed(${displayName|string});",
           "}",
           {
@@ -328,7 +329,7 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        "function parse_${name}(context) {",
+        "function parse_${name}() {",
         "  var cacheKey = ${name|string} + '@' + pos;",
         "  var cachedResult = cache[cacheKey];",
         "  if (cachedResult) {",
@@ -456,10 +457,10 @@ PEG.compiler.emitter = function(ast) {
 
       return formatCode(
         "var ${savedPosVar} = pos;",
-        "var ${savedReportMatchFailuresVar} = context.reportMatchFailures;",
-        "context.reportMatchFailures = false;",
+        "var ${savedReportMatchFailuresVar} = reportMatchFailures;",
+        "reportMatchFailures = false;",
         "${expressionCode}",
-        "context.reportMatchFailures = ${savedReportMatchFailuresVar};",
+        "reportMatchFailures = ${savedReportMatchFailuresVar};",
         "if (${expressionResultVar} !== null) {",
         "  var ${resultVar} = '';",
         "  pos = ${savedPosVar};",
@@ -483,10 +484,10 @@ PEG.compiler.emitter = function(ast) {
 
       return formatCode(
         "var ${savedPosVar} = pos;",
-        "var ${savedReportMatchFailuresVar} = context.reportMatchFailures;",
-        "context.reportMatchFailures = false;",
+        "var ${savedReportMatchFailuresVar} = reportMatchFailures;",
+        "reportMatchFailures = false;",
         "${expressionCode}",
-        "context.reportMatchFailures = ${savedReportMatchFailuresVar};",
+        "reportMatchFailures = ${savedReportMatchFailuresVar};",
         "if (${expressionResultVar} === null) {",
         "  var ${resultVar} = '';",
         "} else {",
@@ -631,7 +632,7 @@ PEG.compiler.emitter = function(ast) {
 
     rule_ref: function(node, resultVar) {
       return formatCode(
-        "var ${resultVar} = ${ruleMethod}(context);",
+        "var ${resultVar} = ${ruleMethod}();",
         {
           ruleMethod: "parse_" + node.name,
           resultVar:  resultVar
@@ -646,7 +647,7 @@ PEG.compiler.emitter = function(ast) {
         "  pos += ${length};",
         "} else {",
         "  var ${resultVar} = null;",
-        "  if (context.reportMatchFailures) {",
+        "  if (reportMatchFailures) {",
         "    matchFailed(quote(${value|string}));",
         "  }",
         "}",
@@ -665,7 +666,7 @@ PEG.compiler.emitter = function(ast) {
         "  pos++;",
         "} else {",
         "  var ${resultVar} = null;",
-        "  if (context.reportMatchFailures) {",
+        "  if (reportMatchFailures) {",
         "    matchFailed('any character');",
         "  }",
         "}",
@@ -699,7 +700,7 @@ PEG.compiler.emitter = function(ast) {
         "  pos++;",
         "} else {",
         "  var ${resultVar} = null;",
-        "  if (context.reportMatchFailures) {",
+        "  if (reportMatchFailures) {",
         "    matchFailed(${rawText|string});",
         "  }",
         "}",

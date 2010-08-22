@@ -10,6 +10,7 @@ PEG.parser = (function(){
      */
     parse: function(input) {
       var pos = 0;
+      var reportMatchFailures = true;
       var rightmostMatchFailuresPos = 0;
       var rightmostMatchFailuresExpected = [];
       var cache = {};
@@ -60,7 +61,7 @@ PEG.parser = (function(){
         }
       }
       
-      function parse_grammar(context) {
+      function parse_grammar() {
         var cacheKey = "grammar" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -70,17 +71,17 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse___(context);
+        var result2 = parse___();
         if (result2 !== null) {
-          var result6 = parse_initializer(context);
+          var result6 = parse_initializer();
           var result3 = result6 !== null ? result6 : '';
           if (result3 !== null) {
-            var result5 = parse_rule(context);
+            var result5 = parse_rule();
             if (result5 !== null) {
               var result4 = [];
               while (result5 !== null) {
                 result4.push(result5);
-                var result5 = parse_rule(context);
+                var result5 = parse_rule();
               }
             } else {
               var result4 = null;
@@ -122,7 +123,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_initializer(context) {
+      function parse_initializer() {
         var cacheKey = "initializer" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -132,9 +133,9 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_action(context);
+        var result2 = parse_action();
         if (result2 !== null) {
-          var result4 = parse_semicolon(context);
+          var result4 = parse_semicolon();
           var result3 = result4 !== null ? result4 : '';
           if (result3 !== null) {
             var result1 = [result2, result3];
@@ -164,7 +165,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_rule(context) {
+      function parse_rule() {
         var cacheKey = "rule" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -174,9 +175,9 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_identifier(context);
+        var result2 = parse_identifier();
         if (result2 !== null) {
-          var result9 = parse_literal(context);
+          var result9 = parse_literal();
           if (result9 !== null) {
             var result3 = result9;
           } else {
@@ -185,7 +186,7 @@ PEG.parser = (function(){
               pos += 0;
             } else {
               var result8 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote(""));
               }
             }
@@ -196,11 +197,11 @@ PEG.parser = (function(){
             };
           }
           if (result3 !== null) {
-            var result4 = parse_equals(context);
+            var result4 = parse_equals();
             if (result4 !== null) {
-              var result5 = parse_choice(context);
+              var result5 = parse_choice();
               if (result5 !== null) {
-                var result7 = parse_semicolon(context);
+                var result7 = parse_semicolon();
                 var result6 = result7 !== null ? result7 : '';
                 if (result6 !== null) {
                   var result1 = [result2, result3, result4, result5, result6];
@@ -244,7 +245,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_choice(context) {
+      function parse_choice() {
         var cacheKey = "choice" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -254,13 +255,13 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_sequence(context);
+        var result2 = parse_sequence();
         if (result2 !== null) {
           var result3 = [];
           var savedPos1 = pos;
-          var result5 = parse_slash(context);
+          var result5 = parse_slash();
           if (result5 !== null) {
-            var result6 = parse_sequence(context);
+            var result6 = parse_sequence();
             if (result6 !== null) {
               var result4 = [result5, result6];
             } else {
@@ -274,9 +275,9 @@ PEG.parser = (function(){
           while (result4 !== null) {
             result3.push(result4);
             var savedPos1 = pos;
-            var result5 = parse_slash(context);
+            var result5 = parse_slash();
             if (result5 !== null) {
-              var result6 = parse_sequence(context);
+              var result6 = parse_sequence();
               if (result6 !== null) {
                 var result4 = [result5, result6];
               } else {
@@ -324,7 +325,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_sequence(context) {
+      function parse_sequence() {
         var cacheKey = "sequence" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -335,13 +336,13 @@ PEG.parser = (function(){
         
         var savedPos0 = pos;
         var result6 = [];
-        var result8 = parse_labeled(context);
+        var result8 = parse_labeled();
         while (result8 !== null) {
           result6.push(result8);
-          var result8 = parse_labeled(context);
+          var result8 = parse_labeled();
         }
         if (result6 !== null) {
-          var result7 = parse_action(context);
+          var result7 = parse_action();
           if (result7 !== null) {
             var result5 = [result6, result7];
           } else {
@@ -371,10 +372,10 @@ PEG.parser = (function(){
           var result0 = result4;
         } else {
           var result2 = [];
-          var result3 = parse_labeled(context);
+          var result3 = parse_labeled();
           while (result3 !== null) {
             result2.push(result3);
-            var result3 = parse_labeled(context);
+            var result3 = parse_labeled();
           }
           var result1 = result2 !== null
             ? (function(elements) {
@@ -402,7 +403,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_labeled(context) {
+      function parse_labeled() {
         var cacheKey = "labeled" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -412,11 +413,11 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result4 = parse_identifier(context);
+        var result4 = parse_identifier();
         if (result4 !== null) {
-          var result5 = parse_colon(context);
+          var result5 = parse_colon();
           if (result5 !== null) {
-            var result6 = parse_prefixed(context);
+            var result6 = parse_prefixed();
             if (result6 !== null) {
               var result3 = [result4, result5, result6];
             } else {
@@ -443,7 +444,7 @@ PEG.parser = (function(){
         if (result2 !== null) {
           var result0 = result2;
         } else {
-          var result1 = parse_prefixed(context);
+          var result1 = parse_prefixed();
           if (result1 !== null) {
             var result0 = result1;
           } else {
@@ -460,7 +461,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_prefixed(context) {
+      function parse_prefixed() {
         var cacheKey = "prefixed" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -470,9 +471,9 @@ PEG.parser = (function(){
         
         
         var savedPos3 = pos;
-        var result16 = parse_and(context);
+        var result16 = parse_and();
         if (result16 !== null) {
-          var result17 = parse_action(context);
+          var result17 = parse_action();
           if (result17 !== null) {
             var result15 = [result16, result17];
           } else {
@@ -495,9 +496,9 @@ PEG.parser = (function(){
           var result0 = result14;
         } else {
           var savedPos2 = pos;
-          var result12 = parse_and(context);
+          var result12 = parse_and();
           if (result12 !== null) {
-            var result13 = parse_suffixed(context);
+            var result13 = parse_suffixed();
             if (result13 !== null) {
               var result11 = [result12, result13];
             } else {
@@ -520,9 +521,9 @@ PEG.parser = (function(){
             var result0 = result10;
           } else {
             var savedPos1 = pos;
-            var result8 = parse_not(context);
+            var result8 = parse_not();
             if (result8 !== null) {
-              var result9 = parse_action(context);
+              var result9 = parse_action();
               if (result9 !== null) {
                 var result7 = [result8, result9];
               } else {
@@ -545,9 +546,9 @@ PEG.parser = (function(){
               var result0 = result6;
             } else {
               var savedPos0 = pos;
-              var result4 = parse_not(context);
+              var result4 = parse_not();
               if (result4 !== null) {
-                var result5 = parse_suffixed(context);
+                var result5 = parse_suffixed();
                 if (result5 !== null) {
                   var result3 = [result4, result5];
                 } else {
@@ -569,7 +570,7 @@ PEG.parser = (function(){
               if (result2 !== null) {
                 var result0 = result2;
               } else {
-                var result1 = parse_suffixed(context);
+                var result1 = parse_suffixed();
                 if (result1 !== null) {
                   var result0 = result1;
                 } else {
@@ -589,7 +590,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_suffixed(context) {
+      function parse_suffixed() {
         var cacheKey = "suffixed" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -599,9 +600,9 @@ PEG.parser = (function(){
         
         
         var savedPos2 = pos;
-        var result12 = parse_primary(context);
+        var result12 = parse_primary();
         if (result12 !== null) {
-          var result13 = parse_question(context);
+          var result13 = parse_question();
           if (result13 !== null) {
             var result11 = [result12, result13];
           } else {
@@ -624,9 +625,9 @@ PEG.parser = (function(){
           var result0 = result10;
         } else {
           var savedPos1 = pos;
-          var result8 = parse_primary(context);
+          var result8 = parse_primary();
           if (result8 !== null) {
-            var result9 = parse_star(context);
+            var result9 = parse_star();
             if (result9 !== null) {
               var result7 = [result8, result9];
             } else {
@@ -649,9 +650,9 @@ PEG.parser = (function(){
             var result0 = result6;
           } else {
             var savedPos0 = pos;
-            var result4 = parse_primary(context);
+            var result4 = parse_primary();
             if (result4 !== null) {
-              var result5 = parse_plus(context);
+              var result5 = parse_plus();
               if (result5 !== null) {
                 var result3 = [result4, result5];
               } else {
@@ -673,7 +674,7 @@ PEG.parser = (function(){
             if (result2 !== null) {
               var result0 = result2;
             } else {
-              var result1 = parse_primary(context);
+              var result1 = parse_primary();
               if (result1 !== null) {
                 var result0 = result1;
               } else {
@@ -692,7 +693,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_primary(context) {
+      function parse_primary() {
         var cacheKey = "primary" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -702,13 +703,13 @@ PEG.parser = (function(){
         
         
         var savedPos1 = pos;
-        var result13 = parse_identifier(context);
+        var result13 = parse_identifier();
         if (result13 !== null) {
           var savedPos2 = pos;
-          var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-          context.reportMatchFailures = false;
+          var savedReportMatchFailuresVar0 = reportMatchFailures;
+          reportMatchFailures = false;
           var savedPos3 = pos;
-          var result19 = parse_literal(context);
+          var result19 = parse_literal();
           if (result19 !== null) {
             var result16 = result19;
           } else {
@@ -717,7 +718,7 @@ PEG.parser = (function(){
               pos += 0;
             } else {
               var result18 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote(""));
               }
             }
@@ -728,7 +729,7 @@ PEG.parser = (function(){
             };
           }
           if (result16 !== null) {
-            var result17 = parse_equals(context);
+            var result17 = parse_equals();
             if (result17 !== null) {
               var result15 = [result16, result17];
             } else {
@@ -739,7 +740,7 @@ PEG.parser = (function(){
             var result15 = null;
             pos = savedPos3;
           }
-          context.reportMatchFailures = savedReportMatchFailuresVar0;
+          reportMatchFailures = savedReportMatchFailuresVar0;
           if (result15 === null) {
             var result14 = '';
           } else {
@@ -767,7 +768,7 @@ PEG.parser = (function(){
         if (result11 !== null) {
           var result0 = result11;
         } else {
-          var result10 = parse_literal(context);
+          var result10 = parse_literal();
           var result9 = result10 !== null
             ? (function(value) {
                   return {
@@ -779,23 +780,23 @@ PEG.parser = (function(){
           if (result9 !== null) {
             var result0 = result9;
           } else {
-            var result8 = parse_dot(context);
+            var result8 = parse_dot();
             var result7 = result8 !== null
               ? (function() { return { type: "any" }; })()
               : null;
             if (result7 !== null) {
               var result0 = result7;
             } else {
-              var result6 = parse_class(context);
+              var result6 = parse_class();
               if (result6 !== null) {
                 var result0 = result6;
               } else {
                 var savedPos0 = pos;
-                var result3 = parse_lparen(context);
+                var result3 = parse_lparen();
                 if (result3 !== null) {
-                  var result4 = parse_choice(context);
+                  var result4 = parse_choice();
                   if (result4 !== null) {
-                    var result5 = parse_rparen(context);
+                    var result5 = parse_rparen();
                     if (result5 !== null) {
                       var result2 = [result3, result4, result5];
                     } else {
@@ -832,7 +833,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_action(context) {
+      function parse_action() {
         var cacheKey = "action" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -840,12 +841,12 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportMatchFailures = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
         var savedPos0 = pos;
-        var result2 = parse_braced(context);
+        var result2 = parse_braced();
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -859,8 +860,8 @@ PEG.parser = (function(){
         var result0 = result1 !== null
           ? (function(braced) { return braced.substr(1, braced.length - 2); })(result1[0])
           : null;
-        context.reportMatchFailures = savedReportMatchFailures;
-        if (context.reportMatchFailures && result0 === null) {
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
           matchFailed("action");
         }
         
@@ -871,7 +872,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_braced(context) {
+      function parse_braced() {
         var cacheKey = "braced" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -886,17 +887,17 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("{"));
           }
         }
         if (result2 !== null) {
           var result3 = [];
-          var result7 = parse_braced(context);
+          var result7 = parse_braced();
           if (result7 !== null) {
             var result5 = result7;
           } else {
-            var result6 = parse_nonBraceCharacter(context);
+            var result6 = parse_nonBraceCharacter();
             if (result6 !== null) {
               var result5 = result6;
             } else {
@@ -905,11 +906,11 @@ PEG.parser = (function(){
           }
           while (result5 !== null) {
             result3.push(result5);
-            var result7 = parse_braced(context);
+            var result7 = parse_braced();
             if (result7 !== null) {
               var result5 = result7;
             } else {
-              var result6 = parse_nonBraceCharacter(context);
+              var result6 = parse_nonBraceCharacter();
               if (result6 !== null) {
                 var result5 = result6;
               } else {
@@ -923,7 +924,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result4 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("}"));
               }
             }
@@ -956,7 +957,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_nonBraceCharacters(context) {
+      function parse_nonBraceCharacters() {
         var cacheKey = "nonBraceCharacters" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -965,12 +966,12 @@ PEG.parser = (function(){
         }
         
         
-        var result2 = parse_nonBraceCharacter(context);
+        var result2 = parse_nonBraceCharacter();
         if (result2 !== null) {
           var result1 = [];
           while (result2 !== null) {
             result1.push(result2);
-            var result2 = parse_nonBraceCharacter(context);
+            var result2 = parse_nonBraceCharacter();
           }
         } else {
           var result1 = null;
@@ -988,7 +989,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_nonBraceCharacter(context) {
+      function parse_nonBraceCharacter() {
         var cacheKey = "nonBraceCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1002,7 +1003,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed("[^{}]");
           }
         }
@@ -1016,7 +1017,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_equals(context) {
+      function parse_equals() {
         var cacheKey = "equals" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1031,12 +1032,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("="));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1060,7 +1061,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_colon(context) {
+      function parse_colon() {
         var cacheKey = "colon" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1075,12 +1076,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote(":"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1104,7 +1105,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_semicolon(context) {
+      function parse_semicolon() {
         var cacheKey = "semicolon" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1119,12 +1120,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote(";"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1148,7 +1149,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_slash(context) {
+      function parse_slash() {
         var cacheKey = "slash" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1163,12 +1164,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("/"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1192,7 +1193,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_and(context) {
+      function parse_and() {
         var cacheKey = "and" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1207,12 +1208,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("&"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1236,7 +1237,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_not(context) {
+      function parse_not() {
         var cacheKey = "not" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1251,12 +1252,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("!"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1280,7 +1281,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_question(context) {
+      function parse_question() {
         var cacheKey = "question" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1295,12 +1296,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("?"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1324,7 +1325,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_star(context) {
+      function parse_star() {
         var cacheKey = "star" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1339,12 +1340,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("*"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1368,7 +1369,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_plus(context) {
+      function parse_plus() {
         var cacheKey = "plus" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1383,12 +1384,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("+"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1412,7 +1413,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_lparen(context) {
+      function parse_lparen() {
         var cacheKey = "lparen" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1427,12 +1428,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("("));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1456,7 +1457,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_rparen(context) {
+      function parse_rparen() {
         var cacheKey = "rparen" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1471,12 +1472,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote(")"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1500,7 +1501,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_dot(context) {
+      function parse_dot() {
         var cacheKey = "dot" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1515,12 +1516,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("."));
           }
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1544,7 +1545,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_identifier(context) {
+      function parse_identifier() {
         var cacheKey = "identifier" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1552,10 +1553,10 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportMatchFailures = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
         var savedPos0 = pos;
-        var result12 = parse_letter(context);
+        var result12 = parse_letter();
         if (result12 !== null) {
           var result2 = result12;
         } else {
@@ -1564,7 +1565,7 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result11 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("_"));
             }
           }
@@ -1576,7 +1577,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result10 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("$"));
               }
             }
@@ -1589,11 +1590,11 @@ PEG.parser = (function(){
         }
         if (result2 !== null) {
           var result3 = [];
-          var result9 = parse_letter(context);
+          var result9 = parse_letter();
           if (result9 !== null) {
             var result5 = result9;
           } else {
-            var result8 = parse_digit(context);
+            var result8 = parse_digit();
             if (result8 !== null) {
               var result5 = result8;
             } else {
@@ -1602,7 +1603,7 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result7 = null;
-                if (context.reportMatchFailures) {
+                if (reportMatchFailures) {
                   matchFailed(quote("_"));
                 }
               }
@@ -1614,7 +1615,7 @@ PEG.parser = (function(){
                   pos += 1;
                 } else {
                   var result6 = null;
-                  if (context.reportMatchFailures) {
+                  if (reportMatchFailures) {
                     matchFailed(quote("$"));
                   }
                 }
@@ -1628,11 +1629,11 @@ PEG.parser = (function(){
           }
           while (result5 !== null) {
             result3.push(result5);
-            var result9 = parse_letter(context);
+            var result9 = parse_letter();
             if (result9 !== null) {
               var result5 = result9;
             } else {
-              var result8 = parse_digit(context);
+              var result8 = parse_digit();
               if (result8 !== null) {
                 var result5 = result8;
               } else {
@@ -1641,7 +1642,7 @@ PEG.parser = (function(){
                   pos += 1;
                 } else {
                   var result7 = null;
-                  if (context.reportMatchFailures) {
+                  if (reportMatchFailures) {
                     matchFailed(quote("_"));
                   }
                 }
@@ -1653,7 +1654,7 @@ PEG.parser = (function(){
                     pos += 1;
                   } else {
                     var result6 = null;
-                    if (context.reportMatchFailures) {
+                    if (reportMatchFailures) {
                       matchFailed(quote("$"));
                     }
                   }
@@ -1667,7 +1668,7 @@ PEG.parser = (function(){
             }
           }
           if (result3 !== null) {
-            var result4 = parse___(context);
+            var result4 = parse___();
             if (result4 !== null) {
               var result1 = [result2, result3, result4];
             } else {
@@ -1687,8 +1688,8 @@ PEG.parser = (function(){
                 return head + tail.join("");
               })(result1[0], result1[1])
           : null;
-        context.reportMatchFailures = savedReportMatchFailures;
-        if (context.reportMatchFailures && result0 === null) {
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
           matchFailed("identifier");
         }
         
@@ -1699,7 +1700,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_literal(context) {
+      function parse_literal() {
         var cacheKey = "literal" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1707,14 +1708,14 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportMatchFailures = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
         var savedPos0 = pos;
-        var result5 = parse_doubleQuotedLiteral(context);
+        var result5 = parse_doubleQuotedLiteral();
         if (result5 !== null) {
           var result2 = result5;
         } else {
-          var result4 = parse_singleQuotedLiteral(context);
+          var result4 = parse_singleQuotedLiteral();
           if (result4 !== null) {
             var result2 = result4;
           } else {
@@ -1722,7 +1723,7 @@ PEG.parser = (function(){
           };
         }
         if (result2 !== null) {
-          var result3 = parse___(context);
+          var result3 = parse___();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1736,8 +1737,8 @@ PEG.parser = (function(){
         var result0 = result1 !== null
           ? (function(literal) { return literal; })(result1[0])
           : null;
-        context.reportMatchFailures = savedReportMatchFailures;
-        if (context.reportMatchFailures && result0 === null) {
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
           matchFailed("literal");
         }
         
@@ -1748,7 +1749,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_doubleQuotedLiteral(context) {
+      function parse_doubleQuotedLiteral() {
         var cacheKey = "doubleQuotedLiteral" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1763,16 +1764,16 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\""));
           }
         }
         if (result2 !== null) {
           var result3 = [];
-          var result5 = parse_doubleQuotedCharacter(context);
+          var result5 = parse_doubleQuotedCharacter();
           while (result5 !== null) {
             result3.push(result5);
-            var result5 = parse_doubleQuotedCharacter(context);
+            var result5 = parse_doubleQuotedCharacter();
           }
           if (result3 !== null) {
             if (input.substr(pos, 1) === "\"") {
@@ -1780,7 +1781,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result4 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("\""));
               }
             }
@@ -1811,7 +1812,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_doubleQuotedCharacter(context) {
+      function parse_doubleQuotedCharacter() {
         var cacheKey = "doubleQuotedCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1820,27 +1821,27 @@ PEG.parser = (function(){
         }
         
         
-        var result6 = parse_simpleDoubleQuotedCharacter(context);
+        var result6 = parse_simpleDoubleQuotedCharacter();
         if (result6 !== null) {
           var result0 = result6;
         } else {
-          var result5 = parse_simpleEscapeSequence(context);
+          var result5 = parse_simpleEscapeSequence();
           if (result5 !== null) {
             var result0 = result5;
           } else {
-            var result4 = parse_zeroEscapeSequence(context);
+            var result4 = parse_zeroEscapeSequence();
             if (result4 !== null) {
               var result0 = result4;
             } else {
-              var result3 = parse_hexEscapeSequence(context);
+              var result3 = parse_hexEscapeSequence();
               if (result3 !== null) {
                 var result0 = result3;
               } else {
-                var result2 = parse_unicodeEscapeSequence(context);
+                var result2 = parse_unicodeEscapeSequence();
                 if (result2 !== null) {
                   var result0 = result2;
                 } else {
-                  var result1 = parse_eolEscapeSequence(context);
+                  var result1 = parse_eolEscapeSequence();
                   if (result1 !== null) {
                     var result0 = result1;
                   } else {
@@ -1861,7 +1862,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_simpleDoubleQuotedCharacter(context) {
+      function parse_simpleDoubleQuotedCharacter() {
         var cacheKey = "simpleDoubleQuotedCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1872,14 +1873,14 @@ PEG.parser = (function(){
         
         var savedPos0 = pos;
         var savedPos1 = pos;
-        var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailuresVar0 = reportMatchFailures;
+        reportMatchFailures = false;
         if (input.substr(pos, 1) === "\"") {
           var result7 = "\"";
           pos += 1;
         } else {
           var result7 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\""));
           }
         }
@@ -1891,14 +1892,14 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result6 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("\\"));
             }
           }
           if (result6 !== null) {
             var result4 = result6;
           } else {
-            var result5 = parse_eolChar(context);
+            var result5 = parse_eolChar();
             if (result5 !== null) {
               var result4 = result5;
             } else {
@@ -1906,7 +1907,7 @@ PEG.parser = (function(){
             };
           };
         }
-        context.reportMatchFailures = savedReportMatchFailuresVar0;
+        reportMatchFailures = savedReportMatchFailuresVar0;
         if (result4 === null) {
           var result2 = '';
         } else {
@@ -1919,7 +1920,7 @@ PEG.parser = (function(){
             pos++;
           } else {
             var result3 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed('any character');
             }
           }
@@ -1946,7 +1947,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_singleQuotedLiteral(context) {
+      function parse_singleQuotedLiteral() {
         var cacheKey = "singleQuotedLiteral" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -1961,16 +1962,16 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("'"));
           }
         }
         if (result2 !== null) {
           var result3 = [];
-          var result5 = parse_singleQuotedCharacter(context);
+          var result5 = parse_singleQuotedCharacter();
           while (result5 !== null) {
             result3.push(result5);
-            var result5 = parse_singleQuotedCharacter(context);
+            var result5 = parse_singleQuotedCharacter();
           }
           if (result3 !== null) {
             if (input.substr(pos, 1) === "'") {
@@ -1978,7 +1979,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result4 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("'"));
               }
             }
@@ -2009,7 +2010,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_singleQuotedCharacter(context) {
+      function parse_singleQuotedCharacter() {
         var cacheKey = "singleQuotedCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2018,27 +2019,27 @@ PEG.parser = (function(){
         }
         
         
-        var result6 = parse_simpleSingleQuotedCharacter(context);
+        var result6 = parse_simpleSingleQuotedCharacter();
         if (result6 !== null) {
           var result0 = result6;
         } else {
-          var result5 = parse_simpleEscapeSequence(context);
+          var result5 = parse_simpleEscapeSequence();
           if (result5 !== null) {
             var result0 = result5;
           } else {
-            var result4 = parse_zeroEscapeSequence(context);
+            var result4 = parse_zeroEscapeSequence();
             if (result4 !== null) {
               var result0 = result4;
             } else {
-              var result3 = parse_hexEscapeSequence(context);
+              var result3 = parse_hexEscapeSequence();
               if (result3 !== null) {
                 var result0 = result3;
               } else {
-                var result2 = parse_unicodeEscapeSequence(context);
+                var result2 = parse_unicodeEscapeSequence();
                 if (result2 !== null) {
                   var result0 = result2;
                 } else {
-                  var result1 = parse_eolEscapeSequence(context);
+                  var result1 = parse_eolEscapeSequence();
                   if (result1 !== null) {
                     var result0 = result1;
                   } else {
@@ -2059,7 +2060,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_simpleSingleQuotedCharacter(context) {
+      function parse_simpleSingleQuotedCharacter() {
         var cacheKey = "simpleSingleQuotedCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2070,14 +2071,14 @@ PEG.parser = (function(){
         
         var savedPos0 = pos;
         var savedPos1 = pos;
-        var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailuresVar0 = reportMatchFailures;
+        reportMatchFailures = false;
         if (input.substr(pos, 1) === "'") {
           var result7 = "'";
           pos += 1;
         } else {
           var result7 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("'"));
           }
         }
@@ -2089,14 +2090,14 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result6 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("\\"));
             }
           }
           if (result6 !== null) {
             var result4 = result6;
           } else {
-            var result5 = parse_eolChar(context);
+            var result5 = parse_eolChar();
             if (result5 !== null) {
               var result4 = result5;
             } else {
@@ -2104,7 +2105,7 @@ PEG.parser = (function(){
             };
           };
         }
-        context.reportMatchFailures = savedReportMatchFailuresVar0;
+        reportMatchFailures = savedReportMatchFailuresVar0;
         if (result4 === null) {
           var result2 = '';
         } else {
@@ -2117,7 +2118,7 @@ PEG.parser = (function(){
             pos++;
           } else {
             var result3 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed('any character');
             }
           }
@@ -2144,7 +2145,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_class(context) {
+      function parse_class() {
         var cacheKey = "class" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2152,15 +2153,15 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportMatchFailures = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
         var savedPos0 = pos;
         if (input.substr(pos, 1) === "[") {
           var result2 = "[";
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("["));
           }
         }
@@ -2170,18 +2171,18 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result10 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("^"));
             }
           }
           var result3 = result10 !== null ? result10 : '';
           if (result3 !== null) {
             var result4 = [];
-            var result9 = parse_classCharacterRange(context);
+            var result9 = parse_classCharacterRange();
             if (result9 !== null) {
               var result7 = result9;
             } else {
-              var result8 = parse_classCharacter(context);
+              var result8 = parse_classCharacter();
               if (result8 !== null) {
                 var result7 = result8;
               } else {
@@ -2190,11 +2191,11 @@ PEG.parser = (function(){
             }
             while (result7 !== null) {
               result4.push(result7);
-              var result9 = parse_classCharacterRange(context);
+              var result9 = parse_classCharacterRange();
               if (result9 !== null) {
                 var result7 = result9;
               } else {
-                var result8 = parse_classCharacter(context);
+                var result8 = parse_classCharacter();
                 if (result8 !== null) {
                   var result7 = result8;
                 } else {
@@ -2208,12 +2209,12 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result5 = null;
-                if (context.reportMatchFailures) {
+                if (reportMatchFailures) {
                   matchFailed(quote("]"));
                 }
               }
               if (result5 !== null) {
-                var result6 = parse___(context);
+                var result6 = parse___();
                 if (result6 !== null) {
                   var result1 = [result2, result3, result4, result5, result6];
                 } else {
@@ -2253,8 +2254,8 @@ PEG.parser = (function(){
                 };
               })(result1[1], result1[2])
           : null;
-        context.reportMatchFailures = savedReportMatchFailures;
-        if (context.reportMatchFailures && result0 === null) {
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
           matchFailed("character class");
         }
         
@@ -2265,7 +2266,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_classCharacterRange(context) {
+      function parse_classCharacterRange() {
         var cacheKey = "classCharacterRange" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2275,19 +2276,19 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_classCharacter(context);
+        var result2 = parse_classCharacter();
         if (result2 !== null) {
           if (input.substr(pos, 1) === "-") {
             var result3 = "-";
             pos += 1;
           } else {
             var result3 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("-"));
             }
           }
           if (result3 !== null) {
-            var result4 = parse_classCharacter(context);
+            var result4 = parse_classCharacter();
             if (result4 !== null) {
               var result1 = [result2, result3, result4];
             } else {
@@ -2327,7 +2328,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_classCharacter(context) {
+      function parse_classCharacter() {
         var cacheKey = "classCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2336,7 +2337,7 @@ PEG.parser = (function(){
         }
         
         
-        var result1 = parse_bracketDelimitedCharacter(context);
+        var result1 = parse_bracketDelimitedCharacter();
         var result0 = result1 !== null
           ? (function(char_) {
                 return {
@@ -2356,7 +2357,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_bracketDelimitedCharacter(context) {
+      function parse_bracketDelimitedCharacter() {
         var cacheKey = "bracketDelimitedCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2365,27 +2366,27 @@ PEG.parser = (function(){
         }
         
         
-        var result6 = parse_simpleBracketDelimitedCharacter(context);
+        var result6 = parse_simpleBracketDelimitedCharacter();
         if (result6 !== null) {
           var result0 = result6;
         } else {
-          var result5 = parse_simpleEscapeSequence(context);
+          var result5 = parse_simpleEscapeSequence();
           if (result5 !== null) {
             var result0 = result5;
           } else {
-            var result4 = parse_zeroEscapeSequence(context);
+            var result4 = parse_zeroEscapeSequence();
             if (result4 !== null) {
               var result0 = result4;
             } else {
-              var result3 = parse_hexEscapeSequence(context);
+              var result3 = parse_hexEscapeSequence();
               if (result3 !== null) {
                 var result0 = result3;
               } else {
-                var result2 = parse_unicodeEscapeSequence(context);
+                var result2 = parse_unicodeEscapeSequence();
                 if (result2 !== null) {
                   var result0 = result2;
                 } else {
-                  var result1 = parse_eolEscapeSequence(context);
+                  var result1 = parse_eolEscapeSequence();
                   if (result1 !== null) {
                     var result0 = result1;
                   } else {
@@ -2406,7 +2407,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_simpleBracketDelimitedCharacter(context) {
+      function parse_simpleBracketDelimitedCharacter() {
         var cacheKey = "simpleBracketDelimitedCharacter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2417,14 +2418,14 @@ PEG.parser = (function(){
         
         var savedPos0 = pos;
         var savedPos1 = pos;
-        var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailuresVar0 = reportMatchFailures;
+        reportMatchFailures = false;
         if (input.substr(pos, 1) === "]") {
           var result7 = "]";
           pos += 1;
         } else {
           var result7 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("]"));
           }
         }
@@ -2436,14 +2437,14 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result6 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("\\"));
             }
           }
           if (result6 !== null) {
             var result4 = result6;
           } else {
-            var result5 = parse_eolChar(context);
+            var result5 = parse_eolChar();
             if (result5 !== null) {
               var result4 = result5;
             } else {
@@ -2451,7 +2452,7 @@ PEG.parser = (function(){
             };
           };
         }
-        context.reportMatchFailures = savedReportMatchFailuresVar0;
+        reportMatchFailures = savedReportMatchFailuresVar0;
         if (result4 === null) {
           var result2 = '';
         } else {
@@ -2464,7 +2465,7 @@ PEG.parser = (function(){
             pos++;
           } else {
             var result3 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed('any character');
             }
           }
@@ -2491,7 +2492,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_simpleEscapeSequence(context) {
+      function parse_simpleEscapeSequence() {
         var cacheKey = "simpleEscapeSequence" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2506,15 +2507,15 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\\"));
           }
         }
         if (result2 !== null) {
           var savedPos1 = pos;
-          var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-          context.reportMatchFailures = false;
-          var result9 = parse_digit(context);
+          var savedReportMatchFailuresVar0 = reportMatchFailures;
+          reportMatchFailures = false;
+          var result9 = parse_digit();
           if (result9 !== null) {
             var result5 = result9;
           } else {
@@ -2523,7 +2524,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result8 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("x"));
               }
             }
@@ -2535,14 +2536,14 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result7 = null;
-                if (context.reportMatchFailures) {
+                if (reportMatchFailures) {
                   matchFailed(quote("u"));
                 }
               }
               if (result7 !== null) {
                 var result5 = result7;
               } else {
-                var result6 = parse_eolChar(context);
+                var result6 = parse_eolChar();
                 if (result6 !== null) {
                   var result5 = result6;
                 } else {
@@ -2551,7 +2552,7 @@ PEG.parser = (function(){
               };
             };
           }
-          context.reportMatchFailures = savedReportMatchFailuresVar0;
+          reportMatchFailures = savedReportMatchFailuresVar0;
           if (result5 === null) {
             var result3 = '';
           } else {
@@ -2564,7 +2565,7 @@ PEG.parser = (function(){
               pos++;
             } else {
               var result4 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed('any character');
               }
             }
@@ -2603,7 +2604,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_zeroEscapeSequence(context) {
+      function parse_zeroEscapeSequence() {
         var cacheKey = "zeroEscapeSequence" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2618,16 +2619,16 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\\0"));
           }
         }
         if (result2 !== null) {
           var savedPos1 = pos;
-          var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-          context.reportMatchFailures = false;
-          var result4 = parse_digit(context);
-          context.reportMatchFailures = savedReportMatchFailuresVar0;
+          var savedReportMatchFailuresVar0 = reportMatchFailures;
+          reportMatchFailures = false;
+          var result4 = parse_digit();
+          reportMatchFailures = savedReportMatchFailuresVar0;
           if (result4 === null) {
             var result3 = '';
           } else {
@@ -2657,7 +2658,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_hexEscapeSequence(context) {
+      function parse_hexEscapeSequence() {
         var cacheKey = "hexEscapeSequence" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2672,14 +2673,14 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\\x"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse_hexDigit(context);
+          var result3 = parse_hexDigit();
           if (result3 !== null) {
-            var result4 = parse_hexDigit(context);
+            var result4 = parse_hexDigit();
             if (result4 !== null) {
               var result1 = [result2, result3, result4];
             } else {
@@ -2709,7 +2710,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_unicodeEscapeSequence(context) {
+      function parse_unicodeEscapeSequence() {
         var cacheKey = "unicodeEscapeSequence" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2724,18 +2725,18 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\\u"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse_hexDigit(context);
+          var result3 = parse_hexDigit();
           if (result3 !== null) {
-            var result4 = parse_hexDigit(context);
+            var result4 = parse_hexDigit();
             if (result4 !== null) {
-              var result5 = parse_hexDigit(context);
+              var result5 = parse_hexDigit();
               if (result5 !== null) {
-                var result6 = parse_hexDigit(context);
+                var result6 = parse_hexDigit();
                 if (result6 !== null) {
                   var result1 = [result2, result3, result4, result5, result6];
                 } else {
@@ -2773,7 +2774,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_eolEscapeSequence(context) {
+      function parse_eolEscapeSequence() {
         var cacheKey = "eolEscapeSequence" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2788,12 +2789,12 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result2 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\\"));
           }
         }
         if (result2 !== null) {
-          var result3 = parse_eol(context);
+          var result3 = parse_eol();
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -2817,7 +2818,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_digit(context) {
+      function parse_digit() {
         var cacheKey = "digit" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2831,7 +2832,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed("[0-9]");
           }
         }
@@ -2845,7 +2846,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_hexDigit(context) {
+      function parse_hexDigit() {
         var cacheKey = "hexDigit" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2859,7 +2860,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed("[0-9a-fA-F]");
           }
         }
@@ -2873,7 +2874,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_letter(context) {
+      function parse_letter() {
         var cacheKey = "letter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2882,11 +2883,11 @@ PEG.parser = (function(){
         }
         
         
-        var result2 = parse_lowerCaseLetter(context);
+        var result2 = parse_lowerCaseLetter();
         if (result2 !== null) {
           var result0 = result2;
         } else {
-          var result1 = parse_upperCaseLetter(context);
+          var result1 = parse_upperCaseLetter();
           if (result1 !== null) {
             var result0 = result1;
           } else {
@@ -2903,7 +2904,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_lowerCaseLetter(context) {
+      function parse_lowerCaseLetter() {
         var cacheKey = "lowerCaseLetter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2917,7 +2918,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed("[a-z]");
           }
         }
@@ -2931,7 +2932,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_upperCaseLetter(context) {
+      function parse_upperCaseLetter() {
         var cacheKey = "upperCaseLetter" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2945,7 +2946,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed("[A-Z]");
           }
         }
@@ -2959,7 +2960,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse___(context) {
+      function parse___() {
         var cacheKey = "__" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -2969,15 +2970,15 @@ PEG.parser = (function(){
         
         
         var result0 = [];
-        var result4 = parse_whitespace(context);
+        var result4 = parse_whitespace();
         if (result4 !== null) {
           var result1 = result4;
         } else {
-          var result3 = parse_eol(context);
+          var result3 = parse_eol();
           if (result3 !== null) {
             var result1 = result3;
           } else {
-            var result2 = parse_comment(context);
+            var result2 = parse_comment();
             if (result2 !== null) {
               var result1 = result2;
             } else {
@@ -2987,15 +2988,15 @@ PEG.parser = (function(){
         }
         while (result1 !== null) {
           result0.push(result1);
-          var result4 = parse_whitespace(context);
+          var result4 = parse_whitespace();
           if (result4 !== null) {
             var result1 = result4;
           } else {
-            var result3 = parse_eol(context);
+            var result3 = parse_eol();
             if (result3 !== null) {
               var result1 = result3;
             } else {
-              var result2 = parse_comment(context);
+              var result2 = parse_comment();
               if (result2 !== null) {
                 var result1 = result2;
               } else {
@@ -3014,7 +3015,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_comment(context) {
+      function parse_comment() {
         var cacheKey = "comment" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -3022,21 +3023,21 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportMatchFailures = context.reportMatchFailures;
-        context.reportMatchFailures = false;
-        var result2 = parse_singleLineComment(context);
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
+        var result2 = parse_singleLineComment();
         if (result2 !== null) {
           var result0 = result2;
         } else {
-          var result1 = parse_multiLineComment(context);
+          var result1 = parse_multiLineComment();
           if (result1 !== null) {
             var result0 = result1;
           } else {
             var result0 = null;;
           };
         }
-        context.reportMatchFailures = savedReportMatchFailures;
-        if (context.reportMatchFailures && result0 === null) {
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
           matchFailed("comment");
         }
         
@@ -3047,7 +3048,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_singleLineComment(context) {
+      function parse_singleLineComment() {
         var cacheKey = "singleLineComment" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -3062,7 +3063,7 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result1 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("//"));
           }
         }
@@ -3070,10 +3071,10 @@ PEG.parser = (function(){
           var result2 = [];
           var savedPos1 = pos;
           var savedPos2 = pos;
-          var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-          context.reportMatchFailures = false;
-          var result6 = parse_eolChar(context);
-          context.reportMatchFailures = savedReportMatchFailuresVar0;
+          var savedReportMatchFailuresVar0 = reportMatchFailures;
+          reportMatchFailures = false;
+          var result6 = parse_eolChar();
+          reportMatchFailures = savedReportMatchFailuresVar0;
           if (result6 === null) {
             var result4 = '';
           } else {
@@ -3086,7 +3087,7 @@ PEG.parser = (function(){
               pos++;
             } else {
               var result5 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed('any character');
               }
             }
@@ -3104,10 +3105,10 @@ PEG.parser = (function(){
             result2.push(result3);
             var savedPos1 = pos;
             var savedPos2 = pos;
-            var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-            context.reportMatchFailures = false;
-            var result6 = parse_eolChar(context);
-            context.reportMatchFailures = savedReportMatchFailuresVar0;
+            var savedReportMatchFailuresVar0 = reportMatchFailures;
+            reportMatchFailures = false;
+            var result6 = parse_eolChar();
+            reportMatchFailures = savedReportMatchFailuresVar0;
             if (result6 === null) {
               var result4 = '';
             } else {
@@ -3120,7 +3121,7 @@ PEG.parser = (function(){
                 pos++;
               } else {
                 var result5 = null;
-                if (context.reportMatchFailures) {
+                if (reportMatchFailures) {
                   matchFailed('any character');
                 }
               }
@@ -3155,7 +3156,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_multiLineComment(context) {
+      function parse_multiLineComment() {
         var cacheKey = "multiLineComment" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -3170,7 +3171,7 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result1 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("/*"));
           }
         }
@@ -3178,18 +3179,18 @@ PEG.parser = (function(){
           var result2 = [];
           var savedPos1 = pos;
           var savedPos2 = pos;
-          var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-          context.reportMatchFailures = false;
+          var savedReportMatchFailuresVar0 = reportMatchFailures;
+          reportMatchFailures = false;
           if (input.substr(pos, 2) === "*/") {
             var result7 = "*/";
             pos += 2;
           } else {
             var result7 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("*/"));
             }
           }
-          context.reportMatchFailures = savedReportMatchFailuresVar0;
+          reportMatchFailures = savedReportMatchFailuresVar0;
           if (result7 === null) {
             var result5 = '';
           } else {
@@ -3202,7 +3203,7 @@ PEG.parser = (function(){
               pos++;
             } else {
               var result6 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed('any character');
               }
             }
@@ -3220,18 +3221,18 @@ PEG.parser = (function(){
             result2.push(result4);
             var savedPos1 = pos;
             var savedPos2 = pos;
-            var savedReportMatchFailuresVar0 = context.reportMatchFailures;
-            context.reportMatchFailures = false;
+            var savedReportMatchFailuresVar0 = reportMatchFailures;
+            reportMatchFailures = false;
             if (input.substr(pos, 2) === "*/") {
               var result7 = "*/";
               pos += 2;
             } else {
               var result7 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("*/"));
               }
             }
-            context.reportMatchFailures = savedReportMatchFailuresVar0;
+            reportMatchFailures = savedReportMatchFailuresVar0;
             if (result7 === null) {
               var result5 = '';
             } else {
@@ -3244,7 +3245,7 @@ PEG.parser = (function(){
                 pos++;
               } else {
                 var result6 = null;
-                if (context.reportMatchFailures) {
+                if (reportMatchFailures) {
                   matchFailed('any character');
                 }
               }
@@ -3265,7 +3266,7 @@ PEG.parser = (function(){
               pos += 2;
             } else {
               var result3 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("*/"));
               }
             }
@@ -3293,7 +3294,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_eol(context) {
+      function parse_eol() {
         var cacheKey = "eol" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -3301,14 +3302,14 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportMatchFailures = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
         if (input.substr(pos, 1) === "\n") {
           var result5 = "\n";
           pos += 1;
         } else {
           var result5 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed(quote("\n"));
           }
         }
@@ -3320,7 +3321,7 @@ PEG.parser = (function(){
             pos += 2;
           } else {
             var result4 = null;
-            if (context.reportMatchFailures) {
+            if (reportMatchFailures) {
               matchFailed(quote("\r\n"));
             }
           }
@@ -3332,7 +3333,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result3 = null;
-              if (context.reportMatchFailures) {
+              if (reportMatchFailures) {
                 matchFailed(quote("\r"));
               }
             }
@@ -3344,7 +3345,7 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result2 = null;
-                if (context.reportMatchFailures) {
+                if (reportMatchFailures) {
                   matchFailed(quote("\u2028"));
                 }
               }
@@ -3356,7 +3357,7 @@ PEG.parser = (function(){
                   pos += 1;
                 } else {
                   var result1 = null;
-                  if (context.reportMatchFailures) {
+                  if (reportMatchFailures) {
                     matchFailed(quote("\u2029"));
                   }
                 }
@@ -3369,8 +3370,8 @@ PEG.parser = (function(){
             };
           };
         }
-        context.reportMatchFailures = savedReportMatchFailures;
-        if (context.reportMatchFailures && result0 === null) {
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
           matchFailed("end of line");
         }
         
@@ -3381,7 +3382,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_eolChar(context) {
+      function parse_eolChar() {
         var cacheKey = "eolChar" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -3395,7 +3396,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed("[\\n\\r\\u2028\\u2029]");
           }
         }
@@ -3409,7 +3410,7 @@ PEG.parser = (function(){
         return result0;
       }
       
-      function parse_whitespace(context) {
+      function parse_whitespace() {
         var cacheKey = "whitespace" + '@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
@@ -3417,19 +3418,19 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportMatchFailures = context.reportMatchFailures;
-        context.reportMatchFailures = false;
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
         if (input.substr(pos).match(/^[ 	 ﻿ ᠎ -   　]/) !== null) {
           var result0 = input.charAt(pos);
           pos++;
         } else {
           var result0 = null;
-          if (context.reportMatchFailures) {
+          if (reportMatchFailures) {
             matchFailed("[ 	 ﻿ ᠎ -   　]");
           }
         }
-        context.reportMatchFailures = savedReportMatchFailures;
-        if (context.reportMatchFailures && result0 === null) {
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
           matchFailed("whitespace");
         }
         
@@ -3497,7 +3498,7 @@ PEG.parser = (function(){
       
       
       
-      var result = parse_grammar({ reportMatchFailures: true });
+      var result = parse_grammar();
       
       /*
        * The parser is now in one of the following three states:
