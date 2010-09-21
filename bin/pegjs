@@ -1,10 +1,36 @@
 #!/bin/sh
 
+JAVA_BIN=`which java`
+NODE_BIN=`which node`
+
+
 if [ -L "$0" ]; then
   THIS_FILE=`readlink "$0"`
 else
   THIS_FILE=$0
 fi
-DIR=`dirname "$THIS_FILE"`
+DIR=`dirname "$THIS_FILE"` 
 
-java -jar "$DIR/../vendor/rhino/js.jar" "$DIR/pegjs-main.js" "$DIR" "$@"
+
+#
+# Try to determine if this script is really
+# a symlink from pegjs_n, if so use node.js
+# if it is a symlink from pegjs_j use rhino.
+#
+PEGJS_BIN=`basename "$0"`
+if [ "$PEGJS_BIN" != "pegjs" ]; then 
+  DIR=`dirname "$0"` 
+  if [ "$PEGJS_BIN" = "pegjs_n" ]; then
+    $NODE_BIN "$DIR/pegjs-main.js" "$@"
+  elif [ "$PEGJS_BIN" = "pegjs_j" ]; then 
+    $JAVA_BIN -jar "$DIR/../vendor/rhino/js.jar" "$DIR/pegjs-main.js" "$DIR" "$@"
+  fi
+else
+  # Otherwise default to using rhino if java was found,
+  # if not use node.js
+  if [ $JAVA_BIN ]; then
+    $JAVA_BIN -jar "$DIR/../vendor/rhino/js.jar" "$DIR/pegjs-main.js" "$DIR" "$@"
+  elif [ $NODE_BIN ]; then
+    $NODE_BIN "$DIR/pegjs-main.js" "$@"
+  fi
+fi
