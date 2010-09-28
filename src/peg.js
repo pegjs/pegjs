@@ -1,4 +1,4 @@
-(function() {
+(function(global) {
 
 var undefined;
 
@@ -34,8 +34,8 @@ PEG.GrammarError.prototype = Error.prototype;
 
 if (typeof exports !== "undefined") { // Looks like we're in CommonJS environment.
   extend(exports, PEG);
-} else {                              // Okay, assume this is a browser.
-  window.PEG = PEG;
+} else {                              // Okay, assume this is a browser/Rhino.
+  global.PEG = PEG;
 }
 
-})();
+})(this);
