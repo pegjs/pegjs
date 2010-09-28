@@ -1,4 +1,6 @@
-(function(global, undefined) {
+(function(global) {
+
+var undefined;
 
 var PEG = {
   /*
