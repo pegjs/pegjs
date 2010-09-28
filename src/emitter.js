@@ -254,7 +254,7 @@ PEG.compiler.emitter = function(ast) {
         "       */",
         "      if (result === null || pos !== input.length) {",
         "        var errorPosition = computeErrorPosition();",
-        "        throw new this.SyntaxError(",
+        "        throw new SyntaxError(",
         "          buildErrorMessage(),",
         "          errorPosition.line,",
         "          errorPosition.column",
