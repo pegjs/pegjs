@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
 
 var undefined;
 
@@ -32,6 +32,10 @@ PEG.GrammarError.prototype = Error.prototype;
 // @include "parser.js"
 // @include "compiler.js"
 
-global.PEG = PEG;
+if (typeof exports !== "undefined") { // Looks like we're in CommonJS environment.
+  extend(exports, PEG);
+} else {                              // Okay, assume this is a browser.
+  window.PEG = PEG;
+}
 
-})(this);
+})();

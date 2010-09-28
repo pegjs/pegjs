@@ -1,3 +1,9 @@
+function extend(target, source) {
+  for (var key in source) {
+    target[key] = source[key];
+  }
+}
+
 function contains(array, value) {
   /*
    * Stupid IE does not have Array.prototype.indexOf, otherwise this function
