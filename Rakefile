@@ -27,7 +27,7 @@ def preprocess(input, base_dir)
 end
 
 file PARSER_OUT_FILE => PARSER_SRC_FILE do
-  system "#{PEGJS} PEG.parser #{PARSER_SRC_FILE} #{PARSER_OUT_FILE}"
+  system "#{PEGJS} --export-var PEG.parser #{PARSER_SRC_FILE} #{PARSER_OUT_FILE}"
 end
 
 file PEGJS_OUT_FILE => SRC_FILES do

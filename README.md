@@ -48,7 +48,7 @@ To generate the parser from JavaScript code, include the `lib/compiler.js` file 
 
 To generate the parser from a command line, you need to have Java installed (so that [Rhino](http://www.mozilla.org/rhino/) — which is included in PEG.js — can run). Use the `bin/pegjs` script on Unix or `bin/pegjs.bat` batch file on Windows:
 
-    $ bin/pegjs arithmeticsParser examples/arithmetics.pegjs
+    $ bin/pegjs --export-var arithmeticsParser examples/arithmetics.pegjs
 
 This command will create the parser from the `examples/arithmetics.pegjs` file and put in into the `examples/arithmetics.js` file. The parser object will be available in the `arithmeticsParser` global variable. To learn more about the generator usage, use  the `--help` option.
 
