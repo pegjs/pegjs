@@ -28,11 +28,12 @@ PegJSUtils=function(){
           PegJSUtils.prototype.readFile=function(inputFile,callback) {
             if(inputFile===this.FILE_STDIN){
               var stdin = process.openStdin();
+              stdin.setEncoding('ascii');
               var data = "";
-              stdin.addListener("data",function(data){ data+=data; });
-              stdin.addListener("end", function(data){ return callback(data); });
+              stdin.addListener("data",function(_data){ data+=_data; });
+              stdin.addListener("end", function(){ return callback(data); });
             } else {
-              var data = fs.readFileSync(inputFile);
+              var data = fs.readFileSync(inputFile,"ascii");
               return callback(data);
             }
           }
