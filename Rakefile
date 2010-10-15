@@ -30,7 +30,9 @@ file PARSER_OUT_FILE => PARSER_SRC_FILE do
   system "#{PEGJS} --export-var PEG.parser #{PARSER_SRC_FILE} #{PARSER_OUT_FILE}"
 end
 
-file PEGJS_OUT_FILE => SRC_FILES do
+directory LIB_DIR
+
+file PEGJS_OUT_FILE => SRC_FILES + [LIB_DIR] do
   File.open(PEGJS_OUT_FILE, "w") do |f|
     f.write(preprocess(File.read(PEGJS_SRC_FILE), SRC_DIR))
   end
