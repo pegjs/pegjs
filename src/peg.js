@@ -3,6 +3,9 @@
 var undefined;
 
 var PEG = {
+  /* PEG.js version. */
+  VERSION: "@VERSION",
+
   /*
    * Generates a parser from a specified grammar and returns it.
    *

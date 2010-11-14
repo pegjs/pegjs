@@ -12,18 +12,20 @@ PEGJS_OUT_FILE  = "#{LIB_DIR}/peg.js"
 PARSER_SRC_FILE  = "#{SRC_DIR}/parser.pegjs"
 PARSER_OUT_FILE  = "#{SRC_DIR}/parser.js"
 
-def preprocess(input, base_dir)
+PEGJS_VERSION = File.read("VERSION").strip
+
+def preprocess(input, base_dir, version)
   input.split("\n").map do |line|
     if line =~ /^\s*\/\/\s*@include\s*"([^"]*)"\s*$/
       included_file = "#{base_dir}/#$1"
       if !File.exist?(included_file)
         abort "Included file \"#{included_file}\" does not exist."
       end
-      preprocess(File.read(included_file), base_dir)
+      preprocess(File.read(included_file), base_dir, version)
     else
       line
     end
-  end.join("\n")
+  end.join("\n").gsub("@VERSION", version)
 end
 
 file PARSER_OUT_FILE => PARSER_SRC_FILE do
@@ -32,7 +34,7 @@ end
 
 file PEGJS_OUT_FILE => SRC_FILES do
   File.open(PEGJS_OUT_FILE, "w") do |f|
-    f.write(preprocess(File.read(PEGJS_SRC_FILE), SRC_DIR))
+    f.write(preprocess(File.read(PEGJS_SRC_FILE), SRC_DIR, PEGJS_VERSION))
   end
 end
 
