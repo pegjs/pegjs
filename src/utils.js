@@ -35,6 +35,44 @@ function map(array, callback) {
 }
 
 /*
+ * Returns a string padded on the left to a desired length with a character.
+ *
+ * The code needs to be in sync with th code template in the compilation
+ * function for "action" nodes.
+ */
+function padLeft(input, padding, length) {
+  var result = input;
+
+  var padLength = length - input.length;
+  for (var i = 0; i < padLength; i++) {
+    result = padding + result;
+  }
+
+  return result;
+}
+
+/*
+ * Returns an escape sequence for given character. Uses \x for characters <=
+ * 0xFF to save space, \u for the rest.
+ *
+ * The code needs to be in sync with th code template in the compilation
+ * function for "action" nodes.
+ */
+function escape(ch) {
+  var charCode = ch.charCodeAt(0);
+
+  if (charCode < 0xFF) {
+    var escapeChar = 'x';
+    var length = 2;
+  } else {
+    var escapeChar = 'u';
+    var length = 4;
+  }
+
+  return '\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);
+}
+
+/*
  * Surrounds the string with quotes and escapes characters inside so that the
  * result is a valid JavaScript string.
  *
@@ -47,14 +85,15 @@ function quote(s) {
    * literal except for the closing quote character, backslash, carriage return,
    * line separator, paragraph separator, and line feed. Any character may
    * appear in the form of an escape sequence.
+   *
+   * For portability, we also escape escape all non-ASCII characters.
    */
   return '"' + s
-    .replace(/\\/g, '\\\\')        // backslash
-    .replace(/"/g, '\\"')          // closing quote character
-    .replace(/\r/g, '\\r')         // carriage return
-    .replace(/\u2028/g, '\\u2028') // line separator
-    .replace(/\u2029/g, '\\u2029') // paragraph separator
-    .replace(/\n/g, '\\n')         // line feed
+    .replace(/\\/g, '\\\\')            // backslash
+    .replace(/"/g, '\\"')              // closing quote character
+    .replace(/\r/g, '\\r')             // carriage return
+    .replace(/\n/g, '\\n')             // line feed
+    .replace(/[\x80-\uFFFF]/g, escape) // non-ASCII characters
     + '"';
 };
 
@@ -63,17 +102,20 @@ function quote(s) {
  * characters in a character class of a regular expression.
  */
 function quoteForRegexpClass(s) {
-  /* Based on ECMA-262, 5th ed., 7.8.5 & 15.10.1. */
+  /*
+   * Based on ECMA-262, 5th ed., 7.8.5 & 15.10.1.
+   *
+   * For portability, we also escape escape all non-ASCII characters.
+   */
   return s
-    .replace(/\\/g, '\\\\')        // backslash
-    .replace(/\0/g, '\\0')         // null, IE needs this
-    .replace(/\//g, '\\/')         // closing slash
-    .replace(/]/g, '\\]')          // closing bracket
-    .replace(/-/g, '\\-')          // dash
-    .replace(/\r/g, '\\r')         // carriage return
-    .replace(/\u2028/g, '\\u2028') // line separator
-    .replace(/\u2029/g, '\\u2029') // paragraph separator
-    .replace(/\n/g, '\\n')         // line feed
+    .replace(/\\/g, '\\\\')            // backslash
+    .replace(/\0/g, '\\0')             // null, IE needs this
+    .replace(/\//g, '\\/')             // closing slash
+    .replace(/]/g, '\\]')              // closing bracket
+    .replace(/-/g, '\\-')              // dash
+    .replace(/\r/g, '\\r')             // carriage return
+    .replace(/\n/g, '\\n')             // line feed
+    .replace(/[\x80-\uFFFF]/g, escape) // non-ASCII characters
 }
 
 /*

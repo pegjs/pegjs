@@ -15,6 +15,31 @@ PEG.parser = (function(){
       var rightmostMatchFailuresExpected = [];
       var cache = {};
       
+      function padLeft(input, padding, length) {
+        var result = input;
+        
+        var padLength = length - input.length;
+        for (var i = 0; i < padLength; i++) {
+          result = padding + result;
+        }
+        
+        return result;
+      }
+      
+      function escape(ch) {
+        var charCode = ch.charCodeAt(0);
+        
+        if (charCode < 0xFF) {
+          var escapeChar = 'x';
+          var length = 2;
+        } else {
+          var escapeChar = 'u';
+          var length = 4;
+        }
+        
+        return '\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);
+      }
+      
       function quote(s) {
         /*
          * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a
@@ -23,12 +48,11 @@ PEG.parser = (function(){
          * Any character may appear in the form of an escape sequence.
          */
         return '"' + s
-          .replace(/\\/g, '\\\\')        // backslash
-          .replace(/"/g, '\\"')          // closing quote character
-          .replace(/\r/g, '\\r')         // carriage return
-          .replace(/\u2028/g, '\\u2028') // line separator
-          .replace(/\u2029/g, '\\u2029') // paragraph separator
-          .replace(/\n/g, '\\n')         // line feed
+          .replace(/\\/g, '\\\\')            // backslash
+          .replace(/"/g, '\\"')              // closing quote character
+          .replace(/\r/g, '\\r')             // carriage return
+          .replace(/\n/g, '\\n')             // line feed
+          .replace(/[\x80-\uFFFF]/g, escape) // non-ASCII characters
           + '"';
       }
       
@@ -3404,13 +3428,13 @@ PEG.parser = (function(){
         
         var savedReportMatchFailures = reportMatchFailures;
         reportMatchFailures = false;
-        if (input.substr(pos).match(/^[ 	 ﻿ ᠎ -   　]/) !== null) {
+        if (input.substr(pos).match(/^[ 	\xA0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]/) !== null) {
           var result0 = input.charAt(pos);
           pos++;
         } else {
           var result0 = null;
           if (reportMatchFailures) {
-            matchFailed("[ 	 ﻿ ᠎ -   　]");
+            matchFailed("[ 	\\xA0\\uFEFF\\u1680\\u180E\\u2000-\\u200A\\u202F\\u205F\\u3000]");
           }
         }
         reportMatchFailures = savedReportMatchFailures;
