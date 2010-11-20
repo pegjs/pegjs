@@ -95,12 +95,26 @@ test("map", function() {
 
 module("PEG.StringUtils");
 
+test("padLeft", function() {
+  strictEqual(PEG.StringUtils.padLeft("abcd", "x", 0), "abcd");
+  strictEqual(PEG.StringUtils.padLeft("abcd", "x", 4), "abcd");
+  strictEqual(PEG.StringUtils.padLeft("abcd", "x", 5), "xabcd");
+  strictEqual(PEG.StringUtils.padLeft("abcd", "x", 7), "xxxabcd");
+});
+
+test("escape", function() {
+  strictEqual(PEG.StringUtils.escape("\0"),     '\\x00');
+  strictEqual(PEG.StringUtils.escape("\xFF"),   '\\xFF');
+  strictEqual(PEG.StringUtils.escape("\u0100"), '\\u0100');
+  strictEqual(PEG.StringUtils.escape("\uFFFF"), '\\uFFFF');
+});
+
 test("quote", function() {
   strictEqual(PEG.StringUtils.quote(""), '""');
   strictEqual(PEG.StringUtils.quote("abcd"), '"abcd"');
   strictEqual(
-    PEG.StringUtils.quote("\"\\\r\u2028\u2029\n\"\\\r\u2028\u2029\n"),
-    '"\\\"\\\\\\r\\u2028\\u2029\\n\\\"\\\\\\r\\u2028\\u2029\\n"'
+    PEG.StringUtils.quote("\"\\\r\n\x80\xFF\u0100\uFFFF\"\\\r\n\x80\xFF\u0100\uFFFF"),
+    '"\\\"\\\\\\r\\n\\x80\\xFF\\u0100\\uFFFF\\\"\\\\\\r\\n\\x80\\xFF\\u0100\\uFFFF"'
   );
 });
 
@@ -112,8 +126,8 @@ test("quoteForClass", function() {
   strictEqual(PEG.RegExpUtils.quoteForClass(""), '');
   strictEqual(PEG.RegExpUtils.quoteForClass("abcd"), 'abcd');
   strictEqual(
-    PEG.RegExpUtils.quoteForClass("\\\0/]-\r\u2028\u2029\n\\\0/]-\r\u2028\u2029\n"),
-    '\\\\\\0\\/\\]\\-\\r\\u2028\\u2029\\n\\\\\\0\\/\\]\\-\\r\\u2028\\u2029\\n'
+    PEG.RegExpUtils.quoteForClass("\\\0/]-\r\n\x80\xFF\u0100\uFFFF\\\0/]-\r\n\x80\xFF\u0100\uFFFF"),
+    '\\\\\\0\\/\\]\\-\\r\\n\\x80\\xFF\\u0100\\uFFFF\\\\\\0\\/\\]\\-\\r\\n\\x80\\xFF\\u0100\\uFFFF'
   );
 });
 

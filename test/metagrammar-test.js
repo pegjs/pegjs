@@ -456,7 +456,7 @@ test("parses bracketDelimitedCharacter", function() {
   grammarParserParses("start = [\\n]",     classGrammar(false, ["\n"], "[\\n]"));
   grammarParserParses("start = [\\0]",     classGrammar(false, ["\0"], "[\\0]"));
   grammarParserParses("start = [\\x00]",   classGrammar(false, ["\0"], "[\\0]"));
-  grammarParserParses("start = [\\u0120]", classGrammar(false, ["\u0120"], "[\u0120]"));
+  grammarParserParses("start = [\\u0120]", classGrammar(false, ["\u0120"], "[\\u0120]"));
   grammarParserParses("start = [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
 });
 
