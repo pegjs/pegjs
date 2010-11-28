@@ -46,7 +46,7 @@ function isOption(arg) {
 }
 
 function printVersion() {
-  print("PEG.js 0.5+");
+  print("PEG.js 0.5.1");
 }
 
 function printHelp() {
