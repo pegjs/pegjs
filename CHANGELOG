@@ -1,3 +1,14 @@
+0.5.1 (2010-11-28)
+------------------
+
+Small Changes:
+
+* Fixed a problem where "SyntaxError: Invalid range in character class." error
+  appeared when using command-line version on Widnows (GH-13).
+* Fixed wrong version reported by "bin/pegjs --version".
+* Removed two unused variables in the code.
+* Fixed incorrect variable name on two places.
+
 0.5 (2010-06-10)
 ----------------
 
