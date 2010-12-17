@@ -33,6 +33,7 @@ file PARSER_OUT_FILE => PARSER_SRC_FILE do
 end
 
 file PEGJS_OUT_FILE => SRC_FILES do
+  mkdir_p LIB_DIR unless File.directory?(LIB_DIR)
   File.open(PEGJS_OUT_FILE, "w") do |f|
     f.write(preprocess(File.read(PEGJS_SRC_FILE), SRC_DIR, PEGJS_VERSION))
   end
