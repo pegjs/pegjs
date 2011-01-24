@@ -1,0 +1,11 @@
+{
+  "name": "peg",
+  "description": "Parser generator for JavaScript",
+  "version": "0.5.0",
+  "author": "David Majda <david@majda.cz> (http://majda.cz/)",
+  "homepage": "http://pegjs.majda.cz/",
+  "repository": "git://github.com/dmajda/pegjs.git",
+  "engines": {
+    "node": ">= 0.2.6"
+  }
+}
