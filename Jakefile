@@ -66,6 +66,11 @@ task("build", [], function() {
   }
 
   fs.writeFileSync(PEGJS_OUT_FILE, preprocess(PEGJS_SRC_FILE), "utf8");
+  try {
+    fs.statSync(LIB_DIR);
+  } catch (e) {
+    fs.mkdirSync(LIB_DIR, 0755);
+  }
 });
 
 task("default", ["build"], function() {});
