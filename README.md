@@ -17,11 +17,11 @@ Features
 Building
 --------
 
-To build PEG.js, simply run the `rake` command:
+To build PEG.js, you need to have [Node](http://nodejs.org/) installed together with the `jake` package. Then simply run the `jake` command:
 
-    $ rake
+    $ jake
 
-Of course, you need to have [Rake](http://rake.rubyforge.org/) installed. The command creates PEG.js library in `lib/peg.js` by processing files in the `src` directory.
+This command creates the PEG.js library in `lib/peg.js` by processing files in the `src` directory.
 
 Usage
 -----
