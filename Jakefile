@@ -16,8 +16,6 @@ var PARSER_OUT_FILE = SRC_DIR + "/parser.js";
 
 var PEGJS_VERSION = fs.readFileSync("VERSION", "utf8").trim();
 
-var PEG = require(PEGJS_OUT_FILE);
-
 function exitFailure() {
   process.exit(1);
 }
@@ -29,6 +27,7 @@ function abort(message) {
 
 desc("Generate the grammar parser");
 task("parser", [], function() {
+  var PEG = require(PEGJS_OUT_FILE);
   var input = fs.readFileSync(PARSER_SRC_FILE, "utf8");
 
   try {
@@ -45,7 +44,7 @@ task("parser", [], function() {
 });
 
 desc("Build the peg.js file");
-task("build", ["parser"], function() {
+task("build", [], function() {
   function preprocess(file) {
     var input = fs.readFileSync(file, "utf8").trim();
     return input.split("\n").map(function(line) {
