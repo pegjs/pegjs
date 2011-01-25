@@ -65,12 +65,12 @@ task("build", [], function() {
     }).join("\n").replace("@VERSION", PEGJS_VERSION);
   }
 
-  fs.writeFileSync(PEGJS_OUT_FILE, preprocess(PEGJS_SRC_FILE), "utf8");
   try {
     fs.statSync(LIB_DIR);
   } catch (e) {
     fs.mkdirSync(LIB_DIR, 0755);
   }
+  fs.writeFileSync(PEGJS_OUT_FILE, preprocess(PEGJS_SRC_FILE), "utf8");
 });
 
 task("default", ["build"], function() {});
