@@ -232,8 +232,8 @@ simpleSingleQuotedCharacter
 
 class "character class"
   = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" __ {
-      partsConverted = map(parts, function(part) { return part.data; });
-      rawText = "["
+      var partsConverted = map(parts, function(part) { return part.data; });
+      var rawText = "["
         + inverted
         + map(parts, function(part) { return part.rawText; }).join("")
         + "]";
