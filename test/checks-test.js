@@ -19,13 +19,15 @@ test("reports missing referenced rules", function() {
   ];
 
   for (var i = 0; i < grammars.length; i++) {
-    throws(
+    raises(
       function() {
         var ast = PEG.parser.parse(grammars[i]);
         PEG.compiler.checks.missingReferencedRules(ast);
       },
-      PEG.GrammarError,
-      { message: "Referenced rule \"missing\" does not exist." }
+      function(e) {
+        return e instanceof PEG.GrammarError
+          && e.message === "Referenced rule \"missing\" does not exist.";
+      }
     );
   }
 });
@@ -50,13 +52,15 @@ test("reports left recursion", function() {
   ];
 
   for (var i = 0; i < grammars.length; i++) {
-    throws(
+    raises(
       function() {
         var ast = PEG.parser.parse(grammars[i]);
         PEG.compiler.checks.leftRecursion(ast);
       },
-      PEG.GrammarError,
-      { message: "Left recursion detected for rule \"start\"." }
+      function(e) {
+        return e instanceof PEG.GrammarError
+          && e.message === "Left recursion detected for rule \"start\".";
+      }
     );
   }
 });

@@ -1,54 +1,29 @@
 (function(global) {
 
-global.throws = function(block, exceptionType, exceptionProperties) {
-  var exception = null;
-  try {
-    block();
-  } catch (e) {
-    exception = e;
-  }
-
-  ok(
-    exception !== null,
-    exception !== null ? "okay: thrown something" : "failed, nothing thrown"
-  );
-  if (exception !== null) {
-    ok(
-      exception instanceof exceptionType,
-      exception instanceof exceptionType
-        ? "okay: thrown " + exceptionType.name
-        : "failed, thrown " + exception.name + " instead of " + exceptionType.name
-    );
-
-    for (var property in exceptionProperties) {
-      strictEqual(exception[property], exceptionProperties[property]);
-    }
-  }
-};
-
 global.parses = function(parser, input, expected) {
   deepEqual(parser.parse(input), expected);
 };
 
 global.doesNotParse = function(parser, input) {
-  throws(function() { parser.parse(input); }, parser.SyntaxError);
+  raises(function() { parser.parse(input); }, parser.SyntaxError);
 };
 
 global.doesNotParseWithMessage = function(parser, input, message) {
-  throws(
+  raises(
     function() { parser.parse(input); },
-    parser.SyntaxError,
-    { message: message }
+    function(e) {
+      return e instanceof parser.SyntaxError && e.message === message;
+    }
   );
 };
 
 global.doesNotParseWithPos = function(parser, input, line, column) {
-  var exception = throws(
+  raises(
     function() { parser.parse(input); },
-    parser.SyntaxError,
-    {
-      line:   line,
-      column: column
+    function(e) {
+      return e instanceof parser.SyntaxError
+        && e.line === line
+        && e.column === column;
     }
   );
 };
