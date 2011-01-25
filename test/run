@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+
+var sys   = require("sys");
+var fs    = require("fs");
+var PEG   = require("../lib/peg");
+var QUnit = require("./vendor/qunit/qunit").QUnit;
+
+function bold(s)    { return "\u001B[1m"  + s + "\u001B[22m"; };
+function message(s) { return "\u001B[35m" + s + "\u001B[39m"; };
+function ok(s)      { return "\u001B[32m" + s + "\u001B[39m"; };
+function error(s)   { return "\u001B[31m" + s + "\u001B[39m"; };
+
+function indent(s) {
+  return s.split("\n").map(function(line) { return "    " + line; }).join("\n");
+}
+
+QUnit.init();
+QUnit.config.blocking = true;
+QUnit.config.updateRate = 0;
+
+QUnit.moduleStart = function(details) {
+  sys.puts("");
+  sys.puts(bold(details.name));
+};
+
+var failedAssertions = [];
+
+QUnit.testStart = function(details) {
+  failedAssertions = [];
+};
+
+QUnit.testDone = function(details) {
+  if (details.failed == 0) {
+    sys.puts('✔ ' + details.name);
+  } else {
+    sys.puts(error('✖ ' + details.name));
+    sys.puts("");
+    failedAssertions.forEach(function(assertion) {
+      sys.puts(assertion);
+    });
+  }
+};
+
+QUnit.log = function(details) {
+  if (details.result) { return; }
+
+  var output = ""
+  if (details.message) {
+    output += indent("Message:  " + message(details.message)) + "\n";
+  }
+  if (details.actual && details.expected) {
+    output += indent("Expected: " + QUnit.jsDump.parse(details.expected)) + "\n";
+    if (details.actual != details.expected) {
+      output += indent("Actual:   " + QUnit.jsDump.parse(details.expected));
+    }
+  }
+
+  failedAssertions.push(output);
+};
+
+QUnit.done = function(details) {
+  sys.puts("");
+  if (details.failed > 0) {
+    sys.puts(bold(error("FAILURES: "))
+      + details.failed + "/"
+      + details.total + " assertions failed ("
+      + details.runtime + " ms)"
+    );
+  } else {
+    sys.puts(bold(ok('OK: '))
+      + details.total + " assertions ("
+      + details.runtime + " ms)"
+    )
+  }
+};
+
+[
+  "helpers.js",
+  "parser-test.js",
+  "checks-test.js",
+  "passes-test.js",
+  "compiler-test.js"
+].forEach(function(file) {
+  eval("with (QUnit) {" + fs.readFileSync(file, "utf-8") + "}");
+});
+
+QUnit.start();

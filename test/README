@@ -1,0 +1,23 @@
+PEG.js Test Suite
+=================
+
+This is the PEG.js test suite. It ensures PEG.js works correctly. All tests
+should always pass on all supported platforms.
+
+Running in a browser
+--------------------
+
+  1. Open the index.html file in your browser.
+
+  2. Watch the test pass (or fail).
+
+Running from a command-line
+---------------------------
+
+  1. Make sure you have Node.js installed.
+
+  2. Run the following command:
+
+       ./run
+
+  3. Watch the tests pass (or fail).
