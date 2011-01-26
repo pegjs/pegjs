@@ -103,13 +103,25 @@ switch (args.length) {
     var inputStream = process.openStdin();
     var outputStream = process.stdout;
     break;
+
   case 1:
   case 2:
-    var inputStream = fs.createReadStream(args[0]);
-    var outputStream = fs.createWriteStream(
-      args.length == 1 ?  args[0].replace(/\.[^.]*$/, ".js") : args[1]
-    );
+    var inputFile = args[0];
+    var inputStream = fs.createReadStream(inputFile);
+    inputStream.on("error", function() {
+      abort("Can't read from file \"" + inputFile + "\".");
+    });
+
+    var outputFile = args.length == 1
+      ? args[0].replace(/\.[^.]*$/, ".js")
+      : args[1];
+    var outputStream = fs.createWriteStream(outputFile);
+    outputStream.on("error", function() {
+      abort("Can't write to file \"" + outputFile + "\".");
+    });
+
     break;
+
   default:
     abort("Too many arguments.");
 }
