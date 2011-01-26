@@ -70,6 +70,9 @@ while (args.length > 0 && isOption(args[0])) {
     case "-e":
     case "--export-var":
       nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the -e/--export-var option.");
+      }
       exportVar = args[0];
       break;
 
