@@ -8,7 +8,7 @@ var PEG = require("../lib/peg");
   "benchmarks.js",
   "runner.js",
 ].forEach(function(file) {
-  eval(fs.readFileSync(file, "utf8"));
+  eval(fs.readFileSync(__dirname + "/" + file, "utf8"));
 });
 
 /* Results Table Manipulation */
@@ -105,7 +105,7 @@ sys.puts("");
 
 Runner.run(benchmarks, runCount, {
   readFile: function(file) {
-    return fs.readFileSync(file, "utf8");
+    return fs.readFileSync(__dirname + "/" + file, "utf8");
   },
 
   testStart: function(benchmark, test) {
