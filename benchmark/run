@@ -57,7 +57,7 @@ function writeResult(title, inputSize, parseTime) {
     + padLeft((inputSize / KB).toFixed(2), 6)
     + " kB | "
     + padLeft(parseTime.toFixed(2), 6)
-    + " kB | "
+    + " ms | "
     + padLeft(((inputSize / KB) / (parseTime / MS_IN_S)).toFixed(2), 7)
     + " kB/s |"
   );
