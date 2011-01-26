@@ -4,7 +4,7 @@ var sys = require("sys");
 var fs  = require("fs");
 var PEG = require("../lib/peg");
 
-/* ===== Helpers ===== */
+/* Helpers */
 
 function printVersion() {
   sys.puts("PEG.js " + PEG.VERSION);
@@ -40,7 +40,7 @@ function abort(message) {
   exitFailure();
 }
 
-/* ===== Arguments ===== */
+/* Arguments */
 
 var args = process.argv.slice(2); // Trim "node" and the script path.
 
@@ -52,7 +52,7 @@ function nextArg() {
   args.shift();
 }
 
-/* ===== Files ===== */
+/* Files */
 
 function readStream(inputStream, callback) {
   var input = "";
@@ -60,7 +60,7 @@ function readStream(inputStream, callback) {
   inputStream.on("end", function() { callback(input); });
 }
 
-/* ===== Main ===== */
+/* Main */
 
 /* This makes the generated parser a CommonJS module by default. */
 var exportVar = "exports.parser";
