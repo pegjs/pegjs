@@ -70,7 +70,7 @@ PEG.parser = (function(){
       }
       
       function parse_grammar() {
-        var cacheKey = "grammar" + '@' + pos;
+        var cacheKey = 'grammar@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -132,7 +132,7 @@ PEG.parser = (function(){
       }
       
       function parse_initializer() {
-        var cacheKey = "initializer" + '@' + pos;
+        var cacheKey = 'initializer@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -174,7 +174,7 @@ PEG.parser = (function(){
       }
       
       function parse_rule() {
-        var cacheKey = "rule" + '@' + pos;
+        var cacheKey = 'rule@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -254,7 +254,7 @@ PEG.parser = (function(){
       }
       
       function parse_choice() {
-        var cacheKey = "choice" + '@' + pos;
+        var cacheKey = 'choice@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -334,7 +334,7 @@ PEG.parser = (function(){
       }
       
       function parse_sequence() {
-        var cacheKey = "sequence" + '@' + pos;
+        var cacheKey = 'sequence@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -412,7 +412,7 @@ PEG.parser = (function(){
       }
       
       function parse_labeled() {
-        var cacheKey = "labeled" + '@' + pos;
+        var cacheKey = 'labeled@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -470,7 +470,7 @@ PEG.parser = (function(){
       }
       
       function parse_prefixed() {
-        var cacheKey = "prefixed" + '@' + pos;
+        var cacheKey = 'prefixed@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -599,7 +599,7 @@ PEG.parser = (function(){
       }
       
       function parse_suffixed() {
-        var cacheKey = "suffixed" + '@' + pos;
+        var cacheKey = 'suffixed@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -702,7 +702,7 @@ PEG.parser = (function(){
       }
       
       function parse_primary() {
-        var cacheKey = "primary" + '@' + pos;
+        var cacheKey = 'primary@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -842,7 +842,7 @@ PEG.parser = (function(){
       }
       
       function parse_action() {
-        var cacheKey = "action" + '@' + pos;
+        var cacheKey = 'action@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -881,7 +881,7 @@ PEG.parser = (function(){
       }
       
       function parse_braced() {
-        var cacheKey = "braced" + '@' + pos;
+        var cacheKey = 'braced@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -966,7 +966,7 @@ PEG.parser = (function(){
       }
       
       function parse_nonBraceCharacters() {
-        var cacheKey = "nonBraceCharacters" + '@' + pos;
+        var cacheKey = 'nonBraceCharacters@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -998,7 +998,7 @@ PEG.parser = (function(){
       }
       
       function parse_nonBraceCharacter() {
-        var cacheKey = "nonBraceCharacter" + '@' + pos;
+        var cacheKey = 'nonBraceCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1026,7 +1026,7 @@ PEG.parser = (function(){
       }
       
       function parse_equals() {
-        var cacheKey = "equals" + '@' + pos;
+        var cacheKey = 'equals@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1070,7 +1070,7 @@ PEG.parser = (function(){
       }
       
       function parse_colon() {
-        var cacheKey = "colon" + '@' + pos;
+        var cacheKey = 'colon@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1114,7 +1114,7 @@ PEG.parser = (function(){
       }
       
       function parse_semicolon() {
-        var cacheKey = "semicolon" + '@' + pos;
+        var cacheKey = 'semicolon@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1158,7 +1158,7 @@ PEG.parser = (function(){
       }
       
       function parse_slash() {
-        var cacheKey = "slash" + '@' + pos;
+        var cacheKey = 'slash@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1202,7 +1202,7 @@ PEG.parser = (function(){
       }
       
       function parse_and() {
-        var cacheKey = "and" + '@' + pos;
+        var cacheKey = 'and@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1246,7 +1246,7 @@ PEG.parser = (function(){
       }
       
       function parse_not() {
-        var cacheKey = "not" + '@' + pos;
+        var cacheKey = 'not@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1290,7 +1290,7 @@ PEG.parser = (function(){
       }
       
       function parse_question() {
-        var cacheKey = "question" + '@' + pos;
+        var cacheKey = 'question@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1334,7 +1334,7 @@ PEG.parser = (function(){
       }
       
       function parse_star() {
-        var cacheKey = "star" + '@' + pos;
+        var cacheKey = 'star@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1378,7 +1378,7 @@ PEG.parser = (function(){
       }
       
       function parse_plus() {
-        var cacheKey = "plus" + '@' + pos;
+        var cacheKey = 'plus@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1422,7 +1422,7 @@ PEG.parser = (function(){
       }
       
       function parse_lparen() {
-        var cacheKey = "lparen" + '@' + pos;
+        var cacheKey = 'lparen@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1466,7 +1466,7 @@ PEG.parser = (function(){
       }
       
       function parse_rparen() {
-        var cacheKey = "rparen" + '@' + pos;
+        var cacheKey = 'rparen@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1510,7 +1510,7 @@ PEG.parser = (function(){
       }
       
       function parse_dot() {
-        var cacheKey = "dot" + '@' + pos;
+        var cacheKey = 'dot@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1554,7 +1554,7 @@ PEG.parser = (function(){
       }
       
       function parse_identifier() {
-        var cacheKey = "identifier" + '@' + pos;
+        var cacheKey = 'identifier@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1709,7 +1709,7 @@ PEG.parser = (function(){
       }
       
       function parse_literal() {
-        var cacheKey = "literal" + '@' + pos;
+        var cacheKey = 'literal@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1758,7 +1758,7 @@ PEG.parser = (function(){
       }
       
       function parse_doubleQuotedLiteral() {
-        var cacheKey = "doubleQuotedLiteral" + '@' + pos;
+        var cacheKey = 'doubleQuotedLiteral@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1821,7 +1821,7 @@ PEG.parser = (function(){
       }
       
       function parse_doubleQuotedCharacter() {
-        var cacheKey = "doubleQuotedCharacter" + '@' + pos;
+        var cacheKey = 'doubleQuotedCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1871,7 +1871,7 @@ PEG.parser = (function(){
       }
       
       function parse_simpleDoubleQuotedCharacter() {
-        var cacheKey = "simpleDoubleQuotedCharacter" + '@' + pos;
+        var cacheKey = 'simpleDoubleQuotedCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1956,7 +1956,7 @@ PEG.parser = (function(){
       }
       
       function parse_singleQuotedLiteral() {
-        var cacheKey = "singleQuotedLiteral" + '@' + pos;
+        var cacheKey = 'singleQuotedLiteral@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2019,7 +2019,7 @@ PEG.parser = (function(){
       }
       
       function parse_singleQuotedCharacter() {
-        var cacheKey = "singleQuotedCharacter" + '@' + pos;
+        var cacheKey = 'singleQuotedCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2069,7 +2069,7 @@ PEG.parser = (function(){
       }
       
       function parse_simpleSingleQuotedCharacter() {
-        var cacheKey = "simpleSingleQuotedCharacter" + '@' + pos;
+        var cacheKey = 'simpleSingleQuotedCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2154,7 +2154,7 @@ PEG.parser = (function(){
       }
       
       function parse_class() {
-        var cacheKey = "class" + '@' + pos;
+        var cacheKey = 'class@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2275,7 +2275,7 @@ PEG.parser = (function(){
       }
       
       function parse_classCharacterRange() {
-        var cacheKey = "classCharacterRange" + '@' + pos;
+        var cacheKey = 'classCharacterRange@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2337,7 +2337,7 @@ PEG.parser = (function(){
       }
       
       function parse_classCharacter() {
-        var cacheKey = "classCharacter" + '@' + pos;
+        var cacheKey = 'classCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2366,7 +2366,7 @@ PEG.parser = (function(){
       }
       
       function parse_bracketDelimitedCharacter() {
-        var cacheKey = "bracketDelimitedCharacter" + '@' + pos;
+        var cacheKey = 'bracketDelimitedCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2416,7 +2416,7 @@ PEG.parser = (function(){
       }
       
       function parse_simpleBracketDelimitedCharacter() {
-        var cacheKey = "simpleBracketDelimitedCharacter" + '@' + pos;
+        var cacheKey = 'simpleBracketDelimitedCharacter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2501,7 +2501,7 @@ PEG.parser = (function(){
       }
       
       function parse_simpleEscapeSequence() {
-        var cacheKey = "simpleEscapeSequence" + '@' + pos;
+        var cacheKey = 'simpleEscapeSequence@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2613,7 +2613,7 @@ PEG.parser = (function(){
       }
       
       function parse_zeroEscapeSequence() {
-        var cacheKey = "zeroEscapeSequence" + '@' + pos;
+        var cacheKey = 'zeroEscapeSequence@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2667,7 +2667,7 @@ PEG.parser = (function(){
       }
       
       function parse_hexEscapeSequence() {
-        var cacheKey = "hexEscapeSequence" + '@' + pos;
+        var cacheKey = 'hexEscapeSequence@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2719,7 +2719,7 @@ PEG.parser = (function(){
       }
       
       function parse_unicodeEscapeSequence() {
-        var cacheKey = "unicodeEscapeSequence" + '@' + pos;
+        var cacheKey = 'unicodeEscapeSequence@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2783,7 +2783,7 @@ PEG.parser = (function(){
       }
       
       function parse_eolEscapeSequence() {
-        var cacheKey = "eolEscapeSequence" + '@' + pos;
+        var cacheKey = 'eolEscapeSequence@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2827,7 +2827,7 @@ PEG.parser = (function(){
       }
       
       function parse_digit() {
-        var cacheKey = "digit" + '@' + pos;
+        var cacheKey = 'digit@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2855,7 +2855,7 @@ PEG.parser = (function(){
       }
       
       function parse_hexDigit() {
-        var cacheKey = "hexDigit" + '@' + pos;
+        var cacheKey = 'hexDigit@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2883,7 +2883,7 @@ PEG.parser = (function(){
       }
       
       function parse_letter() {
-        var cacheKey = "letter" + '@' + pos;
+        var cacheKey = 'letter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2913,7 +2913,7 @@ PEG.parser = (function(){
       }
       
       function parse_lowerCaseLetter() {
-        var cacheKey = "lowerCaseLetter" + '@' + pos;
+        var cacheKey = 'lowerCaseLetter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2941,7 +2941,7 @@ PEG.parser = (function(){
       }
       
       function parse_upperCaseLetter() {
-        var cacheKey = "upperCaseLetter" + '@' + pos;
+        var cacheKey = 'upperCaseLetter@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -2969,7 +2969,7 @@ PEG.parser = (function(){
       }
       
       function parse___() {
-        var cacheKey = "__" + '@' + pos;
+        var cacheKey = '__@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -3024,7 +3024,7 @@ PEG.parser = (function(){
       }
       
       function parse_comment() {
-        var cacheKey = "comment" + '@' + pos;
+        var cacheKey = 'comment@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -3057,7 +3057,7 @@ PEG.parser = (function(){
       }
       
       function parse_singleLineComment() {
-        var cacheKey = "singleLineComment" + '@' + pos;
+        var cacheKey = 'singleLineComment@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -3165,7 +3165,7 @@ PEG.parser = (function(){
       }
       
       function parse_multiLineComment() {
-        var cacheKey = "multiLineComment" + '@' + pos;
+        var cacheKey = 'multiLineComment@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -3303,7 +3303,7 @@ PEG.parser = (function(){
       }
       
       function parse_eol() {
-        var cacheKey = "eol" + '@' + pos;
+        var cacheKey = 'eol@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -3391,7 +3391,7 @@ PEG.parser = (function(){
       }
       
       function parse_eolChar() {
-        var cacheKey = "eolChar" + '@' + pos;
+        var cacheKey = 'eolChar@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -3419,7 +3419,7 @@ PEG.parser = (function(){
       }
       
       function parse_whitespace() {
-        var cacheKey = "whitespace" + '@' + pos;
+        var cacheKey = 'whitespace@' + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;

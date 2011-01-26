@@ -349,7 +349,7 @@ PEG.compiler.emitter = function(ast) {
 
       return formatCode(
         "function parse_${name}() {",
-        "  var cacheKey = ${name|string} + '@' + pos;",
+        "  var cacheKey = '${name}@' + pos;",
         "  var cachedResult = cache[cacheKey];",
         "  if (cachedResult) {",
         "    pos = cachedResult.nextPos;",
