@@ -105,7 +105,7 @@ sys.puts("");
 
 Runner.run(benchmarks, runCount, {
   readFile: function(file) {
-    return fs.readFileSync(file, "utf-8");
+    return fs.readFileSync(file, "utf8");
   },
 
   testStart: function(benchmark, test) {

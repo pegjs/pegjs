@@ -81,7 +81,7 @@ QUnit.done = function(details) {
   "passes-test.js",
   "compiler-test.js",
 ].forEach(function(file) {
-  eval("with (QUnit) {" + fs.readFileSync(file, "utf-8") + "}");
+  eval("with (QUnit) {" + fs.readFileSync(file, "utf8") + "}");
 });
 
 QUnit.start();
