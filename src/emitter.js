@@ -135,7 +135,7 @@ PEG.compiler.emitter = function(ast) {
         "      function escape(ch) {",
         "        var charCode = ch.charCodeAt(0);",
         "        ",
-        "        if (charCode < 0xFF) {",
+        "        if (charCode <= 0xFF) {",
         "          var escapeChar = 'x';",
         "          var length = 2;",
         "        } else {",
