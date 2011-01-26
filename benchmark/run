@@ -1,0 +1,137 @@
+#!/usr/bin/env node
+
+var sys = require("sys");
+var fs  = require("fs");
+var PEG = require("../lib/peg");
+
+[
+  "benchmarks.js",
+  "runner.js",
+].forEach(function(file) {
+  eval(fs.readFileSync(file, "utf8"));
+});
+
+/* Results Table Manipulation */
+
+function dup(text, count) {
+  var result = "";
+  for (var i = 1; i <= count; i++) {
+    result += text;
+  }
+  return result;
+}
+
+function padLeft(text, length) {
+  return dup(" ", length - text.length) + text;
+}
+
+function padRight(text, length) {
+  return text + dup(" ", length - text.length);
+}
+
+function center(text, length) {
+  var padLength = (length - text.length) / 2;
+  return dup(" ", Math.floor(padLength))
+    + text
+    + dup(" ", Math.ceil(padLength));
+}
+
+function writeTableHeader() {
+  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+  sys.puts("|                Test                 | Inp. size | Avg. time |  Avg. speed  |");
+}
+
+function writeHeading(heading) {
+  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+  sys.puts("| " + center(heading, 74) + " |");
+  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+}
+
+function writeResult(title, inputSize, parseTime) {
+  var KB      = 1024;
+  var MS_IN_S = 1000;
+
+  sys.puts("| "
+    + padRight(title, 35)
+    + " | "
+    + padLeft((inputSize / KB).toFixed(2), 6)
+    + " kB | "
+    + padLeft(parseTime.toFixed(2), 6)
+    + " kB | "
+    + padLeft(((inputSize / KB) / (parseTime / MS_IN_S)).toFixed(2), 7)
+    + " kB/s |"
+  );
+}
+
+function writeSeparator() {
+  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+}
+
+function writeTableFooter() {
+  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+}
+
+/* Helpers */
+
+function exitFailure() {
+  process.exit(1);
+}
+
+function abort(message) {
+  sys.error(message);
+  exitFailure();
+}
+
+/* Main */
+
+var args = process.argv.slice(2); // Trim "node" and the script path.
+
+switch (args.length) {
+  case 0:
+    var runCount = 10;
+    break;
+  case 1:
+    var runCount = parseInt(args[0]);
+    if (isNaN(runCount) || runCount <= 0) {
+      abort("Number of runs must be a positive integer.");
+    }
+    break;
+  default:
+    abort("Too many arguments.");
+}
+
+sys.puts("Each test is run " + runCount + " times.");
+sys.puts("");
+
+Runner.run(benchmarks, runCount, {
+  readFile: function(file) {
+    return fs.readFileSync(file, "utf-8");
+  },
+
+  testStart: function(benchmark, test) {
+    /* Nothing to do. */
+  },
+
+  testFinish: function(benchmark, test, inputSize, parseTime) {
+    writeResult(test.title, inputSize, parseTime);
+  },
+
+  benchmarkStart: function(benchmark) {
+    writeHeading(benchmark.title);
+  },
+
+  benchmarkFinish: function(benchmark, inputSize, parseTime) {
+    writeSeparator();
+    writeResult(benchmark.title + " total", inputSize, parseTime);
+  },
+
+  start: function() {
+    writeTableHeader();
+  },
+
+  finish: function(inputSize, parseTime) {
+    writeSeparator();
+    writeResult("Total", inputSize, parseTime);
+    writeTableFooter();
+  },
+});
