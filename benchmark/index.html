@@ -63,45 +63,9 @@
     <script src="../lib/peg.js"></script>
     <script src="vendor/jquery/jquery.js"></script>
     <script src="vendor/jquery.scrollto/jquery.scrollTo.js"></script>
+    <script src="benchmarks.js"></script>
+    <script src="runner.js"></script>
     <script>
-      var benchmarks = [
-        {
-          id:          "json",
-          title:       "JSON",
-          tests: [
-            { file: "example1.json", title: "Example 1" },
-            { file: "example2.json", title: "Example 2" },
-            { file: "example3.json", title: "Example 3" },
-            { file: "example4.json", title: "Example 4" },
-            { file: "example5.json", title: "Example 5" }
-          ]
-        },
-        {
-          id:          "css",
-          title:       "CSS",
-          tests: [
-            { file: "blueprint/src/reset.css",      title: "Blueprint - reset.css (source)"      },
-            { file: "blueprint/src/typography.css", title: "Blueprint - typography.css (source)" },
-            { file: "blueprint/src/forms.css",      title: "Blueprint - forms.css (source)"      },
-            { file: "blueprint/src/grid.css",       title: "Blueprint - grid.css (source)"       },
-            { file: "blueprint/src/print.css",      title: "Blueprint - print.css (source)"      },
-            // Contains syntax errors.
-            // { file: "blueprint/src/ie.css",         title: "Blueprint - ie.css (source)"         },
-            { file: "blueprint/min/screen.css",     title: "Blueprint - screen.css (minified)"   },
-            { file: "blueprint/min/print.css",      title: "Blueprint - print.css (minified)"    },
-            // Contains syntax errors.
-            // { file: "blueprint/min/ie.css",         title: "Blueprint - ie.css (minified)"       },
-            { file: "960.gs/src/reset.css",         title: "960.gs - reset.css (source)"         },
-            { file: "960.gs/src/text.css",          title: "960.gs - text.css (source)"          },
-            { file: "960.gs/src/960.css",           title: "960.gs - 960.css (source)"           },
-            { file: "960.gs/src/960_24_col.css",    title: "960.gs - 960_24_col.css (source)"    },
-            { file: "960.gs/min/reset.css",         title: "960.gs - reset.css (minified)"       },
-            { file: "960.gs/min/text.css",          title: "960.gs - text.css (minified)"        },
-            { file: "960.gs/min/960.css",           title: "960.gs - 960.css (minified)"         },
-            { file: "960.gs/min/960_24_col.css",    title: "960.gs - 960_24_col.css (minified)"  }
-          ]
-        }
-      ];
 
       $("#run").click(function() {
 
@@ -148,39 +112,6 @@
           );
         }
 
-        /* AJAX */
-
-        function get(url) {
-          return $.ajax({
-            type:     "GET",
-            url:      url,
-            dataType: "text",
-            async:    false
-          }).responseText;
-        }
-
-        /* Queue */
-
-        var Q = {
-          functions: [],
-
-          add: function(f) {
-            this.functions.push(f);
-          },
-
-          run: function() {
-            if (this.functions.length > 0) {
-              this.functions.shift()();
-
-              /*
-               * We can't use |arguments.callee| here because |this| would get
-               * messed-up in that case.
-               */
-              setTimeout(function() { Q.run() }, 0);
-            }
-          }
-        };
-
         /* Main */
 
         /*
@@ -200,118 +131,66 @@
           return;
         }
 
-        /*
-         * The benchmark itself is factored out into several functions (some of
-         * them generated), which are enqueued and run one by one using
-         * |setTimeout|. We do this for two reasons:
-         *
-         *   1. To avoid bowser mechanism for interrupting long-running scripts
-         *      to kick-in (or at least to not kick-in that often).
-         *
-         *   2. To ensure progressive rendering of results in the browser (some
-         *      browsers do not render at all when running JavaScript code).
-         *
-         * The enqueued functions share state, which is all stored in the
-         * properties of the |state| object.
-         */
+        Runner.run(benchmarks, runCount, {
+          readFile: function(file) {
+            return $.ajax({
+              type:     "GET",
+              url:      file,
+              dataType: "text",
+              async:    false
+            }).responseText;
+          },
 
-        var state = {};
+          testStart: function(benchmark, test) {
+            /* Nothing to do. */
+          },
 
-        function initialize() {
-          $("#run-count, #run").attr("disabled", "disabled");
-
-          resultsTable.show();
-          $("#results-table tr").slice(1).remove();
-
-          state.totalInputSize = 0;
-          state.totalParseTime = 0;
-        }
-
-        function benchmarkInitializer(i) {
-          return function() {
-            var benchmark = benchmarks[i];
-
-            appendHeading(benchmark.title);
-
-            var grammar = get("../examples/" + benchmark.id + ".pegjs");
-            state.parser = PEG.buildParser(grammar);
-
-            state.benchmarkInputSize = 0;
-            state.benchmarkParseTime = 0;
-          };
-        }
-
-        function testRunner(i, j) {
-          return function() {
-            var benchmark = benchmarks[i];
-            var test = benchmark.tests[j];
-            var url = benchmark.id + "/" + test.file;
-
-            var input = get(url);
-
-            var parseTime = 0;
-            for (var k = 0; k < runCount; k++) {
-              var t = (new Date).getTime();
-              state.parser.parse(input);
-              parseTime += (new Date).getTime() - t;
-            }
-            var averageParseTime = parseTime / runCount;
-
+          testFinish: function(benchmark, test, inputSize, parseTime) {
             appendResult(
               "individual",
               test.title,
-              url,
-              input.length,
-              averageParseTime
+              benchmark.id + "/" + test.file,
+              inputSize,
+              parseTime
             );
+          },
 
-            state.benchmarkInputSize += input.length;
-            state.benchmarkParseTime += averageParseTime;
-          };
-        }
+          benchmarkStart: function(benchmark) {
+            appendHeading(benchmark.title);
+          },
 
-        function benchmarkFinalizer(i) {
-          return function() {
-            var benchmark = benchmarks[i];
-
+          benchmarkFinish: function(benchmark, inputSize, parseTime) {
             appendResult(
               "benchmark-total",
               benchmark.title + " total",
               null,
-              state.benchmarkInputSize,
-              state.benchmarkParseTime
+              inputSize,
+              parseTime
+            );
+          },
+
+          start: function() {
+            $("#run-count, #run").attr("disabled", "disabled");
+
+            resultsTable.show();
+            $("#results-table tr").slice(1).remove();
+          },
+
+          finish: function(inputSize, parseTime) {
+            appendResult(
+              "total",
+              "Total",
+              null,
+              inputSize,
+              parseTime
             );
 
-            state.totalInputSize += state.benchmarkInputSize;
-            state.totalParseTime += state.benchmarkParseTime;
-          };
-        }
+            $.scrollTo("max", { axis: "y", duration: 500 });
 
-        function finalize() {
-          appendResult(
-            "total",
-            "Total",
-            null,
-            state.totalInputSize,
-            state.totalParseTime
-          );
-
-          $.scrollTo("max", { axis: "y", duration: 500 });
-
-          $("#run-count, #run").removeAttr("disabled");
-        }
-
-        Q.add(initialize);
-        for (var i = 0; i < benchmarks.length; i++) {
-          Q.add(benchmarkInitializer(i));
-          for (var j = 0; j < benchmarks[i].tests.length; j++) {
-            Q.add(testRunner(i, j));
+            $("#run-count, #run").removeAttr("disabled");
           }
-          Q.add(benchmarkFinalizer(i));
-        }
-        Q.add(finalize);
+        });
 
-        Q.run();
       });
 
       $(document).ready(function() {
