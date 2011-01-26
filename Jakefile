@@ -1,5 +1,6 @@
-var sys = require("sys");
-var fs  = require("fs");
+var sys          = require("sys");
+var fs           = require("fs");
+var childProcess = require("child_process");
 
 /* Relative paths are here because of use in |require|. */
 var SRC_DIR = "./src";
@@ -72,5 +73,21 @@ task("build", [], function() {
   }
   fs.writeFileSync(PEGJS_OUT_FILE, preprocess(PEGJS_SRC_FILE), "utf8");
 });
+
+desc("Run the test suite");
+task("test", [], function() {
+  var process = childProcess.spawn("test/run", [], { customFds: [0, 1, 2] });
+  process.on("exit", function() { complete(); });
+}, true);
+
+desc("Run the benchmark suite");
+task("benchmark", [], function(runCount) {
+  var process = childProcess.spawn(
+    "benchmark/run",
+    runCount !== undefined ? [runCount] : [],
+    { customFds: [0, 1, 2] }
+  );
+  process.on("exit", function() { complete(); });
+}, true);
 
 task("default", ["build"], function() {});
