@@ -6,6 +6,6 @@
   "homepage": "http://pegjs.majda.cz/",
   "repository": "git://github.com/dmajda/pegjs.git",
   "engines": {
-    "node": ">= 0.2.6"
+    "node": ">= 0.4"
   }
 }
