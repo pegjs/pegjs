@@ -37,14 +37,14 @@ function center(text, length) {
 }
 
 function writeTableHeader() {
-  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
-  sys.puts("|                Test                 | Inp. size | Avg. time |  Avg. speed  |");
+  sys.puts("+-------------------------------------+-----------+------------+--------------+");
+  sys.puts("|                Test                 | Inp. size | Avg. time  |  Avg. speed  |");
 }
 
 function writeHeading(heading) {
-  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
-  sys.puts("| " + center(heading, 74) + " |");
-  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+  sys.puts("+-------------------------------------+-----------+------------+--------------+");
+  sys.puts("| " + center(heading, 75) + " |");
+  sys.puts("+-------------------------------------+-----------+------------+--------------+");
 }
 
 function writeResult(title, inputSize, parseTime) {
@@ -56,7 +56,7 @@ function writeResult(title, inputSize, parseTime) {
     + " | "
     + padLeft((inputSize / KB).toFixed(2), 6)
     + " kB | "
-    + padLeft(parseTime.toFixed(2), 6)
+    + padLeft(parseTime.toFixed(2), 7)
     + " ms | "
     + padLeft(((inputSize / KB) / (parseTime / MS_IN_S)).toFixed(2), 7)
     + " kB/s |"
@@ -64,11 +64,11 @@ function writeResult(title, inputSize, parseTime) {
 }
 
 function writeSeparator() {
-  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+  sys.puts("+-------------------------------------+-----------+------------+--------------+");
 }
 
 function writeTableFooter() {
-  sys.puts("+-------------------------------------+-----------+-----------+--------------+");
+  sys.puts("+-------------------------------------+-----------+------------+--------------+");
 }
 
 /* Helpers */
