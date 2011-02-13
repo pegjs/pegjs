@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
 
 var undefined;
 
@@ -35,10 +35,12 @@ PEG.GrammarError.prototype = Error.prototype;
 // @include "parser.js"
 // @include "compiler.js"
 
-if (typeof exports !== "undefined") { // Looks like we're in CommonJS environment.
-  extend(exports, PEG);
-} else {                              // Okay, assume this is a browser/Rhino.
-  global.PEG = PEG;
+if (typeof module === "object") {
+  module.exports = PEG;
+} else if (typeof window === "object") {
+  window.PEG = PEG;
+} else {
+  throw new Error("Can't export PEG library (no \"module\" nor \"window\" object detected).");
 }
 
-})(this);
+})();
