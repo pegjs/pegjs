@@ -22,7 +22,7 @@ function printHelp() {
   sys.puts("");
   sys.puts("Options:");
   sys.puts("  -e, --export-var <variable>  name of the variable where the parser object");
-  sys.puts("                               will be stored (default: \"exports.parser\")");
+  sys.puts("                               will be stored (default: \"module.exports\")");
   sys.puts("  -v, --version                print version information and exit");
   sys.puts("  -h, --help                   print help and exit");
 }
@@ -63,7 +63,7 @@ function readStream(inputStream, callback) {
 /* Main */
 
 /* This makes the generated parser a CommonJS module by default. */
-var exportVar = "exports.parser";
+var exportVar = "module.exports";
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
