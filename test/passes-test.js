@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
 
 module("PEG.compiler.passes");
 
@@ -147,4 +147,4 @@ test("removes proxy rules", function() {
   }
 });
 
-})(this);
+})();

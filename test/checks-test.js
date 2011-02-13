@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
 
 module("PEG.compiler.checks");
 
@@ -65,4 +65,4 @@ test("reports left recursion", function() {
   }
 });
 
-})(this);
+})();

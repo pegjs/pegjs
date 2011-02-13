@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
 
 module("PEG.parser");
 
@@ -589,4 +589,4 @@ test("parses whitespace", function() {
   parserParses('start =\u3000"abcd"', simpleGrammar);
 });
 
-})(this);
+})();

@@ -1,4 +1,4 @@
-(function(global) {
+(function() {
 
 module("PEG.compiler");
 
@@ -506,4 +506,4 @@ test("nested comments", function() {
   );
 });
 
-})(this);
+})();
