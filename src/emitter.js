@@ -446,7 +446,8 @@ PEG.compiler.emitter = function(ast) {
           "  pos = ${savedPosVar};",
           "}",
           {
-            elementCode:      emit(node.elements[i], elementResultVars[i]),
+            elementCode:      emit(node.elements[i], elementResultVars[i],
+                                   elementResultVars.slice(0, i)),
             elementResultVar: elementResultVars[i],
             code:             code,
             savedPosVar:      savedPosVar,
@@ -523,22 +524,46 @@ PEG.compiler.emitter = function(ast) {
       );
     },
 
-    semantic_and: function(node, resultVar) {
+    semantic_and: function(node, resultVar, previousResults) {
+      var formalParams = [];
+      var actualParams = [];
+      for (var i = 0; i < node.previousElements.length; i++) {
+        var element = node.previousElements[i];
+        if (element.type === "labeled") {
+          formalParams.push(element.label);
+          actualParams.push(previousResults[i]);
+        }
+      }
       return formatCode(
-        "var ${resultVar} = (function() {${actionCode}})() ? '' : null;",
+        "var ${resultVar} =",
+        "(function(${formalParams}) {${actionCode}})(${actualParams}) ? '' : null;",
         {
-          actionCode:  node.code,
-          resultVar:   resultVar
+          actionCode:   node.code,
+          resultVar:    resultVar,
+          formalParams: formalParams.join(", "),
+          actualParams: actualParams.join(", ")
         }
       );
     },
 
-    semantic_not: function(node, resultVar) {
+    semantic_not: function(node, resultVar, previousResults) {
+      var formalParams = [];
+      var actualParams = [];
+      for (var i = 0; i < node.previousElements.length; i++) {
+        var element = node.previousElements[i];
+        if (element.type === "labeled") {
+          formalParams.push(element.label);
+          actualParams.push(previousResults[i]);
+        }
+      }
       return formatCode(
-        "var ${resultVar} = (function() {${actionCode}})() ? null : '';",
+        "var ${resultVar} =",
+        "(function(${formalParams}) {${actionCode}})(${actualParams}) ? null : '';",
         {
-          actionCode:  node.code,
-          resultVar:   resultVar
+          actionCode:   node.code,
+          resultVar:    resultVar,
+          formalParams: formalParams.join(", "),
+          actualParams: actualParams.join(", ")
         }
       );
     },
