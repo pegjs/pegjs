@@ -68,6 +68,15 @@ test("semantic and", function() {
 
   var rejectingParser = PEG.buildParser('start = "a" &{ return false; } "b"');
   doesNotParse(rejectingParser, "ab");
+
+  var oddParser = PEG.buildParser('start = as:"a"* &{ return as.length % 2; }');
+  doesNotParse(oddParser, "aa");
+  parses(oddParser, "aaa", [["a", "a", "a"], ""]);
+
+  var oddParserWithAction = PEG.buildParser(
+    'start = as:"a"* &{ return as.length % 2; } "b" { return as; }');
+  doesNotParse(oddParserWithAction, "aab");
+  parses(oddParserWithAction, "aaab", ["a", "a", "a"]);
 });
 
 test("semantic not", function() {
@@ -76,6 +85,15 @@ test("semantic not", function() {
 
   var rejectingParser = PEG.buildParser('start = "a" !{ return true; } "b"');
   doesNotParse(rejectingParser, "ab");
+
+  var evenParser = PEG.buildParser('start = as:"a"* !{ return as.length % 2; }');
+  parses(evenParser, "aa", [["a", "a"], ""]);
+  doesNotParse(evenParser, "aaa");
+
+  var evenParserWithAction = PEG.buildParser(
+    'start = as:"a"* !{ return as.length % 2; } "b" { return as; }');
+  parses(evenParserWithAction, "aab", ["a", "a"]);
+  doesNotParse(evenParserWithAction, "aaab");
 });
 
 test("optional expressions", function() {
