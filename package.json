@@ -5,7 +5,13 @@
   "author": "David Majda <david@majda.cz> (http://majda.cz/)",
   "homepage": "http://pegjs.majda.cz/",
   "repository": "git://github.com/dmajda/pegjs.git",
+  "dependencies": {
+    "jake": ">=0.1.8"
+  },
   "engines": {
     "node": ">= 0.4"
+  },
+  "scripts": {
+    "postinstall": "jake"
   }
 }
