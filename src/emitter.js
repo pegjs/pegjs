@@ -96,6 +96,12 @@ PEG.compiler.emitter = function(ast) {
         ? emit(node.initializer)
         : "";
 
+      var parseFunctionTableItems = [];
+      for (var name in node.rules) {
+        parseFunctionTableItems.push(name + ": parse_" + name);
+      }
+      parseFunctionTableItems.sort();
+
       var parseFunctionDefinitions = [];
       for (var name in node.rules) {
         parseFunctionDefinitions.push(emit(node.rules[name]));
@@ -112,7 +118,19 @@ PEG.compiler.emitter = function(ast) {
         "     * which the parser was generated (see |PEG.buildParser|). If the parsing is",
         "     * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.",
         "     */",
-        "    parse: function(input) {",
+        "    parse: function(input, startRule) {",
+        "      var parseFunctions = {",
+        "        ${parseFunctionTableItems}",
+        "      };",
+        "      ",
+        "      if (startRule !== undefined) {",
+        "        if (parseFunctions[startRule] === undefined) {",
+        "          throw new Error(\"Invalid rule name: \" + quote(startRule) + \".\");",
+        "        }",
+        "      } else {",
+        "        startRule = ${startRule|string};",
+        "      }",
+        "      ",
         "      var pos = 0;",
         "      var reportMatchFailures = true;",
         "      var rightmostMatchFailuresPos = 0;",
@@ -245,7 +263,7 @@ PEG.compiler.emitter = function(ast) {
         "      ",
         "      ${initializerCode}",
         "      ",
-        "      var result = parse_${startRule}();",
+        "      var result = parseFunctions[startRule]();",
         "      ",
         "      /*",
         "       * The parser is now in one of the following three states:",
@@ -302,6 +320,7 @@ PEG.compiler.emitter = function(ast) {
         "})()",
         {
           initializerCode:          initializerCode,
+          parseFunctionTableItems:  parseFunctionTableItems.join(",\n"),
           parseFunctionDefinitions: parseFunctionDefinitions.join("\n\n"),
           startRule:                node.startRule
         }

@@ -2,6 +2,10 @@ parses = function(parser, input, expected) {
   deepEqual(parser.parse(input), expected);
 };
 
+parsesWithStartRule = function(parser, input, startRule, expected) {
+  deepEqual(parser.parse(input, startRule), expected);
+};
+
 doesNotParse = function(parser, input) {
   raises(function() { parser.parse(input); }, parser.SyntaxError);
 };

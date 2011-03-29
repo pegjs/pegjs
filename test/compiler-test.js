@@ -395,6 +395,28 @@ test("error positions", function() {
   doesNotParseWithPos(parser, "1\u2029x", 2, 1); // paragraph separator
 });
 
+test("start rule", function() {
+  var parser = PEG.buildParser([
+    'a = .* { return "alpha"; }',
+    'b = .* { return "beta"; }'
+  ].join("\n"));
+
+  /* Default start rule = the first one */
+  parses(parser, "whatever", "alpha");
+
+  /* Explicit specification of the start rule */
+  parsesWithStartRule(parser, "whatever", "a", "alpha");
+  parsesWithStartRule(parser, "whatever", "b", "beta");
+
+  /* Invalid rule name */
+  raises(
+    function() { parser.parse("whatever", "c") },
+    function(e) {
+      return e instanceof Error && e.message === "Invalid rule name: \"c\".";
+    }
+  );
+});
+
 /*
  * Following examples are from Wikipedia, see
  * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.

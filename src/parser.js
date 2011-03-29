@@ -8,7 +8,73 @@ PEG.parser = (function(){
      * which the parser was generated (see |PEG.buildParser|). If the parsing is
      * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.
      */
-    parse: function(input) {
+    parse: function(input, startRule) {
+      var parseFunctions = {
+        __: parse___,
+        action: parse_action,
+        and: parse_and,
+        braced: parse_braced,
+        bracketDelimitedCharacter: parse_bracketDelimitedCharacter,
+        choice: parse_choice,
+        class: parse_class,
+        classCharacter: parse_classCharacter,
+        classCharacterRange: parse_classCharacterRange,
+        colon: parse_colon,
+        comment: parse_comment,
+        digit: parse_digit,
+        dot: parse_dot,
+        doubleQuotedCharacter: parse_doubleQuotedCharacter,
+        doubleQuotedLiteral: parse_doubleQuotedLiteral,
+        eol: parse_eol,
+        eolChar: parse_eolChar,
+        eolEscapeSequence: parse_eolEscapeSequence,
+        equals: parse_equals,
+        grammar: parse_grammar,
+        hexDigit: parse_hexDigit,
+        hexEscapeSequence: parse_hexEscapeSequence,
+        identifier: parse_identifier,
+        initializer: parse_initializer,
+        labeled: parse_labeled,
+        letter: parse_letter,
+        literal: parse_literal,
+        lowerCaseLetter: parse_lowerCaseLetter,
+        lparen: parse_lparen,
+        multiLineComment: parse_multiLineComment,
+        nonBraceCharacter: parse_nonBraceCharacter,
+        nonBraceCharacters: parse_nonBraceCharacters,
+        not: parse_not,
+        plus: parse_plus,
+        prefixed: parse_prefixed,
+        primary: parse_primary,
+        question: parse_question,
+        rparen: parse_rparen,
+        rule: parse_rule,
+        semicolon: parse_semicolon,
+        sequence: parse_sequence,
+        simpleBracketDelimitedCharacter: parse_simpleBracketDelimitedCharacter,
+        simpleDoubleQuotedCharacter: parse_simpleDoubleQuotedCharacter,
+        simpleEscapeSequence: parse_simpleEscapeSequence,
+        simpleSingleQuotedCharacter: parse_simpleSingleQuotedCharacter,
+        singleLineComment: parse_singleLineComment,
+        singleQuotedCharacter: parse_singleQuotedCharacter,
+        singleQuotedLiteral: parse_singleQuotedLiteral,
+        slash: parse_slash,
+        star: parse_star,
+        suffixed: parse_suffixed,
+        unicodeEscapeSequence: parse_unicodeEscapeSequence,
+        upperCaseLetter: parse_upperCaseLetter,
+        whitespace: parse_whitespace,
+        zeroEscapeSequence: parse_zeroEscapeSequence
+      };
+      
+      if (startRule !== undefined) {
+        if (parseFunctions[startRule] === undefined) {
+          throw new Error("Invalid rule name: " + quote(startRule) + ".");
+        }
+      } else {
+        startRule = "grammar";
+      }
+      
       var pos = 0;
       var reportMatchFailures = true;
       var rightmostMatchFailuresPos = 0;
@@ -3516,7 +3582,7 @@ PEG.parser = (function(){
       
       
       
-      var result = parse_grammar();
+      var result = parseFunctions[startRule]();
       
       /*
        * The parser is now in one of the following three states:
