@@ -160,13 +160,13 @@ task("distclean", [], function() {
 });
 
 desc("Run the test suite");
-task("test", [], function() {
+task("test", ["build"], function() {
   var process = childProcess.spawn("test/run", [], { customFds: [0, 1, 2] });
   process.on("exit", function() { complete(); });
 }, true);
 
 desc("Run the benchmark suite");
-task("benchmark", [], function(runCount) {
+task("benchmark", ["build"], function(runCount) {
   var process = childProcess.spawn(
     "benchmark/run",
     runCount !== undefined ? [runCount] : [],
