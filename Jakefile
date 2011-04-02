@@ -99,7 +99,7 @@ function preprocess(file) {
     } else {
       return line;
     }
-  }).join("\n").replace("@VERSION", PEGJS_VERSION);
+  }).join("\n").replace(/@VERSION/g, PEGJS_VERSION);
 }
 
 desc("Generate the grammar parser");
