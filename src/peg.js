@@ -1,3 +1,5 @@
+/* PEG.js @VERSION (http://pegjs.majda.cz/) */
+
 (function() {
 
 var undefined;
