@@ -5,6 +5,7 @@
   "author": "David Majda <david@majda.cz> (http://majda.cz/)",
   "homepage": "http://pegjs.majda.cz/",
   "repository": "git://github.com/dmajda/pegjs.git",
+  "main"          : "./lib/peg",
   "engines": {
     "node": ">= 0.4"
   }
