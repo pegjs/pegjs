@@ -1,7 +1,7 @@
 {
   "name": "pegjs",
   "description": "Parser generator for JavaScript",
-  "version": "0.6.0pre",
+  "version": "@VERSION",
   "author": "David Majda <david@majda.cz> (http://majda.cz/)",
   "homepage": "http://pegjs.majda.cz/",
   "repository": "git://github.com/dmajda/pegjs.git",

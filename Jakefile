@@ -1,11 +1,16 @@
 var sys          = require("sys");
 var fs           = require("fs");
+var path         = require("path");
 var childProcess = require("child_process");
 
 /* Relative paths are here because of use in |require|. */
-var SRC_DIR = "./src";
-var LIB_DIR = "./lib";
-var BIN_DIR = "./bin";
+var SRC_DIR       = "./src";
+var LIB_DIR       = "./lib";
+var BIN_DIR       = "./bin";
+var EXAMPLES_DIR  = "./examples";
+var DIST_DIR      = "./dist";
+var DIST_WEB_DIR  = "./dist/web";
+var DIST_NODE_DIR = "./dist/node";
 
 var PEGJS = BIN_DIR + "/pegjs";
 
@@ -24,6 +29,57 @@ function exitFailure() {
 function abort(message) {
   sys.error(message);
   exitFailure();
+}
+
+function mkdirUnlessExists(dir) {
+  try {
+    fs.statSync(dir);
+  } catch (e) {
+    fs.mkdirSync(dir, 0755);
+  }
+}
+
+function copyFile(src, dest) {
+  fs.writeFileSync(dest, fs.readFileSync(src));
+}
+
+function copyDir(src, dest) {
+  mkdirUnlessExists(dest);
+
+  fs.readdirSync(src).every(function(file) {
+    var srcFile  = src  + "/" + file;
+    var destFile = dest + "/" + file;
+
+    var stats = fs.statSync(srcFile);
+    if (stats.isDirectory()) {
+      copyDir(srcFile, destFile);
+    } else {
+      copyFile(srcFile, destFile);
+      fs.chmodSync(destFile, stats.mode);
+    }
+
+    return true;
+  });
+}
+
+function preprocess(file) {
+  var input = fs.readFileSync(file, "utf8").trim();
+  return input.split("\n").map(function(line) {
+    var matches = /^\s*\/\/\s*@include\s*"([^"]*)"\s*$/.exec(line);
+    if (matches !== null) {
+      var includedFile = SRC_DIR + "/" + matches[1];
+
+      try {
+        fs.statSync(includedFile);
+      } catch (e) {
+        abort("Included file \"" + includedFile + "\" does not exist.");
+      }
+
+      return preprocess(includedFile);
+    } else {
+      return line;
+    }
+  }).join("\n").replace("@VERSION", PEGJS_VERSION);
 }
 
 desc("Generate the grammar parser");
@@ -46,32 +102,34 @@ task("parser", [], function() {
 
 desc("Build the peg.js file");
 task("build", [], function() {
-  function preprocess(file) {
-    var input = fs.readFileSync(file, "utf8").trim();
-    return input.split("\n").map(function(line) {
-      var matches = /^\s*\/\/\s*@include\s*"([^"]*)"\s*$/.exec(line);
-      if (matches !== null) {
-        var includedFile = SRC_DIR + "/" + matches[1];
-
-        try {
-          fs.statSync(includedFile);
-        } catch (e) {
-          abort("Included file \"" + includedFile + "\" does not exist.");
-        }
-
-        return preprocess(includedFile);
-      } else {
-        return line;
-      }
-    }).join("\n").replace("@VERSION", PEGJS_VERSION);
-  }
-
-  try {
-    fs.statSync(LIB_DIR);
-  } catch (e) {
-    fs.mkdirSync(LIB_DIR, 0755);
-  }
+  mkdirUnlessExists(LIB_DIR);
   fs.writeFileSync(PEGJS_OUT_FILE, preprocess(PEGJS_SRC_FILE), "utf8");
+});
+
+desc("Prepare the distribution files");
+task("dist", ["build"], function() {
+  mkdirUnlessExists(DIST_DIR);
+
+  /* Web */
+
+  mkdirUnlessExists(DIST_WEB_DIR);
+
+  copyFile(PEGJS_OUT_FILE, DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".js");
+
+  /* Node.js */
+
+  mkdirUnlessExists(DIST_NODE_DIR);
+
+  copyDir(LIB_DIR,      DIST_NODE_DIR + "/lib");
+  copyDir(BIN_DIR,      DIST_NODE_DIR + "/bin");
+  copyDir(EXAMPLES_DIR, DIST_NODE_DIR + "/examples");
+
+  copyFile("CHANGELOG", DIST_NODE_DIR + "/CHANGELOG");
+  copyFile("LICENSE",   DIST_NODE_DIR + "/LICENSE");
+  copyFile("README.md", DIST_NODE_DIR + "/README.md");
+  copyFile("VERSION",   DIST_NODE_DIR + "/VERSION");
+
+  fs.writeFileSync(DIST_NODE_DIR + "/package.json", preprocess("package.json"), "utf8");
 });
 
 desc("Run the test suite");
