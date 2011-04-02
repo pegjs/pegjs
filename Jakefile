@@ -62,6 +62,23 @@ function copyDir(src, dest) {
   });
 }
 
+function removeDir(dir) {
+  fs.readdirSync(dir).every(function(file) {
+    var file = dir  + "/" + file;
+
+    var stats = fs.statSync(file);
+    if (stats.isDirectory()) {
+      removeDir(file);
+    } else {
+      fs.unlinkSync(file);
+    }
+
+    return true;
+  });
+
+  fs.rmdirSync(dir);
+}
+
 function preprocess(file) {
   var input = fs.readFileSync(file, "utf8").trim();
   return input.split("\n").map(function(line) {
@@ -106,6 +123,11 @@ task("build", [], function() {
   fs.writeFileSync(PEGJS_OUT_FILE, preprocess(PEGJS_SRC_FILE), "utf8");
 });
 
+desc("Remove built peg.js file (created by \"build\")");
+task("clean", [], function() {
+  removeDir(LIB_DIR);
+});
+
 desc("Prepare the distribution files");
 task("dist", ["build"], function() {
   mkdirUnlessExists(DIST_DIR);
@@ -130,6 +152,11 @@ task("dist", ["build"], function() {
   copyFile("VERSION",   DIST_NODE_DIR + "/VERSION");
 
   fs.writeFileSync(DIST_NODE_DIR + "/package.json", preprocess("package.json"), "utf8");
+});
+
+desc("Remove the distribution files (created by \"dist\")");
+task("distclean", [], function() {
+  removeDir(DIST_DIR);
 });
 
 desc("Run the test suite");
