@@ -1,5 +1,5 @@
 {
-  "name": "peg",
+  "name": "pegjs",
   "description": "Parser generator for JavaScript",
   "version": "0.6.0pre",
   "author": "David Majda <david@majda.cz> (http://majda.cz/)",
