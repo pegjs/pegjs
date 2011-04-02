@@ -3,6 +3,8 @@ var fs           = require("fs");
 var path         = require("path");
 var childProcess = require("child_process");
 
+var PEGJS_VERSION = fs.readFileSync("VERSION", "utf8").trim();
+
 /* Relative paths are here because of use in |require|. */
 var SRC_DIR       = "./src";
 var LIB_DIR       = "./lib";
@@ -17,10 +19,11 @@ var PEGJS = BIN_DIR + "/pegjs";
 var PEGJS_SRC_FILE = SRC_DIR + "/peg.js";
 var PEGJS_OUT_FILE = LIB_DIR + "/peg.js";
 
+var PEGJS_DIST_FILE     = DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".js"
+var PEGJS_DIST_MIN_FILE = DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".min.js"
+
 var PARSER_SRC_FILE = SRC_DIR + "/parser.pegjs";
 var PARSER_OUT_FILE = SRC_DIR + "/parser.js";
-
-var PEGJS_VERSION = fs.readFileSync("VERSION", "utf8").trim();
 
 function exitFailure() {
   process.exit(1);
@@ -136,7 +139,14 @@ task("dist", ["build"], function() {
 
   mkdirUnlessExists(DIST_WEB_DIR);
 
-  copyFile(PEGJS_OUT_FILE, DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".js");
+  copyFile(PEGJS_OUT_FILE, PEGJS_DIST_FILE);
+
+  var process = childProcess.spawn(
+    "uglifyjs",
+    ["-o", PEGJS_DIST_MIN_FILE, PEGJS_OUT_FILE],
+    { customFds: [0, 1, 2] }
+  );
+  process.on("exit", function() { complete(); });
 
   /* Node.js */
 
@@ -152,7 +162,7 @@ task("dist", ["build"], function() {
   copyFile("VERSION",   DIST_NODE_DIR + "/VERSION");
 
   fs.writeFileSync(DIST_NODE_DIR + "/package.json", preprocess("package.json"), "utf8");
-});
+}, true);
 
 desc("Remove the distribution files (created by \"dist\")");
 task("distclean", [], function() {
