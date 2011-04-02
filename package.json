@@ -1,11 +1,24 @@
 {
-  "name": "pegjs",
+  "name":        "pegjs",
+  "version":     "@VERSION",
   "description": "Parser generator for JavaScript",
-  "version": "@VERSION",
-  "author": "David Majda <david@majda.cz> (http://majda.cz/)",
-  "homepage": "http://pegjs.majda.cz/",
-  "repository": "git://github.com/dmajda/pegjs.git",
+  "homepage":    "http://pegjs.majda.cz/",
+  "author": {
+    "name":  "David Majda",
+    "email": "david@majda.cz",
+    "url":   "http://majda.cz/"
+  },
+  "main":        "lib/peg",
+  "bin":         "bin/pegjs",
+  "repository": {
+    "type": "git",
+    "url":  "http://github.com/dmajda/pegjs.git"
+  },
+  "devDependencies": {
+    "jake":      ">= 0.1.10",
+    "uglify-js": ">= 0.0.5"
+  },
   "engines": {
-    "node": ">= 0.4"
+    "node": ">= 0.4.4"
   }
 }
