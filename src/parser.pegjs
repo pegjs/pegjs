@@ -20,7 +20,7 @@ initializer
     }
 
 rule
-  = name:identifier displayName:(literal / "") equals expression:expression semicolon? {
+  = name:nonterminal displayName:(literal / "") equals expression:expression semicolon? {
       return {
         type:        "rule",
         name:        name,
@@ -130,7 +130,7 @@ suffixed
   / primary
 
 primary
-  = name:identifier !(( literal / "") equals) {
+  = name:nonterminal !(( literal / "") equals) {
       return {
         type: "rule_ref",
         name: name
@@ -193,6 +193,14 @@ dot       = "." __ { return "."; }
  */
 identifier "identifier"
   = head:(letter / "_" / "$") tail:(letter / digit / "_" / "$")* __ {
+      return head + tail.join("");
+    }
+
+/*
+ * Similar to identifier, but hyphens are permitted.
+ */
+nonterminal "nonterminal"
+  = head:(letter / "_" / "$") tail:(letter / digit / "_" / "-" / "$")* __ {
       return head + tail.join("");
     }
 

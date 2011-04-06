@@ -170,9 +170,9 @@ test("initializer", function() {
 
 test("rule references", function() {
   var parser = PEG.buildParser([
-    'start   = static / dynamic',
+    'start   = static / dyn-amic',
     'static  = "C" / "C++" / "Java" / "C#"',
-    'dynamic = "Ruby" / "Python" / "JavaScript"'
+    'dyn-amic = "Ruby" / "Python" / "JavaScript"'
   ].join("\n"));
   parses(parser, "Java", "Java");
   parses(parser, "Python", "Python");

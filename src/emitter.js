@@ -90,6 +90,10 @@ PEG.compiler.emitter = function(ast) {
     }
   };
 
+  function safeName(name) {
+    return name.replace(/-/g, "_");
+  }
+
   var emit = buildNodeVisitor({
     grammar: function(node) {
       var initializerCode = node.initializer !== null
@@ -98,7 +102,7 @@ PEG.compiler.emitter = function(ast) {
 
       var parseFunctionTableItems = [];
       for (var name in node.rules) {
-        parseFunctionTableItems.push(name + ": parse_" + name);
+        parseFunctionTableItems.push("'" + name + "': parse_" + safeName(name));
       }
       parseFunctionTableItems.sort();
 
@@ -387,7 +391,7 @@ PEG.compiler.emitter = function(ast) {
         "  return ${resultVar};",
         "}",
         {
-          name:                           node.name,
+          name:                           safeName(node.name),
           setReportMatchFailuresCode:     setReportMatchFailuresCode,
           restoreReportMatchFailuresCode: restoreReportMatchFailuresCode,
           reportMatchFailureCode:         reportMatchFailureCode,
@@ -668,7 +672,7 @@ PEG.compiler.emitter = function(ast) {
       return formatCode(
         "var ${resultVar} = ${ruleMethod}();",
         {
-          ruleMethod: "parse_" + node.name,
+          ruleMethod: "parse_" + safeName(node.name),
           resultVar:  resultVar
         }
       );

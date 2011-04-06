@@ -10,62 +10,63 @@ PEG.parser = (function(){
      */
     parse: function(input, startRule) {
       var parseFunctions = {
-        __: parse___,
-        action: parse_action,
-        and: parse_and,
-        braced: parse_braced,
-        bracketDelimitedCharacter: parse_bracketDelimitedCharacter,
-        choice: parse_choice,
-        class: parse_class,
-        classCharacter: parse_classCharacter,
-        classCharacterRange: parse_classCharacterRange,
-        colon: parse_colon,
-        comment: parse_comment,
-        digit: parse_digit,
-        dot: parse_dot,
-        doubleQuotedCharacter: parse_doubleQuotedCharacter,
-        doubleQuotedLiteral: parse_doubleQuotedLiteral,
-        eol: parse_eol,
-        eolChar: parse_eolChar,
-        eolEscapeSequence: parse_eolEscapeSequence,
-        equals: parse_equals,
-        grammar: parse_grammar,
-        hexDigit: parse_hexDigit,
-        hexEscapeSequence: parse_hexEscapeSequence,
-        identifier: parse_identifier,
-        initializer: parse_initializer,
-        labeled: parse_labeled,
-        letter: parse_letter,
-        literal: parse_literal,
-        lowerCaseLetter: parse_lowerCaseLetter,
-        lparen: parse_lparen,
-        multiLineComment: parse_multiLineComment,
-        nonBraceCharacter: parse_nonBraceCharacter,
-        nonBraceCharacters: parse_nonBraceCharacters,
-        not: parse_not,
-        pipe: parse_pipe,
-        plus: parse_plus,
-        prefixed: parse_prefixed,
-        primary: parse_primary,
-        question: parse_question,
-        rparen: parse_rparen,
-        rule: parse_rule,
-        semicolon: parse_semicolon,
-        sequence: parse_sequence,
-        simpleBracketDelimitedCharacter: parse_simpleBracketDelimitedCharacter,
-        simpleDoubleQuotedCharacter: parse_simpleDoubleQuotedCharacter,
-        simpleEscapeSequence: parse_simpleEscapeSequence,
-        simpleSingleQuotedCharacter: parse_simpleSingleQuotedCharacter,
-        singleLineComment: parse_singleLineComment,
-        singleQuotedCharacter: parse_singleQuotedCharacter,
-        singleQuotedLiteral: parse_singleQuotedLiteral,
-        slash: parse_slash,
-        star: parse_star,
-        suffixed: parse_suffixed,
-        unicodeEscapeSequence: parse_unicodeEscapeSequence,
-        upperCaseLetter: parse_upperCaseLetter,
-        whitespace: parse_whitespace,
-        zeroEscapeSequence: parse_zeroEscapeSequence
+        '__': parse___,
+        'action': parse_action,
+        'and': parse_and,
+        'braced': parse_braced,
+        'bracketDelimitedCharacter': parse_bracketDelimitedCharacter,
+        'choice': parse_choice,
+        'class': parse_class,
+        'classCharacter': parse_classCharacter,
+        'classCharacterRange': parse_classCharacterRange,
+        'colon': parse_colon,
+        'comment': parse_comment,
+        'digit': parse_digit,
+        'dot': parse_dot,
+        'doubleQuotedCharacter': parse_doubleQuotedCharacter,
+        'doubleQuotedLiteral': parse_doubleQuotedLiteral,
+        'eol': parse_eol,
+        'eolChar': parse_eolChar,
+        'eolEscapeSequence': parse_eolEscapeSequence,
+        'equals': parse_equals,
+        'grammar': parse_grammar,
+        'hexDigit': parse_hexDigit,
+        'hexEscapeSequence': parse_hexEscapeSequence,
+        'identifier': parse_identifier,
+        'initializer': parse_initializer,
+        'labeled': parse_labeled,
+        'letter': parse_letter,
+        'literal': parse_literal,
+        'lowerCaseLetter': parse_lowerCaseLetter,
+        'lparen': parse_lparen,
+        'multiLineComment': parse_multiLineComment,
+        'nonBraceCharacter': parse_nonBraceCharacter,
+        'nonBraceCharacters': parse_nonBraceCharacters,
+        'nonterminal': parse_nonterminal,
+        'not': parse_not,
+        'pipe': parse_pipe,
+        'plus': parse_plus,
+        'prefixed': parse_prefixed,
+        'primary': parse_primary,
+        'question': parse_question,
+        'rparen': parse_rparen,
+        'rule': parse_rule,
+        'semicolon': parse_semicolon,
+        'sequence': parse_sequence,
+        'simpleBracketDelimitedCharacter': parse_simpleBracketDelimitedCharacter,
+        'simpleDoubleQuotedCharacter': parse_simpleDoubleQuotedCharacter,
+        'simpleEscapeSequence': parse_simpleEscapeSequence,
+        'simpleSingleQuotedCharacter': parse_simpleSingleQuotedCharacter,
+        'singleLineComment': parse_singleLineComment,
+        'singleQuotedCharacter': parse_singleQuotedCharacter,
+        'singleQuotedLiteral': parse_singleQuotedLiteral,
+        'slash': parse_slash,
+        'star': parse_star,
+        'suffixed': parse_suffixed,
+        'unicodeEscapeSequence': parse_unicodeEscapeSequence,
+        'upperCaseLetter': parse_upperCaseLetter,
+        'whitespace': parse_whitespace,
+        'zeroEscapeSequence': parse_zeroEscapeSequence
       };
       
       if (startRule !== undefined) {
@@ -250,7 +251,7 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_identifier();
+        var result2 = parse_nonterminal();
         if (result2 !== null) {
           var result9 = parse_literal();
           if (result9 !== null) {
@@ -798,7 +799,7 @@ PEG.parser = (function(){
         
         
         var savedPos1 = pos;
-        var result13 = parse_identifier();
+        var result13 = parse_nonterminal();
         if (result13 !== null) {
           var savedPos2 = pos;
           var savedReportMatchFailuresVar0 = reportMatchFailures;
@@ -1830,6 +1831,187 @@ PEG.parser = (function(){
         reportMatchFailures = savedReportMatchFailures;
         if (reportMatchFailures && result0 === null) {
           matchFailed("identifier");
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_nonterminal() {
+        var cacheKey = 'nonterminal@' + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var savedReportMatchFailures = reportMatchFailures;
+        reportMatchFailures = false;
+        var savedPos0 = pos;
+        var result13 = parse_letter();
+        if (result13 !== null) {
+          var result2 = result13;
+        } else {
+          if (input.substr(pos, 1) === "_") {
+            var result12 = "_";
+            pos += 1;
+          } else {
+            var result12 = null;
+            if (reportMatchFailures) {
+              matchFailed("\"_\"");
+            }
+          }
+          if (result12 !== null) {
+            var result2 = result12;
+          } else {
+            if (input.substr(pos, 1) === "$") {
+              var result11 = "$";
+              pos += 1;
+            } else {
+              var result11 = null;
+              if (reportMatchFailures) {
+                matchFailed("\"$\"");
+              }
+            }
+            if (result11 !== null) {
+              var result2 = result11;
+            } else {
+              var result2 = null;;
+            };
+          };
+        }
+        if (result2 !== null) {
+          var result3 = [];
+          var result10 = parse_letter();
+          if (result10 !== null) {
+            var result5 = result10;
+          } else {
+            var result9 = parse_digit();
+            if (result9 !== null) {
+              var result5 = result9;
+            } else {
+              if (input.substr(pos, 1) === "_") {
+                var result8 = "_";
+                pos += 1;
+              } else {
+                var result8 = null;
+                if (reportMatchFailures) {
+                  matchFailed("\"_\"");
+                }
+              }
+              if (result8 !== null) {
+                var result5 = result8;
+              } else {
+                if (input.substr(pos, 1) === "-") {
+                  var result7 = "-";
+                  pos += 1;
+                } else {
+                  var result7 = null;
+                  if (reportMatchFailures) {
+                    matchFailed("\"-\"");
+                  }
+                }
+                if (result7 !== null) {
+                  var result5 = result7;
+                } else {
+                  if (input.substr(pos, 1) === "$") {
+                    var result6 = "$";
+                    pos += 1;
+                  } else {
+                    var result6 = null;
+                    if (reportMatchFailures) {
+                      matchFailed("\"$\"");
+                    }
+                  }
+                  if (result6 !== null) {
+                    var result5 = result6;
+                  } else {
+                    var result5 = null;;
+                  };
+                };
+              };
+            };
+          }
+          while (result5 !== null) {
+            result3.push(result5);
+            var result10 = parse_letter();
+            if (result10 !== null) {
+              var result5 = result10;
+            } else {
+              var result9 = parse_digit();
+              if (result9 !== null) {
+                var result5 = result9;
+              } else {
+                if (input.substr(pos, 1) === "_") {
+                  var result8 = "_";
+                  pos += 1;
+                } else {
+                  var result8 = null;
+                  if (reportMatchFailures) {
+                    matchFailed("\"_\"");
+                  }
+                }
+                if (result8 !== null) {
+                  var result5 = result8;
+                } else {
+                  if (input.substr(pos, 1) === "-") {
+                    var result7 = "-";
+                    pos += 1;
+                  } else {
+                    var result7 = null;
+                    if (reportMatchFailures) {
+                      matchFailed("\"-\"");
+                    }
+                  }
+                  if (result7 !== null) {
+                    var result5 = result7;
+                  } else {
+                    if (input.substr(pos, 1) === "$") {
+                      var result6 = "$";
+                      pos += 1;
+                    } else {
+                      var result6 = null;
+                      if (reportMatchFailures) {
+                        matchFailed("\"$\"");
+                      }
+                    }
+                    if (result6 !== null) {
+                      var result5 = result6;
+                    } else {
+                      var result5 = null;;
+                    };
+                  };
+                };
+              };
+            }
+          }
+          if (result3 !== null) {
+            var result4 = parse___();
+            if (result4 !== null) {
+              var result1 = [result2, result3, result4];
+            } else {
+              var result1 = null;
+              pos = savedPos0;
+            }
+          } else {
+            var result1 = null;
+            pos = savedPos0;
+          }
+        } else {
+          var result1 = null;
+          pos = savedPos0;
+        }
+        var result0 = result1 !== null
+          ? (function(head, tail) {
+                return head + tail.join("");
+              })(result1[0], result1[1])
+          : null;
+        reportMatchFailures = savedReportMatchFailures;
+        if (reportMatchFailures && result0 === null) {
+          matchFailed("nonterminal");
         }
         
         cache[cacheKey] = {
