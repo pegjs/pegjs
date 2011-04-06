@@ -33,7 +33,7 @@ expression
   = choice
 
 choice
-  = head:sequence tail:(slash sequence)* {
+  = head:sequence tail:((slash / pipe) sequence)* {
       if (tail.length > 0) {
         var alternatives = [head].concat(map(
             tail,
@@ -166,6 +166,7 @@ equals    = "=" __ { return "="; }
 colon     = ":" __ { return ":"; }
 semicolon = ";" __ { return ";"; }
 slash     = "/" __ { return "/"; }
+pipe      = "|" __ { return "|"; }
 and       = "&" __ { return "&"; }
 not       = "!" __ { return "!"; }
 question  = "?" __ { return "?"; }

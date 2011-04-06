@@ -3,7 +3,7 @@
 module("PEG.compiler");
 
 test("choices", function() {
-  var parser = PEG.buildParser('start = "a" / "b" / "c"');
+  var parser = PEG.buildParser('start = "a" / "b" | "c"');
   parses(parser, "a", "a");
   parses(parser, "b", "b");
   parses(parser, "c", "c");

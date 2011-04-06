@@ -43,6 +43,7 @@ PEG.parser = (function(){
         nonBraceCharacter: parse_nonBraceCharacter,
         nonBraceCharacters: parse_nonBraceCharacters,
         not: parse_not,
+        pipe: parse_pipe,
         plus: parse_plus,
         prefixed: parse_prefixed,
         primary: parse_primary,
@@ -333,7 +334,17 @@ PEG.parser = (function(){
         if (result2 !== null) {
           var result3 = [];
           var savedPos1 = pos;
-          var result5 = parse_slash();
+          var result8 = parse_slash();
+          if (result8 !== null) {
+            var result5 = result8;
+          } else {
+            var result7 = parse_pipe();
+            if (result7 !== null) {
+              var result5 = result7;
+            } else {
+              var result5 = null;;
+            };
+          }
           if (result5 !== null) {
             var result6 = parse_sequence();
             if (result6 !== null) {
@@ -349,7 +360,17 @@ PEG.parser = (function(){
           while (result4 !== null) {
             result3.push(result4);
             var savedPos1 = pos;
-            var result5 = parse_slash();
+            var result8 = parse_slash();
+            if (result8 !== null) {
+              var result5 = result8;
+            } else {
+              var result7 = parse_pipe();
+              if (result7 !== null) {
+                var result5 = result7;
+              } else {
+                var result5 = null;;
+              };
+            }
             if (result5 !== null) {
               var result6 = parse_sequence();
               if (result6 !== null) {
@@ -1256,6 +1277,50 @@ PEG.parser = (function(){
         }
         var result0 = result1 !== null
           ? (function() { return "/"; })()
+          : null;
+        
+        
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_pipe() {
+        var cacheKey = 'pipe@' + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        
+        var savedPos0 = pos;
+        if (input.substr(pos, 1) === "|") {
+          var result2 = "|";
+          pos += 1;
+        } else {
+          var result2 = null;
+          if (reportMatchFailures) {
+            matchFailed("\"|\"");
+          }
+        }
+        if (result2 !== null) {
+          var result3 = parse___();
+          if (result3 !== null) {
+            var result1 = [result2, result3];
+          } else {
+            var result1 = null;
+            pos = savedPos0;
+          }
+        } else {
+          var result1 = null;
+          pos = savedPos0;
+        }
+        var result0 = result1 !== null
+          ? (function() { return "|"; })()
           : null;
         
         
