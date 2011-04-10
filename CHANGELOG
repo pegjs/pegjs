@@ -28,6 +28,7 @@ Small Changes:
 * Added PEG.js version information and homepage header to peg.js.
 * Generated code improvements and fixes.
 * Internal code improvements and fixes.
+* Rewrote README.md.
 
 0.5.1 (2010-11-28)
 ------------------
