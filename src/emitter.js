@@ -98,7 +98,7 @@ PEG.compiler.emitter = function(ast) {
 
       var parseFunctionTableItems = [];
       for (var name in node.rules) {
-        parseFunctionTableItems.push(name + ": parse_" + name);
+        parseFunctionTableItems.push(quote(name) + ": parse_" + name);
       }
       parseFunctionTableItems.sort();
 
