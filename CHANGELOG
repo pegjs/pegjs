@@ -1,3 +1,10 @@
+0.6.1 (2011-04-14)
+------------------
+
+Small Changes:
+
+* Use --ascii option when generating a minified version.
+
 0.6.0 (2011-04-14)
 ------------------
 
