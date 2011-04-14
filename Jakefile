@@ -143,7 +143,7 @@ task("dist", ["build"], function() {
 
   var process = childProcess.spawn(
     "uglifyjs",
-    ["-o", PEGJS_DIST_MIN_FILE, PEGJS_OUT_FILE],
+    ["--ascii", "-o", PEGJS_DIST_MIN_FILE, PEGJS_OUT_FILE],
     { customFds: [0, 1, 2] }
   );
   process.on("exit", function() { complete(); });
