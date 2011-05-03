@@ -8,7 +8,7 @@ PEG.parser = (function(){
      * which the parser was generated (see |PEG.buildParser|). If the parsing is
      * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.
      */
-    parse: function(input, startRule) {
+    parse: function(input, startRule, thisObj) {
       var parseFunctions = {
         '__': parse___,
         'action': parse_action,
@@ -69,6 +69,11 @@ PEG.parser = (function(){
         'zeroEscapeSequence': parse_zeroEscapeSequence
       };
       
+      /* allow thisObj as second arg */
+      if (arguments.length === 2 && typeof startRule === 'object') {
+        thisObj = startRule;
+        startRule = undefined;
+      }
       if (startRule !== undefined) {
         if (parseFunctions[startRule] === undefined) {
           throw new Error("Invalid rule name: " + quote(startRule) + ".");
@@ -147,17 +152,17 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse___();
+        var result2 = parse___.apply(this);
         if (result2 !== null) {
-          var result6 = parse_initializer();
+          var result6 = parse_initializer.apply(this);
           var result3 = result6 !== null ? result6 : '';
           if (result3 !== null) {
-            var result5 = parse_rule();
+            var result5 = parse_rule.apply(this);
             if (result5 !== null) {
               var result4 = [];
               while (result5 !== null) {
                 result4.push(result5);
-                var result5 = parse_rule();
+                var result5 = parse_rule.apply(this);
               }
             } else {
               var result4 = null;
@@ -187,7 +192,7 @@ PEG.parser = (function(){
                   rules:       rulesConverted,
                   startRule:   rules[0].name
                 }
-              })(result1[1], result1[2])
+              }).apply(this, [result1[1], result1[2]])
           : null;
         
         
@@ -209,9 +214,9 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_action();
+        var result2 = parse_action.apply(this);
         if (result2 !== null) {
-          var result4 = parse_semicolon();
+          var result4 = parse_semicolon.apply(this);
           var result3 = result4 !== null ? result4 : '';
           if (result3 !== null) {
             var result1 = [result2, result3];
@@ -229,7 +234,7 @@ PEG.parser = (function(){
                   type: "initializer",
                   code: code
                 };
-              })(result1[0])
+              }).apply(this, [result1[0]])
           : null;
         
         
@@ -251,9 +256,9 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_nonterminal();
+        var result2 = parse_nonterminal.apply(this);
         if (result2 !== null) {
-          var result9 = parse_literal();
+          var result9 = parse_literal.apply(this);
           if (result9 !== null) {
             var result3 = result9;
           } else {
@@ -273,11 +278,11 @@ PEG.parser = (function(){
             };
           }
           if (result3 !== null) {
-            var result4 = parse_equals();
+            var result4 = parse_equals.apply(this);
             if (result4 !== null) {
-              var result5 = parse_choice();
+              var result5 = parse_choice.apply(this);
               if (result5 !== null) {
-                var result7 = parse_semicolon();
+                var result7 = parse_semicolon.apply(this);
                 var result6 = result7 !== null ? result7 : '';
                 if (result6 !== null) {
                   var result1 = [result2, result3, result4, result5, result6];
@@ -309,7 +314,7 @@ PEG.parser = (function(){
                   displayName: displayName !== "" ? displayName : null,
                   expression:  expression
                 };
-              })(result1[0], result1[1], result1[3])
+              }).apply(this, [result1[0], result1[1], result1[3]])
           : null;
         
         
@@ -331,15 +336,15 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_sequence();
+        var result2 = parse_sequence.apply(this);
         if (result2 !== null) {
           var result3 = [];
           var savedPos1 = pos;
-          var result8 = parse_slash();
+          var result8 = parse_slash.apply(this);
           if (result8 !== null) {
             var result5 = result8;
           } else {
-            var result7 = parse_pipe();
+            var result7 = parse_pipe.apply(this);
             if (result7 !== null) {
               var result5 = result7;
             } else {
@@ -347,7 +352,7 @@ PEG.parser = (function(){
             };
           }
           if (result5 !== null) {
-            var result6 = parse_sequence();
+            var result6 = parse_sequence.apply(this);
             if (result6 !== null) {
               var result4 = [result5, result6];
             } else {
@@ -361,11 +366,11 @@ PEG.parser = (function(){
           while (result4 !== null) {
             result3.push(result4);
             var savedPos1 = pos;
-            var result8 = parse_slash();
+            var result8 = parse_slash.apply(this);
             if (result8 !== null) {
               var result5 = result8;
             } else {
-              var result7 = parse_pipe();
+              var result7 = parse_pipe.apply(this);
               if (result7 !== null) {
                 var result5 = result7;
               } else {
@@ -373,7 +378,7 @@ PEG.parser = (function(){
               };
             }
             if (result5 !== null) {
-              var result6 = parse_sequence();
+              var result6 = parse_sequence.apply(this);
               if (result6 !== null) {
                 var result4 = [result5, result6];
               } else {
@@ -409,7 +414,7 @@ PEG.parser = (function(){
                 } else {
                   return head;
                 }
-              })(result1[0], result1[1])
+              }).apply(this, [result1[0], result1[1]])
           : null;
         
         
@@ -432,13 +437,13 @@ PEG.parser = (function(){
         
         var savedPos0 = pos;
         var result6 = [];
-        var result8 = parse_labeled();
+        var result8 = parse_labeled.apply(this);
         while (result8 !== null) {
           result6.push(result8);
-          var result8 = parse_labeled();
+          var result8 = parse_labeled.apply(this);
         }
         if (result6 !== null) {
-          var result7 = parse_action();
+          var result7 = parse_action.apply(this);
           if (result7 !== null) {
             var result5 = [result6, result7];
           } else {
@@ -462,16 +467,16 @@ PEG.parser = (function(){
                   expression: expression,
                   code:       code
                 };
-              })(result5[0], result5[1])
+              }).apply(this, [result5[0], result5[1]])
           : null;
         if (result4 !== null) {
           var result0 = result4;
         } else {
           var result2 = [];
-          var result3 = parse_labeled();
+          var result3 = parse_labeled.apply(this);
           while (result3 !== null) {
             result2.push(result3);
-            var result3 = parse_labeled();
+            var result3 = parse_labeled.apply(this);
           }
           var result1 = result2 !== null
             ? (function(elements) {
@@ -481,7 +486,7 @@ PEG.parser = (function(){
                         elements: elements
                       }
                     : elements[0];
-                })(result2)
+                }).apply(this, [result2])
             : null;
           if (result1 !== null) {
             var result0 = result1;
@@ -509,11 +514,11 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result4 = parse_identifier();
+        var result4 = parse_identifier.apply(this);
         if (result4 !== null) {
-          var result5 = parse_colon();
+          var result5 = parse_colon.apply(this);
           if (result5 !== null) {
-            var result6 = parse_prefixed();
+            var result6 = parse_prefixed.apply(this);
             if (result6 !== null) {
               var result3 = [result4, result5, result6];
             } else {
@@ -535,12 +540,12 @@ PEG.parser = (function(){
                   label:      label,
                   expression: expression
                 };
-              })(result3[0], result3[2])
+              }).apply(this, [result3[0], result3[2]])
           : null;
         if (result2 !== null) {
           var result0 = result2;
         } else {
-          var result1 = parse_prefixed();
+          var result1 = parse_prefixed.apply(this);
           if (result1 !== null) {
             var result0 = result1;
           } else {
@@ -567,9 +572,9 @@ PEG.parser = (function(){
         
         
         var savedPos3 = pos;
-        var result16 = parse_and();
+        var result16 = parse_and.apply(this);
         if (result16 !== null) {
-          var result17 = parse_action();
+          var result17 = parse_action.apply(this);
           if (result17 !== null) {
             var result15 = [result16, result17];
           } else {
@@ -586,15 +591,15 @@ PEG.parser = (function(){
                   type: "semantic_and",
                   code: code
                 };
-              })(result15[1])
+              }).apply(this, [result15[1]])
           : null;
         if (result14 !== null) {
           var result0 = result14;
         } else {
           var savedPos2 = pos;
-          var result12 = parse_and();
+          var result12 = parse_and.apply(this);
           if (result12 !== null) {
-            var result13 = parse_suffixed();
+            var result13 = parse_suffixed.apply(this);
             if (result13 !== null) {
               var result11 = [result12, result13];
             } else {
@@ -611,15 +616,15 @@ PEG.parser = (function(){
                     type:       "simple_and",
                     expression: expression
                   };
-                })(result11[1])
+                }).apply(this, [result11[1]])
             : null;
           if (result10 !== null) {
             var result0 = result10;
           } else {
             var savedPos1 = pos;
-            var result8 = parse_not();
+            var result8 = parse_not.apply(this);
             if (result8 !== null) {
-              var result9 = parse_action();
+              var result9 = parse_action.apply(this);
               if (result9 !== null) {
                 var result7 = [result8, result9];
               } else {
@@ -636,15 +641,15 @@ PEG.parser = (function(){
                       type: "semantic_not",
                       code: code
                     };
-                  })(result7[1])
+                  }).apply(this, [result7[1]])
               : null;
             if (result6 !== null) {
               var result0 = result6;
             } else {
               var savedPos0 = pos;
-              var result4 = parse_not();
+              var result4 = parse_not.apply(this);
               if (result4 !== null) {
-                var result5 = parse_suffixed();
+                var result5 = parse_suffixed.apply(this);
                 if (result5 !== null) {
                   var result3 = [result4, result5];
                 } else {
@@ -661,12 +666,12 @@ PEG.parser = (function(){
                         type:       "simple_not",
                         expression: expression
                       };
-                    })(result3[1])
+                    }).apply(this, [result3[1]])
                 : null;
               if (result2 !== null) {
                 var result0 = result2;
               } else {
-                var result1 = parse_suffixed();
+                var result1 = parse_suffixed.apply(this);
                 if (result1 !== null) {
                   var result0 = result1;
                 } else {
@@ -696,9 +701,9 @@ PEG.parser = (function(){
         
         
         var savedPos2 = pos;
-        var result12 = parse_primary();
+        var result12 = parse_primary.apply(this);
         if (result12 !== null) {
-          var result13 = parse_question();
+          var result13 = parse_question.apply(this);
           if (result13 !== null) {
             var result11 = [result12, result13];
           } else {
@@ -715,15 +720,15 @@ PEG.parser = (function(){
                   type:       "optional",
                   expression: expression
                 };
-              })(result11[0])
+              }).apply(this, [result11[0]])
           : null;
         if (result10 !== null) {
           var result0 = result10;
         } else {
           var savedPos1 = pos;
-          var result8 = parse_primary();
+          var result8 = parse_primary.apply(this);
           if (result8 !== null) {
-            var result9 = parse_star();
+            var result9 = parse_star.apply(this);
             if (result9 !== null) {
               var result7 = [result8, result9];
             } else {
@@ -740,15 +745,15 @@ PEG.parser = (function(){
                     type:       "zero_or_more",
                     expression: expression
                   };
-                })(result7[0])
+                }).apply(this, [result7[0]])
             : null;
           if (result6 !== null) {
             var result0 = result6;
           } else {
             var savedPos0 = pos;
-            var result4 = parse_primary();
+            var result4 = parse_primary.apply(this);
             if (result4 !== null) {
-              var result5 = parse_plus();
+              var result5 = parse_plus.apply(this);
               if (result5 !== null) {
                 var result3 = [result4, result5];
               } else {
@@ -765,12 +770,12 @@ PEG.parser = (function(){
                       type:       "one_or_more",
                       expression: expression
                     };
-                  })(result3[0])
+                  }).apply(this, [result3[0]])
               : null;
             if (result2 !== null) {
               var result0 = result2;
             } else {
-              var result1 = parse_primary();
+              var result1 = parse_primary.apply(this);
               if (result1 !== null) {
                 var result0 = result1;
               } else {
@@ -799,13 +804,13 @@ PEG.parser = (function(){
         
         
         var savedPos1 = pos;
-        var result13 = parse_nonterminal();
+        var result13 = parse_nonterminal.apply(this);
         if (result13 !== null) {
           var savedPos2 = pos;
           var savedReportMatchFailuresVar0 = reportMatchFailures;
           reportMatchFailures = false;
           var savedPos3 = pos;
-          var result19 = parse_literal();
+          var result19 = parse_literal.apply(this);
           if (result19 !== null) {
             var result16 = result19;
           } else {
@@ -825,7 +830,7 @@ PEG.parser = (function(){
             };
           }
           if (result16 !== null) {
-            var result17 = parse_equals();
+            var result17 = parse_equals.apply(this);
             if (result17 !== null) {
               var result15 = [result16, result17];
             } else {
@@ -859,40 +864,40 @@ PEG.parser = (function(){
                   type: "rule_ref",
                   name: name
                 };
-              })(result12[0])
+              }).apply(this, [result12[0]])
           : null;
         if (result11 !== null) {
           var result0 = result11;
         } else {
-          var result10 = parse_literal();
+          var result10 = parse_literal.apply(this);
           var result9 = result10 !== null
             ? (function(value) {
                   return {
                     type:  "literal",
                     value: value
                   };
-                })(result10)
+                }).apply(this, [result10])
             : null;
           if (result9 !== null) {
             var result0 = result9;
           } else {
-            var result8 = parse_dot();
+            var result8 = parse_dot.apply(this);
             var result7 = result8 !== null
-              ? (function() { return { type: "any" }; })()
+              ? (function() { return { type: "any" }; }).apply(this, [])
               : null;
             if (result7 !== null) {
               var result0 = result7;
             } else {
-              var result6 = parse_class();
+              var result6 = parse_class.apply(this);
               if (result6 !== null) {
                 var result0 = result6;
               } else {
                 var savedPos0 = pos;
-                var result3 = parse_lparen();
+                var result3 = parse_lparen.apply(this);
                 if (result3 !== null) {
-                  var result4 = parse_choice();
+                  var result4 = parse_choice.apply(this);
                   if (result4 !== null) {
-                    var result5 = parse_rparen();
+                    var result5 = parse_rparen.apply(this);
                     if (result5 !== null) {
                       var result2 = [result3, result4, result5];
                     } else {
@@ -908,7 +913,7 @@ PEG.parser = (function(){
                   pos = savedPos0;
                 }
                 var result1 = result2 !== null
-                  ? (function(expression) { return expression; })(result2[1])
+                  ? (function(expression) { return expression; }).apply(this, [result2[1]])
                   : null;
                 if (result1 !== null) {
                   var result0 = result1;
@@ -940,9 +945,9 @@ PEG.parser = (function(){
         var savedReportMatchFailures = reportMatchFailures;
         reportMatchFailures = false;
         var savedPos0 = pos;
-        var result2 = parse_braced();
+        var result2 = parse_braced.apply(this);
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -954,7 +959,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(braced) { return braced.substr(1, braced.length - 2); })(result1[0])
+          ? (function(braced) { return braced.substr(1, braced.length - 2); }).apply(this, [result1[0]])
           : null;
         reportMatchFailures = savedReportMatchFailures;
         if (reportMatchFailures && result0 === null) {
@@ -989,11 +994,11 @@ PEG.parser = (function(){
         }
         if (result2 !== null) {
           var result3 = [];
-          var result7 = parse_braced();
+          var result7 = parse_braced.apply(this);
           if (result7 !== null) {
             var result5 = result7;
           } else {
-            var result6 = parse_nonBraceCharacter();
+            var result6 = parse_nonBraceCharacter.apply(this);
             if (result6 !== null) {
               var result5 = result6;
             } else {
@@ -1002,11 +1007,11 @@ PEG.parser = (function(){
           }
           while (result5 !== null) {
             result3.push(result5);
-            var result7 = parse_braced();
+            var result7 = parse_braced.apply(this);
             if (result7 !== null) {
               var result5 = result7;
             } else {
-              var result6 = parse_nonBraceCharacter();
+              var result6 = parse_nonBraceCharacter.apply(this);
               if (result6 !== null) {
                 var result5 = result6;
               } else {
@@ -1041,7 +1046,7 @@ PEG.parser = (function(){
         var result0 = result1 !== null
           ? (function(parts) {
                 return "{" + parts.join("") + "}";
-              })(result1[1])
+              }).apply(this, [result1[1]])
           : null;
         
         
@@ -1062,18 +1067,18 @@ PEG.parser = (function(){
         }
         
         
-        var result2 = parse_nonBraceCharacter();
+        var result2 = parse_nonBraceCharacter.apply(this);
         if (result2 !== null) {
           var result1 = [];
           while (result2 !== null) {
             result1.push(result2);
-            var result2 = parse_nonBraceCharacter();
+            var result2 = parse_nonBraceCharacter.apply(this);
           }
         } else {
           var result1 = null;
         }
         var result0 = result1 !== null
-          ? (function(chars) { return chars.join(""); })(result1)
+          ? (function(chars) { return chars.join(""); }).apply(this, [result1])
           : null;
         
         
@@ -1133,7 +1138,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1145,7 +1150,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "="; })()
+          ? (function() { return "="; }).apply(this, [])
           : null;
         
         
@@ -1177,7 +1182,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1189,7 +1194,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return ":"; })()
+          ? (function() { return ":"; }).apply(this, [])
           : null;
         
         
@@ -1221,7 +1226,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1233,7 +1238,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return ";"; })()
+          ? (function() { return ";"; }).apply(this, [])
           : null;
         
         
@@ -1265,7 +1270,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1277,7 +1282,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "/"; })()
+          ? (function() { return "/"; }).apply(this, [])
           : null;
         
         
@@ -1309,7 +1314,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1321,7 +1326,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "|"; })()
+          ? (function() { return "|"; }).apply(this, [])
           : null;
         
         
@@ -1353,7 +1358,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1365,7 +1370,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "&"; })()
+          ? (function() { return "&"; }).apply(this, [])
           : null;
         
         
@@ -1397,7 +1402,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1409,7 +1414,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "!"; })()
+          ? (function() { return "!"; }).apply(this, [])
           : null;
         
         
@@ -1441,7 +1446,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1453,7 +1458,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "?"; })()
+          ? (function() { return "?"; }).apply(this, [])
           : null;
         
         
@@ -1485,7 +1490,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1497,7 +1502,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "*"; })()
+          ? (function() { return "*"; }).apply(this, [])
           : null;
         
         
@@ -1529,7 +1534,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1541,7 +1546,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "+"; })()
+          ? (function() { return "+"; }).apply(this, [])
           : null;
         
         
@@ -1573,7 +1578,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1585,7 +1590,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "("; })()
+          ? (function() { return "("; }).apply(this, [])
           : null;
         
         
@@ -1617,7 +1622,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1629,7 +1634,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return ")"; })()
+          ? (function() { return ")"; }).apply(this, [])
           : null;
         
         
@@ -1661,7 +1666,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -1673,7 +1678,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "."; })()
+          ? (function() { return "."; }).apply(this, [])
           : null;
         
         
@@ -1696,7 +1701,7 @@ PEG.parser = (function(){
         var savedReportMatchFailures = reportMatchFailures;
         reportMatchFailures = false;
         var savedPos0 = pos;
-        var result12 = parse_letter();
+        var result12 = parse_letter.apply(this);
         if (result12 !== null) {
           var result2 = result12;
         } else {
@@ -1730,11 +1735,11 @@ PEG.parser = (function(){
         }
         if (result2 !== null) {
           var result3 = [];
-          var result9 = parse_letter();
+          var result9 = parse_letter.apply(this);
           if (result9 !== null) {
             var result5 = result9;
           } else {
-            var result8 = parse_digit();
+            var result8 = parse_digit.apply(this);
             if (result8 !== null) {
               var result5 = result8;
             } else {
@@ -1769,11 +1774,11 @@ PEG.parser = (function(){
           }
           while (result5 !== null) {
             result3.push(result5);
-            var result9 = parse_letter();
+            var result9 = parse_letter.apply(this);
             if (result9 !== null) {
               var result5 = result9;
             } else {
-              var result8 = parse_digit();
+              var result8 = parse_digit.apply(this);
               if (result8 !== null) {
                 var result5 = result8;
               } else {
@@ -1808,7 +1813,7 @@ PEG.parser = (function(){
             }
           }
           if (result3 !== null) {
-            var result4 = parse___();
+            var result4 = parse___.apply(this);
             if (result4 !== null) {
               var result1 = [result2, result3, result4];
             } else {
@@ -1826,7 +1831,7 @@ PEG.parser = (function(){
         var result0 = result1 !== null
           ? (function(head, tail) {
                 return head + tail.join("");
-              })(result1[0], result1[1])
+              }).apply(this, [result1[0], result1[1]])
           : null;
         reportMatchFailures = savedReportMatchFailures;
         if (reportMatchFailures && result0 === null) {
@@ -1851,7 +1856,7 @@ PEG.parser = (function(){
         var savedReportMatchFailures = reportMatchFailures;
         reportMatchFailures = false;
         var savedPos0 = pos;
-        var result13 = parse_letter();
+        var result13 = parse_letter.apply(this);
         if (result13 !== null) {
           var result2 = result13;
         } else {
@@ -1885,11 +1890,11 @@ PEG.parser = (function(){
         }
         if (result2 !== null) {
           var result3 = [];
-          var result10 = parse_letter();
+          var result10 = parse_letter.apply(this);
           if (result10 !== null) {
             var result5 = result10;
           } else {
-            var result9 = parse_digit();
+            var result9 = parse_digit.apply(this);
             if (result9 !== null) {
               var result5 = result9;
             } else {
@@ -1937,11 +1942,11 @@ PEG.parser = (function(){
           }
           while (result5 !== null) {
             result3.push(result5);
-            var result10 = parse_letter();
+            var result10 = parse_letter.apply(this);
             if (result10 !== null) {
               var result5 = result10;
             } else {
-              var result9 = parse_digit();
+              var result9 = parse_digit.apply(this);
               if (result9 !== null) {
                 var result5 = result9;
               } else {
@@ -1989,7 +1994,7 @@ PEG.parser = (function(){
             }
           }
           if (result3 !== null) {
-            var result4 = parse___();
+            var result4 = parse___.apply(this);
             if (result4 !== null) {
               var result1 = [result2, result3, result4];
             } else {
@@ -2007,7 +2012,7 @@ PEG.parser = (function(){
         var result0 = result1 !== null
           ? (function(head, tail) {
                 return head + tail.join("");
-              })(result1[0], result1[1])
+              }).apply(this, [result1[0], result1[1]])
           : null;
         reportMatchFailures = savedReportMatchFailures;
         if (reportMatchFailures && result0 === null) {
@@ -2032,11 +2037,11 @@ PEG.parser = (function(){
         var savedReportMatchFailures = reportMatchFailures;
         reportMatchFailures = false;
         var savedPos0 = pos;
-        var result5 = parse_doubleQuotedLiteral();
+        var result5 = parse_doubleQuotedLiteral.apply(this);
         if (result5 !== null) {
           var result2 = result5;
         } else {
-          var result4 = parse_singleQuotedLiteral();
+          var result4 = parse_singleQuotedLiteral.apply(this);
           if (result4 !== null) {
             var result2 = result4;
           } else {
@@ -2044,7 +2049,7 @@ PEG.parser = (function(){
           };
         }
         if (result2 !== null) {
-          var result3 = parse___();
+          var result3 = parse___.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -2056,7 +2061,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(literal) { return literal; })(result1[0])
+          ? (function(literal) { return literal; }).apply(this, [result1[0]])
           : null;
         reportMatchFailures = savedReportMatchFailures;
         if (reportMatchFailures && result0 === null) {
@@ -2091,10 +2096,10 @@ PEG.parser = (function(){
         }
         if (result2 !== null) {
           var result3 = [];
-          var result5 = parse_doubleQuotedCharacter();
+          var result5 = parse_doubleQuotedCharacter.apply(this);
           while (result5 !== null) {
             result3.push(result5);
-            var result5 = parse_doubleQuotedCharacter();
+            var result5 = parse_doubleQuotedCharacter.apply(this);
           }
           if (result3 !== null) {
             if (input.substr(pos, 1) === "\"") {
@@ -2121,7 +2126,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(chars) { return chars.join(""); })(result1[1])
+          ? (function(chars) { return chars.join(""); }).apply(this, [result1[1]])
           : null;
         
         
@@ -2142,27 +2147,27 @@ PEG.parser = (function(){
         }
         
         
-        var result6 = parse_simpleDoubleQuotedCharacter();
+        var result6 = parse_simpleDoubleQuotedCharacter.apply(this);
         if (result6 !== null) {
           var result0 = result6;
         } else {
-          var result5 = parse_simpleEscapeSequence();
+          var result5 = parse_simpleEscapeSequence.apply(this);
           if (result5 !== null) {
             var result0 = result5;
           } else {
-            var result4 = parse_zeroEscapeSequence();
+            var result4 = parse_zeroEscapeSequence.apply(this);
             if (result4 !== null) {
               var result0 = result4;
             } else {
-              var result3 = parse_hexEscapeSequence();
+              var result3 = parse_hexEscapeSequence.apply(this);
               if (result3 !== null) {
                 var result0 = result3;
               } else {
-                var result2 = parse_unicodeEscapeSequence();
+                var result2 = parse_unicodeEscapeSequence.apply(this);
                 if (result2 !== null) {
                   var result0 = result2;
                 } else {
-                  var result1 = parse_eolEscapeSequence();
+                  var result1 = parse_eolEscapeSequence.apply(this);
                   if (result1 !== null) {
                     var result0 = result1;
                   } else {
@@ -2220,7 +2225,7 @@ PEG.parser = (function(){
           if (result6 !== null) {
             var result4 = result6;
           } else {
-            var result5 = parse_eolChar();
+            var result5 = parse_eolChar.apply(this);
             if (result5 !== null) {
               var result4 = result5;
             } else {
@@ -2256,7 +2261,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(char_) { return char_; })(result1[1])
+          ? (function(char_) { return char_; }).apply(this, [result1[1]])
           : null;
         
         
@@ -2289,10 +2294,10 @@ PEG.parser = (function(){
         }
         if (result2 !== null) {
           var result3 = [];
-          var result5 = parse_singleQuotedCharacter();
+          var result5 = parse_singleQuotedCharacter.apply(this);
           while (result5 !== null) {
             result3.push(result5);
-            var result5 = parse_singleQuotedCharacter();
+            var result5 = parse_singleQuotedCharacter.apply(this);
           }
           if (result3 !== null) {
             if (input.substr(pos, 1) === "'") {
@@ -2319,7 +2324,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(chars) { return chars.join(""); })(result1[1])
+          ? (function(chars) { return chars.join(""); }).apply(this, [result1[1]])
           : null;
         
         
@@ -2340,27 +2345,27 @@ PEG.parser = (function(){
         }
         
         
-        var result6 = parse_simpleSingleQuotedCharacter();
+        var result6 = parse_simpleSingleQuotedCharacter.apply(this);
         if (result6 !== null) {
           var result0 = result6;
         } else {
-          var result5 = parse_simpleEscapeSequence();
+          var result5 = parse_simpleEscapeSequence.apply(this);
           if (result5 !== null) {
             var result0 = result5;
           } else {
-            var result4 = parse_zeroEscapeSequence();
+            var result4 = parse_zeroEscapeSequence.apply(this);
             if (result4 !== null) {
               var result0 = result4;
             } else {
-              var result3 = parse_hexEscapeSequence();
+              var result3 = parse_hexEscapeSequence.apply(this);
               if (result3 !== null) {
                 var result0 = result3;
               } else {
-                var result2 = parse_unicodeEscapeSequence();
+                var result2 = parse_unicodeEscapeSequence.apply(this);
                 if (result2 !== null) {
                   var result0 = result2;
                 } else {
-                  var result1 = parse_eolEscapeSequence();
+                  var result1 = parse_eolEscapeSequence.apply(this);
                   if (result1 !== null) {
                     var result0 = result1;
                   } else {
@@ -2418,7 +2423,7 @@ PEG.parser = (function(){
           if (result6 !== null) {
             var result4 = result6;
           } else {
-            var result5 = parse_eolChar();
+            var result5 = parse_eolChar.apply(this);
             if (result5 !== null) {
               var result4 = result5;
             } else {
@@ -2454,7 +2459,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(char_) { return char_; })(result1[1])
+          ? (function(char_) { return char_; }).apply(this, [result1[1]])
           : null;
         
         
@@ -2499,11 +2504,11 @@ PEG.parser = (function(){
           var result3 = result10 !== null ? result10 : '';
           if (result3 !== null) {
             var result4 = [];
-            var result9 = parse_classCharacterRange();
+            var result9 = parse_classCharacterRange.apply(this);
             if (result9 !== null) {
               var result7 = result9;
             } else {
-              var result8 = parse_classCharacter();
+              var result8 = parse_classCharacter.apply(this);
               if (result8 !== null) {
                 var result7 = result8;
               } else {
@@ -2512,11 +2517,11 @@ PEG.parser = (function(){
             }
             while (result7 !== null) {
               result4.push(result7);
-              var result9 = parse_classCharacterRange();
+              var result9 = parse_classCharacterRange.apply(this);
               if (result9 !== null) {
                 var result7 = result9;
               } else {
-                var result8 = parse_classCharacter();
+                var result8 = parse_classCharacter.apply(this);
                 if (result8 !== null) {
                   var result7 = result8;
                 } else {
@@ -2535,7 +2540,7 @@ PEG.parser = (function(){
                 }
               }
               if (result5 !== null) {
-                var result6 = parse___();
+                var result6 = parse___.apply(this);
                 if (result6 !== null) {
                   var result1 = [result2, result3, result4, result5, result6];
                 } else {
@@ -2573,7 +2578,7 @@ PEG.parser = (function(){
                   // FIXME: Get the raw text from the input directly.
                   rawText:  rawText
                 };
-              })(result1[1], result1[2])
+              }).apply(this, [result1[1], result1[2]])
           : null;
         reportMatchFailures = savedReportMatchFailures;
         if (reportMatchFailures && result0 === null) {
@@ -2597,7 +2602,7 @@ PEG.parser = (function(){
         
         
         var savedPos0 = pos;
-        var result2 = parse_classCharacter();
+        var result2 = parse_classCharacter.apply(this);
         if (result2 !== null) {
           if (input.substr(pos, 1) === "-") {
             var result3 = "-";
@@ -2609,7 +2614,7 @@ PEG.parser = (function(){
             }
           }
           if (result3 !== null) {
-            var result4 = parse_classCharacter();
+            var result4 = parse_classCharacter.apply(this);
             if (result4 !== null) {
               var result1 = [result2, result3, result4];
             } else {
@@ -2637,7 +2642,7 @@ PEG.parser = (function(){
                   // FIXME: Get the raw text from the input directly.
                   rawText: begin.rawText + "-" + end.rawText
                 }
-              })(result1[0], result1[2])
+              }).apply(this, [result1[0], result1[2]])
           : null;
         
         
@@ -2658,7 +2663,7 @@ PEG.parser = (function(){
         }
         
         
-        var result1 = parse_bracketDelimitedCharacter();
+        var result1 = parse_bracketDelimitedCharacter.apply(this);
         var result0 = result1 !== null
           ? (function(char_) {
                 return {
@@ -2666,7 +2671,7 @@ PEG.parser = (function(){
                   // FIXME: Get the raw text from the input directly.
                   rawText: quoteForRegexpClass(char_)
                 };
-              })(result1)
+              }).apply(this, [result1])
           : null;
         
         
@@ -2687,27 +2692,27 @@ PEG.parser = (function(){
         }
         
         
-        var result6 = parse_simpleBracketDelimitedCharacter();
+        var result6 = parse_simpleBracketDelimitedCharacter.apply(this);
         if (result6 !== null) {
           var result0 = result6;
         } else {
-          var result5 = parse_simpleEscapeSequence();
+          var result5 = parse_simpleEscapeSequence.apply(this);
           if (result5 !== null) {
             var result0 = result5;
           } else {
-            var result4 = parse_zeroEscapeSequence();
+            var result4 = parse_zeroEscapeSequence.apply(this);
             if (result4 !== null) {
               var result0 = result4;
             } else {
-              var result3 = parse_hexEscapeSequence();
+              var result3 = parse_hexEscapeSequence.apply(this);
               if (result3 !== null) {
                 var result0 = result3;
               } else {
-                var result2 = parse_unicodeEscapeSequence();
+                var result2 = parse_unicodeEscapeSequence.apply(this);
                 if (result2 !== null) {
                   var result0 = result2;
                 } else {
-                  var result1 = parse_eolEscapeSequence();
+                  var result1 = parse_eolEscapeSequence.apply(this);
                   if (result1 !== null) {
                     var result0 = result1;
                   } else {
@@ -2765,7 +2770,7 @@ PEG.parser = (function(){
           if (result6 !== null) {
             var result4 = result6;
           } else {
-            var result5 = parse_eolChar();
+            var result5 = parse_eolChar.apply(this);
             if (result5 !== null) {
               var result4 = result5;
             } else {
@@ -2801,7 +2806,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(char_) { return char_; })(result1[1])
+          ? (function(char_) { return char_; }).apply(this, [result1[1]])
           : null;
         
         
@@ -2836,7 +2841,7 @@ PEG.parser = (function(){
           var savedPos1 = pos;
           var savedReportMatchFailuresVar0 = reportMatchFailures;
           reportMatchFailures = false;
-          var result9 = parse_digit();
+          var result9 = parse_digit.apply(this);
           if (result9 !== null) {
             var result5 = result9;
           } else {
@@ -2864,7 +2869,7 @@ PEG.parser = (function(){
               if (result7 !== null) {
                 var result5 = result7;
               } else {
-                var result6 = parse_eolChar();
+                var result6 = parse_eolChar.apply(this);
                 if (result6 !== null) {
                   var result5 = result6;
                 } else {
@@ -2913,7 +2918,7 @@ PEG.parser = (function(){
                   .replace("r", "\r")
                   .replace("t", "\t")
                   .replace("v", "\x0B") // IE does not recognize "\v".
-              })(result1[2])
+              }).apply(this, [result1[2]])
           : null;
         
         
@@ -2948,7 +2953,7 @@ PEG.parser = (function(){
           var savedPos1 = pos;
           var savedReportMatchFailuresVar0 = reportMatchFailures;
           reportMatchFailures = false;
-          var result4 = parse_digit();
+          var result4 = parse_digit.apply(this);
           reportMatchFailures = savedReportMatchFailuresVar0;
           if (result4 === null) {
             var result3 = '';
@@ -2967,7 +2972,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function() { return "\0"; })()
+          ? (function() { return "\0"; }).apply(this, [])
           : null;
         
         
@@ -2999,9 +3004,9 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse_hexDigit();
+          var result3 = parse_hexDigit.apply(this);
           if (result3 !== null) {
-            var result4 = parse_hexDigit();
+            var result4 = parse_hexDigit.apply(this);
             if (result4 !== null) {
               var result1 = [result2, result3, result4];
             } else {
@@ -3019,7 +3024,7 @@ PEG.parser = (function(){
         var result0 = result1 !== null
           ? (function(h1, h2) {
                 return String.fromCharCode(parseInt("0x" + h1 + h2));
-              })(result1[1], result1[2])
+              }).apply(this, [result1[1], result1[2]])
           : null;
         
         
@@ -3051,13 +3056,13 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse_hexDigit();
+          var result3 = parse_hexDigit.apply(this);
           if (result3 !== null) {
-            var result4 = parse_hexDigit();
+            var result4 = parse_hexDigit.apply(this);
             if (result4 !== null) {
-              var result5 = parse_hexDigit();
+              var result5 = parse_hexDigit.apply(this);
               if (result5 !== null) {
-                var result6 = parse_hexDigit();
+                var result6 = parse_hexDigit.apply(this);
                 if (result6 !== null) {
                   var result1 = [result2, result3, result4, result5, result6];
                 } else {
@@ -3083,7 +3088,7 @@ PEG.parser = (function(){
         var result0 = result1 !== null
           ? (function(h1, h2, h3, h4) {
                 return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
-              })(result1[1], result1[2], result1[3], result1[4])
+              }).apply(this, [result1[1], result1[2], result1[3], result1[4]])
           : null;
         
         
@@ -3115,7 +3120,7 @@ PEG.parser = (function(){
           }
         }
         if (result2 !== null) {
-          var result3 = parse_eol();
+          var result3 = parse_eol.apply(this);
           if (result3 !== null) {
             var result1 = [result2, result3];
           } else {
@@ -3127,7 +3132,7 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(eol) { return eol; })(result1[1])
+          ? (function(eol) { return eol; }).apply(this, [result1[1]])
           : null;
         
         
@@ -3204,11 +3209,11 @@ PEG.parser = (function(){
         }
         
         
-        var result2 = parse_lowerCaseLetter();
+        var result2 = parse_lowerCaseLetter.apply(this);
         if (result2 !== null) {
           var result0 = result2;
         } else {
-          var result1 = parse_upperCaseLetter();
+          var result1 = parse_upperCaseLetter.apply(this);
           if (result1 !== null) {
             var result0 = result1;
           } else {
@@ -3291,15 +3296,15 @@ PEG.parser = (function(){
         
         
         var result0 = [];
-        var result4 = parse_whitespace();
+        var result4 = parse_whitespace.apply(this);
         if (result4 !== null) {
           var result1 = result4;
         } else {
-          var result3 = parse_eol();
+          var result3 = parse_eol.apply(this);
           if (result3 !== null) {
             var result1 = result3;
           } else {
-            var result2 = parse_comment();
+            var result2 = parse_comment.apply(this);
             if (result2 !== null) {
               var result1 = result2;
             } else {
@@ -3309,15 +3314,15 @@ PEG.parser = (function(){
         }
         while (result1 !== null) {
           result0.push(result1);
-          var result4 = parse_whitespace();
+          var result4 = parse_whitespace.apply(this);
           if (result4 !== null) {
             var result1 = result4;
           } else {
-            var result3 = parse_eol();
+            var result3 = parse_eol.apply(this);
             if (result3 !== null) {
               var result1 = result3;
             } else {
-              var result2 = parse_comment();
+              var result2 = parse_comment.apply(this);
               if (result2 !== null) {
                 var result1 = result2;
               } else {
@@ -3346,11 +3351,11 @@ PEG.parser = (function(){
         
         var savedReportMatchFailures = reportMatchFailures;
         reportMatchFailures = false;
-        var result2 = parse_singleLineComment();
+        var result2 = parse_singleLineComment.apply(this);
         if (result2 !== null) {
           var result0 = result2;
         } else {
-          var result1 = parse_multiLineComment();
+          var result1 = parse_multiLineComment.apply(this);
           if (result1 !== null) {
             var result0 = result1;
           } else {
@@ -3394,7 +3399,7 @@ PEG.parser = (function(){
           var savedPos2 = pos;
           var savedReportMatchFailuresVar0 = reportMatchFailures;
           reportMatchFailures = false;
-          var result6 = parse_eolChar();
+          var result6 = parse_eolChar.apply(this);
           reportMatchFailures = savedReportMatchFailuresVar0;
           if (result6 === null) {
             var result4 = '';
@@ -3428,7 +3433,7 @@ PEG.parser = (function(){
             var savedPos2 = pos;
             var savedReportMatchFailuresVar0 = reportMatchFailures;
             reportMatchFailures = false;
-            var result6 = parse_eolChar();
+            var result6 = parse_eolChar.apply(this);
             reportMatchFailures = savedReportMatchFailuresVar0;
             if (result6 === null) {
               var result4 = '';
@@ -3829,7 +3834,7 @@ PEG.parser = (function(){
       
       
       
-      var result = parseFunctions[startRule]();
+      var result = parseFunctions[startRule].apply(thisObj || this);
       
       /*
        * The parser is now in one of the following three states:

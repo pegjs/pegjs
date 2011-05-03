@@ -122,11 +122,16 @@ PEG.compiler.emitter = function(ast) {
         "     * which the parser was generated (see |PEG.buildParser|). If the parsing is",
         "     * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.",
         "     */",
-        "    parse: function(input, startRule) {",
+        "    parse: function(input, startRule, thisObj) {",
         "      var parseFunctions = {",
         "        ${parseFunctionTableItems}",
         "      };",
         "      ",
+        "      /* allow thisObj as second arg */",
+        "      if (arguments.length === 2 && typeof startRule === 'object') {",
+        "        thisObj = startRule;",
+        "        startRule = undefined;",
+        "      }",
         "      if (startRule !== undefined) {",
         "        if (parseFunctions[startRule] === undefined) {",
         "          throw new Error(\"Invalid rule name: \" + quote(startRule) + \".\");",
@@ -267,7 +272,7 @@ PEG.compiler.emitter = function(ast) {
         "      ",
         "      ${initializerCode}",
         "      ",
-        "      var result = parseFunctions[startRule]();",
+        "      var result = parseFunctions[startRule].apply(thisObj || this);",
         "      ",
         "      /*",
         "       * The parser is now in one of the following three states:",
@@ -655,7 +660,7 @@ PEG.compiler.emitter = function(ast) {
       return formatCode(
         "${expressionCode}",
         "var ${resultVar} = ${expressionResultVar} !== null",
-        "  ? (function(${formalParams}) {${actionCode}})(${actualParams})",
+        "  ? (function(${formalParams}) {${actionCode}}).apply(this, [${actualParams}])",
         "  : null;",
         {
           expressionCode:      emit(node.expression, expressionResultVar),
@@ -670,7 +675,7 @@ PEG.compiler.emitter = function(ast) {
 
     rule_ref: function(node, resultVar) {
       return formatCode(
-        "var ${resultVar} = ${ruleMethod}();",
+        "var ${resultVar} = ${ruleMethod}.apply(this);",
         {
           ruleMethod: "parse_" + safeName(node.name),
           resultVar:  resultVar

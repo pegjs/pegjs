@@ -136,6 +136,16 @@ test("actions", function() {
   doesNotParse(notAMatchParser, "b");
 });
 
+test("this", function() {
+  var parser = PEG.buildParser(
+    'start = "a" { return this.foo; }'
+  );
+  var thisObj = {foo: "foo"};
+  deepEqual(parser.parse("a", thisObj), "foo");
+  deepEqual(parser.parse("a", "start", thisObj), "foo");
+  deepEqual(parser.parse("a", new String("start"), thisObj), "foo");
+});
+
 test("initializer", function() {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }'
