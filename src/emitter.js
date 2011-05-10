@@ -449,7 +449,7 @@ PEG.compiler.emitter = function(ast) {
           "if (${alternativeResultVar} !== null) {",
           "  ${resultVar} = ${alternativeResultVar};",
           "} else {",
-          "  ${code};",
+          "  ${code}",
           "}",
           {
             alternativeCode:      emit(node.alternatives[i], alternativeResultVar),
