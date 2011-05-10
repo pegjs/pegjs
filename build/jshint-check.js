@@ -17,18 +17,18 @@ JSHINT(
     debug       : false, // if debugger statements should be allowed
     devel       : false, // if logging globals should be predefined (console, alert, etc.)
     eqeqeq      : true,  // if === should be required
-    eqnull      : true,  // if == null comparisons should be tolerated
+    eqnull      : false, // if == null comparisons should be tolerated
     es5         : true,  // if ES5 syntax should be allowed
     evil        : true,  // if eval should be allowed
-    expr        : true,  // if ExpressionStatement should be allowed as Programs
+    expr        : false, // if ExpressionStatement should be allowed as Programs
     forin       : false, // if for in statements must filter
     globalstrict: false, // if global "use strict"; should be allowed (also enables 'strict')
-    immed       : true,  // if immediate invocations must be wrapped in parens
+    immed       : false, // if immediate invocations must be wrapped in parens
     indent      : 2,     // the indentation factor
-    latedef     : true,  // if the use before definition should not be tolerated
+    latedef     : false, // if the use before definition should not be tolerated
     laxbreak    : true,  // if line breaks should not be checked
-    loopfunc    : true,  // if functions should be allowed to be defined within loops
-    maxerr      : 2100,   // the maximum number of errors to allow
+    loopfunc    : false, // if functions should be allowed to be defined within loops
+    maxerr      : 50,    // the maximum number of errors to allow
     newcap      : true,  // if constructor names must be capitalized
     noarg       : true,  // if arguments.caller and arguments.callee should be disallowed
     noempty     : true,  // if empty blocks should be disallowed
@@ -38,12 +38,12 @@ JSHINT(
     passfail    : false, // if the scan should stop on first error
     plusplus    : false, // if increment/decrement should not be allowed
     regexp      : false, // if the . should not be allowed in regexp literals
-    undef       : true,  // if variables should be declared before used
+    undef       : false, // if variables should be declared before used
     shadow      : false, // if variable shadowing should be tolerated
     strict      : false, // require the "use strict"; pragma
     sub         : false, // if all forms of subscript notation are tolerated
     supernew    : false, // if `new function () { ... };` and `new Object;` should be tolerated
-    trailing    : true,  // if trailing whitespace rules apply
+    trailing    : false, // if trailing whitespace rules apply
     white       : false, // if strict whitespace rules apply
 
     browser     : false, // if the standard browser globals should be predefined
@@ -52,7 +52,7 @@ JSHINT(
     mootools    : false, // if MooTools globals should be predefined
     node        : false, // if the Node.js environment globals should be predefined
     prototypejs : false, // if Prototype and Scriptaculous globals should be predefined
-    rhino       : false, // if the Rhino environment globals should be predefined
+    rhino       : false, // if the Rh    "vars" in function formatCode, line 4238ino environment globals should be predefined
     wsh         : false, // if the Windows Scripting Host environment globals should be predefined
 
     predef      : ["window", "module"]
@@ -60,8 +60,6 @@ JSHINT(
 );
 
 var  ignore = {
-    // ignore (function(){})()
-    "Move the invocation into the parens that contain the function.": true
   },
   e = JSHINT.errors,
   el = e.length,
