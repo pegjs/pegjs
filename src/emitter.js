@@ -41,7 +41,7 @@ PEG.compiler.emitter = function(ast) {
               throw new Error("Undefined variable: \"" + name + "\".");
             }
 
-            if (filter !== undefined && filter != "") { // JavaScript engines differ here.
+            if (filter !== undefined && filter !== "") { // JavaScript engines differ here.
               if (filter === "string") {
                 return quote(value);
               } else {
