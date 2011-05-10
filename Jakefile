@@ -134,8 +134,8 @@ task("clean", [], function() {
   removeDir(LIB_DIR);
 });
 
-desc("Prepare the distribution files");
-task("dist", ["build"], function() {
+desc("Prepare the distribution files. Use option {uglifyjs:'path'} to set another path to uglify.js (node)");
+task("dist", ["build"], function(options) {
   mkdirUnlessExists(DIST_DIR);
 
   /* Web */
@@ -145,7 +145,7 @@ task("dist", ["build"], function() {
   copyFile(PEGJS_OUT_FILE, PEGJS_DIST_FILE);
 
   var process = childProcess.spawn(
-    "uglifyjs",
+    options && !!options.uglifyjs ? options.uglifyjs : "uglifyjs",
     ["--ascii", "-o", PEGJS_DIST_MIN_FILE, PEGJS_OUT_FILE],
     { customFds: [0, 1, 2] }
   );
