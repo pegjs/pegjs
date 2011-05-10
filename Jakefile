@@ -18,6 +18,7 @@ var PEGJS = BIN_DIR + "/pegjs";
 
 var PEGJS_SRC_FILE = SRC_DIR + "/peg.js";
 var PEGJS_OUT_FILE = LIB_DIR + "/peg.js";
+var PEGJS_WORK_FILE = "./peg-working.js"; // working copy of peg.js
 
 var PEGJS_DIST_FILE     = DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".js"
 var PEGJS_DIST_MIN_FILE = DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".min.js"
@@ -104,9 +105,9 @@ function preprocess(file) {
   }).join("\n").replace(/@VERSION/g, PEGJS_VERSION);
 }
 
-desc("Generate the grammar parser");
-task("parser", [], function() {
-  var PEG = require(PEGJS_OUT_FILE);
+desc("Generate the grammar parser. Use option '{useWorkingCopy:true}' to use a working copy of peg.js to generate the parser");
+task("parser", [], function(options) {
+  var PEG = require(options && !!options.useWorkingCopy ? PEGJS_WORK_FILE : PEGJS_OUT_FILE);
   var input = fs.readFileSync(PARSER_SRC_FILE, "utf8");
 
   try {
