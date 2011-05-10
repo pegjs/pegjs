@@ -30,6 +30,9 @@ PEG.compiler.emitter = function(ast, options) {
    *   formatCode("foo", "${bar|eeek}", { bar: "baz" });   // throws Error
    *   formatCode("foo", "${bar}", { bar: "  baz\nqux" }); // "foo\n  baz\n  qux"
    */
+
+  options = options || {};
+  
   function formatCode() {
 	var vars;
 
@@ -61,7 +64,7 @@ PEG.compiler.emitter = function(ast, options) {
       return map(parts, function(part) {
         if (!/\n/.test(part)) { return part; }
 
-        var firstLineWhitespacePrefix = part.match(/^\s*/)[0];
+        var firstLineWhitespacePrefix = part.match(/^[ \t]*/)[0];
         var lines = part.split("\n");
         var linesIndented = [lines[0]].concat(
           map(lines.slice(1), function(line) {
@@ -102,12 +105,17 @@ PEG.compiler.emitter = function(ast, options) {
         ? emit(node.initializer)
         : "";
       var name;
+      var outputStartRules = options.startRules || [];
       var parseFunctionTableItems = [];
       for (name in node.rules) {
-        parseFunctionTableItems.push(quote(name) + ": parse_" + name);
+        if (outputStartRules.length === 0 || contains(outputStartRules, name)) {
+          parseFunctionTableItems.push(quote(name) + ": parse_" + name);
+        }
       }
+      if( parseFunctionTableItems.length === 0 ){
+	    throw new Error("No start rule found: \"" + outputStartRules.join(", ") + "\".");
+	  }
       parseFunctionTableItems.sort();
-
       var parseFunctionDefinitions = [];
       for (name in node.rules) {
         parseFunctionDefinitions.push(emit(node.rules[name]));
@@ -132,69 +140,86 @@ PEG.compiler.emitter = function(ast, options) {
         "      var cache = {};",
         "      ",
         "      ${parseFunctionDefinitions}",
-        "      ",
-        "      var parseFunctions = {",
-        "        ${parseFunctionTableItems}",
-        "      };",
-        "      ",
-        "      if (startRule !== undefined) {",
-        "        if (parseFunctions[startRule] === undefined) {",
-        "          throw new Error(\"Invalid rule name: \" + quote(startRule) + \".\");",
-        "        }",
-        "      } else {",
-        "        startRule = ${startRule|string};",
-        "      }",
+        /* if only one startRule exists, omit parseFunctions-array */
+        parseFunctionTableItems.length === 1
+          ? formatCode(
+              "      ",
+              "if (startRule !== undefined && startRule !== ${startRule|string}) {",
+              "  throw new Error(\"Invalid rule name: \" + quote(startRule) + \".\");",
+              "}",
+              {
+                startRule: node.startRule
+              }
+            )
+          : formatCode(
+              "      ",
+              "var parseFunctions = {",
+              "  ${parseFunctionTableItems}",
+              "};",
+              "",
+              "if (startRule !== undefined) {",
+              "  if (parseFunctions[startRule] === undefined) {",
+              "    throw new Error(\"Invalid rule name: \" + quote(startRule) + \".\");",
+              "  }",
+              "} else {",
+              "  startRule = ${startRule|string};",
+              "}",
+              {
+                parseFunctionTableItems: parseFunctionTableItems.join(",\n"),
+				startRule:               node.startRule
+              }
+            ),
         /* the functions from utils.js aren't needed, if we parse the peg-parser itself */
 		!!options.selfParsing
 		  ? "      "
 		  : formatCode(
-            "      ",
-            /* This needs to be in sync with |padLeft| in utils.js. */
-            "      function padLeft(input, padding, length) {",
-            "        var result = input;",
-            "        ",
-            "        var padLength = length - input.length;",
-            "        for (var i = 0; i < padLength; i++) {",
-            "          result = padding + result;",
-            "        }",
-            "        ",
-            "        return result;",
-            "      }",
-            "      ",
-            /* This needs to be in sync with |escape| in utils.js. */
-            "      function escape(ch) {",
-            "        var charCode = ch.charCodeAt(0);",
-            "        var escapeChar, length;",
-            "        if (charCode <= 0xFF) {",
-            "          escapeChar = 'x';",
-            "          length = 2;",
-            "        } else {",
-            "          escapeChar = 'u';",
-            "          length = 4;",
-            "        }",
-            "        ",
-            "        return '\\\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);",
-            "      }",
-            "      ",
-            /* This needs to be in sync with |quote| in utils.js. */
-            "      function quote(s) {",
-            "        /*",
-            "         * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a",
-            "         * string literal except for the closing quote character, backslash,",
-            "         * carriage return, line separator, paragraph separator, and line feed.",
-            "         * Any character may appear in the form of an escape sequence.",
-            "         */",
-            "        return '\"' + s",
-            "          .replace(/\\\\/g, '\\\\\\\\')           // backslash",
-            "          .replace(/\"/g, '\\\\\"')             // closing quote character",
-            "          .replace(/\\r/g, '\\\\r')            // carriage return",
-            "          .replace(/\\n/g, '\\\\n')            // line feed",
-            "          .replace(/\\t/g, '\\\\t')            // tab",
-            "          .replace(/\\f/g, '\\\\f')            // form feed",
-            "          .replace(/[^\\x20-\\x7F]/g, escape) // non-ASCII characters",
-            "          + '\"';",
-            "      }",
-            "      "
+              "      ",
+              /* This needs to be in sync with |padLeft| in utils.js. */
+              "function padLeft(input, padding, length) {",
+              "  var result = input;",
+              "  ",
+              "  var padLength = length - input.length;",
+              "  for (var i = 0; i < padLength; i++) {",
+              "    result = padding + result;",
+              "  }",
+              "  ",
+              "  return result;",
+              "}",
+              "",
+              /* This needs to be in sync with |escape| in utils.js. */
+              "function escape(ch) {",
+              "  var charCode = ch.charCodeAt(0);",
+              "  var escapeChar, length;",
+              "  if (charCode <= 0xFF) {",
+              "    escapeChar = 'x';",
+              "    length = 2;",
+              "  } else {",
+              "    escapeChar = 'u';",
+              "    length = 4;",
+              "  }",
+              "  ",
+              "  return '\\\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);",
+              "}",
+              "",
+              /* This needs to be in sync with |quote| in utils.js. */
+              "function quote(s) {",
+              "  /*",
+              "   * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a",
+              "   * string literal except for the closing quote character, backslash,",
+              "   * carriage return, line separator, paragraph separator, and line feed.",
+              "   * Any character may appear in the form of an escape sequence.",
+              "   */",
+              "  return '\"' + s",
+              "    .replace(/\\\\/g, '\\\\\\\\')           // backslash",
+              "    .replace(/\"/g, '\\\\\"')             // closing quote character",
+              "    .replace(/\\r/g, '\\\\r')            // carriage return",
+              "    .replace(/\\n/g, '\\\\n')            // line feed",
+              "    .replace(/\\t/g, '\\\\t')            // tab",
+              "    .replace(/\\f/g, '\\\\f')            // form feed",
+              "    .replace(/[^\\x20-\\x7F]/g, escape) // non-ASCII characters",
+              "    + '\"';",
+              "}",
+              ""
 		),
         "      function matchFailed(failure) {",
         "        if (pos < rightmostMatchFailuresPos) {",
@@ -276,7 +301,9 @@ PEG.compiler.emitter = function(ast, options) {
         "      ",
         "      ${initializerCode}",
         "      ",
-        "      var result = parseFunctions[startRule]();",
+        parseFunctionTableItems.length === 1
+          ? "      var result = parse_${startRule}();"
+          : "      var result = parseFunctions[startRule]();",
         "      ",
         "      /*",
         "       * The parser is now in one of the following three states:",
@@ -333,7 +360,6 @@ PEG.compiler.emitter = function(ast, options) {
         "})()",
         {
           initializerCode:          initializerCode,
-          parseFunctionTableItems:  parseFunctionTableItems.join(",\n"),
           parseFunctionDefinitions: parseFunctionDefinitions.join("\n\n"),
           startRule:                node.startRule
         }
