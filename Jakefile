@@ -185,4 +185,14 @@ task("benchmark", ["build"], function(runCount) {
   process.on("exit", function() { complete(); });
 }, true);
 
+desc("Run code analysis tools (currently JSHint)");
+task("codeanalysis", ["build"], function() {
+  var process = childProcess.spawn(
+    "build/jshint-check.js",
+    [PEGJS_OUT_FILE],
+    { customFds: [0, 1, 2] }
+  );
+  process.on("exit", function() { complete(); });
+}, true);
+
 task("default", ["build"], function() {});
