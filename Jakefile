@@ -66,20 +66,22 @@ function copyDir(src, dest) {
 }
 
 function removeDir(dir) {
-  fs.readdirSync(dir).every(function(file) {
-    var file = dir  + "/" + file;
+  if(path.existsSync(dir)){
+    fs.readdirSync(dir).every(function(file) {
+      var file = dir  + "/" + file;
 
-    var stats = fs.statSync(file);
-    if (stats.isDirectory()) {
-      removeDir(file);
-    } else {
-      fs.unlinkSync(file);
-    }
+      var stats = fs.statSync(file);
+      if (stats.isDirectory()) {
+        removeDir(file);
+      } else {
+        fs.unlinkSync(file);
+      }
 
-    return true;
-  });
+      return true;
+    });
 
-  fs.rmdirSync(dir);
+    fs.rmdirSync(dir);
+  }
 }
 
 function preprocess(file) {
