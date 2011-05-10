@@ -8,7 +8,7 @@ grammar
         initializer: initializer !== "" ? initializer : null,
         rules:       rulesConverted,
         startRule:   rules[0].name
-      }
+      };
     }
 
 initializer
@@ -42,7 +42,7 @@ choice
         return {
           type:         "choice",
           alternatives: alternatives
-        }
+        };
       } else {
         return head;
       }
@@ -50,7 +50,7 @@ choice
 
 sequence
   = elements:labeled* code:action {
-      var expression = elements.length != 1
+      var expression = elements.length !== 1
         ? {
             type:     "sequence",
             elements: elements
@@ -63,7 +63,7 @@ sequence
       };
     }
   / elements:labeled* {
-      return elements.length != 1
+      return elements.length !== 1
         ? {
             type:     "sequence",
             elements: elements
@@ -259,7 +259,7 @@ classCharacterRange
         data:    [begin.data, end.data],
         // FIXME: Get the raw text from the input directly.
         rawText: begin.rawText + "-" + end.rawText
-      }
+      };
     }
 
 classCharacter
@@ -291,19 +291,20 @@ simpleEscapeSequence
         .replace("r", "\r")
         .replace("t", "\t")
         .replace("v", "\x0B") // IE does not recognize "\v".
+      ;
     }
 
 zeroEscapeSequence
-  = "\\0" !digit { return "\0"; }
+  = "\\0" !digit { return "\x00"; }
 
 hexEscapeSequence
   = "\\x" h1:hexDigit h2:hexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2));
+      return String.fromCharCode(parseInt(h1 + h2, 16));
     }
 
 unicodeEscapeSequence
   = "\\u" h1:hexDigit h2:hexDigit h3:hexDigit h4:hexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
+      return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
     }
 
 eolEscapeSequence
