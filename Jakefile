@@ -87,7 +87,7 @@ function removeDir(dir) {
 
 function preprocess(file) {
   var input = fs.readFileSync(file, "utf8").trim();
-  return input.split("\n").map(function(line) {
+  input = input.split("\n").map(function(line) {
     var matches = /^\s*\/\/\s*@include\s*"([^"]*)"\s*$/.exec(line);
     if (matches !== null) {
       var includedFile = SRC_DIR + "/" + matches[1];
@@ -103,6 +103,31 @@ function preprocess(file) {
       return line;
     }
   }).join("\n").replace(/@VERSION/g, PEGJS_VERSION);
+
+  // use full content for @removeStart .. @removeEnd
+  var rm = /^\s*\/\/\s*@remove(Start|End)\s*$/gm;
+  var pos, m, state=false;
+  while( m = rm.exec(input) ){
+    var ln = input.substr(m.index,m[0].length);
+    if( m[1] === "Start" ){
+      if( state ){
+        abort( "@removeStart without @removeEnd at position: " + ( pos || 0 ) + "/" + m.index );
+      }
+      state = true;
+      pos = m.index;
+    } else {
+      if( !state ){
+        abort( "@removeEnd without @removeStart at position: " + pos + "/" + m.index + ":" + m[1] );
+      }
+      state = false;
+      input = input.substr(0, pos) + input.substr(m.index + m[0].length);
+	  rm.lastIndex = pos;
+    }
+  }
+  if( state ){
+    abort( "last @removeStart without @removeEnd at position: " + pos + "/" + m.index );
+  }
+  return input;
 }
 
 desc("Generate the grammar parser. Use option '{useWorkingCopy:true}' to use a working copy of peg.js to generate the parser");
