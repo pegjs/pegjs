@@ -83,11 +83,13 @@ function quote(s) {
    * For portability, we also escape escape all non-ASCII characters.
    */
   return '"' + s
-    .replace(/\\/g, '\\\\')            // backslash
-    .replace(/"/g, '\\"')              // closing quote character
-    .replace(/\r/g, '\\r')             // carriage return
-    .replace(/\n/g, '\\n')             // line feed
-    .replace(/[\x80-\uFFFF]/g, escape) // non-ASCII characters
+    .replace(/\\/g, '\\\\')           // backslash
+    .replace(/"/g, '\\"')             // closing quote character
+    .replace(/\r/g, '\\r')            // carriage return
+    .replace(/\n/g, '\\n')            // line feed
+    .replace(/\t/g, '\\t')            // tab
+    .replace(/\f/g, '\\f')            // form feed
+    .replace(/[^\x20-\x7F]/g, escape) // non-ASCII characters
     + '"';
 }
 
@@ -102,14 +104,16 @@ function quoteForRegexpClass(s) {
    * For portability, we also escape escape all non-ASCII characters.
    */
   return s
-    .replace(/\\/g, '\\\\')            // backslash
-    .replace(/\0/g, '\\0')             // null, IE needs this
-    .replace(/\//g, '\\/')             // closing slash
-    .replace(/\]/g, '\\]')              // closing bracket
-    .replace(/-/g, '\\-')              // dash
-    .replace(/\r/g, '\\r')             // carriage return
-    .replace(/\n/g, '\\n')             // line feed
-    .replace(/[\x80-\uFFFF]/g, escape);// non-ASCII characters
+    .replace(/\\/g, '\\\\')           // backslash
+    .replace(/\//g, '\\/')            // closing slash
+    .replace(/\]/g, '\\]')            // closing bracket
+    .replace(/-/g, '\\-')             // dash
+    .replace(/\r/g, '\\r')            // carriage return
+    .replace(/\n/g, '\\n')            // line feed
+    .replace(/\t/g, '\\t')            // tab
+    .replace(/\f/g, '\\f')            // form feed
+    .replace(/[^\x20-\x7F]/g, escape) // non-ASCII characters
+  ;
 }
 
 /*

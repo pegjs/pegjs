@@ -433,8 +433,8 @@ test("parses classCharacter", function() {
 test("parses bracketDelimitedCharacter", function() {
   parserParses("start = [a]",       classGrammar(false, ["a"], "[a]"));
   parserParses("start = [\\n]",     classGrammar(false, ["\n"], "[\\n]"));
-  parserParses("start = [\\0]",     classGrammar(false, ["\0"], "[\\0]"));
-  parserParses("start = [\\x00]",   classGrammar(false, ["\0"], "[\\0]"));
+  parserParses("start = [\\0]",     classGrammar(false, ["\0"], "[\\x00]"));
+  parserParses("start = [\\x00]",   classGrammar(false, ["\0"], "[\\x00]"));
   parserParses("start = [\\u0120]", classGrammar(false, ["\u0120"], "[\\u0120]"));
   parserParses("start = [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
 });
