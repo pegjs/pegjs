@@ -31,6 +31,8 @@ PEG.compiler.emitter = function(ast) {
    *   formatCode("foo", "${bar}", { bar: "  baz\nqux" }); // "foo\n  baz\n  qux"
    */
   function formatCode() {
+	var vars;
+
     function interpolateVariablesInParts(parts) {
       return map(parts, function(part) {
         return part.replace(
@@ -69,9 +71,9 @@ PEG.compiler.emitter = function(ast) {
         return linesIndented.join("\n");
       });
     }
-
+	
     var args = Array.prototype.slice.call(arguments);
-    var vars = args[args.length - 1] instanceof Object ? args.pop() : {};
+    vars = args[args.length - 1] instanceof Object ? args.pop() : {};
 
     return indentMultilineParts(interpolateVariablesInParts(args)).join("\n");
   }
