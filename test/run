@@ -51,7 +51,7 @@ QUnit.log = function(details) {
   if (details.actual && details.expected) {
     output += indent("Expected: " + QUnit.jsDump.parse(details.expected)) + "\n";
     if (details.actual != details.expected) {
-      output += indent("Actual:   " + QUnit.jsDump.parse(details.expected));
+      output += indent("Actual:   " + QUnit.jsDump.parse(details.actual));
     }
   }
 
