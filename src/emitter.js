@@ -85,6 +85,10 @@ PEG.compiler.emitter = function(ast) {
       return prefix + this._counters[prefix]++;
     },
 
+    current: function(prefix) {
+      return this._counters[prefix] || 0;
+    },
+
     reset: function() {
       this._counters = {};
     }
@@ -367,6 +371,18 @@ PEG.compiler.emitter = function(ast) {
         reportMatchFailureCode = "";
       }
 
+      var varDef = function(name){
+        var count = UID.current(name);
+        if( count === 0 ) {
+          return "";
+        }
+        var ret = new Array(count);
+        for( var i = 0; i < count; i++ ){
+          ret[i] = name + i;
+        }
+        return "var " + ret.join(", ") + ";";
+      };
+
       return formatCode(
         "function parse_${name}() {",
         "  var cacheKey = '${name}@' + pos;",
@@ -376,6 +392,9 @@ PEG.compiler.emitter = function(ast) {
         "    return cachedResult.result;",
         "  }",
         "  ",
+        "  ${resultVariables}",
+        "  ${savedPosVariables}",
+        "  ${savedReportMatchFailuresVariables}",
         "  ${setReportMatchFailuresCode}",
         "  ${code}",
         "  ${restoreReportMatchFailuresCode}",
@@ -393,7 +412,10 @@ PEG.compiler.emitter = function(ast) {
           restoreReportMatchFailuresCode: restoreReportMatchFailuresCode,
           reportMatchFailureCode:         reportMatchFailureCode,
           code:                           emit(node.expression, resultVar),
-          resultVar:                      resultVar
+          resultVar:                         resultVar,
+          resultVariables:                   varDef("result"),
+          savedPosVariables:                 varDef("savedPos"),
+          savedReportMatchFailuresVariables: varDef("savedReportMatchFailuresVar")
         }
       );
     },
@@ -416,7 +438,7 @@ PEG.compiler.emitter = function(ast) {
 
     choice: function(node, resultVar) {
       var code = formatCode(
-        "var ${resultVar} = null;",
+        "${resultVar} = null;",
         { resultVar: resultVar }
       );
 
@@ -425,7 +447,7 @@ PEG.compiler.emitter = function(ast) {
         code = formatCode(
           "${alternativeCode}",
           "if (${alternativeResultVar} !== null) {",
-          "  var ${resultVar} = ${alternativeResultVar};",
+          "  ${resultVar} = ${alternativeResultVar};",
           "} else {",
           "  ${code};",
           "}",
@@ -449,7 +471,7 @@ PEG.compiler.emitter = function(ast) {
       });
 
       var code = formatCode(
-        "var ${resultVar} = ${elementResultVarArray};",
+        "${resultVar} = ${elementResultVarArray};",
         {
           resultVar:             resultVar,
           elementResultVarArray: "[" + elementResultVars.join(", ") + "]"
@@ -462,7 +484,7 @@ PEG.compiler.emitter = function(ast) {
           "if (${elementResultVar} !== null) {",
           "  ${code}",
           "} else {",
-          "  var ${resultVar} = null;",
+          "  ${resultVar} = null;",
           "  pos = ${savedPosVar};",
           "}",
           {
@@ -476,7 +498,7 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        "var ${savedPosVar} = pos;",
+        "${savedPosVar} = pos;",
         "${code}",
         {
           code:        code,
@@ -495,16 +517,16 @@ PEG.compiler.emitter = function(ast) {
       var expressionResultVar         = UID.next("result");
 
       return formatCode(
-        "var ${savedPosVar} = pos;",
-        "var ${savedReportMatchFailuresVar} = reportMatchFailures;",
+        "${savedPosVar} = pos;",
+        "${savedReportMatchFailuresVar} = reportMatchFailures;",
         "reportMatchFailures = false;",
         "${expressionCode}",
         "reportMatchFailures = ${savedReportMatchFailuresVar};",
         "if (${expressionResultVar} !== null) {",
-        "  var ${resultVar} = '';",
+        "  ${resultVar} = '';",
         "  pos = ${savedPosVar};",
         "} else {",
-        "  var ${resultVar} = null;",
+        "  ${resultVar} = null;",
         "}",
         {
           expressionCode:              emit(node.expression, expressionResultVar),
@@ -522,15 +544,15 @@ PEG.compiler.emitter = function(ast) {
       var expressionResultVar         = UID.next("result");
 
       return formatCode(
-        "var ${savedPosVar} = pos;",
-        "var ${savedReportMatchFailuresVar} = reportMatchFailures;",
+        "${savedPosVar} = pos;",
+        "${savedReportMatchFailuresVar} = reportMatchFailures;",
         "reportMatchFailures = false;",
         "${expressionCode}",
         "reportMatchFailures = ${savedReportMatchFailuresVar};",
         "if (${expressionResultVar} === null) {",
-        "  var ${resultVar} = '';",
+        "  ${resultVar} = '';",
         "} else {",
-        "  var ${resultVar} = null;",
+        "  ${resultVar} = null;",
         "  pos = ${savedPosVar};",
         "}",
         {
@@ -545,7 +567,7 @@ PEG.compiler.emitter = function(ast) {
 
     semantic_and: function(node, resultVar) {
       return formatCode(
-        "var ${resultVar} = (function() {${actionCode}})() ? '' : null;",
+        "${resultVar} = (function() {${actionCode}})() ? '' : null;",
         {
           actionCode:  node.code,
           resultVar:   resultVar
@@ -555,7 +577,7 @@ PEG.compiler.emitter = function(ast) {
 
     semantic_not: function(node, resultVar) {
       return formatCode(
-        "var ${resultVar} = (function() {${actionCode}})() ? null : '';",
+        "${resultVar} = (function() {${actionCode}})() ? null : '';",
         {
           actionCode:  node.code,
           resultVar:   resultVar
@@ -568,7 +590,7 @@ PEG.compiler.emitter = function(ast) {
 
       return formatCode(
         "${expressionCode}",
-        "var ${resultVar} = ${expressionResultVar} !== null ? ${expressionResultVar} : '';",
+        "${resultVar} = ${expressionResultVar} !== null ? ${expressionResultVar} : '';",
         {
           expressionCode:      emit(node.expression, expressionResultVar),
           expressionResultVar: expressionResultVar,
@@ -581,7 +603,7 @@ PEG.compiler.emitter = function(ast) {
       var expressionResultVar = UID.next("result");
 
       return formatCode(
-        "var ${resultVar} = [];",
+        "${resultVar} = [];",
         "${expressionCode}",
         "while (${expressionResultVar} !== null) {",
         "  ${resultVar}.push(${expressionResultVar});",
@@ -601,13 +623,13 @@ PEG.compiler.emitter = function(ast) {
       return formatCode(
         "${expressionCode}",
         "if (${expressionResultVar} !== null) {",
-        "  var ${resultVar} = [];",
+        "  ${resultVar} = [];",
         "  while (${expressionResultVar} !== null) {",
         "    ${resultVar}.push(${expressionResultVar});",
         "    ${expressionCode}",
         "  }",
         "} else {",
-        "  var ${resultVar} = null;",
+        "  ${resultVar} = null;",
         "}",
         {
           expressionCode:      emit(node.expression, expressionResultVar),
@@ -651,7 +673,7 @@ PEG.compiler.emitter = function(ast) {
 
       return formatCode(
         "${expressionCode}",
-        "var ${resultVar} = ${expressionResultVar} !== null",
+        "${resultVar} = ${expressionResultVar} !== null",
         "  ? (function(${formalParams}) {${actionCode}})(${actualParams})",
         "  : null;",
         {
@@ -667,7 +689,7 @@ PEG.compiler.emitter = function(ast) {
 
     rule_ref: function(node, resultVar) {
       return formatCode(
-        "var ${resultVar} = ${ruleMethod}();",
+        "${resultVar} = ${ruleMethod}();",
         {
           ruleMethod: "parse_" + node.name,
           resultVar:  resultVar
@@ -678,10 +700,10 @@ PEG.compiler.emitter = function(ast) {
     literal: function(node, resultVar) {
       return formatCode(
         "if (input.substr(pos, ${length}) === ${value|string}) {",
-        "  var ${resultVar} = ${value|string};",
+        "  ${resultVar} = ${value|string};",
         "  pos += ${length};",
         "} else {",
-        "  var ${resultVar} = null;",
+        "  ${resultVar} = null;",
         "  if (reportMatchFailures) {",
         "    matchFailed(${valueQuoted|string});",
         "  }",
@@ -698,10 +720,10 @@ PEG.compiler.emitter = function(ast) {
     any: function(node, resultVar) {
       return formatCode(
         "if (input.length > pos) {",
-        "  var ${resultVar} = input.charAt(pos);",
+        "  ${resultVar} = input.charAt(pos);",
         "  pos++;",
         "} else {",
-        "  var ${resultVar} = null;",
+        "  ${resultVar} = null;",
         "  if (reportMatchFailures) {",
         "    matchFailed('any character');",
         "  }",
@@ -733,10 +755,10 @@ PEG.compiler.emitter = function(ast) {
 
       return formatCode(
         "if (input.substr(pos).match(${regexp}) !== null) {",
-        "  var ${resultVar} = input.charAt(pos);",
+        "  ${resultVar} = input.charAt(pos);",
         "  pos++;",
         "} else {",
-        "  var ${resultVar} = null;",
+        "  ${resultVar} = null;",
         "  if (reportMatchFailures) {",
         "    matchFailed(${rawText|string});",
         "  }",
