@@ -1,5 +1,5 @@
 /* Emits the generated code for the AST. */
-PEG.compiler.emitter = function(ast) {
+PEG.compiler.emitter = function(ast, options) {
   /*
    * Takes parts of code, interpolates variables inside them and joins them with
    * a newline.
@@ -74,7 +74,7 @@ PEG.compiler.emitter = function(ast) {
 	
     var args = Array.prototype.slice.call(arguments);
     vars = args[args.length - 1] instanceof Object ? args.pop() : {};
-
+    
     return indentMultilineParts(interpolateVariablesInParts(args)).join("\n");
   }
 
@@ -144,53 +144,58 @@ PEG.compiler.emitter = function(ast) {
         "      } else {",
         "        startRule = ${startRule|string};",
         "      }",
-        "      ",
-        /* This needs to be in sync with |padLeft| in utils.js. */
-        "      function padLeft(input, padding, length) {",
-        "        var result = input;",
-        "        ",
-        "        var padLength = length - input.length;",
-        "        for (var i = 0; i < padLength; i++) {",
-        "          result = padding + result;",
-        "        }",
-        "        ",
-        "        return result;",
-        "      }",
-        "      ",
-        /* This needs to be in sync with |escape| in utils.js. */
-        "      function escape(ch) {",
-        "        var charCode = ch.charCodeAt(0);",
-        "        var escapeChar, length;",
-        "        if (charCode <= 0xFF) {",
-        "          escapeChar = 'x';",
-        "          length = 2;",
-        "        } else {",
-        "          escapeChar = 'u';",
-        "          length = 4;",
-        "        }",
-        "        ",
-        "        return '\\\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);",
-        "      }",
-        "      ",
-        /* This needs to be in sync with |quote| in utils.js. */
-        "      function quote(s) {",
-        "        /*",
-        "         * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a",
-        "         * string literal except for the closing quote character, backslash,",
-        "         * carriage return, line separator, paragraph separator, and line feed.",
-        "         * Any character may appear in the form of an escape sequence.",
-        "         */",
-        "        return '\"' + s",
-        "          .replace(/\\\\/g, '\\\\\\\\')           // backslash",
-        "          .replace(/\"/g, '\\\\\"')             // closing quote character",
-        "          .replace(/\\r/g, '\\\\r')            // carriage return",
-        "          .replace(/\\n/g, '\\\\n')            // line feed",
-        "          .replace(/\\t/g, '\\\\t')            // tab",
-        "          .replace(/\\f/g, '\\\\f')            // form feed",
-        "          .replace(/[^\\x20-\\x7F]/g, escape) // non-ASCII characters",
-        "          + '\"';",
-        "      }",
-        "      ",
+        /* the functions from utils.js aren't needed, if we parse the peg-parser itself */
+		!!options.selfParsing
+		  ? "      "
+		  : formatCode(
+            "      ",
+            /* This needs to be in sync with |padLeft| in utils.js. */
+            "      function padLeft(input, padding, length) {",
+            "        var result = input;",
+            "        ",
+            "        var padLength = length - input.length;",
+            "        for (var i = 0; i < padLength; i++) {",
+            "          result = padding + result;",
+            "        }",
+            "        ",
+            "        return result;",
+            "      }",
+            "      ",
+            /* This needs to be in sync with |escape| in utils.js. */
+            "      function escape(ch) {",
+            "        var charCode = ch.charCodeAt(0);",
+            "        var escapeChar, length;",
+            "        if (charCode <= 0xFF) {",
+            "          escapeChar = 'x';",
+            "          length = 2;",
+            "        } else {",
+            "          escapeChar = 'u';",
+            "          length = 4;",
+            "        }",
+            "        ",
+            "        return '\\\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);",
+            "      }",
+            "      ",
+            /* This needs to be in sync with |quote| in utils.js. */
+            "      function quote(s) {",
+            "        /*",
+            "         * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a",
+            "         * string literal except for the closing quote character, backslash,",
+            "         * carriage return, line separator, paragraph separator, and line feed.",
+            "         * Any character may appear in the form of an escape sequence.",
+            "         */",
+            "        return '\"' + s",
+            "          .replace(/\\\\/g, '\\\\\\\\')           // backslash",
+            "          .replace(/\"/g, '\\\\\"')             // closing quote character",
+            "          .replace(/\\r/g, '\\\\r')            // carriage return",
+            "          .replace(/\\n/g, '\\\\n')            // line feed",
+            "          .replace(/\\t/g, '\\\\t')            // tab",
+            "          .replace(/\\f/g, '\\\\f')            // form feed",
+            "          .replace(/[^\\x20-\\x7F]/g, escape) // non-ASCII characters",
+            "          + '\"';",
+            "      }",
+            "      "
+		),
         "      function matchFailed(failure) {",
         "        if (pos < rightmostMatchFailuresPos) {",
         "          return;",

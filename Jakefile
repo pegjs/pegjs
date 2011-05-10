@@ -136,7 +136,7 @@ task("parser", [], function(options) {
   var input = fs.readFileSync(PARSER_SRC_FILE, "utf8");
 
   try {
-    var parser = PEG.buildParser(input);
+    var parser = PEG.buildParser(input, {selfParsing: true});
   } catch (e) {
     if (e.line !== undefined && e.column !== undefined) {
       abort(e.line + ":" + e.column + ": " + e.message);
