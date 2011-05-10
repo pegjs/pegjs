@@ -74,7 +74,7 @@ PEG.compiler.emitter = function(ast) {
     var vars = args[args.length - 1] instanceof Object ? args.pop() : {};
 
     return indentMultilineParts(interpolateVariablesInParts(args)).join("\n");
-  };
+  }
 
   /* Unique ID generator. */
   var UID = {
@@ -95,15 +95,15 @@ PEG.compiler.emitter = function(ast) {
       var initializerCode = node.initializer !== null
         ? emit(node.initializer)
         : "";
-
+      var name;
       var parseFunctionTableItems = [];
-      for (var name in node.rules) {
+      for (name in node.rules) {
         parseFunctionTableItems.push(quote(name) + ": parse_" + name);
       }
       parseFunctionTableItems.sort();
 
       var parseFunctionDefinitions = [];
-      for (var name in node.rules) {
+      for (name in node.rules) {
         parseFunctionDefinitions.push(emit(node.rules[name]));
       }
 
@@ -152,13 +152,13 @@ PEG.compiler.emitter = function(ast) {
         /* This needs to be in sync with |escape| in utils.js. */
         "      function escape(ch) {",
         "        var charCode = ch.charCodeAt(0);",
-        "        ",
+        "        var escapeChar, length;",
         "        if (charCode <= 0xFF) {",
-        "          var escapeChar = 'x';",
-        "          var length = 2;",
+        "          escapeChar = 'x';",
+        "          length = 2;",
         "        } else {",
-        "          var escapeChar = 'u';",
-        "          var length = 4;",
+        "          escapeChar = 'u';",
+        "          length = 4;",
         "        }",
         "        ",
         "        return '\\\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);",
@@ -342,16 +342,17 @@ PEG.compiler.emitter = function(ast) {
       UID.reset();
 
       var resultVar = UID.next("result");
+      var setReportMatchFailuresCode, restoreReportMatchFailuresCode, reportMatchFailureCode;
 
       if (node.displayName !== null) {
-        var setReportMatchFailuresCode = formatCode(
+        setReportMatchFailuresCode = formatCode(
           "var savedReportMatchFailures = reportMatchFailures;",
           "reportMatchFailures = false;"
         );
-        var restoreReportMatchFailuresCode = formatCode(
+        restoreReportMatchFailuresCode = formatCode(
           "reportMatchFailures = savedReportMatchFailures;"
         );
-        var reportMatchFailureCode = formatCode(
+        reportMatchFailureCode = formatCode(
           "if (reportMatchFailures && ${resultVar} === null) {",
           "  matchFailed(${displayName|string});",
           "}",
@@ -361,9 +362,9 @@ PEG.compiler.emitter = function(ast) {
           }
         );
       } else {
-        var setReportMatchFailuresCode = "";
-        var restoreReportMatchFailuresCode = "";
-        var reportMatchFailureCode = "";
+        setReportMatchFailuresCode = "";
+        restoreReportMatchFailuresCode = "";
+        reportMatchFailureCode = "";
       }
 
       return formatCode(
@@ -444,7 +445,7 @@ PEG.compiler.emitter = function(ast) {
       var savedPosVar = UID.next("savedPos");
 
       var elementResultVars = map(node.elements, function() {
-        return UID.next("result")
+        return UID.next("result");
       });
 
       var code = formatCode(
@@ -627,10 +628,10 @@ PEG.compiler.emitter = function(ast) {
        */
 
       var expressionResultVar = UID.next("result");
-
+      var formalParams, actualParams;
       if (node.expression.type === "sequence") {
-        var formalParams = [];
-        var actualParams = [];
+        formalParams = [];
+        actualParams = [];
 
         var elements = node.expression.elements;
         var elementsLength = elements.length;
@@ -641,11 +642,11 @@ PEG.compiler.emitter = function(ast) {
           }
         }
       } else if (node.expression.type === "labeled") {
-        var formalParams = [node.expression.label];
-        var actualParams = [expressionResultVar];
+        formalParams = [node.expression.label];
+        actualParams = [expressionResultVar];
       } else {
-        var formalParams = [];
-        var actualParams = [];
+        formalParams = [];
+        actualParams = [];
       }
 
       return formatCode(
@@ -710,8 +711,9 @@ PEG.compiler.emitter = function(ast) {
     },
 
     "class": function(node, resultVar) {
+      var regexp;
       if (node.parts.length > 0) {
-        var regexp = "/^["
+        regexp = "/^["
           + (node.inverted ? "^" : "")
           + map(node.parts, function(part) {
               return part instanceof Array
@@ -726,7 +728,7 @@ PEG.compiler.emitter = function(ast) {
          * Stupid IE considers regexps /[]/ and /[^]/ syntactically invalid, so
          * we translate them into euqivalents it can handle.
          */
-        var regexp = node.inverted ? "/^[\\S\\s]/" : "/^(?!)/";
+        regexp = node.inverted ? "/^[\\S\\s]/" : "/^(?!)/";
       }
 
       return formatCode(

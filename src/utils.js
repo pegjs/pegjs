@@ -54,13 +54,13 @@ function padLeft(input, padding, length) {
  */
 function escape(ch) {
   var charCode = ch.charCodeAt(0);
-
+  var escapeChar, length;
   if (charCode <= 0xFF) {
-    var escapeChar = 'x';
-    var length = 2;
+    escapeChar = 'x';
+    length = 2;
   } else {
-    var escapeChar = 'u';
-    var length = 4;
+    escapeChar = 'u';
+    length = 4;
   }
 
   return '\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);
@@ -89,7 +89,7 @@ function quote(s) {
     .replace(/\n/g, '\\n')             // line feed
     .replace(/[\x80-\uFFFF]/g, escape) // non-ASCII characters
     + '"';
-};
+}
 
 /*
  * Escapes characters inside the string so that it can be used as a list of
@@ -105,11 +105,11 @@ function quoteForRegexpClass(s) {
     .replace(/\\/g, '\\\\')            // backslash
     .replace(/\0/g, '\\0')             // null, IE needs this
     .replace(/\//g, '\\/')             // closing slash
-    .replace(/]/g, '\\]')              // closing bracket
+    .replace(/\]/g, '\\]')              // closing bracket
     .replace(/-/g, '\\-')              // dash
     .replace(/\r/g, '\\r')             // carriage return
     .replace(/\n/g, '\\n')             // line feed
-    .replace(/[\x80-\uFFFF]/g, escape) // non-ASCII characters
+    .replace(/[\x80-\uFFFF]/g, escape);// non-ASCII characters
 }
 
 /*
@@ -121,5 +121,5 @@ function quoteForRegexpClass(s) {
 function buildNodeVisitor(functions) {
   return function(node) {
     return functions[node.type].apply(null, arguments);
-  }
+  };
 }
