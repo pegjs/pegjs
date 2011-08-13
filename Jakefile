@@ -18,6 +18,7 @@ var PEGJS = BIN_DIR + "/pegjs";
 
 var PEGJS_SRC_FILE = SRC_DIR + "/peg.js";
 var PEGJS_OUT_FILE = LIB_DIR + "/peg.js";
+var PEGJS_WORK_FILE = "./peg-working.js"; // working copy of peg.js
 
 var PEGJS_DIST_FILE     = DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".js"
 var PEGJS_DIST_MIN_FILE = DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".min.js"
@@ -66,25 +67,27 @@ function copyDir(src, dest) {
 }
 
 function removeDir(dir) {
-  fs.readdirSync(dir).every(function(file) {
-    var file = dir  + "/" + file;
+  if(path.existsSync(dir)){
+    fs.readdirSync(dir).every(function(file) {
+      var file = dir  + "/" + file;
 
-    var stats = fs.statSync(file);
-    if (stats.isDirectory()) {
-      removeDir(file);
-    } else {
-      fs.unlinkSync(file);
-    }
+      var stats = fs.statSync(file);
+      if (stats.isDirectory()) {
+        removeDir(file);
+      } else {
+        fs.unlinkSync(file);
+      }
 
-    return true;
-  });
+      return true;
+    });
 
-  fs.rmdirSync(dir);
+    fs.rmdirSync(dir);
+  }
 }
 
 function preprocess(file) {
   var input = fs.readFileSync(file, "utf8").trim();
-  return input.split("\n").map(function(line) {
+  input = input.split("\n").map(function(line) {
     var matches = /^\s*\/\/\s*@include\s*"([^"]*)"\s*$/.exec(line);
     if (matches !== null) {
       var includedFile = SRC_DIR + "/" + matches[1];
@@ -100,15 +103,46 @@ function preprocess(file) {
       return line;
     }
   }).join("\n").replace(/@VERSION/g, PEGJS_VERSION);
+
+  // use full content for @removeStart .. @removeEnd
+  var rm = /^\s*\/\/\s*@remove(Start|End)\s*$/gm;
+  var pos, m, state=false;
+  while( m = rm.exec(input) ){
+    var ln = input.substr(m.index,m[0].length);
+    if( m[1] === "Start" ){
+      if( state ){
+        abort( "@removeStart without @removeEnd at position: " + ( pos || 0 ) + "/" + m.index );
+      }
+      state = true;
+      pos = m.index;
+    } else {
+      if( !state ){
+        abort( "@removeEnd without @removeStart at position: " + pos + "/" + m.index + ":" + m[1] );
+      }
+      state = false;
+      input = input.substr(0, pos) + input.substr(m.index + m[0].length);
+	  rm.lastIndex = pos;
+    }
+  }
+  if( state ){
+    abort( "last @removeStart without @removeEnd at position: " + pos + "/" + m.index );
+  }
+  return input;
 }
 
-desc("Generate the grammar parser");
-task("parser", [], function() {
-  var PEG = require(PEGJS_OUT_FILE);
+desc("Generate the grammar parser. Use option '{useWorkingCopy:true}' to use a working copy of peg.js to generate the parser");
+task("parser", [], function(options) {
+  var PEG = require(options && !!options.useWorkingCopy ? PEGJS_WORK_FILE : PEGJS_OUT_FILE);
   var input = fs.readFileSync(PARSER_SRC_FILE, "utf8");
 
   try {
-    var parser = PEG.buildParser(input);
+    var parser = PEG.buildParser(
+                   input,
+                   {
+                     selfParsing: true,
+                     startRules: ["grammar"]
+                   }
+                 );
   } catch (e) {
     if (e.line !== undefined && e.column !== undefined) {
       abort(e.line + ":" + e.column + ": " + e.message);
@@ -131,8 +165,8 @@ task("clean", [], function() {
   removeDir(LIB_DIR);
 });
 
-desc("Prepare the distribution files");
-task("dist", ["build"], function() {
+desc("Prepare the distribution files. Use option {uglifyjs:'path'} to set another path to uglify.js (node)");
+task("dist", ["build"], function(options) {
   mkdirUnlessExists(DIST_DIR);
 
   /* Web */
@@ -142,7 +176,7 @@ task("dist", ["build"], function() {
   copyFile(PEGJS_OUT_FILE, PEGJS_DIST_FILE);
 
   var process = childProcess.spawn(
-    "uglifyjs",
+    options && !!options.uglifyjs ? options.uglifyjs : "uglifyjs",
     ["--ascii", "-o", PEGJS_DIST_MIN_FILE, PEGJS_OUT_FILE],
     { customFds: [0, 1, 2] }
   );
@@ -180,6 +214,16 @@ task("benchmark", ["build"], function(runCount) {
   var process = childProcess.spawn(
     "benchmark/run",
     runCount !== undefined ? [runCount] : [],
+    { customFds: [0, 1, 2] }
+  );
+  process.on("exit", function() { complete(); });
+}, true);
+
+desc("Run code analysis tools (currently JSHint)");
+task("codeanalysis", ["build"], function() {
+  var process = childProcess.spawn(
+    "build/jshint-check.js",
+    [PEGJS_OUT_FILE],
     { customFds: [0, 1, 2] }
   );
   process.on("exit", function() { complete(); });

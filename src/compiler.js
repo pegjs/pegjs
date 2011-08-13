@@ -5,7 +5,7 @@ PEG.compiler = {
    * during the generation and some may protrude to the generated parser and
    * cause its malfunction.
    */
-  compile: function(ast) {
+  compile: function(ast, options) {
     var CHECK_NAMES = [
       "missingReferencedRules",
       "leftRecursion"
@@ -14,16 +14,17 @@ PEG.compiler = {
     var PASS_NAMES = [
       "proxyRules"
     ];
-
-    for (var i = 0; i < CHECK_NAMES.length; i++) {
+    
+    var i;
+    for (i = 0; i < CHECK_NAMES.length; i++) {
       this.checks[CHECK_NAMES[i]](ast);
     }
 
-    for (var i = 0; i < PASS_NAMES.length; i++) {
+    for (i = 0; i < PASS_NAMES.length; i++) {
       ast = this.passes[PASS_NAMES[i]](ast);
     }
 
-    var source = this.emitter(ast);
+    var source = this.emitter(ast, options);
     var result = eval(source);
     result._source = source;
 
