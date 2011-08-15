@@ -240,7 +240,7 @@ SignedInteger
   = sign:[-+]? digits:DecimalDigits { return sign + digits; }
 
 HexIntegerLiteral
-  = "0" [xX] digits:HexDigit+ { return parseInt("0x" + dgits.join("")); }
+  = "0" [xX] digits:HexDigit+ { return parseInt("0x" + digits.join("")); }
 
 HexDigit
   = [0-9a-fA-F]
