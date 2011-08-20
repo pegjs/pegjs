@@ -627,6 +627,8 @@ PEG.compiler.emitter = function(ast) {
        */
 
       var expressionResultVar = UID.next("result");
+      var actionResultVar     = UID.next("result");
+      var savedPosVar         = UID.next("savedPos");
 
       if (node.expression.type === "sequence") {
         var formalParams = [];
@@ -649,16 +651,25 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
+        "var ${savedPosVar} = pos;",
         "${expressionCode}",
-        "var ${resultVar} = ${expressionResultVar} !== null",
+        "var ${actionResultVar} = ${expressionResultVar} !== null",
         "  ? (function(${formalParams}) {${actionCode}})(${actualParams})",
         "  : null;",
+        "if (${actionResultVar} !== null) {",
+        "  var ${resultVar} = ${actionResultVar};",
+        "} else {",
+        "  var ${resultVar} = null;",
+        "  pos = ${savedPosVar};",
+        "}",
         {
           expressionCode:      emit(node.expression, expressionResultVar),
           expressionResultVar: expressionResultVar,
           actionCode:          node.code,
+          actionResultVar:     actionResultVar,
           formalParams:        formalParams.join(", "),
           actualParams:        actualParams.join(", "),
+          savedPosVar:         savedPosVar,
           resultVar:           resultVar
         }
       );

@@ -129,6 +129,13 @@ test("actions", function() {
   );
   parses(innerElementsLabeledParser, "abcde", ["a", [2, "b", "d"], "e"]);
 
+  /*
+   * Test that the parsing position returns after successfull parsing of the
+   * action expression and action returning |null|.
+   */
+  var posTestParser = PEG.buildParser('start = "a" { return null; } / "a"');
+  parses(posTestParser, "a", "a");
+
   /* Test that the action is not called when its expression does not match. */
   var notAMatchParser = PEG.buildParser(
     'start = "a" { ok(false, "action got called when it should not be"); }'
