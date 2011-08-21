@@ -145,19 +145,19 @@ test("actions", function() {
   doesNotParse(notAMatchParser, "b");
 
   var actionKnowsPositionParser = PEG.buildParser(
-    'start = "abc" { return _pos; }'
+    'start = [a-c]* { return _pos; }'
   );
   parses(actionKnowsPositionParser, "abc", 0);
 
   var actionKnowsEndPositionParser = PEG.buildParser(
-    'start = "abc" { return _end; }'
+    'start = [a-e]* { return _end; }'
   );
-  parses(actionKnowsEndPositionParser, "abc", 3);
+  parses(actionKnowsEndPositionParser, "abcde", 5);
 
   var actionKnowsMatchParser = PEG.buildParser(
-    'start = "abc" { return _match; }'
+    'start = [a-d]* { return _match; }'
   );
-  parses(actionKnowsMatchParser, "abc", "abc");
+  parses(actionKnowsMatchParser, "abcd", "abcd");
 });
 
 test("initializer", function() {
