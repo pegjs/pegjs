@@ -614,8 +614,7 @@ PEG.compiler.emitter = function(ast) {
        * In case of sequences, we splat their elements into function arguments
        * one by one. Example:
        *
-       *   start: a:"a" b:"b" c:"c" { alert(arguments.length) }  // => 6
-       *   (3 label values + special `_pos`, `_end` and `_match` arguments)
+       *   start: a:"a" b:"b" c:"c" { alert(arguments.length) }  // => 3
        *
        * This behavior is reflected in this function.
        */
