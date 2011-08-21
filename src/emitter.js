@@ -614,7 +614,8 @@ PEG.compiler.emitter = function(ast) {
        * In case of sequences, we splat their elements into function arguments
        * one by one. Example:
        *
-       *   start: a:"a" b:"b" c:"c" { alert(arguments.length) }  // => 3
+       *   start: a:"a" b:"b" c:"c" { alert(arguments.length) }  // => 6
+       *   (3 label values + special `_pos`, `_end` and `_match` arguments)
        *
        * This behavior is reflected in this function.
        */
@@ -642,6 +643,13 @@ PEG.compiler.emitter = function(ast) {
         var formalParams = [];
         var actualParams = [];
       }
+
+      formalParams.push('_pos');
+      actualParams.push(savedPosVar); // start position
+      formalParams.push('_end');
+      actualParams.push('pos'); // due to closure this variable will refrect actual _end
+      formalParams.push('_match');
+      actualParams.push('input.substr(' + savedPosVar + ', pos)'); // may be not a very fast thing
 
       return formatCode(
         "var ${savedPosVar} = pos;",
@@ -754,3 +762,4 @@ PEG.compiler.emitter = function(ast) {
 
   return emit(ast);
 };
+

@@ -99,35 +99,37 @@ test("one or more expressions", function() {
 });
 
 test("actions", function() {
+  var sys_args = 3;
+
   var singleElementUnlabeledParser = PEG.buildParser(
     'start = "a" { return arguments.length; }'
   );
-  parses(singleElementUnlabeledParser, "a", 0);
+  parses(singleElementUnlabeledParser, "a", sys_args);
 
   var singleElementLabeledParser = PEG.buildParser(
     'start = a:"a" { return [arguments.length, a]; }'
   );
-  parses(singleElementLabeledParser, "a", [1, "a"]);
+  parses(singleElementLabeledParser, "a", [sys_args + 1, "a"]);
 
   var multiElementUnlabeledParser = PEG.buildParser(
     'start = "a" "b" "c" { return arguments.length; }'
   );
-  parses(multiElementUnlabeledParser, "abc", 0);
+  parses(multiElementUnlabeledParser, "abc", sys_args);
 
   var multiElementLabeledParser = PEG.buildParser(
     'start = a:"a" "b" c:"c" { return [arguments.length, a, c]; }'
   );
-  parses(multiElementLabeledParser, "abc", [2, "a", "c"]);
+  parses(multiElementLabeledParser, "abc", [sys_args + 2, "a", "c"]);
 
   var innerElementsUnlabeledParser = PEG.buildParser(
     'start = "a" ("b" "c" "d" { return arguments.length; }) "e"'
   );
-  parses(innerElementsUnlabeledParser, "abcde", ["a", 0, "e"]);
+  parses(innerElementsUnlabeledParser, "abcde", ["a", sys_args, "e"]);
 
   var innerElementsLabeledParser = PEG.buildParser(
     'start = "a" (b:"b" "c" d:"d" { return [arguments.length, b, d]; }) "e"'
   );
-  parses(innerElementsLabeledParser, "abcde", ["a", [2, "b", "d"], "e"]);
+  parses(innerElementsLabeledParser, "abcde", ["a", [sys_args + 2, "b", "d"], "e"]);
 
   /*
    * Test that the parsing position returns after successfull parsing of the
@@ -141,6 +143,21 @@ test("actions", function() {
     'start = "a" { ok(false, "action got called when it should not be"); }'
   );
   doesNotParse(notAMatchParser, "b");
+
+  var actionKnowsPositionParser = PEG.buildParser(
+    'start = "abc" { return _pos; }'
+  );
+  parses(actionKnowsPositionParser, "abc", 0);
+
+  var actionKnowsEndPositionParser = PEG.buildParser(
+    'start = "abc" { return _end; }'
+  );
+  parses(actionKnowsEndPositionParser, "abc", 3);
+
+  var actionKnowsMatchParser = PEG.buildParser(
+    'start = "abc" { return _match; }'
+  );
+  parses(actionKnowsMatchParser, "abc", "abc");
 });
 
 test("initializer", function() {
@@ -173,6 +190,7 @@ test("initializer", function() {
     '{ function f() { return 42; } }; start = "a" !{ return f() !== 42; }'
   );
   parses(functionInSemanticNotParser, "a", ["a", ""]);
+
 });
 
 test("rule references", function() {
@@ -536,3 +554,4 @@ test("nested comments", function() {
 });
 
 })();
+
