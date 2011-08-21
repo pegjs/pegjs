@@ -132,7 +132,7 @@ PEG.compiler.emitter = function(ast) {
         "      }",
         "      ",
         "      var pos = 0;",
-        "      var reportFailures = true;",
+        "      var reportFailures = 0;", // 0 = report, anything > 0 = do not report
         "      var rightmostFailuresPos = 0;",
         "      var rightmostFailuresExpected = [];",
         "      var cache = {};",
@@ -345,14 +345,13 @@ PEG.compiler.emitter = function(ast) {
 
       if (node.displayName !== null) {
         var setReportFailuresCode = formatCode(
-          "var savedReportFailures = reportFailures;",
-          "reportFailures = false;"
+          "reportFailures++;"
         );
         var restoreReportFailuresCode = formatCode(
-          "reportFailures = savedReportFailures;"
+          "reportFailures--;"
         );
         var reportFailureCode = formatCode(
-          "if (reportFailures && ${resultVar} === null) {",
+          "if (reportFailures === 0 && ${resultVar} === null) {",
           "  matchFailed(${displayName|string});",
           "}",
           {
@@ -490,15 +489,13 @@ PEG.compiler.emitter = function(ast) {
 
     simple_and: function(node, resultVar) {
       var savedPosVar            = UID.next("savedPos");
-      var savedReportFailuresVar = UID.next("savedReportFailuresVar");
       var expressionResultVar    = UID.next("result");
 
       return formatCode(
         "var ${savedPosVar} = pos;",
-        "var ${savedReportFailuresVar} = reportFailures;",
-        "reportFailures = false;",
+        "reportFailures++;",
         "${expressionCode}",
-        "reportFailures = ${savedReportFailuresVar};",
+        "reportFailures--;",
         "if (${expressionResultVar} !== null) {",
         "  var ${resultVar} = '';",
         "  pos = ${savedPosVar};",
@@ -509,7 +506,6 @@ PEG.compiler.emitter = function(ast) {
           expressionCode:         emit(node.expression, expressionResultVar),
           expressionResultVar:    expressionResultVar,
           savedPosVar:            savedPosVar,
-          savedReportFailuresVar: savedReportFailuresVar,
           resultVar:              resultVar
         }
       );
@@ -517,15 +513,13 @@ PEG.compiler.emitter = function(ast) {
 
     simple_not: function(node, resultVar) {
       var savedPosVar            = UID.next("savedPos");
-      var savedReportFailuresVar = UID.next("savedReportFailuresVar");
       var expressionResultVar    = UID.next("result");
 
       return formatCode(
         "var ${savedPosVar} = pos;",
-        "var ${savedReportFailuresVar} = reportFailures;",
-        "reportFailures = false;",
+        "reportFailures++;",
         "${expressionCode}",
-        "reportFailures = ${savedReportFailuresVar};",
+        "reportFailures--;",
         "if (${expressionResultVar} === null) {",
         "  var ${resultVar} = '';",
         "} else {",
@@ -536,7 +530,6 @@ PEG.compiler.emitter = function(ast) {
           expressionCode:         emit(node.expression, expressionResultVar),
           expressionResultVar:    expressionResultVar,
           savedPosVar:            savedPosVar,
-          savedReportFailuresVar: savedReportFailuresVar,
           resultVar:              resultVar
         }
       );
@@ -692,7 +685,7 @@ PEG.compiler.emitter = function(ast) {
         "  pos += ${length};",
         "} else {",
         "  var ${resultVar} = null;",
-        "  if (reportFailures) {",
+        "  if (reportFailures === 0) {",
         "    matchFailed(${valueQuoted|string});",
         "  }",
         "}",
@@ -712,7 +705,7 @@ PEG.compiler.emitter = function(ast) {
         "  pos++;",
         "} else {",
         "  var ${resultVar} = null;",
-        "  if (reportFailures) {",
+        "  if (reportFailures === 0) {",
         "    matchFailed('any character');",
         "  }",
         "}",
@@ -746,7 +739,7 @@ PEG.compiler.emitter = function(ast) {
         "  pos++;",
         "} else {",
         "  var ${resultVar} = null;",
-        "  if (reportFailures) {",
+        "  if (reportFailures === 0) {",
         "    matchFailed(${rawText|string});",
         "  }",
         "}",

@@ -76,7 +76,7 @@ PEG.parser = (function(){
       }
       
       var pos = 0;
-      var reportFailures = true;
+      var reportFailures = 0;
       var rightmostFailuresPos = 0;
       var rightmostFailuresExpected = [];
       var cache = {};
@@ -275,7 +275,7 @@ PEG.parser = (function(){
               pos += 0;
             } else {
               var result9 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"\"");
               }
             }
@@ -879,8 +879,7 @@ PEG.parser = (function(){
         var result17 = parse_identifier();
         if (result17 !== null) {
           var savedPos6 = pos;
-          var savedReportFailuresVar0 = reportFailures;
-          reportFailures = false;
+          reportFailures++;
           var savedPos7 = pos;
           var result23 = parse_literal();
           if (result23 !== null) {
@@ -891,7 +890,7 @@ PEG.parser = (function(){
               pos += 0;
             } else {
               var result22 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"\"");
               }
             }
@@ -913,7 +912,7 @@ PEG.parser = (function(){
             var result19 = null;
             pos = savedPos7;
           }
-          reportFailures = savedReportFailuresVar0;
+          reportFailures--;
           if (result19 === null) {
             var result18 = '';
           } else {
@@ -1041,8 +1040,7 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportFailures = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         var savedPos0 = pos;
         var savedPos1 = pos;
         var result3 = parse_braced();
@@ -1067,8 +1065,8 @@ PEG.parser = (function(){
           var result0 = null;
           pos = savedPos0;
         }
-        reportFailures = savedReportFailures;
-        if (reportFailures && result0 === null) {
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
           matchFailed("action");
         }
         
@@ -1095,7 +1093,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"{\"");
           }
         }
@@ -1132,7 +1130,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result5 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"}\"");
               }
             }
@@ -1224,7 +1222,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("[^{}]");
           }
         }
@@ -1254,7 +1252,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"=\"");
           }
         }
@@ -1305,7 +1303,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\":\"");
           }
         }
@@ -1356,7 +1354,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\";\"");
           }
         }
@@ -1407,7 +1405,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"/\"");
           }
         }
@@ -1458,7 +1456,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"&\"");
           }
         }
@@ -1509,7 +1507,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"!\"");
           }
         }
@@ -1560,7 +1558,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"?\"");
           }
         }
@@ -1611,7 +1609,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"*\"");
           }
         }
@@ -1662,7 +1660,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"+\"");
           }
         }
@@ -1713,7 +1711,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"(\"");
           }
         }
@@ -1764,7 +1762,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\")\"");
           }
         }
@@ -1815,7 +1813,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\".\"");
           }
         }
@@ -1858,8 +1856,7 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportFailures = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         var savedPos0 = pos;
         var savedPos1 = pos;
         var result13 = parse_letter();
@@ -1871,7 +1868,7 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result12 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"_\"");
             }
           }
@@ -1883,7 +1880,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result11 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"$\"");
               }
             }
@@ -1909,7 +1906,7 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result8 = null;
-                if (reportFailures) {
+                if (reportFailures === 0) {
                   matchFailed("\"_\"");
                 }
               }
@@ -1921,7 +1918,7 @@ PEG.parser = (function(){
                   pos += 1;
                 } else {
                   var result7 = null;
-                  if (reportFailures) {
+                  if (reportFailures === 0) {
                     matchFailed("\"$\"");
                   }
                 }
@@ -1948,7 +1945,7 @@ PEG.parser = (function(){
                   pos += 1;
                 } else {
                   var result8 = null;
-                  if (reportFailures) {
+                  if (reportFailures === 0) {
                     matchFailed("\"_\"");
                   }
                 }
@@ -1960,7 +1957,7 @@ PEG.parser = (function(){
                     pos += 1;
                   } else {
                     var result7 = null;
-                    if (reportFailures) {
+                    if (reportFailures === 0) {
                       matchFailed("\"$\"");
                     }
                   }
@@ -2000,8 +1997,8 @@ PEG.parser = (function(){
           var result0 = null;
           pos = savedPos0;
         }
-        reportFailures = savedReportFailures;
-        if (reportFailures && result0 === null) {
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
           matchFailed("identifier");
         }
         
@@ -2020,8 +2017,7 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportFailures = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         var savedPos0 = pos;
         var savedPos1 = pos;
         var result6 = parse_doubleQuotedLiteral();
@@ -2056,8 +2052,8 @@ PEG.parser = (function(){
           var result0 = null;
           pos = savedPos0;
         }
-        reportFailures = savedReportFailures;
-        if (reportFailures && result0 === null) {
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
           matchFailed("literal");
         }
         
@@ -2084,7 +2080,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\\"\"");
           }
         }
@@ -2101,7 +2097,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result5 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"\\\"\"");
               }
             }
@@ -2200,14 +2196,13 @@ PEG.parser = (function(){
         var savedPos0 = pos;
         var savedPos1 = pos;
         var savedPos2 = pos;
-        var savedReportFailuresVar0 = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         if (input.substr(pos, 1) === "\"") {
           var result8 = "\"";
           pos += 1;
         } else {
           var result8 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\\"\"");
           }
         }
@@ -2219,7 +2214,7 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result7 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"\\\\\"");
             }
           }
@@ -2234,7 +2229,7 @@ PEG.parser = (function(){
             };
           };
         }
-        reportFailures = savedReportFailuresVar0;
+        reportFailures--;
         if (result5 === null) {
           var result3 = '';
         } else {
@@ -2247,7 +2242,7 @@ PEG.parser = (function(){
             pos++;
           } else {
             var result4 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed('any character');
             }
           }
@@ -2296,7 +2291,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"'\"");
           }
         }
@@ -2313,7 +2308,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result5 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"'\"");
               }
             }
@@ -2412,14 +2407,13 @@ PEG.parser = (function(){
         var savedPos0 = pos;
         var savedPos1 = pos;
         var savedPos2 = pos;
-        var savedReportFailuresVar0 = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         if (input.substr(pos, 1) === "'") {
           var result8 = "'";
           pos += 1;
         } else {
           var result8 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"'\"");
           }
         }
@@ -2431,7 +2425,7 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result7 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"\\\\\"");
             }
           }
@@ -2446,7 +2440,7 @@ PEG.parser = (function(){
             };
           };
         }
-        reportFailures = savedReportFailuresVar0;
+        reportFailures--;
         if (result5 === null) {
           var result3 = '';
         } else {
@@ -2459,7 +2453,7 @@ PEG.parser = (function(){
             pos++;
           } else {
             var result4 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed('any character');
             }
           }
@@ -2500,8 +2494,7 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportFailures = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         var savedPos0 = pos;
         var savedPos1 = pos;
         if (input.substr(pos, 1) === "[") {
@@ -2509,7 +2502,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"[\"");
           }
         }
@@ -2519,7 +2512,7 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result11 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"^\"");
             }
           }
@@ -2557,7 +2550,7 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result6 = null;
-                if (reportFailures) {
+                if (reportFailures === 0) {
                   matchFailed("\"]\"");
                 }
               }
@@ -2608,8 +2601,8 @@ PEG.parser = (function(){
           var result0 = null;
           pos = savedPos0;
         }
-        reportFailures = savedReportFailures;
-        if (reportFailures && result0 === null) {
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
           matchFailed("character class");
         }
         
@@ -2638,7 +2631,7 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result4 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"-\"");
             }
           }
@@ -2787,14 +2780,13 @@ PEG.parser = (function(){
         var savedPos0 = pos;
         var savedPos1 = pos;
         var savedPos2 = pos;
-        var savedReportFailuresVar0 = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         if (input.substr(pos, 1) === "]") {
           var result8 = "]";
           pos += 1;
         } else {
           var result8 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"]\"");
           }
         }
@@ -2806,7 +2798,7 @@ PEG.parser = (function(){
             pos += 1;
           } else {
             var result7 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"\\\\\"");
             }
           }
@@ -2821,7 +2813,7 @@ PEG.parser = (function(){
             };
           };
         }
-        reportFailures = savedReportFailuresVar0;
+        reportFailures--;
         if (result5 === null) {
           var result3 = '';
         } else {
@@ -2834,7 +2826,7 @@ PEG.parser = (function(){
             pos++;
           } else {
             var result4 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed('any character');
             }
           }
@@ -2883,14 +2875,13 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\\\\"");
           }
         }
         if (result3 !== null) {
           var savedPos2 = pos;
-          var savedReportFailuresVar0 = reportFailures;
-          reportFailures = false;
+          reportFailures++;
           var result10 = parse_digit();
           if (result10 !== null) {
             var result6 = result10;
@@ -2900,7 +2891,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result9 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"x\"");
               }
             }
@@ -2912,7 +2903,7 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result8 = null;
-                if (reportFailures) {
+                if (reportFailures === 0) {
                   matchFailed("\"u\"");
                 }
               }
@@ -2928,7 +2919,7 @@ PEG.parser = (function(){
               };
             };
           }
-          reportFailures = savedReportFailuresVar0;
+          reportFailures--;
           if (result6 === null) {
             var result4 = '';
           } else {
@@ -2941,7 +2932,7 @@ PEG.parser = (function(){
               pos++;
             } else {
               var result5 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed('any character');
               }
             }
@@ -3002,16 +2993,15 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\\\0\"");
           }
         }
         if (result3 !== null) {
           var savedPos2 = pos;
-          var savedReportFailuresVar0 = reportFailures;
-          reportFailures = false;
+          reportFailures++;
           var result5 = parse_digit();
-          reportFailures = savedReportFailuresVar0;
+          reportFailures--;
           if (result5 === null) {
             var result4 = '';
           } else {
@@ -3063,7 +3053,7 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\\\x\"");
           }
         }
@@ -3122,7 +3112,7 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\\\u\"");
           }
         }
@@ -3193,7 +3183,7 @@ PEG.parser = (function(){
           pos += 1;
         } else {
           var result3 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\\\\"");
           }
         }
@@ -3242,7 +3232,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("[0-9]");
           }
         }
@@ -3270,7 +3260,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("[0-9a-fA-F]");
           }
         }
@@ -3328,7 +3318,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("[a-z]");
           }
         }
@@ -3356,7 +3346,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("[A-Z]");
           }
         }
@@ -3433,8 +3423,7 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportFailures = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         var result2 = parse_singleLineComment();
         if (result2 !== null) {
           var result0 = result2;
@@ -3446,8 +3435,8 @@ PEG.parser = (function(){
             var result0 = null;;
           };
         }
-        reportFailures = savedReportFailures;
-        if (reportFailures && result0 === null) {
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
           matchFailed("comment");
         }
         
@@ -3473,7 +3462,7 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result1 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"//\"");
           }
         }
@@ -3481,10 +3470,9 @@ PEG.parser = (function(){
           var result2 = [];
           var savedPos1 = pos;
           var savedPos2 = pos;
-          var savedReportFailuresVar0 = reportFailures;
-          reportFailures = false;
+          reportFailures++;
           var result6 = parse_eolChar();
-          reportFailures = savedReportFailuresVar0;
+          reportFailures--;
           if (result6 === null) {
             var result4 = '';
           } else {
@@ -3497,7 +3485,7 @@ PEG.parser = (function(){
               pos++;
             } else {
               var result5 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed('any character');
               }
             }
@@ -3515,10 +3503,9 @@ PEG.parser = (function(){
             result2.push(result3);
             var savedPos1 = pos;
             var savedPos2 = pos;
-            var savedReportFailuresVar0 = reportFailures;
-            reportFailures = false;
+            reportFailures++;
             var result6 = parse_eolChar();
-            reportFailures = savedReportFailuresVar0;
+            reportFailures--;
             if (result6 === null) {
               var result4 = '';
             } else {
@@ -3531,7 +3518,7 @@ PEG.parser = (function(){
                 pos++;
               } else {
                 var result5 = null;
-                if (reportFailures) {
+                if (reportFailures === 0) {
                   matchFailed('any character');
                 }
               }
@@ -3581,7 +3568,7 @@ PEG.parser = (function(){
           pos += 2;
         } else {
           var result1 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"/*\"");
           }
         }
@@ -3589,18 +3576,17 @@ PEG.parser = (function(){
           var result2 = [];
           var savedPos1 = pos;
           var savedPos2 = pos;
-          var savedReportFailuresVar0 = reportFailures;
-          reportFailures = false;
+          reportFailures++;
           if (input.substr(pos, 2) === "*/") {
             var result7 = "*/";
             pos += 2;
           } else {
             var result7 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"*/\"");
             }
           }
-          reportFailures = savedReportFailuresVar0;
+          reportFailures--;
           if (result7 === null) {
             var result5 = '';
           } else {
@@ -3613,7 +3599,7 @@ PEG.parser = (function(){
               pos++;
             } else {
               var result6 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed('any character');
               }
             }
@@ -3631,18 +3617,17 @@ PEG.parser = (function(){
             result2.push(result4);
             var savedPos1 = pos;
             var savedPos2 = pos;
-            var savedReportFailuresVar0 = reportFailures;
-            reportFailures = false;
+            reportFailures++;
             if (input.substr(pos, 2) === "*/") {
               var result7 = "*/";
               pos += 2;
             } else {
               var result7 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"*/\"");
               }
             }
-            reportFailures = savedReportFailuresVar0;
+            reportFailures--;
             if (result7 === null) {
               var result5 = '';
             } else {
@@ -3655,7 +3640,7 @@ PEG.parser = (function(){
                 pos++;
               } else {
                 var result6 = null;
-                if (reportFailures) {
+                if (reportFailures === 0) {
                   matchFailed('any character');
                 }
               }
@@ -3676,7 +3661,7 @@ PEG.parser = (function(){
               pos += 2;
             } else {
               var result3 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"*/\"");
               }
             }
@@ -3712,14 +3697,13 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportFailures = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         if (input.substr(pos, 1) === "\n") {
           var result5 = "\n";
           pos += 1;
         } else {
           var result5 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("\"\\n\"");
           }
         }
@@ -3731,7 +3715,7 @@ PEG.parser = (function(){
             pos += 2;
           } else {
             var result4 = null;
-            if (reportFailures) {
+            if (reportFailures === 0) {
               matchFailed("\"\\r\\n\"");
             }
           }
@@ -3743,7 +3727,7 @@ PEG.parser = (function(){
               pos += 1;
             } else {
               var result3 = null;
-              if (reportFailures) {
+              if (reportFailures === 0) {
                 matchFailed("\"\\r\"");
               }
             }
@@ -3755,7 +3739,7 @@ PEG.parser = (function(){
                 pos += 1;
               } else {
                 var result2 = null;
-                if (reportFailures) {
+                if (reportFailures === 0) {
                   matchFailed("\"\\u2028\"");
                 }
               }
@@ -3767,7 +3751,7 @@ PEG.parser = (function(){
                   pos += 1;
                 } else {
                   var result1 = null;
-                  if (reportFailures) {
+                  if (reportFailures === 0) {
                     matchFailed("\"\\u2029\"");
                   }
                 }
@@ -3780,8 +3764,8 @@ PEG.parser = (function(){
             };
           };
         }
-        reportFailures = savedReportFailures;
-        if (reportFailures && result0 === null) {
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
           matchFailed("end of line");
         }
         
@@ -3806,7 +3790,7 @@ PEG.parser = (function(){
           pos++;
         } else {
           var result0 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("[\\n\\r\\u2028\\u2029]");
           }
         }
@@ -3828,19 +3812,18 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var savedReportFailures = reportFailures;
-        reportFailures = false;
+        reportFailures++;
         if (input.substr(pos).match(/^[ 	\xA0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]/) !== null) {
           var result0 = input.charAt(pos);
           pos++;
         } else {
           var result0 = null;
-          if (reportFailures) {
+          if (reportFailures === 0) {
             matchFailed("[ 	\\xA0\\uFEFF\\u1680\\u180E\\u2000-\\u200A\\u202F\\u205F\\u3000]");
           }
         }
-        reportFailures = savedReportFailures;
-        if (reportFailures && result0 === null) {
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
           matchFailed("whitespace");
         }
         
