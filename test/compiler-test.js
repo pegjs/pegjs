@@ -150,7 +150,7 @@ test("actions", function() {
   parses(actionKnowsPositionParser, "abc", 0);
 
   var actionKnowsEndPositionParser = PEG.buildParser(
-    'start = [a-e]* { return _end; }'
+    'start = "a" "b" [c-e]* { return _end; }'
   );
   parses(actionKnowsEndPositionParser, "abcde", 5);
 
@@ -158,6 +158,21 @@ test("actions", function() {
     'start = [a-d]* { return _match; }'
   );
   parses(actionKnowsMatchParser, "abcd", "abcd");
+
+  var actionKnowsPositionInsideParser = PEG.buildParser(
+    'start = [a-c]* ([d-f]* { return _pos; })'
+  );
+  parses(actionKnowsPositionInsideParser, "acdef", [["a", "c"], 2]);
+
+  var actionKnowsEndPositionInsideParser = PEG.buildParser(
+    'start = "e" "d" ([bc]* { return _end; }) "a"'
+  );
+  parses(actionKnowsEndPositionInsideParser, "edcba", ["e", "d", 4, "a"]);
+
+  var actionKnowsMatchInsideParser = PEG.buildParser(
+    'start = [vad]* ([tier]* { return _match; }) "s" [temn]*'
+  );
+  parses(actionKnowsMatchInsideParser, "advertisment", [["a","d","v"], "erti", "s", ["m","e","n","t"]]);
 });
 
 test("initializer", function() {

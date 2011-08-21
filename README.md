@@ -196,6 +196,8 @@ The action is a piece of JavaScript code that is executed as if it was inside a 
 
 The code inside the action has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the action code must be balanced.
 
+Also, as a temporary solution for your ease, there are `_pos` (a start of expression match), `_end` (an end of expression match), and `_match` variables added. Currently they are not tested a lot, so in some complex cases they may contain not the values you expect.
+
 #### *expression<sub>1</sub>* / *expression<sub>2</sub>* / ... / *expression<sub>n</sub>*
 
 Try to match the first expression, if it does not succeed, try the second one, etc. Return the match result of the first successfully matched expression. If no expression matches, consider the match failed.
@@ -224,3 +226,4 @@ Development
 PEG.js is developed by [David Majda](http://majda.cz/) ([@dmajda](http://twitter.com/dmajda)). You are welcome to contribute code. Unless your contribution is really trivial you should get in touch with me first — this can prevent wasted effort on both sides. You can send code both as patch or GitHub pull request.
 
 Note that PEG.js is still very much work in progress. There are no compatibility guarantees until version 1.0.
+

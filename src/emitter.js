@@ -644,12 +644,13 @@ PEG.compiler.emitter = function(ast) {
         var actualParams = [];
       }
 
+      // may be add in plain way to the expression function code?
       formalParams.push('_pos');
       actualParams.push(savedPosVar); // start position
       formalParams.push('_end');
-      actualParams.push('pos'); // due to closure this variable will refrect actual _end
+      actualParams.push('pos'); // due to closure this variable will refrect an actual _end
       formalParams.push('_match');
-      actualParams.push('input.substr(' + savedPosVar + ', pos)'); // may be not a very fast thing
+      actualParams.push('input.substr('+savedPosVar+',pos-'+savedPosVar+')'); // may be not a very fast thing
 
       return formatCode(
         "var ${savedPosVar} = pos;",
