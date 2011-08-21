@@ -99,7 +99,7 @@ test("one or more expressions", function() {
 });
 
 test("actions", function() {
-  var sys_args = 3;
+  var sys_args = 0;
 
   var singleElementUnlabeledParser = PEG.buildParser(
     'start = "a" { return arguments.length; }'

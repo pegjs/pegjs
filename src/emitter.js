@@ -644,19 +644,16 @@ PEG.compiler.emitter = function(ast) {
         var actualParams = [];
       }
 
-      // may be add in plain way to the expression function code?
-      formalParams.push('_pos');
-      actualParams.push(savedPosVar); // start position
-      formalParams.push('_end');
-      actualParams.push('pos'); // due to closure this variable will refrect an actual _end
-      formalParams.push('_match');
-      actualParams.push('input.substr('+savedPosVar+',pos-'+savedPosVar+')'); // may be not a very fast thing
-
       return formatCode(
         "var ${savedPosVar} = pos;",
         "${expressionCode}",
         "var ${actionResultVar} = ${expressionResultVar} !== null",
-        "  ? (function(${formalParams}) {${actionCode}})(${actualParams})",
+        "  ? (function(${formalParams}) {", // wrap these vars into object?
+                "var _pos = ${savedPosVar};", // start position
+                "var _end = pos;", // due to closure this variable will refrect an actual _end
+                "var _match = input.substr(${savedPosVar},pos-${savedPosVar});",  // may be not a very fast thing
+                "${actionCode}",
+             "})(${actualParams})",
         "  : null;",
         "if (${actionResultVar} !== null) {",
         "  var ${resultVar} = ${actionResultVar};",
