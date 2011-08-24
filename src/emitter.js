@@ -669,7 +669,7 @@ PEG.compiler.emitter = function(ast) {
           expressionResultVar: expressionResultVar,
           actionCode:          node.code,
           actionResultVar:     actionResultVar,
-          formalParams:        (formalParams.length > 0) ? formalParams.join(", ") : "",
+          formalParams:        formalParams.join(", "),
           actualParams:        actualParams.join(", "),
           savedPosVar:         savedPosVar,
           resultVar:           resultVar
