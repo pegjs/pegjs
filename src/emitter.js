@@ -136,6 +136,7 @@ PEG.compiler.emitter = function(ast) {
         "      var rightmostFailuresPos = 0;",
         "      var rightmostFailuresExpected = [];",
         "      var cache = {};",
+        "      var _chunk = {'pos':-1,'end':-1,'match':''};",
         "      ",
         /* This needs to be in sync with |padLeft| in utils.js. */
         "      function padLeft(input, padding, length) {",
@@ -649,9 +650,9 @@ PEG.compiler.emitter = function(ast) {
       return formatCode(
         "var ${savedPosVar} = pos;",
         "${expressionCode}",
-        "var _chunk = {'pos': ${savedPosVar},",
-                      "'end': pos,",
-                      "'match': input.substr(${savedPosVar},pos-${savedPosVar})}",
+        "_chunk.pos = ${savedPosVar};",
+        "_chunk.end = pos;",
+        "_chunk.match = input.substr(${savedPosVar},pos-${savedPosVar});",
         "var ${actionResultVar} = ${expressionResultVar} !== null",
         "  ? (function(${formalParams}) {",
                 "${actionCode}",
