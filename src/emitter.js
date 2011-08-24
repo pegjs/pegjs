@@ -643,14 +643,17 @@ PEG.compiler.emitter = function(ast) {
         var actualParams = [];
       }
 
+      formalParams.push("_chunk");
+      actualParams.push("_chunk");
+
       return formatCode(
         "var ${savedPosVar} = pos;",
         "${expressionCode}",
+        "var _chunk = {'pos': ${savedPosVar},",
+                      "'end': pos,",
+                      "'match': input.substr(${savedPosVar},pos-${savedPosVar})}",
         "var ${actionResultVar} = ${expressionResultVar} !== null",
-        "  ? (function(${formalParams}) {", // wrap these vars into object?
-                "var _pos = ${savedPosVar};", // start position
-                "var _end = pos;", // due to closure this variable will refrect an actual _end
-                "var _match = input.substr(${savedPosVar},pos-${savedPosVar});",  // may be not a very fast thing
+        "  ? (function(${formalParams}) {",
                 "${actionCode}",
              "})(${actualParams})",
         "  : null;",
@@ -665,7 +668,7 @@ PEG.compiler.emitter = function(ast) {
           expressionResultVar: expressionResultVar,
           actionCode:          node.code,
           actionResultVar:     actionResultVar,
-          formalParams:        formalParams.join(", "),
+          formalParams:        (formalParams.length > 0) ? formalParams.join(", ") : "",
           actualParams:        actualParams.join(", "),
           savedPosVar:         savedPosVar,
           resultVar:           resultVar

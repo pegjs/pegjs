@@ -99,7 +99,7 @@ test("one or more expressions", function() {
 });
 
 test("actions", function() {
-  var sys_args = 0;
+  var sys_args = 1;
 
   var singleElementUnlabeledParser = PEG.buildParser(
     'start = "a" { return arguments.length; }'
@@ -145,32 +145,32 @@ test("actions", function() {
   doesNotParse(notAMatchParser, "b");
 
   var actionKnowsPositionParser = PEG.buildParser(
-    'start = [a-c]* { return _pos; }'
+    'start = [a-c]* { return _chunk.pos; }'
   );
   parses(actionKnowsPositionParser, "abc", 0);
 
   var actionKnowsEndPositionParser = PEG.buildParser(
-    'start = "a" "b" [c-e]* { return _end; }'
+    'start = "a" "b" [c-e]* { return _chunk.end; }'
   );
   parses(actionKnowsEndPositionParser, "abcde", 5);
 
   var actionKnowsMatchParser = PEG.buildParser(
-    'start = [a-d]* { return _match; }'
+    'start = [a-d]* { return _chunk.match; }'
   );
   parses(actionKnowsMatchParser, "abcd", "abcd");
 
   var actionKnowsPositionInsideParser = PEG.buildParser(
-    'start = [a-c]* ([d-f]* { return _pos; })'
+    'start = [a-c]* ([d-f]* { return _chunk.pos; })'
   );
   parses(actionKnowsPositionInsideParser, "acdef", [["a", "c"], 2]);
 
   var actionKnowsEndPositionInsideParser = PEG.buildParser(
-    'start = "e" "d" ([bc]* { return _end; }) "a"'
+    'start = "e" "d" ([bc]* { return _chunk.end; }) "a"'
   );
   parses(actionKnowsEndPositionInsideParser, "edcba", ["e", "d", 4, "a"]);
 
   var actionKnowsMatchInsideParser = PEG.buildParser(
-    'start = [vad]* ([tier]* { return _match; }) "s" [temn]*'
+    'start = [vad]* ([tier]* { return _chunk.match; }) "s" [temn]*'
   );
   parses(actionKnowsMatchInsideParser, "advertisment", [["a","d","v"], "erti", "s", ["m","e","n","t"]]);
 });
