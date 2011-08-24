@@ -172,11 +172,15 @@ The predicate is a piece of JavaScript code that is executed as if it was inside
 
 The code inside the predicate has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the predicate code must be balanced.
 
+Also, there is a `_chunk` special variable you have access to: it contains a properties like `_chunk.pos` (a start of expression match), `_chunk.end` (an end of expression match), and `_chunk.match` (the input string part that matched the expression). Currently they are not tested a lot, so in some complex cases they may contain not the values you expect, please report issues on those.
+
 #### ! { *predicate* }
 
 The predicate is a piece of JavaScript code that is executed as if it was inside a function. It should return some JavaScript value using the `return` statement. If the returned value evaluates to `false` in boolean context, just return an empty string and do not advance the parser position; otherwise consider the match failed.
 
 The code inside the predicate has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the predicate code must be balanced.
+
+Also, there is a `_chunk` special variable you have access to: it contains a properties like `_chunk.pos` (a start of expression match), `_chunk.end` (an end of expression match), and `_chunk.match` (the input string part that matched the expression). Currently they are not tested a lot, so in some complex cases they may contain not the values you expect, please report issues on those.
 
 #### *label* : *expression*
 
@@ -196,7 +200,7 @@ The action is a piece of JavaScript code that is executed as if it was inside a 
 
 The code inside the action has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the action code must be balanced.
 
-Also, as a temporary solution for your ease, there are `_pos` (a start of expression match), `_end` (an end of expression match), and `_match` variables added. Currently they are not tested a lot, so in some complex cases they may contain not the values you expect.
+Also, there is a `_chunk` special variable you have access to: it contains a properties like `_chunk.pos` (a start of expression match), `_chunk.end` (an end of expression match), and `_chunk.match` (the input string part that matched the expression). Currently they are not tested a lot, so in some complex cases they may contain not the values you expect, please report issues on those.
 
 #### *expression<sub>1</sub>* / *expression<sub>2</sub>* / ... / *expression<sub>n</sub>*
 
