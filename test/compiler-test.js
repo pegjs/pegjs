@@ -417,6 +417,28 @@ test("start rule", function() {
   );
 });
 
+test("start rule and options", function() {
+  var parser = PEG.buildParser([
+    'a = .* { return "alpha" + (options.str || ""); }',
+    'b = .* { return "beta" + (options.str || ""); }'
+  ].join("\n"));
+
+  /* Default start rule = the first one */
+  parses(parser, "whatever", "alpha");
+
+  /* Explicit specification of the start rule */
+  parsesWithStartRule(parser, "whatever", {startRule: "a", str: "-"}, "alpha-");
+  parsesWithStartRule(parser, "whatever", {startRule: "b", str: "-"}, "beta-");
+
+  /* Invalid rule name */
+  raises(
+    function() { parser.parse("whatever", "c") },
+    function(e) {
+      return e instanceof Error && e.message === "Invalid rule name: \"c\".";
+    }
+  );
+});
+
 /*
  * Following examples are from Wikipedia, see
  * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
