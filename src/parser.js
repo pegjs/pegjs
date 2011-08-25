@@ -8,7 +8,8 @@ PEG.parser = (function(){
      * which the parser was generated (see |PEG.buildParser|). If the parsing is
      * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.
      */
-    parse: function(input, startRule) {
+    parse: function(input, options) {
+      var startRule = undefined;
       var parseFunctions = {
         "__": parse___,
         "action": parse_action,
@@ -67,6 +68,16 @@ PEG.parser = (function(){
         "zeroEscapeSequence": parse_zeroEscapeSequence
       };
       
+      if (options !== undefined) {
+        if (typeof options == 'string') {
+          startRule = options;
+          options = {};
+        } else {
+          startRule = options.startRule;
+        }
+      } else {
+        options = {};
+      }
       if (startRule !== undefined) {
         if (parseFunctions[startRule] === undefined) {
           throw new Error("Invalid rule name: " + quote(startRule) + ".");
@@ -932,7 +943,14 @@ PEG.parser = (function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(braced) { return braced.substr(1, braced.length - 2); })(result1[0])
+          ? (function(braced) {
+                  var res = braced.substr(1, braced.length - 2);
+                  try {
+                      return (options.action_transform ? options.action_transform(res) : res);
+                  } catch (e) {
+                      throw new this.SyntaxError("Action code failed to compile: '" + e.toString() + "' in expression\n" + res + "\n");
+                  }
+              })(result1[0])
           : null;
         reportMatchFailures = savedReportMatchFailures;
         if (reportMatchFailures && result0 === null) {

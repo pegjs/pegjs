@@ -19,8 +19,8 @@ var PEG = {
    * errors are detected during the generation and some may protrude to the
    * generated parser and cause its malfunction.
    */
-  buildParser: function(grammar) {
-    return PEG.compiler.compile(PEG.parser.parse(grammar));
+  buildParser: function(grammar, options) {
+    return PEG.compiler.compile(PEG.parser.parse(grammar, options));
   }
 };
 

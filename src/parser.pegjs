@@ -149,7 +149,14 @@ primary
 /* "Lexical" elements */
 
 action "action"
-  = braced:braced __ { return braced.substr(1, braced.length - 2); }
+  = braced:braced __ {
+        var res = braced.substr(1, braced.length - 2);
+        try {
+            return (options.action_transform ? options.action_transform(res) : res);
+        } catch (e) {
+            throw new this.SyntaxError("Action code failed to compile: '" + e.toString() + "' in expression\n" + res + "\n");
+        }
+    }
 
 braced
   = "{" parts:(braced / nonBraceCharacter)* "}" {

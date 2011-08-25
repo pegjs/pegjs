@@ -23,6 +23,8 @@ function printHelp() {
   sys.puts("Options:");
   sys.puts("  -e, --export-var <variable>  name of the variable where the parser object");
   sys.puts("                               will be stored (default: \"module.exports\")");
+  sys.puts("  -a, --action-transform       a javascript function body expression that takes one 'input' argument.");
+  sys.puts("                               e.g: -a 'return require('coffee-script').compile(input);'");
   sys.puts("  -v, --version                print version information and exit");
   sys.puts("  -h, --help                   print help and exit");
 }
@@ -64,6 +66,7 @@ function readStream(inputStream, callback) {
 
 /* This makes the generated parser a CommonJS module by default. */
 var exportVar = "module.exports";
+var options = undefined;
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
@@ -74,6 +77,15 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the -e/--export-var option.");
       }
       exportVar = args[0];
+      break;
+
+    case "-a":
+    case "--action-transformer":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing the expression for the -a/--action-transformer option.");
+      }
+      options = { action_transform : eval ("(function (input) {" + args[0] + "})") };
       break;
 
     case "-v":
@@ -128,7 +140,7 @@ switch (args.length) {
 
 readStream(inputStream, function(input) {
   try {
-    var parser = PEG.buildParser(input);
+    var parser = PEG.buildParser(input, options);
   } catch (e) {
     if (e.line !== undefined && e.column !== undefined) {
       abort(e.line + ":" + e.column + ": " + e.message);

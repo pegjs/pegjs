@@ -589,4 +589,16 @@ test("parses whitespace", function() {
   parserParses('start =\u3000"abcd"', simpleGrammar);
 });
 
+test("other languages in actions", function () {
+  try {
+    var coco = require("coco");
+  } catch (e) {
+    /* can't run these tests */
+    return
+  }
+
+  /* The following action is invalid JS. If it parses, it means coco transformed it. */
+  ok(PEG.parser.parse ('start = "a" { code! }', { action_transform: coco.compile }));
+});
+
 })();
