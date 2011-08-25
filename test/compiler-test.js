@@ -528,4 +528,18 @@ test("nested comments", function() {
   );
 });
 
+test("variable literals", function() {
+  var parser = PEG.buildParser([
+	'{ var lit = "okay"; var obj = { yes: "%%", fun: function () { return "bop"; } } }',
+	'start = %lit { return "done"; }',
+	'  / % obj.yes { return "other" }',
+	'  / % obj.fun() { return "fun" }'
+  ].join("\n"));
+
+  parses(parser, "okay", "done");
+  parses(parser, "%%", "other");
+  parses(parser, "bop", "fun");
+  doesNotParse(parser, "ookay");
+});
+
 })();

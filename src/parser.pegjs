@@ -136,6 +136,12 @@ primary
         name: name
       };
     }
+  / percent expr:literal_expression {
+      return {
+	    type:  "literal",
+		expr:  expr
+	  }
+  }
   / value:literal {
       return {
         type:  "literal",
@@ -173,7 +179,10 @@ star      = "*" __ { return "*"; }
 plus      = "+" __ { return "+"; }
 lparen    = "(" __ { return "("; }
 rparen    = ")" __ { return ")"; }
+lbracket  = "[" __ { return "["; }
+rbracket  = "]" __ { return "]"; }
 dot       = "." __ { return "."; }
+percent	  = "%" __ { return "%"; }
 
 /*
  * Modelled after ECMA-262, 5th ed., 7.6, but much simplified:
@@ -193,6 +202,23 @@ dot       = "." __ { return "."; }
 identifier "identifier"
   = head:(letter / "_" / "$") tail:(letter / digit / "_" / "$")* __ {
       return head + tail.join("");
+    }
+
+literal_expression
+  = head:identifier tail:(dot i:identifier { return "." + i; } / bracketed_exp / parented_exp)* {
+      return [head].concat(tail || []).join("");
+    }
+
+bracketed_exp
+  = lbracket insides:(literal / "\\]" / bracketed_exp / parented_exp)* rbracket {
+	  insides = insides || [];
+	  return "[" + insides.join("") + "]";
+    }
+
+parented_exp
+  = lparen insides:(literal / "\\)" / bracketed_exp / parented_exp)* rparen {
+	  insides = insides || [];
+	  return "(" + insides.join("") + ")";
     }
 
 /*

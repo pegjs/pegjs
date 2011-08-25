@@ -675,23 +675,43 @@ PEG.compiler.emitter = function(ast) {
     },
 
     literal: function(node, resultVar) {
-      return formatCode(
-        "if (input.substr(pos, ${length}) === ${value|string}) {",
-        "  var ${resultVar} = ${value|string};",
-        "  pos += ${length};",
-        "} else {",
-        "  var ${resultVar} = null;",
-        "  if (reportMatchFailures) {",
-        "    matchFailed(${valueQuoted|string});",
-        "  }",
-        "}",
-        {
-          value:       node.value,
-          valueQuoted: quote(node.value),
-          length:      node.value.length,
-          resultVar:   resultVar
-        }
-      );
+	  if (node.value) {
+		return formatCode(
+		"if (input.substr(pos, ${length}) === ${value|string}) {",
+		"  var ${resultVar} = ${value|string};",
+		"  pos += ${length};",
+		"} else {",
+		"  var ${resultVar} = null;",
+		"  if (reportMatchFailures) {",
+		"    matchFailed(${valueQuoted|string});",
+		"  }",
+		"}",
+		{
+		  value:       node.value,
+		  valueQuoted: quote(node.value),
+		  length:      node.value.length,
+		  resultVar:   resultVar
+		}
+		);
+	  } else {
+		return formatCode(
+		"var __ref = ${expr};",
+		"if (input.substr(pos, __ref.length) == __ref) {",
+		"  var ${resultVar} = __ref;",
+		"  pos += __ref.length;",
+		"} else {",
+		"  var ${resultVar} = null;",
+		"  if (reportMatchFailures) {",
+		"    matchFailed(${valueQuoted|string});",
+		"  }",
+		"}",
+		{
+		  expr:       node.expr,
+		  valueQuoted: quote(node.expr),
+		  resultVar:   resultVar
+		}
+		);
+	  }
     },
 
     any: function(node, resultVar) {
