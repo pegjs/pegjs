@@ -66,7 +66,7 @@ char
   / "\\r"  { return "\r"; }
   / "\\t"  { return "\t"; }
   / "\\u" h1:hexDigit h2:hexDigit h3:hexDigit h4:hexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
+      return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
     }
 
 number "number"

@@ -293,7 +293,7 @@ nonascii
 
 unicode
   = "\\" h1:h h2:h? h3:h? h4:h? h5:h? h6:h? ("\r\n" / [ \t\r\n\f])? {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4 + h5 + h6));
+      return String.fromCharCode(parseInt(h1 + h2 + h3 + h4 + h5 + h6, 16));
     }
 
 escape
@@ -311,7 +311,7 @@ nmchar
   / escape
 
 integer
-  = digits:[0-9]+ { return parseInt(digits.join("")); }
+  = digits:[0-9]+ { return parseInt(digits.join("", 10)); }
 
 float
   = before:[0-9]* "." after:[0-9]+ {

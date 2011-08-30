@@ -240,7 +240,7 @@ SignedInteger
   = sign:[-+]? digits:DecimalDigits { return sign + digits; }
 
 HexIntegerLiteral
-  = "0" [xX] digits:HexDigit+ { return parseInt("0x" + digits.join("")); }
+  = "0" [xX] digits:HexDigit+ { return parseInt(digits.join("", 16)); }
 
 HexDigit
   = [0-9a-fA-F]
@@ -301,12 +301,12 @@ EscapeCharacter
 
 HexEscapeSequence
   = "x" h1:HexDigit h2:HexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2));
+      return String.fromCharCode(parseInt(h1 + h2, 16));
     }
 
 UnicodeEscapeSequence
   = "u" h1:HexDigit h2:HexDigit h3:HexDigit h4:HexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
+      return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
     }
 
 RegularExpressionLiteral "regular expression"
