@@ -134,9 +134,9 @@ PEG.compiler.emitter = function(ast, options) {
         "     */",
         "    parse: function(input, startRule) {",
         "      var pos = 0;",
-        "      var reportMatchFailures = true;",
-        "      var rightmostMatchFailuresPos = 0;",
-        "      var rightmostMatchFailuresExpected = [];",
+        "      var reportFailures = 0;", // 0 = report, anything > 0 = do not report
+        "      var rightmostFailuresPos = 0;",
+        "      var rightmostFailuresExpected = [];",
         "      var cache = {};",
         "      ",
         "      ${parseFunctionDefinitions}",
@@ -170,16 +170,10 @@ PEG.compiler.emitter = function(ast, options) {
               }
             ),
         /* the functions from utils.js aren't needed, if we parse the peg-parser itself */
-		!!options.selfParsing
-		  ? "      "
-		  : formatCode(
+        !!options.selfParsing
+          ? "      "
+          : formatCode(
               "      ",
-        "      var pos = 0;",
-        "      var reportFailures = 0;", // 0 = report, anything > 0 = do not report
-        "      var rightmostFailuresPos = 0;",
-        "      var rightmostFailuresExpected = [];",
-        "      var cache = {};",
-        "      ",
               /* This needs to be in sync with |padLeft| in utils.js. */
               "function padLeft(input, padding, length) {",
               "  var result = input;",
@@ -226,7 +220,7 @@ PEG.compiler.emitter = function(ast, options) {
               "    + '\"';",
               "}",
               ""
-		),
+		  ),
         "      function matchFailed(failure) {",
         "        if (pos < rightmostFailuresPos) {",
         "          return;",
@@ -708,15 +702,15 @@ PEG.compiler.emitter = function(ast, options) {
       }
 
       return formatCode(
-        "var ${savedPosVar} = pos;",
+        "${savedPosVar} = pos;",
         "${expressionCode}",
-        "var ${actionResultVar} = ${expressionResultVar} !== null",
+        "${actionResultVar} = ${expressionResultVar} !== null",
         "  ? (function(${formalParams}) {${actionCode}})(${actualParams})",
         "  : null;",
         "if (${actionResultVar} !== null) {",
-        "  var ${resultVar} = ${actionResultVar};",
+        "  ${resultVar} = ${actionResultVar};",
         "} else {",
-        "  var ${resultVar} = null;",
+        "  ${resultVar} = null;",
         "  pos = ${savedPosVar};",
         "}",
         {
