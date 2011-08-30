@@ -737,6 +737,15 @@ PEG.compiler.emitter = function(ast, options) {
     },
 
     literal: function(node, resultVar) {
+      if (node.value.length === 0) {
+        return formatCode(
+          "${resultVar} = ${value|string};",
+          {
+            value:       node.value,
+            resultVar:   resultVar
+          }
+        );
+      }
       return formatCode(
         "if (input.substr(pos, ${length}) === ${value|string}) {",
         "  ${resultVar} = ${value|string};",
