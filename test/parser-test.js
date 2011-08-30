@@ -154,7 +154,7 @@ var initializerGrammar = {
   type:        "grammar",
   initializer: initializer(" code "),
   rules: {
-    a: rule("a", null, literalAbcd),
+    a: rule("a", null, literalAbcd)
   },
   startRule:   "a"
 };
