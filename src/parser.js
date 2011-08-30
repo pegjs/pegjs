@@ -290,8 +290,7 @@ PEG.parser = (function(){
         result2 = result1 !== null
           ? (function(head, tail) {
                 if (tail.length > 0) {
-                  var alternatives = [head].concat(map(
-                      tail,
+                  var alternatives = [head].concat(tail.map(
                       function(element) { return element[1]; }
                   ));
                   return {
@@ -2562,10 +2561,10 @@ PEG.parser = (function(){
         }
         result2 = result1 !== null
           ? (function(inverted, parts) {
-                var partsConverted = map(parts, function(part) { return part.data; });
+                var partsConverted = parts.map(function(part) { return part.data; });
                 var rawText = "["
                   + inverted
-                  + map(parts, function(part) { return part.rawText; }).join("")
+                  + parts.map(function(part) { return part.rawText; }).join("")
                   + "]";
           
                 return {

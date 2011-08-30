@@ -37,7 +37,7 @@ PEG.compiler.emitter = function(ast, options) {
 	var vars;
 
     function interpolateVariablesInParts(parts) {
-      return map(parts, function(part) {
+      return parts.map(function(part) {
         return part.replace(
           /\$\{([a-zA-Z_][a-zA-Z0-9_]*)(\|([a-zA-Z_][a-zA-Z0-9_]*))?\}/g,
           function(match, name, dummy, filter) {
@@ -61,13 +61,13 @@ PEG.compiler.emitter = function(ast, options) {
     }
 
     function indentMultilineParts(parts) {
-      return map(parts, function(part) {
+      return parts.map(function(part) {
         if (!/\n/.test(part)) { return part; }
 
         var firstLineWhitespacePrefix = part.match(/^[ \t]*/)[0];
         var lines = part.split("\n");
         var linesIndented = [lines[0]].concat(
-          map(lines.slice(1), function(line) {
+          lines.slice(1).map(function(line) {
             return firstLineWhitespacePrefix + line;
           })
         );
@@ -500,7 +500,7 @@ PEG.compiler.emitter = function(ast, options) {
     sequence: function(node, resultVar) {
       var savedPosVar = UID.next("savedPos");
 
-      var elementResultVars = map(node.elements, function() {
+      var elementResultVars = node.elements.map(function() {
         return UID.next("result");
       });
 
@@ -776,7 +776,7 @@ PEG.compiler.emitter = function(ast, options) {
       if (node.parts.length > 0) {
         regexp = "/^["
           + (node.inverted ? "^" : "")
-          + map(node.parts, function(part) {
+          + node.parts.map(function(part) {
               return part instanceof Array
                 ? quoteForRegexpClass(part[0])
                   + "-"
