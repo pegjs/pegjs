@@ -14,7 +14,7 @@ PEG.compiler.checks = {
     function checkExpression(node) { check(node.expression); }
 
     function checkSubnodes(propertyName) {
-      return function(node) { each(node[propertyName], check); };
+      return function(node) { node[propertyName].forEach(check); };
     }
 
     var check = buildNodeVisitor({
@@ -78,7 +78,7 @@ PEG.compiler.checks = {
 
       choice:
         function(node, appliedRules) {
-          each(node.alternatives, function(alternative) {
+          node.alternatives.forEach(function(alternative) {
             check(alternative, appliedRules);
           });
         },

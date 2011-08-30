@@ -1,7 +1,7 @@
 grammar
   = __ initializer:initializer? rules:rule+ {
       var rulesConverted = {};
-      each(rules, function(rule) { rulesConverted[rule.name] = rule; });
+      rules.forEach(function(rule) { rulesConverted[rule.name] = rule; });
 
       return {
         type:        "grammar",

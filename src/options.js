@@ -47,7 +47,7 @@ function mergedOptions( ){
         return value.split(/\s+/g);
       } else if ( typeof value === "object" ) {
         if (value instanceof Array) {
-          each(value, function(v) {v = v + "";}); // string-array
+          value.forEach(function(v) {v = v + "";}); // string-array
 		  return value;
         }
       }

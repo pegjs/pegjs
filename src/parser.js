@@ -61,7 +61,7 @@ PEG.parser = (function(){
         result2 = result1 !== null
           ? (function(initializer, rules) {
                 var rulesConverted = {};
-                each(rules, function(rule) { rulesConverted[rule.name] = rule; });
+                rules.forEach(function(rule) { rulesConverted[rule.name] = rule; });
           
                 return {
                   type:        "grammar",
