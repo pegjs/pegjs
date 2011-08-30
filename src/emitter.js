@@ -39,8 +39,8 @@ PEG.compiler.emitter = function(ast, options) {
     function interpolateVariablesInParts(parts) {
       return parts.map(function(part) {
         return part.replace(
-          /\$\{([a-zA-Z_][a-zA-Z0-9_]*)(\|([a-zA-Z_][a-zA-Z0-9_]*))?\}/g,
-          function(match, name, dummy, filter) {
+          /\$\{([a-z_]\w*)(?:\|([a-z_]\w*))?\}/gi,
+          function(match, name, filter) {
             var value = vars[name];
             if (value === undefined) {
               throw new Error("Undefined variable: \"" + name + "\".");
