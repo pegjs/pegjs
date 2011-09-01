@@ -361,8 +361,8 @@ PEG.compiler.emitter = function(ast, options) {
         posIndex:    0
       };
 
-      var resultVars = range(node.resultStackDepth).map(resultVar);
-      var posVars    = range(node.posStackDepth).map(posVar);
+      var resultVars = range(node.resultStackDepth - 1).map(resultVar);
+      var posVars    = range(node.posStackDepth - 1).map(posVar);
       var setReportFailuresCode, restoreReportFailuresCode, reportFailureCode;
 
       var resultVarsCode = resultVars.length > 0 ? "var " + resultVars.join(", ") + ";" : "";
