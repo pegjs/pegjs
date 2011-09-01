@@ -168,6 +168,20 @@ if (!Array.prototype.map) {
   };      
 }
 
+/* Like Python's |range|, but without |step|. */
+function range(start, stop) {
+  if (stop === undefined) {
+    stop = start;
+    start = 0;
+  }
+
+  var result = new Array(Math.max(0, stop - start));
+  for (var i = 0, j = start; j < stop; i++, j++) {
+    result[i] = j;
+  }
+  return result;
+}
+
 function contains(array, value) {
   return array.indexOf(value) !== -1;
 }

@@ -12,7 +12,8 @@ PEG.compiler = {
     ];
 
     var PASS_NAMES = [
-      "proxyRules"
+      "proxyRules",
+      "stackDepths"
     ];
     
     var i;
