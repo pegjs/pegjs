@@ -747,7 +747,7 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        "if (input.substr(pos).match(${regexp}) !== null) {",
+        "if (${regexp}.test(input.substr(pos))) {",
         "  ${resultVar} = input.charAt(pos);",
         "  pos++;",
         "} else {",
