@@ -12,8 +12,15 @@ prepare() {
   jake build
 }
 
-measure_speed() {
+run_benchmark() {
   echo $(jake benchmark | awk 'BEGIN { FS = " *│ *" } /Total/ { split($5, a, " "); print a[1] }')
+}
+
+measure_speed() {
+  bc <<-EOT
+    scale = 2
+    ($(run_benchmark) + $(run_benchmark) + $(run_benchmark) + $(run_benchmark) + $(run_benchmark)) / 5
+EOT
 }
 
 measure_size() {
