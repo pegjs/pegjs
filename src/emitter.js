@@ -668,9 +668,9 @@ PEG.compiler.emitter = function(ast) {
       return formatCode(
         "${posVar} = pos;",
         "${expressionCode}",
-        "_chunk.pos = ${savedPosVar};",
+        "_chunk.pos = ${posVar};",
         "_chunk.end = pos;",
-        "_chunk.match = input.substr(${savedPosVar},pos-${savedPosVar});",
+        "_chunk.match = input.substr(${posVar},pos-${posVar});",
         "if (${resultVar} !== null) {",
         "  ${resultVar} = (function(${formalParams}) {${actionCode}})(${actualParams});",
         "}",
