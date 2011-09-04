@@ -1006,7 +1006,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "{") {
+        if (input.charAt(pos) === "{") {
           result0 = "{";
           pos += 1;
         } else {
@@ -1031,7 +1031,7 @@ PEG.parser = (function(){
             }
           }
           if (result1 !== null) {
-            if (input.substr(pos, 1) === "}") {
+            if (input.charAt(pos) === "}") {
               result2 = "}";
               pos += 1;
             } else {
@@ -1156,7 +1156,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "=") {
+        if (input.charAt(pos) === "=") {
           result0 = "=";
           pos += 1;
         } else {
@@ -1207,7 +1207,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === ":") {
+        if (input.charAt(pos) === ":") {
           result0 = ":";
           pos += 1;
         } else {
@@ -1258,7 +1258,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === ";") {
+        if (input.charAt(pos) === ";") {
           result0 = ";";
           pos += 1;
         } else {
@@ -1309,7 +1309,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "/") {
+        if (input.charAt(pos) === "/") {
           result0 = "/";
           pos += 1;
         } else {
@@ -1360,7 +1360,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "&") {
+        if (input.charAt(pos) === "&") {
           result0 = "&";
           pos += 1;
         } else {
@@ -1411,7 +1411,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "!") {
+        if (input.charAt(pos) === "!") {
           result0 = "!";
           pos += 1;
         } else {
@@ -1462,7 +1462,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "?") {
+        if (input.charAt(pos) === "?") {
           result0 = "?";
           pos += 1;
         } else {
@@ -1513,7 +1513,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "*") {
+        if (input.charAt(pos) === "*") {
           result0 = "*";
           pos += 1;
         } else {
@@ -1564,7 +1564,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "+") {
+        if (input.charAt(pos) === "+") {
           result0 = "+";
           pos += 1;
         } else {
@@ -1615,7 +1615,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "(") {
+        if (input.charAt(pos) === "(") {
           result0 = "(";
           pos += 1;
         } else {
@@ -1666,7 +1666,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === ")") {
+        if (input.charAt(pos) === ")") {
           result0 = ")";
           pos += 1;
         } else {
@@ -1717,7 +1717,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === ".") {
+        if (input.charAt(pos) === ".") {
           result0 = ".";
           pos += 1;
         } else {
@@ -1770,7 +1770,7 @@ PEG.parser = (function(){
         pos1 = pos;
         result0 = parse_letter();
         if (result0 === null) {
-          if (input.substr(pos, 1) === "_") {
+          if (input.charAt(pos) === "_") {
             result0 = "_";
             pos += 1;
           } else {
@@ -1780,7 +1780,7 @@ PEG.parser = (function(){
             }
           }
           if (result0 === null) {
-            if (input.substr(pos, 1) === "$") {
+            if (input.charAt(pos) === "$") {
               result0 = "$";
               pos += 1;
             } else {
@@ -1798,7 +1798,7 @@ PEG.parser = (function(){
           if (result2 === null) {
             result2 = parse_digit();
             if (result2 === null) {
-              if (input.substr(pos, 1) === "_") {
+              if (input.charAt(pos) === "_") {
                 result2 = "_";
                 pos += 1;
               } else {
@@ -1808,7 +1808,7 @@ PEG.parser = (function(){
                 }
               }
               if (result2 === null) {
-                if (input.substr(pos, 1) === "$") {
+                if (input.charAt(pos) === "$") {
                   result2 = "$";
                   pos += 1;
                 } else {
@@ -1827,7 +1827,7 @@ PEG.parser = (function(){
             if (result2 === null) {
               result2 = parse_digit();
               if (result2 === null) {
-                if (input.substr(pos, 1) === "_") {
+                if (input.charAt(pos) === "_") {
                   result2 = "_";
                   pos += 1;
                 } else {
@@ -1837,7 +1837,7 @@ PEG.parser = (function(){
                   }
                 }
                 if (result2 === null) {
-                  if (input.substr(pos, 1) === "$") {
+                  if (input.charAt(pos) === "$") {
                     result2 = "$";
                     pos += 1;
                   } else {
@@ -1950,7 +1950,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "\"") {
+        if (input.charAt(pos) === "\"") {
           result0 = "\"";
           pos += 1;
         } else {
@@ -1967,7 +1967,7 @@ PEG.parser = (function(){
             result2 = parse_doubleQuotedCharacter();
           }
           if (result1 !== null) {
-            if (input.substr(pos, 1) === "\"") {
+            if (input.charAt(pos) === "\"") {
               result2 = "\"";
               pos += 1;
             } else {
@@ -2061,7 +2061,7 @@ PEG.parser = (function(){
         pos1 = pos;
         pos2 = pos;
         reportFailures++;
-        if (input.substr(pos, 1) === "\"") {
+        if (input.charAt(pos) === "\"") {
           result0 = "\"";
           pos += 1;
         } else {
@@ -2071,7 +2071,7 @@ PEG.parser = (function(){
           }
         }
         if (result0 === null) {
-          if (input.substr(pos, 1) === "\\") {
+          if (input.charAt(pos) === "\\") {
             result0 = "\\";
             pos += 1;
           } else {
@@ -2142,7 +2142,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "'") {
+        if (input.charAt(pos) === "'") {
           result0 = "'";
           pos += 1;
         } else {
@@ -2159,7 +2159,7 @@ PEG.parser = (function(){
             result2 = parse_singleQuotedCharacter();
           }
           if (result1 !== null) {
-            if (input.substr(pos, 1) === "'") {
+            if (input.charAt(pos) === "'") {
               result2 = "'";
               pos += 1;
             } else {
@@ -2253,7 +2253,7 @@ PEG.parser = (function(){
         pos1 = pos;
         pos2 = pos;
         reportFailures++;
-        if (input.substr(pos, 1) === "'") {
+        if (input.charAt(pos) === "'") {
           result0 = "'";
           pos += 1;
         } else {
@@ -2263,7 +2263,7 @@ PEG.parser = (function(){
           }
         }
         if (result0 === null) {
-          if (input.substr(pos, 1) === "\\") {
+          if (input.charAt(pos) === "\\") {
             result0 = "\\";
             pos += 1;
           } else {
@@ -2334,7 +2334,7 @@ PEG.parser = (function(){
         reportFailures++;
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "[") {
+        if (input.charAt(pos) === "[") {
           result0 = "[";
           pos += 1;
         } else {
@@ -2344,7 +2344,7 @@ PEG.parser = (function(){
           }
         }
         if (result0 !== null) {
-          if (input.substr(pos, 1) === "^") {
+          if (input.charAt(pos) === "^") {
             result1 = "^";
             pos += 1;
           } else {
@@ -2370,7 +2370,7 @@ PEG.parser = (function(){
               }
             }
             if (result2 !== null) {
-              if (input.substr(pos, 1) === "]") {
+              if (input.charAt(pos) === "]") {
                 result3 = "]";
                 pos += 1;
               } else {
@@ -2451,7 +2451,7 @@ PEG.parser = (function(){
         pos1 = pos;
         result0 = parse_classCharacter();
         if (result0 !== null) {
-          if (input.substr(pos, 1) === "-") {
+          if (input.charAt(pos) === "-") {
             result1 = "-";
             pos += 1;
           } else {
@@ -2595,7 +2595,7 @@ PEG.parser = (function(){
         pos1 = pos;
         pos2 = pos;
         reportFailures++;
-        if (input.substr(pos, 1) === "]") {
+        if (input.charAt(pos) === "]") {
           result0 = "]";
           pos += 1;
         } else {
@@ -2605,7 +2605,7 @@ PEG.parser = (function(){
           }
         }
         if (result0 === null) {
-          if (input.substr(pos, 1) === "\\") {
+          if (input.charAt(pos) === "\\") {
             result0 = "\\";
             pos += 1;
           } else {
@@ -2676,7 +2676,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "\\") {
+        if (input.charAt(pos) === "\\") {
           result0 = "\\";
           pos += 1;
         } else {
@@ -2690,7 +2690,7 @@ PEG.parser = (function(){
           reportFailures++;
           result1 = parse_digit();
           if (result1 === null) {
-            if (input.substr(pos, 1) === "x") {
+            if (input.charAt(pos) === "x") {
               result1 = "x";
               pos += 1;
             } else {
@@ -2700,7 +2700,7 @@ PEG.parser = (function(){
               }
             }
             if (result1 === null) {
-              if (input.substr(pos, 1) === "u") {
+              if (input.charAt(pos) === "u") {
                 result1 = "u";
                 pos += 1;
               } else {
@@ -2974,7 +2974,7 @@ PEG.parser = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (input.substr(pos, 1) === "\\") {
+        if (input.charAt(pos) === "\\") {
           result0 = "\\";
           pos += 1;
         } else {
@@ -3493,7 +3493,7 @@ PEG.parser = (function(){
         var pos0;
         
         reportFailures++;
-        if (input.substr(pos, 1) === "\n") {
+        if (input.charAt(pos) === "\n") {
           result0 = "\n";
           pos += 1;
         } else {
@@ -3513,7 +3513,7 @@ PEG.parser = (function(){
             }
           }
           if (result0 === null) {
-            if (input.substr(pos, 1) === "\r") {
+            if (input.charAt(pos) === "\r") {
               result0 = "\r";
               pos += 1;
             } else {
@@ -3523,7 +3523,7 @@ PEG.parser = (function(){
               }
             }
             if (result0 === null) {
-              if (input.substr(pos, 1) === "\u2028") {
+              if (input.charAt(pos) === "\u2028") {
                 result0 = "\u2028";
                 pos += 1;
               } else {
@@ -3533,7 +3533,7 @@ PEG.parser = (function(){
                 }
               }
               if (result0 === null) {
-                if (input.substr(pos, 1) === "\u2029") {
+                if (input.charAt(pos) === "\u2029") {
                   result0 = "\u2029";
                   pos += 1;
                 } else {

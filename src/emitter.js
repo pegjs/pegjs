@@ -692,8 +692,13 @@ PEG.compiler.emitter = function(ast) {
     },
 
     literal: function(node, context) {
+      var length = node.value.length;
+      var extractSubstrCode = length === 1
+        ? "input.charAt(pos)"
+        : "input.substr(pos, " + length + ")";
+
       return formatCode(
-        "if (input.substr(pos, ${length}) === ${value|string}) {",
+        "if (${extractSubstrCode} === ${value|string}) {",
         "  ${resultVar} = ${value|string};",
         "  pos += ${length};",
         "} else {",
@@ -703,10 +708,11 @@ PEG.compiler.emitter = function(ast) {
         "  }",
         "}",
         {
-          value:       node.value,
-          valueQuoted: quote(node.value),
-          length:      node.value.length,
-          resultVar:   resultVar(context.resultIndex)
+          extractSubstrCode: extractSubstrCode,
+          value:             node.value,
+          valueQuoted:       quote(node.value),
+          length:            length,
+          resultVar:         resultVar(context.resultIndex)
         }
       );
     },
