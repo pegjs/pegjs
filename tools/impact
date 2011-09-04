@@ -1,0 +1,116 @@
+#!/bin/sh
+
+# Measures impact of a Git commit (or multiple commits) on generated parsers'
+# speed and size. Makes sense to use only on PEG.js Git repository checkout.
+
+set -e
+
+# Measurement
+
+prepare() {
+  git checkout --quiet "$1"
+  jake build
+}
+
+run_benchmark() {
+  echo $(jake benchmark | awk 'BEGIN { FS = " *│ *" } /Total/ { split($5, a, " "); print a[1] }')
+}
+
+measure_speed() {
+  bc <<-EOT
+    scale = 2
+    ($(run_benchmark) + $(run_benchmark) + $(run_benchmark) + $(run_benchmark) + $(run_benchmark)) / 5
+EOT
+}
+
+measure_size() {
+  for file in examples/*.pegjs; do
+    bin/pegjs "$file"
+  done
+
+  echo $(cat examples/*.js | wc -c)
+
+  rm examples/*.js
+}
+
+difference() {
+  bc <<-EOT
+    scale = 4
+    ($2 / $1 - 1) * 100
+EOT
+}
+
+# Helpers
+
+print_results() {
+  echo
+
+  echo "Speed impact"
+  echo "------------"
+  echo "Before:     $1 kB/s"
+  echo "After:      $2 kB/s"
+  printf "Difference: %0.2f%%\n" $(difference $1 $2)
+
+  echo
+
+  echo "Size impact"
+  echo "-----------"
+  echo "Before:     $3 b"
+  echo "After:      $4 b"
+  printf "Difference: %0.2f%%\n" $(difference $3 $4)
+
+  echo
+
+  echo "(Measured by /tools/impact with Node.js $(node --version) on $(uname --operating-system --machine).)"
+}
+
+print_usage() {
+  echo "Usage:"
+  echo "  $0 <commit>"
+  echo "  $0 <commit_before> <commit_after>"
+  echo
+  echo "Measures impact of a Git commit (or multiple commits) on generated parsers'"
+  echo "speed and size. Makes sense to use only on PEG.js Git repository checkout."
+}
+
+cd_to_root() {
+  if [ -L "$0" ]; then
+    THIS_FILE=$(readlink "$0")
+  else
+    THIS_FILE="$0"
+  fi
+  cd "$(dirname "$THIS_FILE")/.."
+}
+
+exit_failure() {
+  exit 1
+}
+
+# Main
+
+if [ $# -eq 1 ]; then
+  commit_before="$1~1"
+  commit_after="$1"
+elif [ $# -eq 2 ]; then
+  commit_before="$1"
+  commit_after="$2"
+else
+  print_usage
+  exit_failure
+fi
+
+cd_to_root
+
+echo -n "Measuring commit $commit_before..."
+prepare "$commit_before"
+speed1=$(measure_speed)
+size1=$(measure_size)
+echo " OK"
+
+echo -n "Measuring commit $commit_after..."
+prepare "$commit_after"
+speed2=$(measure_speed)
+size2=$(measure_size)
+echo " OK"
+
+print_results $speed1 $speed2 $size1 $size2

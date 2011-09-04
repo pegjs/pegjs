@@ -1,3 +1,17 @@
+/* Like Python's |range|, but without |step|. */
+function range(start, stop) {
+  if (stop === undefined) {
+    stop = start;
+    start = 0;
+  }
+
+  var result = new Array(Math.max(0, stop - start));
+  for (var i = 0, j = start; j < stop; i++, j++) {
+    result[i] = j;
+  }
+  return result;
+}
+
 function contains(array, value) {
   /*
    * Stupid IE does not have Array.prototype.indexOf, otherwise this function
@@ -15,7 +29,7 @@ function contains(array, value) {
 function each(array, callback) {
   var length = array.length;
   for (var i = 0; i < length; i++) {
-    callback(array[i]);
+    callback(array[i], i);
   }
 }
 
@@ -23,7 +37,7 @@ function map(array, callback) {
   var result = [];
   var length = array.length;
   for (var i = 0; i < length; i++) {
-    result[i] = callback(array[i]);
+    result[i] = callback(array[i], i);
   }
   return result;
 }
