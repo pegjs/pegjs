@@ -1123,7 +1123,7 @@ PEG.parser = (function(){
         var pos0;
         
         
-        if (/^[^{}]/.test(input.substr(pos))) {
+        if (/^[^{}]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
@@ -3023,7 +3023,7 @@ PEG.parser = (function(){
         var pos0;
         
         
-        if (/^[0-9]/.test(input.substr(pos))) {
+        if (/^[0-9]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
@@ -3054,7 +3054,7 @@ PEG.parser = (function(){
         var pos0;
         
         
-        if (/^[0-9a-fA-F]/.test(input.substr(pos))) {
+        if (/^[0-9a-fA-F]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
@@ -3112,7 +3112,7 @@ PEG.parser = (function(){
         var pos0;
         
         
-        if (/^[a-z]/.test(input.substr(pos))) {
+        if (/^[a-z]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
@@ -3143,7 +3143,7 @@ PEG.parser = (function(){
         var pos0;
         
         
-        if (/^[A-Z]/.test(input.substr(pos))) {
+        if (/^[A-Z]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
@@ -3571,7 +3571,7 @@ PEG.parser = (function(){
         var pos0;
         
         
-        if (/^[\n\r\u2028\u2029]/.test(input.substr(pos))) {
+        if (/^[\n\r\u2028\u2029]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
@@ -3602,7 +3602,7 @@ PEG.parser = (function(){
         var pos0;
         
         reportFailures++;
-        if (/^[ 	\xA0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]/.test(input.substr(pos))) {
+        if (/^[ 	\xA0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
