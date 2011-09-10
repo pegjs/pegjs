@@ -700,12 +700,21 @@ PEG.compiler.emitter = function(ast) {
 
     literal: function(node, context) {
       var length = node.value.length;
-      var extractSubstrCode = length === 1
-        ? "input.charAt(pos)"
-        : "input.substr(pos, " + length + ")";
+      var testCode = length === 1
+        ? formatCode(
+            "input.charCodeAt(pos) === ${valueCharCode}",
+            { valueCharCode: node.value.charCodeAt(0) }
+          )
+        : formatCode(
+            "input.substr(pos, ${length}) === ${value|string}",
+            {
+              value:  node.value,
+              length: length
+            }
+          );
 
       return formatCode(
-        "if (${extractSubstrCode} === ${value|string}) {",
+        "if (${testCode}) {",
         "  ${resultVar} = ${value|string};",
         "  pos += ${length};",
         "} else {",
@@ -715,11 +724,11 @@ PEG.compiler.emitter = function(ast) {
         "  }",
         "}",
         {
-          extractSubstrCode: extractSubstrCode,
-          value:             node.value,
-          valueQuoted:       quote(node.value),
-          length:            length,
-          resultVar:         resultVar(context.resultIndex)
+          testCode:    testCode,
+          value:       node.value,
+          valueQuoted: quote(node.value),
+          length:      length,
+          resultVar:   resultVar(context.resultIndex)
         }
       );
     },
@@ -760,7 +769,7 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        "if (${regexp}.test(input.substr(pos))) {",
+        "if (${regexp}.test(input.charAt(pos))) {",
         "  ${resultVar} = input.charAt(pos);",
         "  pos++;",
         "} else {",
