@@ -8,7 +8,7 @@ grammar
         initializer: initializer !== "" ? initializer : null,
         rules:       rulesConverted,
         startRule:   rules[0].name
-      }
+      };
     }
 
 initializer
@@ -42,7 +42,7 @@ choice
         return {
           type:         "choice",
           alternatives: alternatives
-        }
+        };
       } else {
         return head;
       }
@@ -259,7 +259,7 @@ classCharacterRange
         data:    [begin.data, end.data],
         // FIXME: Get the raw text from the input directly.
         rawText: begin.rawText + "-" + end.rawText
-      }
+      };
     }
 
 classCharacter
@@ -290,7 +290,7 @@ simpleEscapeSequence
         .replace("n", "\n")
         .replace("r", "\r")
         .replace("t", "\t")
-        .replace("v", "\x0B") // IE does not recognize "\v".
+        .replace("v", "\x0B"); // IE does not recognize "\v".
     }
 
 zeroEscapeSequence

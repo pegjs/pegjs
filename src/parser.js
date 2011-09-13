@@ -190,7 +190,7 @@ PEG.parser = (function(){
                   initializer: initializer !== "" ? initializer : null,
                   rules:       rulesConverted,
                   startRule:   rules[0].name
-                }
+                };
               })(result0[1], result0[2]);
         }
         if (result0 === null) {
@@ -404,7 +404,7 @@ PEG.parser = (function(){
                   return {
                     type:         "choice",
                     alternatives: alternatives
-                  }
+                  };
                 } else {
                   return head;
                 }
@@ -2490,7 +2490,7 @@ PEG.parser = (function(){
                   data:    [begin.data, end.data],
                   // FIXME: Get the raw text from the input directly.
                   rawText: begin.rawText + "-" + end.rawText
-                }
+                };
               })(result0[0], result0[2]);
         }
         if (result0 === null) {
@@ -2756,7 +2756,7 @@ PEG.parser = (function(){
                   .replace("n", "\n")
                   .replace("r", "\r")
                   .replace("t", "\t")
-                  .replace("v", "\x0B") // IE does not recognize "\v".
+                  .replace("v", "\x0B"); // IE does not recognize "\v".
               })(result0[2]);
         }
         if (result0 === null) {
