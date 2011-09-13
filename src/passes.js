@@ -95,7 +95,7 @@ PEG.compiler.passes = {
         compute(node.expression);
         node.resultStackDepth = node.expression.resultStackDepth + resultStackDelta;
         node.posStackDepth    = node.expression.posStackDepth    + posStackDelta;
-      }
+      };
     }
 
     var compute = buildNodeVisitor({
