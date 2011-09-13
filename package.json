@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "jake":      ">= 0.1.10",
-    "uglify-js": ">= 0.0.5"
+    "uglify-js": ">= 0.0.5",
+    "jshint":    ">= 0.3.1"
   },
   "engines": {
     "node": ">= 0.4.4"

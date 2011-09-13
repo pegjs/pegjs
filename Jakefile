@@ -7,12 +7,32 @@ var PEGJS_VERSION = fs.readFileSync("VERSION", "utf8").trim();
 
 /* Relative paths are here because of use in |require|. */
 var SRC_DIR       = "./src";
+var TEST_DIR      = "./test";
+var BENCHMARK_DIR = "./benchmark";
 var LIB_DIR       = "./lib";
 var BIN_DIR       = "./bin";
 var EXAMPLES_DIR  = "./examples";
 var DIST_DIR      = "./dist";
 var DIST_WEB_DIR  = "./dist/web";
 var DIST_NODE_DIR = "./dist/node";
+
+var SRC_FILES  = fs.readdirSync(SRC_DIR).filter(function(file) {
+  return /\.js$/.test(file);
+}).map(function(file) {
+  return SRC_DIR + "/" + file;
+});
+
+var TEST_FILES = fs.readdirSync(TEST_DIR).filter(function(file) {
+  return /-test\.js$/.test(file);
+}).map(function(file) {
+  return TEST_DIR + "/" + file;
+});
+var TEST_HELPERS_FILE = TEST_DIR + "/helpers.js";
+var TEST_RUN_FILE     = TEST_DIR + "/run";
+
+var BENCHMARK_BENCHMARKS_FILE = BENCHMARK_DIR + "/benchmarks.js";
+var BENCHMARK_RUNNER_FILE     = BENCHMARK_DIR + "/runner.js";
+var BENCHMARK_RUN_FILE        = BENCHMARK_DIR + "/run";
 
 var PEGJS = BIN_DIR + "/pegjs";
 
@@ -24,6 +44,8 @@ var PEGJS_DIST_MIN_FILE = DIST_WEB_DIR + "/peg-" + PEGJS_VERSION + ".min.js"
 
 var PARSER_SRC_FILE = SRC_DIR + "/parser.pegjs";
 var PARSER_OUT_FILE = SRC_DIR + "/parser.js";
+
+var JAKEFILE = "./Jakefile";
 
 function exitFailure() {
   process.exit(1);
@@ -180,6 +202,24 @@ task("benchmark", ["build"], function(runCount) {
   var process = childProcess.spawn(
     "benchmark/run",
     runCount !== undefined ? [runCount] : [],
+    { customFds: [0, 1, 2] }
+  );
+  process.on("exit", function() { complete(); });
+}, true);
+
+desc("Run JSHint");
+task("hint", ["build"], function() {
+  var process = childProcess.spawn(
+    "jshint",
+    SRC_FILES.concat(TEST_FILES).concat([
+      TEST_HELPERS_FILE,
+      TEST_RUN_FILE,
+      BENCHMARK_BENCHMARKS_FILE,
+      BENCHMARK_RUNNER_FILE,
+      BENCHMARK_RUN_FILE,
+      PEGJS,
+      JAKEFILE
+    ]),
     { customFds: [0, 1, 2] }
   );
   process.on("exit", function() { complete(); });
