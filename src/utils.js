@@ -121,7 +121,7 @@ function quoteForRegexpClass(s) {
     .replace(/\\/g, '\\\\')             // backslash
     .replace(/\0/g, '\\0')              // null, IE needs this
     .replace(/\//g, '\\/')              // closing slash
-    .replace(/]/g, '\\]')               // closing bracket
+    .replace(/\]/g, '\\]')              // closing bracket
     .replace(/-/g, '\\-')               // dash
     .replace(/\r/g, '\\r')              // carriage return
     .replace(/\n/g, '\\n')              // line feed
