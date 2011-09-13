@@ -94,13 +94,15 @@ PEG.parser = (function(){
       
       function escape(ch) {
         var charCode = ch.charCodeAt(0);
+        var escapeChar;
+        var length;
         
         if (charCode <= 0xFF) {
-          var escapeChar = 'x';
-          var length = 2;
+          escapeChar = 'x';
+          length = 2;
         } else {
-          var escapeChar = 'u';
-          var length = 4;
+          escapeChar = 'u';
+          length = 4;
         }
         
         return '\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);
