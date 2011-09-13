@@ -457,7 +457,7 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(elements, code) {
-                var expression = elements.length != 1
+                var expression = elements.length !== 1
                   ? {
                       type:     "sequence",
                       elements: elements
@@ -483,7 +483,7 @@ PEG.parser = (function(){
           }
           if (result0 !== null) {
             result0 = (function(elements) {
-                  return elements.length != 1
+                  return elements.length !== 1
                     ? {
                         type:     "sequence",
                         elements: elements
