@@ -417,7 +417,7 @@ test("start rule", function() {
 
   /* Invalid rule name */
   raises(
-    function() { parser.parse("whatever", "c") },
+    function() { parser.parse("whatever", "c"); },
     function(e) {
       return e instanceof Error && e.message === "Invalid rule name: \"c\".";
     }
