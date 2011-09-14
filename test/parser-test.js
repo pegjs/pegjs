@@ -350,7 +350,7 @@ test("parses doubleQuotedLiteral", function() {
 test("parses doubleQuotedCharacter", function() {
   parserParses('start = "a"',       literalGrammar("a"));
   parserParses('start = "\\n"',     literalGrammar("\n"));
-  parserParses('start = "\\0"',     literalGrammar("\0"));
+  parserParses('start = "\\0"',     literalGrammar("\x00"));
   parserParses('start = "\\x00"',   literalGrammar("\x00"));
   parserParses('start = "\\u0120"', literalGrammar("\u0120"));
   parserParses('start = "\\\n"',    literalGrammar("\n"));
@@ -381,7 +381,7 @@ test("parses singleQuotedLiteral", function() {
 test("parses singleQuotedCharacter", function() {
   parserParses("start = 'a'",       literalGrammar("a"));
   parserParses("start = '\\n'",     literalGrammar("\n"));
-  parserParses("start = '\\0'",     literalGrammar("\0"));
+  parserParses("start = '\\0'",     literalGrammar("\x00"));
   parserParses("start = '\\x00'",   literalGrammar("\x00"));
   parserParses("start = '\\u0120'", literalGrammar("\u0120"));
   parserParses("start = '\\\n'",    literalGrammar("\n"));
@@ -433,8 +433,8 @@ test("parses classCharacter", function() {
 test("parses bracketDelimitedCharacter", function() {
   parserParses("start = [a]",       classGrammar(false, ["a"], "[a]"));
   parserParses("start = [\\n]",     classGrammar(false, ["\n"], "[\\n]"));
-  parserParses("start = [\\0]",     classGrammar(false, ["\0"], "[\\0]"));
-  parserParses("start = [\\x00]",   classGrammar(false, ["\0"], "[\\0]"));
+  parserParses("start = [\\0]",     classGrammar(false, ["\x00"], "[\\0]"));
+  parserParses("start = [\\x00]",   classGrammar(false, ["\x00"], "[\\0]"));
   parserParses("start = [\\u0120]", classGrammar(false, ["\u0120"], "[\\u0120]"));
   parserParses("start = [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
 });
@@ -469,7 +469,7 @@ test("parses simpleEscapeSequence", function() {
 
 /* Canonical zeroEscapeSequence is "\\0". */
 test("parses zeroEscapeSequence", function() {
-  parserParses('start = "\\0"', literalGrammar("\0"));
+  parserParses('start = "\\0"', literalGrammar("\x00"));
   parserDoesNotParse('start = "\\00"');
   parserDoesNotParse('start = "\\09"');
 });
