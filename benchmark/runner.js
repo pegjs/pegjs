@@ -18,7 +18,7 @@ Runner = {
            * We can't use |arguments.callee| here because |this| would get
            * messed-up in that case.
            */
-          setTimeout(function() { Q.run() }, 0);
+          setTimeout(function() { Q.run(); }, 0);
         }
       }
     };
