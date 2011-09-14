@@ -46,7 +46,7 @@ function nodeWithExpressionConstructor(type) {
       type:       type,
       expression: expression
     };
-  }
+  };
 }
 
 function nodeWithCodeConstructor(type) {
@@ -55,7 +55,7 @@ function nodeWithCodeConstructor(type) {
       type: type,
       code: code
     };
-  }
+  };
 }
 
 var simpleAnd = nodeWithExpressionConstructor("simple_and");
@@ -74,7 +74,7 @@ function action(expression, code) {
     expression: expression,
     code:       code
   };
-};
+}
 
 function ruleRef(name) {
   return {
@@ -134,7 +134,7 @@ function identifierGrammar(identifier) {
   return oneRuleGrammar(ruleRef(identifier));
 }
 
-var literal_ = literal
+var literal_ = literal;
 function literalGrammar(literal) {
   return oneRuleGrammar(literal_(literal));
 }
