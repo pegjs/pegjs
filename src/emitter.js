@@ -74,7 +74,7 @@ PEG.compiler.emitter = function(ast) {
     var vars = args[args.length - 1] instanceof Object ? args.pop() : {};
 
     return indentMultilineParts(interpolateVariablesInParts(args)).join("\n");
-  };
+  }
 
   function resultVar(index) { return "result" + index; }
   function posVar(index)    { return "pos"    + index; }
