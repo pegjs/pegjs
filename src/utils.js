@@ -120,17 +120,21 @@ function quoteForRegexpClass(s) {
   /*
    * Based on ECMA-262, 5th ed., 7.8.5 & 15.10.1.
    *
-   * For portability, we also escape escape all non-ASCII characters.
+   * For portability, we also escape escape all control and non-ASCII
+   * characters.
    */
   return s
-    .replace(/\\/g, '\\\\')             // backslash
-    .replace(/\0/g, '\\0')              // null, IE needs this
-    .replace(/\//g, '\\/')              // closing slash
-    .replace(/\]/g, '\\]')              // closing bracket
-    .replace(/-/g, '\\-')               // dash
-    .replace(/\r/g, '\\r')              // carriage return
-    .replace(/\n/g, '\\n')              // line feed
-    .replace(/[\x80-\uFFFF]/g, escape); // non-ASCII characters
+    .replace(/\\/g, '\\\\')  // backslash
+    .replace(/\//g, '\\/')   // closing slash
+    .replace(/\]/g, '\\]')   // closing bracket
+    .replace(/-/g, '\\-')    // dash
+    .replace(/\0/g, '\\0')   // null, IE needs this
+    .replace(/\t/g, '\\t')   // horizontal tab
+    .replace(/\n/g, '\\n')   // line feed
+    .replace(/\v/g, '\\x0B') // vertical tab
+    .replace(/\f/g, '\\f')   // form feed
+    .replace(/\r/g, '\\r')   // carriage return
+    .replace(/[\x01-\x08\x0E-\x1F\x80-\uFFFF]/g, escape);
 }
 
 /*
