@@ -2817,7 +2817,7 @@ PEG.parser = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function() { return "\0"; })();
+          result0 = (function() { return "\x00"; })();
         }
         if (result0 === null) {
           pos = pos0;

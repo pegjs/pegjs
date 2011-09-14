@@ -294,7 +294,7 @@ simpleEscapeSequence
     }
 
 zeroEscapeSequence
-  = "\\0" !digit { return "\0"; }
+  = "\\0" !digit { return "\x00"; }
 
 hexEscapeSequence
   = "\\x" h1:hexDigit h2:hexDigit {
