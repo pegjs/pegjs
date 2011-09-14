@@ -3,6 +3,19 @@
 module("PEG.compiler.checks");
 
 test("reports missing referenced rules", function() {
+  function testGrammar(grammar) {
+    raises(
+      function() {
+        var ast = PEG.parser.parse(grammar);
+        PEG.compiler.checks.missingReferencedRules(ast);
+      },
+      function(e) {
+        return e instanceof PEG.GrammarError
+          && e.message === "Referenced rule \"missing\" does not exist.";
+      }
+    );
+  }
+
   var grammars = [
     'start = missing',
     'start = missing / "a" / "b"',
@@ -18,21 +31,23 @@ test("reports missing referenced rules", function() {
     'start = missing { }'
   ];
 
-  for (var i = 0; i < grammars.length; i++) {
-    raises(
-      function() {
-        var ast = PEG.parser.parse(grammars[i]);
-        PEG.compiler.checks.missingReferencedRules(ast);
-      },
-      function(e) {
-        return e instanceof PEG.GrammarError
-          && e.message === "Referenced rule \"missing\" does not exist.";
-      }
-    );
-  }
+  for (var i = 0; i < grammars.length; i++) { testGrammar(grammars[i]); }
 });
 
 test("reports left recursion", function() {
+  function testGrammar(grammar) {
+    raises(
+      function() {
+        var ast = PEG.parser.parse(grammar);
+        PEG.compiler.checks.leftRecursion(ast);
+      },
+      function(e) {
+        return e instanceof PEG.GrammarError
+          && e.message === "Left recursion detected for rule \"start\".";
+      }
+    );
+  }
+
   var grammars = [
     /* Direct */
     'start = start',
@@ -51,18 +66,7 @@ test("reports left recursion", function() {
     'start = stop; stop = start'
   ];
 
-  for (var i = 0; i < grammars.length; i++) {
-    raises(
-      function() {
-        var ast = PEG.parser.parse(grammars[i]);
-        PEG.compiler.checks.leftRecursion(ast);
-      },
-      function(e) {
-        return e instanceof PEG.GrammarError
-          && e.message === "Left recursion detected for rule \"start\".";
-      }
-    );
-  }
+  for (var i = 0; i < grammars.length; i++) { testGrammar(grammars[i]); }
 });
 
 })();
