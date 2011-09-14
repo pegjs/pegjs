@@ -495,7 +495,7 @@ test("non-context-free language", function() {
   var parser = PEG.buildParser([
     'S = &(A "c") a:"a"+ B:B !("a" / "b" / "c") { return a.join("") + B; }',
     'A = a:"a" A:A? b:"b" { return a + A + b; }',
-    'B = b:"b" B:B? c:"c" { return b + B + c; }',
+    'B = b:"b" B:B? c:"c" { return b + B + c; }'
   ].join("\n"));
 
   parses(parser, "abc", "abc");
