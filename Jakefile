@@ -32,6 +32,7 @@ var TEST_RUN_FILE     = TEST_DIR + "/run";
 
 var BENCHMARK_BENCHMARKS_FILE = BENCHMARK_DIR + "/benchmarks.js";
 var BENCHMARK_RUNNER_FILE     = BENCHMARK_DIR + "/runner.js";
+var BENCHMARK_INDEX_FILE      = BENCHMARK_DIR + "/index.js";
 var BENCHMARK_RUN_FILE        = BENCHMARK_DIR + "/run";
 
 var PEGJS = BIN_DIR + "/pegjs";
@@ -216,6 +217,7 @@ task("hint", ["build"], function() {
       TEST_RUN_FILE,
       BENCHMARK_BENCHMARKS_FILE,
       BENCHMARK_RUNNER_FILE,
+      BENCHMARK_INDEX_FILE,
       BENCHMARK_RUN_FILE,
       PEGJS,
       JAKEFILE
