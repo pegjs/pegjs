@@ -518,7 +518,7 @@ test("parses __", function() {
 
 /* Trivial character class rules are not tested. */
 
-/* Canonical comment is "\/* comment *\/". */
+// Canonical comment is "\/* comment *\/".
 test("parses comment", function() {
   parserParses('start =// comment\n"abcd"',  simpleGrammar);
   parserParses('start =/* comment */"abcd"', simpleGrammar);
@@ -531,7 +531,7 @@ test("parses singleLineComment", function() {
   parserParses('start = "abcd"//',     simpleGrammar);
 });
 
-/* Canonical multiLineComment is "\/* comment *\/". */
+// Canonical multiLineComment is "\/* comment *\/".
 test("parses multiLineComment", function() {
   parserParses('start =/**/"abcd"',    simpleGrammar);
   parserParses('start =/*a*/"abcd"',   simpleGrammar);
