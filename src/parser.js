@@ -2875,7 +2875,7 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(h1, h2) {
-                return String.fromCharCode(parseInt("0x" + h1 + h2));
+                return String.fromCharCode(parseInt(h1 + h2, 16));
               })(result0[1], result0[2]);
         }
         if (result0 === null) {
@@ -2946,7 +2946,7 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(h1, h2, h3, h4) {
-                return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
+                return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
               })(result0[1], result0[2], result0[3], result0[4]);
         }
         if (result0 === null) {
