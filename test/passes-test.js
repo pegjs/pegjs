@@ -9,7 +9,7 @@ test("removes proxy rules", function() {
       initializer: null,
       rules:       rules,
       startRule:   startRule
-    }
+    };
   }
 
   var proxiedRule = {
@@ -22,7 +22,7 @@ test("removes proxy rules", function() {
   var proxiedRuleRef = {
     type: "rule_ref",
     name: "proxied"
-  }
+  };
 
   function simpleGrammarWithStartAndProxied(startRuleExpression) {
     return simpleGrammar(
@@ -226,7 +226,7 @@ test("computes stack depths", function() {
 
   for (var i = 0; i < cases.length; i++) {
     var ast = PEG.parser.parse(cases[i].grammar);
-    PEG.compiler.passes.stackDepths(ast)
+    PEG.compiler.passes.stackDepths(ast);
 
     deepEqual(ast.rules["start"].resultStackDepth, cases[i].resultStackDepth);
     deepEqual(ast.rules["start"].posStackDepth,    cases[i].posStackDepth);
