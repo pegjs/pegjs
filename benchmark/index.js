@@ -56,7 +56,7 @@ $("#run").click(function() {
    *   2. To minimize random errors.
    */
 
-  var runCount = parseInt($("#run-count").val());
+  var runCount = parseInt($("#run-count").val(), 10);
   if (isNaN(runCount) || runCount <= 0) {
     alert("Number of runs must be a positive integer.");
     return;
