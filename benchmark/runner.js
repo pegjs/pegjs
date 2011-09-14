@@ -70,9 +70,9 @@ Runner = {
 
         var parseTime = 0;
         for (var k = 0; k < runCount; k++) {
-          var t = (new Date).getTime();
+          var t = (new Date()).getTime();
           state.parser.parse(input);
-          parseTime += (new Date).getTime() - t;
+          parseTime += (new Date()).getTime() - t;
         }
         var averageParseTime = parseTime / runCount;
 
