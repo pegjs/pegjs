@@ -670,7 +670,7 @@ PEG.compiler.emitter = function(ast) {
         "${expressionCode}",
         "_chunk.pos = ${posVar};",
         "_chunk.end = pos;",
-        "_chunk.match = input.substr(${posVar},pos-${posVar});",
+        "_chunk.match = input.substring(${posVar},pos);",
         "if (${resultVar} !== null) {",
         "  ${resultVar} = (function(${formalParams}) {${actionCode}})(${actualParams});",
         "}",
