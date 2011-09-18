@@ -45,7 +45,7 @@ function map(array, callback) {
 /*
  * Returns a string padded on the left to a desired length with a character.
  *
- * The code needs to be in sync with th code template in the compilation
+ * The code needs to be in sync with the code template in the compilation
  * function for "action" nodes.
  */
 function padLeft(input, padding, length) {
@@ -63,7 +63,7 @@ function padLeft(input, padding, length) {
  * Returns an escape sequence for given character. Uses \x for characters <=
  * 0xFF to save space, \u for the rest.
  *
- * The code needs to be in sync with th code template in the compilation
+ * The code needs to be in sync with the code template in the compilation
  * function for "action" nodes.
  */
 function escape(ch) {
@@ -86,7 +86,7 @@ function escape(ch) {
  * Surrounds the string with quotes and escapes characters inside so that the
  * result is a valid JavaScript string.
  *
- * The code needs to be in sync with th code template in the compilation
+ * The code needs to be in sync with the code template in the compilation
  * function for "action" nodes.
  */
 function quote(s) {
