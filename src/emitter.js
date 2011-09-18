@@ -710,6 +710,14 @@ PEG.compiler.emitter = function(ast) {
 
     literal: function(node, context) {
       var length = node.value.length;
+
+      if (length === 0) {
+        return formatCode(
+          "${resultVar} = '';",
+          { resultVar: resultVar(context.resultIndex) }
+        );
+      }
+
       var testCode = length === 1
         ? formatCode(
             "input.charCodeAt(pos) === ${valueCharCode}",
