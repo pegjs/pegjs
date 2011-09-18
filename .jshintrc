@@ -4,6 +4,6 @@
   "evil":     true,
   "laxbreak": true,
   "noempty":  true,
-  "sub":      true,
-  "nonew":    true
+  "nonew":    true,
+  "sub":      true
 }
