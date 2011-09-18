@@ -247,7 +247,7 @@ PEG.compiler.emitter = function(ast) {
         "            if (!seenCR) { line++; }",
         "            column = 1;",
         "            seenCR = false;",
-        "          } else if (ch === '\\r' | ch === '\\u2028' || ch === '\\u2029') {",
+        "          } else if (ch === '\\r' || ch === '\\u2028' || ch === '\\u2029') {",
         "            line++;",
         "            column = 1;",
         "            seenCR = true;",
