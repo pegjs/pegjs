@@ -698,11 +698,6 @@ PEG.compiler.emitter = function(ast) {
     },
 
     simple_not: function(node, context) {
-      var expressionContext = {
-        resultIndex: context.resultIndex,
-        posIndex:    context.posIndex + 1
-      };
-
       return formatCode(
         '#{posVar} = pos;',
         'reportFailures++;',
@@ -715,7 +710,10 @@ PEG.compiler.emitter = function(ast) {
         '  pos = #{posVar};',
         '}',
         {
-          expressionCode: emit(node.expression, expressionContext),
+          expressionCode: emit(node.expression, {
+            resultIndex: context.resultIndex,
+            posIndex:    context.posIndex + 1
+          }),
           posVar:         posVar(context.posIndex),
           resultVar:      resultVar(context.resultIndex)
         }
