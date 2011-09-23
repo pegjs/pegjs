@@ -809,11 +809,6 @@ PEG.compiler.emitter = function(ast) {
        * This behavior is reflected in this function.
        */
 
-      var expressionContext = {
-        resultIndex: context.resultIndex,
-        posIndex:    context.posIndex + 1
-      };
-
       var formalParams;
       var actualParams;
 
@@ -841,16 +836,19 @@ PEG.compiler.emitter = function(ast) {
         '#{posVar} = pos;',
         '#block expressionCode',
         'if (#{resultVar} !== null) {',
-        '  #{resultVar} = (function(#{formalParams}) {#{actionCode}})(#{actualParams});',
+        '  #{resultVar} = (function(#{formalParams.join(", ")}) {#{node.code}})(#{actualParams.join(", ")});',
         '}',
         'if (#{resultVar} === null) {',
         '  pos = #{posVar};',
         '}',
         {
-          expressionCode: emit(node.expression, expressionContext),
-          actionCode:     node.code,
-          formalParams:   formalParams.join(', '),
-          actualParams:   actualParams.join(', '),
+          node:           node,
+          expressionCode: emit(node.expression, {
+            resultIndex: context.resultIndex,
+            posIndex:    context.posIndex + 1
+          }),
+          formalParams:   formalParams,
+          actualParams:   actualParams,
           posVar:         posVar(context.posIndex),
           resultVar:      resultVar(context.resultIndex)
         }
