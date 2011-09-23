@@ -954,12 +954,12 @@ PEG.compiler.emitter = function(ast) {
         '} else {',
         '  #{resultVar} = null;',
         '  if (reportFailures === 0) {',
-        '    matchFailed(#{string(rawText)});',
+        '    matchFailed(#{string(node.rawText)});',
         '  }',
         '}',
         {
+          node:      node,
           regexp:    regexp,
-          rawText:   node.rawText,
           resultVar: resultVar(context.resultIndex)
         }
       );
