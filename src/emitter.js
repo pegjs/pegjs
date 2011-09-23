@@ -724,10 +724,10 @@ PEG.compiler.emitter = function(ast) {
 
     semantic_and: function(node, context) {
       return formatCode(
-        '#{resultVar} = (function() {#{actionCode}})() ? "" : null;',
+        '#{resultVar} = (function() {#{node.code}})() ? "" : null;',
         {
-          actionCode: node.code,
-          resultVar:  resultVar(context.resultIndex)
+          node:      node,
+          resultVar: resultVar(context.resultIndex)
         }
       );
     },
