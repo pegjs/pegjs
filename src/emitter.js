@@ -754,11 +754,6 @@ PEG.compiler.emitter = function(ast) {
     },
 
     zero_or_more: function(node, context) {
-      var expressionContext = {
-        resultIndex: context.resultIndex + 1,
-        posIndex:    context.posIndex
-      };
-
       return formatCode(
         '#{resultVar} = [];',
         '#block expressionCode',
@@ -767,7 +762,10 @@ PEG.compiler.emitter = function(ast) {
         '  #block expressionCode',
         '}',
         {
-          expressionCode:      emit(node.expression, expressionContext),
+          expressionCode:      emit(node.expression, {
+            resultIndex: context.resultIndex + 1,
+            posIndex:    context.posIndex
+          }),
           expressionResultVar: resultVar(context.resultIndex + 1),
           resultVar:           resultVar(context.resultIndex)
         }
