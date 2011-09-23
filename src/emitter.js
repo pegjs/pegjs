@@ -859,10 +859,10 @@ PEG.compiler.emitter = function(ast) {
 
     rule_ref: function(node, context) {
       return formatCode(
-        '#{resultVar} = #{ruleMethod}();',
+        '#{resultVar} = parse_#{node.name}();',
         {
-          ruleMethod: 'parse_' + node.name,
-          resultVar:  resultVar(context.resultIndex)
+          node:      node,
+          resultVar: resultVar(context.resultIndex)
         }
       );
     },
