@@ -868,44 +868,27 @@ PEG.compiler.emitter = function(ast) {
     },
 
     literal: function(node, context) {
-      var length = node.value.length;
-
-      if (length === 0) {
-        return formatCode(
-          '#{resultVar} = "";',
-          { resultVar: resultVar(context.resultIndex) }
-        );
-      }
-
-      var testCode = length === 1
-        ? formatCode(
-            'input.charCodeAt(pos) === #{valueCharCode}',
-            { valueCharCode: node.value.charCodeAt(0) }
-          )
-        : formatCode(
-            'input.substr(pos, #{length}) === #{string(value)}',
-            {
-              value:  node.value,
-              length: length
-            }
-          );
-
       return formatCode(
-        'if (#{testCode}) {',
-        '  #{resultVar} = #{string(value)};',
-        '  pos += #{length};',
-        '} else {',
-        '  #{resultVar} = null;',
-        '  if (reportFailures === 0) {',
-        '    matchFailed(#{string(valueQuoted)});',
+        '#if node.value.length === 0',
+        '  #{resultVar} = "";',
+        '#else',
+        '  #if node.value.length === 1',
+        '    if (input.charCodeAt(pos) === #{node.value.charCodeAt(0)}) {',
+        '  #else',
+        '    if (input.substr(pos, #{node.value.length}) === #{string(node.value)}) {',
+        '  #end',
+        '    #{resultVar} = #{string(node.value)};',
+        '    pos += #{node.value.length};',
+        '  } else {',
+        '    #{resultVar} = null;',
+        '    if (reportFailures === 0) {',
+        '      matchFailed(#{string(string(node.value))});',
+        '    }',
         '  }',
-        '}',
+        '#end',
         {
-          testCode:    testCode,
-          value:       node.value,
-          valueQuoted: quote(node.value),
-          length:      length,
-          resultVar:   resultVar(context.resultIndex)
+          node:      node,
+          resultVar: resultVar(context.resultIndex)
         }
       );
     },
