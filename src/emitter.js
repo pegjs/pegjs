@@ -1,79 +1,238 @@
 /* Emits the generated code for the AST. */
 PEG.compiler.emitter = function(ast) {
-  /*
-   * Takes parts of code, interpolates variables inside them and joins them with
-   * a newline.
-   *
-   * Variables are delimited with "${" and "}" and their names must be valid
-   * identifiers (i.e. they must match [a-zA-Z_][a-zA-Z0-9_]*). Variable values
-   * are specified as properties of the last parameter (if this is an object,
-   * otherwise empty variable set is assumed). Undefined variables result in
-   * throwing |Error|.
-   *
-   * There can be a filter specified after the variable name, prefixed with "|".
-   * The filter name must be a valid identifier. The only recognized filter
-   * right now is "string", which quotes the variable value as a JavaScript
-   * string. Unrecognized filters result in throwing |Error|.
-   *
-   * If any part has multiple lines and the first line is indented by some
-   * amount of whitespace (as defined by the /\s+/ JavaScript regular
-   * expression), second to last lines are indented by the same amount of
-   * whitespace. This results in nicely indented multiline code in variables
-   * without making the templates look ugly.
-   *
-   * Examples:
-   *
-   *   formatCode("foo", "bar");                           // "foo\nbar"
-   *   formatCode("foo", "${bar}", { bar: "baz" });        // "foo\nbaz"
-   *   formatCode("foo", "${bar}");                        // throws Error
-   *   formatCode("foo", "${bar|string}", { bar: "baz" }); // "foo\n\"baz\""
-   *   formatCode("foo", "${bar|eeek}", { bar: "baz" });   // throws Error
-   *   formatCode("foo", "${bar}", { bar: "  baz\nqux" }); // "foo\n  baz\n  qux"
-   */
-  function formatCode() {
-    function interpolateVariablesInParts(parts) {
-      return map(parts, function(part) {
-        return part.replace(
-          /\$\{([a-zA-Z_][a-zA-Z0-9_]*)(\|([a-zA-Z_][a-zA-Z0-9_]*))?\}/g,
-          function(match, name, dummy, filter) {
-            var value = vars[name];
-            if (value === undefined) {
-              throw new Error("Undefined variable: \"" + name + "\".");
-            }
+  var Codie = (function(undefined) {
+    function stringEscape(s) {
+      function hex(ch) { return ch.charCodeAt(0).toString(16).toUpperCase(); }
 
-            if (filter !== undefined && filter !== "") { // JavaScript engines differ here.
-              if (filter === "string") {
-                return quote(value);
-              } else {
-                throw new Error("Unrecognized filter: \"" + filter + "\".");
-              }
+      /*
+       * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a
+       * string literal except for the closing quote character, backslash,
+       * carriage return, line separator, paragraph separator, and line feed.
+       * Any character may appear in the form of an escape sequence.
+       *
+       * For portability, we also escape escape all control and non-ASCII
+       * characters. Note that "\0" and "\v" escape sequences are not used
+       * because JSHint does not like the first and IE the second.
+       */
+      return s
+       .replace(/\\/g,   '\\\\') // backslash
+       .replace(/"/g,    '\\"')  // closing double quote
+       .replace(/\x08/g, '\\b')  // backspace
+       .replace(/\t/g,   '\\t')  // horizontal tab
+       .replace(/\n/g,   '\\n')  // line feed
+       .replace(/\f/g,   '\\f')  // form feed
+       .replace(/\r/g,   '\\r')  // carriage return
+       .replace(/[\x00-\x07\x0B\x0E\x0F]/g, function(ch) { return '\\x0' + hex(ch); })
+       .replace(/[\x10-\x1F\x80-\xFF]/g,    function(ch) { return '\\x'  + hex(ch); })
+       .replace(/[\u0180-\u0FFF]/g,         function(ch) { return '\\u0' + hex(ch); })
+       .replace(/[\u1080-\uFFFF]/g,         function(ch) { return '\\u'  + hex(ch); });
+    }
+
+    function push(s) { return '__p.push(' + s + ');'; }
+
+    function pushRaw(template, length, state) {
+      function unindent(code, level, unindentFirst) {
+        return code.replace(
+          new RegExp('^.{' + level +'}', "gm"),
+          function(str, offset) {
+            if (offset === 0) {
+              return unindentFirst ? '' : str;
             } else {
-              return value;
+              return "";
             }
           }
         );
-      });
+      }
+
+      var escaped = stringEscape(unindent(
+            template.substring(0, length),
+            state.indentLevel(),
+            state.atBOL
+          ));
+
+      return escaped.length > 0 ? push('"' + escaped + '"') : '';
     }
 
-    function indentMultilineParts(parts) {
-      return map(parts, function(part) {
-        if (!/\n/.test(part)) { return part; }
+    var Codie = {
+      /*
+       * Specifies by how many characters do #if/#else and #for unindent their
+       * content in the generated code.
+       */
+      indentStep: 2,
 
-        var firstLineWhitespacePrefix = part.match(/^\s*/)[0];
-        var lines = part.split("\n");
-        var linesIndented = [lines[0]].concat(
-          map(lines.slice(1), function(line) {
-            return firstLineWhitespacePrefix + line;
-          })
-        );
-        return linesIndented.join("\n");
-      });
-    }
+      /* Description of #-commands. Extend to define your own commands. */
+      commands: {
+        "if":   {
+          params:  /^(.*)$/,
+          compile: function(state, prefix, params) {
+            return ['if(' + params[0] + '){', []];
+          },
+          stackOp: "push"
+        },
+        "else": {
+          params:  /^$/,
+          compile: function(state) {
+            var stack = state.commandStack,
+                insideElse = stack[stack.length - 1] === "else",
+                insideIf   = stack[stack.length - 1] === "if";
 
+            if (insideElse) { throw new Error("Multiple #elses."); }
+            if (!insideIf)  { throw new Error("Using #else outside of #if."); }
+
+            return ['}else{', []];
+          },
+          stackOp: "replace"
+        },
+        "for":  {
+          params:  /^([a-zA-Z_][a-zA-Z0-9_]*)[ \t]+in[ \t]+(.*)$/,
+          init:    function(state) {
+            state.forCurrLevel = 0;  // current level of #for loop nesting
+            state.forMaxLevel  = 0;  // maximum level of #for loop nesting
+          },
+          compile: function(state, prefix, params) {
+            var c = '__c' + state.forCurrLevel, // __c for "collection"
+                l = '__l' + state.forCurrLevel, // __l for "length"
+                i = '__i' + state.forCurrLevel; // __i for "index"
+
+            state.forCurrLevel++;
+            if (state.forMaxLevel < state.forCurrLevel) {
+              state.forMaxLevel = state.forCurrLevel;
+            }
+
+            return [
+              c + '=' + params[1] + ';'
+                +  l + '=' + c + '.length;'
+                + 'for(' + i + '=0;' + i + '<' + l + ';' + i + '++){'
+                +  params[0] + '=' + c + '[' + i + '];',
+              [params[0], c, l, i]
+            ];
+          },
+          exit:    function(state) { state.forCurrLevel--; },
+          stackOp: "push"
+        },
+        "end":  {
+          params:  /^$/,
+          compile: function(state) {
+            var stack = state.commandStack, exit;
+
+            if (stack.length === 0) { throw new Error("Too many #ends."); }
+
+            exit = Codie.commands[stack[stack.length - 1]].exit;
+            if (exit) { exit(state); }
+
+            return ['}', []];
+          },
+          stackOp: "pop"
+        },
+        "block": {
+          params: /^(.*)$/,
+          compile: function(state, prefix, params) {
+            return [
+              push('(' + params[0] + ').toString().replace(/^/gm, "'
+                + stringEscape(prefix.substring(state.indentLevel()))
+                + '") + "\\n"'),
+              []
+            ];
+          },
+          stackOp: "nop"
+        }
+      },
+
+      /*
+       * Compiles a template into a function. When called, this function will
+       * execute the template in the context of an object passed in a parameter and
+       * return the result.
+       */
+      template: function(template) {
+        var stackOps = {
+          push:    function(stack, name) { stack.push(name); },
+          replace: function(stack, name) { stack[stack.length - 1] = name; },
+          pop:     function(stack)       { stack.pop(); },
+          nop:     function()            { }
+        };
+
+        function compileExpr(state, expr) {
+          state.atBOL = false;
+          return [push(expr), []];
+        }
+
+        function compileCommand(state, prefix, name, params) {
+          var command, match, result;
+
+          command = Codie.commands[name];
+          if (!command) { throw new Error("Unknown command: #" + name + "."); }
+
+          match = command.params.exec(params);
+          if (match === null) {
+            throw new Error(
+              "Invalid params for command #" + name + ": " + params + "."
+            );
+          }
+
+          result = command.compile(state, prefix, match.slice(1));
+          stackOps[command.stackOp](state.commandStack, name);
+          state.atBOL = true;
+          return result;
+        }
+
+        var state = {               // compilation state
+              commandStack: [],     //   stack of commands as they were nested
+              atBOL:        true,   //   is the next character to process at BOL?
+              indentLevel:  function() {
+                return Codie.indentStep * this.commandStack.length;
+              }
+            },
+            code = '',              // generated template function code
+            vars = ['__p=[]'],      // variables used by generated code
+            name, match, result, i;
+
+        /* Initialize state. */
+        for (name in Codie.commands) {
+          if (Codie.commands[name].init) { Codie.commands[name].init(state); }
+        }
+
+        /* Compile the template. */
+        while ((match = /^([ \t]*)#([a-zA-Z_][a-zA-Z0-9_]*)(?:[ \t]+([^ \t\n][^\n]*))?[ \t]*(?:\n|$)|#\{([^}]*)\}/m.exec(template)) !== null) {
+          code += pushRaw(template, match.index, state);
+          result = match[2] !== undefined && match[2] !== ""
+            ? compileCommand(state, match[1], match[2], match[3] || "") // #-command
+            : compileExpr(state, match[4]);                             // #{...}
+          code += result[0];
+          vars = vars.concat(result[1]);
+          template = template.substring(match.index + match[0].length);
+        }
+        code += pushRaw(template, template.length, state);
+
+        /* Check the final state. */
+        if (state.commandStack.length > 0) { throw new Error("Missing #end."); }
+
+        /* Sanitize the list of variables used by commands. */
+        vars.sort();
+        for (i = 0; i < vars.length; i++) {
+          if (vars[i] === vars[i - 1]) { vars.splice(i--, 1); }
+        }
+
+        /* Create the resulting function. */
+        return new Function("__v", [
+          '__v=__v||{};',
+          'var ' + vars.join(',') + ';',
+          'with(__v){',
+          code,
+          'return __p.join("").replace(/^\\n+|\\n+$/g,"");};'
+        ].join(''));
+      }
+    };
+
+    return Codie;
+  })();
+
+  function formatCode() {
     var args = Array.prototype.slice.call(arguments);
     var vars = args[args.length - 1] instanceof Object ? args.pop() : {};
 
-    return indentMultilineParts(interpolateVariablesInParts(args)).join("\n");
+    vars.string = quote;
+
+    return Codie.template(args.join('\n'))(vars);
   }
 
   function resultVar(index) { return "result" + index; }
@@ -110,7 +269,7 @@ PEG.compiler.emitter = function(ast) {
         '     */',
         '    parse: function(input, startRule) {',
         '      var parseFunctions = {',
-        '        ${parseFunctionTableItems}',
+        '        #block parseFunctionTableItems',
         '      };',
         '      ',
         '      if (startRule !== undefined) {',
@@ -118,7 +277,7 @@ PEG.compiler.emitter = function(ast) {
         '          throw new Error("Invalid rule name: " + quote(startRule) + ".");',
         '        }',
         '      } else {',
-        '        startRule = ${startRule|string};',
+        '        startRule = #{string(startRule)};',
         '      }',
         '      ',
         '      var pos = 0;',
@@ -193,7 +352,7 @@ PEG.compiler.emitter = function(ast) {
         '        rightmostFailuresExpected.push(failure);',
         '      }',
         '      ',
-        '      ${parseFunctionDefinitions}',
+        '      #block parseFunctionDefinitions',
         '      ',
         '      function buildErrorMessage() {',
         '        function buildExpected(failuresExpected) {',
@@ -260,7 +419,7 @@ PEG.compiler.emitter = function(ast) {
         '        return { line: line, column: column };',
         '      }',
         '      ',
-        '      ${initializerCode}',
+        '      #block initializerCode',
         '      ',
         '      var result = parseFunctions[startRule]();',
         '      ',
@@ -354,8 +513,8 @@ PEG.compiler.emitter = function(ast) {
           'reportFailures--;'
         );
         reportFailureCode = formatCode(
-          'if (reportFailures === 0 && ${resultVar} === null) {',
-          '  matchFailed(${displayName|string});',
+          'if (reportFailures === 0 && #{resultVar} === null) {',
+          '  matchFailed(#{string(displayName)});',
           '}',
           {
             displayName: node.displayName,
@@ -369,27 +528,27 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        'function parse_${name}() {',
-        '  var cacheKey = "${name}@" + pos;',
+        'function parse_#{name}() {',
+        '  var cacheKey = "#{name}@" + pos;',
         '  var cachedResult = cache[cacheKey];',
         '  if (cachedResult) {',
         '    pos = cachedResult.nextPos;',
         '    return cachedResult.result;',
         '  }',
         '  ',
-        '  ${resultVarsCode}',
-        '  ${posVarsCode}',
+        '  #block resultVarsCode',
+        '  #block posVarsCode',
         '  ',
-        '  ${setReportFailuresCode}',
-        '  ${code}',
-        '  ${restoreReportFailuresCode}',
-        '  ${reportFailureCode}',
+        '  #block setReportFailuresCode',
+        '  #block code',
+        '  #block restoreReportFailuresCode',
+        '  #block reportFailureCode',
         '  ',
         '  cache[cacheKey] = {',
         '    nextPos: pos,',
-        '    result:  ${resultVar}',
+        '    result:  #{resultVar}',
         '  };',
-        '  return ${resultVar};',
+        '  return #{resultVar};',
         '}',
         {
           name:                      node.name,
@@ -440,8 +599,8 @@ PEG.compiler.emitter = function(ast) {
       for (var i = node.alternatives.length - 1; i >= 0; i--) {
         nextAlternativesCode = i !== node.alternatives.length - 1
           ? formatCode(
-              'if (${resultVar} === null) {',
-              '  ${code}',
+              'if (#{resultVar} === null) {',
+              '  #block code',
               '}',
               {
                 code:      code,
@@ -450,8 +609,8 @@ PEG.compiler.emitter = function(ast) {
             )
           : '';
         code = formatCode(
-          '${currentAlternativeCode}',
-          '${nextAlternativesCode}',
+          '#block currentAlternativeCode',
+          '#block nextAlternativesCode',
           {
             currentAlternativeCode: emit(node.alternatives[i], context),
             nextAlternativesCode:   nextAlternativesCode
@@ -468,7 +627,7 @@ PEG.compiler.emitter = function(ast) {
       });
 
       var code = formatCode(
-        '${resultVar} = ${elementResultVarArray};',
+        '#{resultVar} = #{elementResultVarArray};',
         {
           resultVar:             resultVar(context.resultIndex),
           elementResultVarArray: '[' + elementResultVars.join(', ') + ']'
@@ -482,12 +641,12 @@ PEG.compiler.emitter = function(ast) {
           posIndex:    context.posIndex + 1
         };
         code = formatCode(
-          '${elementCode}',
-          'if (${elementResultVar} !== null) {',
-          '  ${code}',
+          '#block elementCode',
+          'if (#{elementResultVar} !== null) {',
+          '  #block code',
           '} else {',
-          '  ${resultVar} = null;',
-          '  pos = ${posVar};',
+          '  #{resultVar} = null;',
+          '  pos = #{posVar};',
           '}',
           {
             elementCode:      emit(node.elements[i], elementContext),
@@ -500,8 +659,8 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        '${posVar} = pos;',
-        '${code}',
+        '#{posVar} = pos;',
+        '#block code',
         {
           code:   code,
           posVar: posVar(context.posIndex)
@@ -520,15 +679,15 @@ PEG.compiler.emitter = function(ast) {
       };
 
       return formatCode(
-        '${posVar} = pos;',
+        '#{posVar} = pos;',
         'reportFailures++;',
-        '${expressionCode}',
+        '#block expressionCode',
         'reportFailures--;',
-        'if (${resultVar} !== null) {',
-        '  ${resultVar} = "";',
-        '  pos = ${posVar};',
+        'if (#{resultVar} !== null) {',
+        '  #{resultVar} = "";',
+        '  pos = #{posVar};',
         '} else {',
-        '  ${resultVar} = null;',
+        '  #{resultVar} = null;',
         '}',
         {
           expressionCode: emit(node.expression, expressionContext),
@@ -545,15 +704,15 @@ PEG.compiler.emitter = function(ast) {
       };
 
       return formatCode(
-        '${posVar} = pos;',
+        '#{posVar} = pos;',
         'reportFailures++;',
-        '${expressionCode}',
+        '#block expressionCode',
         'reportFailures--;',
-        'if (${resultVar} === null) {',
-        '  ${resultVar} = "";',
+        'if (#{resultVar} === null) {',
+        '  #{resultVar} = "";',
         '} else {',
-        '  ${resultVar} = null;',
-        '  pos = ${posVar};',
+        '  #{resultVar} = null;',
+        '  pos = #{posVar};',
         '}',
         {
           expressionCode: emit(node.expression, expressionContext),
@@ -565,7 +724,7 @@ PEG.compiler.emitter = function(ast) {
 
     semantic_and: function(node, context) {
       return formatCode(
-        '${resultVar} = (function() {${actionCode}})() ? "" : null;',
+        '#{resultVar} = (function() {#{actionCode}})() ? "" : null;',
         {
           actionCode: node.code,
           resultVar:  resultVar(context.resultIndex)
@@ -575,7 +734,7 @@ PEG.compiler.emitter = function(ast) {
 
     semantic_not: function(node, context) {
       return formatCode(
-        '${resultVar} = (function() {${actionCode}})() ? null : "";',
+        '#{resultVar} = (function() {#{actionCode}})() ? null : "";',
         {
           actionCode: node.code,
           resultVar:  resultVar(context.resultIndex)
@@ -585,8 +744,8 @@ PEG.compiler.emitter = function(ast) {
 
     optional: function(node, context) {
       return formatCode(
-        '${expressionCode}',
-        '${resultVar} = ${resultVar} !== null ? ${resultVar} : "";',
+        '#block expressionCode',
+        '#{resultVar} = #{resultVar} !== null ? #{resultVar} : "";',
         {
           expressionCode: emit(node.expression, context),
           resultVar:      resultVar(context.resultIndex)
@@ -601,11 +760,11 @@ PEG.compiler.emitter = function(ast) {
       };
 
       return formatCode(
-        '${resultVar} = [];',
-        '${expressionCode}',
-        'while (${expressionResultVar} !== null) {',
-        '  ${resultVar}.push(${expressionResultVar});',
-        '  ${expressionCode}',
+        '#{resultVar} = [];',
+        '#block expressionCode',
+        'while (#{expressionResultVar} !== null) {',
+        '  #{resultVar}.push(#{expressionResultVar});',
+        '  #block expressionCode',
         '}',
         {
           expressionCode:      emit(node.expression, expressionContext),
@@ -622,15 +781,15 @@ PEG.compiler.emitter = function(ast) {
       };
 
       return formatCode(
-        '${expressionCode}',
-        'if (${expressionResultVar} !== null) {',
-        '  ${resultVar} = [];',
-        '  while (${expressionResultVar} !== null) {',
-        '    ${resultVar}.push(${expressionResultVar});',
-        '    ${expressionCode}',
+        '#block expressionCode',
+        'if (#{expressionResultVar} !== null) {',
+        '  #{resultVar} = [];',
+        '  while (#{expressionResultVar} !== null) {',
+        '    #{resultVar}.push(#{expressionResultVar});',
+        '    #block expressionCode',
         '  }',
         '} else {',
-        '  ${resultVar} = null;',
+        '  #{resultVar} = null;',
         '}',
         {
           expressionCode:      emit(node.expression, expressionContext),
@@ -679,13 +838,13 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        '${posVar} = pos;',
-        '${expressionCode}',
-        'if (${resultVar} !== null) {',
-        '  ${resultVar} = (function(${formalParams}) {${actionCode}})(${actualParams});',
+        '#{posVar} = pos;',
+        '#block expressionCode',
+        'if (#{resultVar} !== null) {',
+        '  #{resultVar} = (function(#{formalParams}) {#{actionCode}})(#{actualParams});',
         '}',
-        'if (${resultVar} === null) {',
-        '  pos = ${posVar};',
+        'if (#{resultVar} === null) {',
+        '  pos = #{posVar};',
         '}',
         {
           expressionCode: emit(node.expression, expressionContext),
@@ -700,7 +859,7 @@ PEG.compiler.emitter = function(ast) {
 
     rule_ref: function(node, context) {
       return formatCode(
-        '${resultVar} = ${ruleMethod}();',
+        '#{resultVar} = #{ruleMethod}();',
         {
           ruleMethod: 'parse_' + node.name,
           resultVar:  resultVar(context.resultIndex)
@@ -713,18 +872,18 @@ PEG.compiler.emitter = function(ast) {
 
       if (length === 0) {
         return formatCode(
-          '${resultVar} = "";',
+          '#{resultVar} = "";',
           { resultVar: resultVar(context.resultIndex) }
         );
       }
 
       var testCode = length === 1
         ? formatCode(
-            'input.charCodeAt(pos) === ${valueCharCode}',
+            'input.charCodeAt(pos) === #{valueCharCode}',
             { valueCharCode: node.value.charCodeAt(0) }
           )
         : formatCode(
-            'input.substr(pos, ${length}) === ${value|string}',
+            'input.substr(pos, #{length}) === #{string(value)}',
             {
               value:  node.value,
               length: length
@@ -732,13 +891,13 @@ PEG.compiler.emitter = function(ast) {
           );
 
       return formatCode(
-        'if (${testCode}) {',
-        '  ${resultVar} = ${value|string};',
-        '  pos += ${length};',
+        'if (#{testCode}) {',
+        '  #{resultVar} = #{string(value)};',
+        '  pos += #{length};',
         '} else {',
-        '  ${resultVar} = null;',
+        '  #{resultVar} = null;',
         '  if (reportFailures === 0) {',
-        '    matchFailed(${valueQuoted|string});',
+        '    matchFailed(#{string(valueQuoted)});',
         '  }',
         '}',
         {
@@ -754,10 +913,10 @@ PEG.compiler.emitter = function(ast) {
     any: function(node, context) {
       return formatCode(
         'if (input.length > pos) {',
-        '  ${resultVar} = input.charAt(pos);',
+        '  #{resultVar} = input.charAt(pos);',
         '  pos++;',
         '} else {',
-        '  ${resultVar} = null;',
+        '  #{resultVar} = null;',
         '  if (reportFailures === 0) {',
         '    matchFailed("any character");',
         '  }',
@@ -789,13 +948,13 @@ PEG.compiler.emitter = function(ast) {
       }
 
       return formatCode(
-        'if (${regexp}.test(input.charAt(pos))) {',
-        '  ${resultVar} = input.charAt(pos);',
+        'if (#{regexp}.test(input.charAt(pos))) {',
+        '  #{resultVar} = input.charAt(pos);',
         '  pos++;',
         '} else {',
-        '  ${resultVar} = null;',
+        '  #{resultVar} = null;',
         '  if (reportFailures === 0) {',
-        '    matchFailed(${rawText|string});',
+        '    matchFailed(#{string(rawText)});',
         '  }',
         '}',
         {

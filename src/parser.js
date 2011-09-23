@@ -189,16 +189,16 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(initializer, rules) {
-                var rulesConverted = {};
-                each(rules, function(rule) { rulesConverted[rule.name] = rule; });
-          
-                return {
-                  type:        "grammar",
-                  initializer: initializer !== "" ? initializer : null,
-                  rules:       rulesConverted,
-                  startRule:   rules[0].name
-                };
-              })(result0[1], result0[2]);
+              var rulesConverted = {};
+              each(rules, function(rule) { rulesConverted[rule.name] = rule; });
+        
+              return {
+                type:        "grammar",
+                initializer: initializer !== "" ? initializer : null,
+                rules:       rulesConverted,
+                startRule:   rules[0].name
+              };
+            })(result0[1], result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -243,11 +243,11 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(code) {
-                return {
-                  type: "initializer",
-                  code: code
-                };
-              })(result0[0]);
+              return {
+                type: "initializer",
+                code: code
+              };
+            })(result0[0]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -281,7 +281,6 @@ PEG.parser = (function(){
           result1 = parse_literal();
           if (result1 === null) {
             result1 = "";
-            
           }
           if (result1 !== null) {
             result2 = parse_equals();
@@ -314,13 +313,13 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(name, displayName, expression) {
-                return {
-                  type:        "rule",
-                  name:        name,
-                  displayName: displayName !== "" ? displayName : null,
-                  expression:  expression
-                };
-              })(result0[0], result0[1], result0[3]);
+              return {
+                type:        "rule",
+                name:        name,
+                displayName: displayName !== "" ? displayName : null,
+                expression:  expression
+              };
+            })(result0[0], result0[1], result0[3]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -395,19 +394,19 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(head, tail) {
-                if (tail.length > 0) {
-                  var alternatives = [head].concat(map(
-                      tail,
-                      function(element) { return element[1]; }
-                  ));
-                  return {
-                    type:         "choice",
-                    alternatives: alternatives
-                  };
-                } else {
-                  return head;
-                }
-              })(result0[0], result0[1]);
+              if (tail.length > 0) {
+                var alternatives = [head].concat(map(
+                    tail,
+                    function(element) { return element[1]; }
+                ));
+                return {
+                  type:         "choice",
+                  alternatives: alternatives
+                };
+              } else {
+                return head;
+              }
+            })(result0[0], result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -456,18 +455,18 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(elements, code) {
-                var expression = elements.length !== 1
-                  ? {
-                      type:     "sequence",
-                      elements: elements
-                    }
-                  : elements[0];
-                return {
-                  type:       "action",
-                  expression: expression,
-                  code:       code
-                };
-              })(result0[0], result0[1]);
+              var expression = elements.length !== 1
+                ? {
+                    type:     "sequence",
+                    elements: elements
+                  }
+                : elements[0];
+              return {
+                type:       "action",
+                expression: expression,
+                code:       code
+              };
+            })(result0[0], result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -482,18 +481,17 @@ PEG.parser = (function(){
           }
           if (result0 !== null) {
             result0 = (function(elements) {
-                  return elements.length !== 1
-                    ? {
-                        type:     "sequence",
-                        elements: elements
-                      }
-                    : elements[0];
-                })(result0);
+                return elements.length !== 1
+                  ? {
+                      type:     "sequence",
+                      elements: elements
+                    }
+                  : elements[0];
+              })(result0);
           }
           if (result0 === null) {
             pos = pos0;
           }
-          
         }
         
         
@@ -540,19 +538,18 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(label, expression) {
-                return {
-                  type:       "labeled",
-                  label:      label,
-                  expression: expression
-                };
-              })(result0[0], result0[2]);
+              return {
+                type:       "labeled",
+                label:      label,
+                expression: expression
+              };
+            })(result0[0], result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
         }
         if (result0 === null) {
           result0 = parse_prefixed();
-          
         }
         
         
@@ -593,11 +590,11 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(code) {
-                return {
-                  type: "semantic_and",
-                  code: code
-                };
-              })(result0[1]);
+              return {
+                type: "semantic_and",
+                code: code
+              };
+            })(result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -620,11 +617,11 @@ PEG.parser = (function(){
           }
           if (result0 !== null) {
             result0 = (function(expression) {
-                  return {
-                    type:       "simple_and",
-                    expression: expression
-                  };
-                })(result0[1]);
+                return {
+                  type:       "simple_and",
+                  expression: expression
+                };
+              })(result0[1]);
           }
           if (result0 === null) {
             pos = pos0;
@@ -647,11 +644,11 @@ PEG.parser = (function(){
             }
             if (result0 !== null) {
               result0 = (function(code) {
-                    return {
-                      type: "semantic_not",
-                      code: code
-                    };
-                  })(result0[1]);
+                  return {
+                    type: "semantic_not",
+                    code: code
+                  };
+                })(result0[1]);
             }
             if (result0 === null) {
               pos = pos0;
@@ -674,18 +671,17 @@ PEG.parser = (function(){
               }
               if (result0 !== null) {
                 result0 = (function(expression) {
-                      return {
-                        type:       "simple_not",
-                        expression: expression
-                      };
-                    })(result0[1]);
+                    return {
+                      type:       "simple_not",
+                      expression: expression
+                    };
+                  })(result0[1]);
               }
               if (result0 === null) {
                 pos = pos0;
               }
               if (result0 === null) {
                 result0 = parse_suffixed();
-                
               }
             }
           }
@@ -729,11 +725,11 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(expression) {
-                return {
-                  type:       "optional",
-                  expression: expression
-                };
-              })(result0[0]);
+              return {
+                type:       "optional",
+                expression: expression
+              };
+            })(result0[0]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -756,11 +752,11 @@ PEG.parser = (function(){
           }
           if (result0 !== null) {
             result0 = (function(expression) {
-                  return {
-                    type:       "zero_or_more",
-                    expression: expression
-                  };
-                })(result0[0]);
+                return {
+                  type:       "zero_or_more",
+                  expression: expression
+                };
+              })(result0[0]);
           }
           if (result0 === null) {
             pos = pos0;
@@ -783,18 +779,17 @@ PEG.parser = (function(){
             }
             if (result0 !== null) {
               result0 = (function(expression) {
-                    return {
-                      type:       "one_or_more",
-                      expression: expression
-                    };
-                  })(result0[0]);
+                  return {
+                    type:       "one_or_more",
+                    expression: expression
+                  };
+                })(result0[0]);
             }
             if (result0 === null) {
               pos = pos0;
             }
             if (result0 === null) {
               result0 = parse_primary();
-              
             }
           }
         }
@@ -830,7 +825,6 @@ PEG.parser = (function(){
           result1 = parse_literal();
           if (result1 === null) {
             result1 = "";
-            
           }
           if (result1 !== null) {
             result2 = parse_equals();
@@ -863,11 +857,11 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(name) {
-                return {
-                  type: "rule_ref",
-                  name: name
-                };
-              })(result0[0]);
+              return {
+                type: "rule_ref",
+                name: name
+              };
+            })(result0[0]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -877,11 +871,11 @@ PEG.parser = (function(){
           result0 = parse_literal();
           if (result0 !== null) {
             result0 = (function(value) {
-                  return {
-                    type:  "literal",
-                    value: value
-                  };
-                })(result0);
+                return {
+                  type:  "literal",
+                  value: value
+                };
+              })(result0);
           }
           if (result0 === null) {
             pos = pos0;
@@ -925,7 +919,6 @@ PEG.parser = (function(){
                 if (result0 === null) {
                   pos = pos0;
                 }
-                
               }
             }
           }
@@ -1013,14 +1006,12 @@ PEG.parser = (function(){
           result2 = parse_braced();
           if (result2 === null) {
             result2 = parse_nonBraceCharacter();
-            
           }
           while (result2 !== null) {
             result1.push(result2);
             result2 = parse_braced();
             if (result2 === null) {
               result2 = parse_nonBraceCharacter();
-              
             }
           }
           if (result1 !== null) {
@@ -1049,8 +1040,8 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(parts) {
-                return "{" + parts.join("") + "}";
-              })(result0[1]);
+              return "{" + parts.join("") + "}";
+            })(result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -1782,7 +1773,6 @@ PEG.parser = (function(){
                 matchFailed("\"$\"");
               }
             }
-            
           }
         }
         if (result0 !== null) {
@@ -1810,7 +1800,6 @@ PEG.parser = (function(){
                     matchFailed("\"$\"");
                   }
                 }
-                
               }
             }
           }
@@ -1839,7 +1828,6 @@ PEG.parser = (function(){
                       matchFailed("\"$\"");
                     }
                   }
-                  
                 }
               }
             }
@@ -1862,8 +1850,8 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(head, tail) {
-                return head + tail.join("");
-              })(result0[0], result0[1]);
+              return head + tail.join("");
+            })(result0[0], result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -1897,7 +1885,6 @@ PEG.parser = (function(){
         result0 = parse_doubleQuotedLiteral();
         if (result0 === null) {
           result0 = parse_singleQuotedLiteral();
-          
         }
         if (result0 !== null) {
           result1 = parse___();
@@ -2022,7 +2009,6 @@ PEG.parser = (function(){
                 result0 = parse_unicodeEscapeSequence();
                 if (result0 === null) {
                   result0 = parse_eolEscapeSequence();
-                  
                 }
               }
             }
@@ -2075,7 +2061,6 @@ PEG.parser = (function(){
           }
           if (result0 === null) {
             result0 = parse_eolChar();
-            
           }
         }
         reportFailures--;
@@ -2214,7 +2199,6 @@ PEG.parser = (function(){
                 result0 = parse_unicodeEscapeSequence();
                 if (result0 === null) {
                   result0 = parse_eolEscapeSequence();
-                  
                 }
               }
             }
@@ -2267,7 +2251,6 @@ PEG.parser = (function(){
           }
           if (result0 === null) {
             result0 = parse_eolChar();
-            
           }
         }
         reportFailures--;
@@ -2352,14 +2335,12 @@ PEG.parser = (function(){
             result3 = parse_classCharacterRange();
             if (result3 === null) {
               result3 = parse_classCharacter();
-              
             }
             while (result3 !== null) {
               result2.push(result3);
               result3 = parse_classCharacterRange();
               if (result3 === null) {
                 result3 = parse_classCharacter();
-                
               }
             }
             if (result2 !== null) {
@@ -2398,20 +2379,20 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(inverted, parts) {
-                var partsConverted = map(parts, function(part) { return part.data; });
-                var rawText = "["
-                  + inverted
-                  + map(parts, function(part) { return part.rawText; }).join("")
-                  + "]";
-          
-                return {
-                  type:     "class",
-                  inverted: inverted === "^",
-                  parts:    partsConverted,
-                  // FIXME: Get the raw text from the input directly.
-                  rawText:  rawText
-                };
-              })(result0[1], result0[2]);
+              var partsConverted = map(parts, function(part) { return part.data; });
+              var rawText = "["
+                + inverted
+                + map(parts, function(part) { return part.rawText; }).join("")
+                + "]";
+        
+              return {
+                type:     "class",
+                inverted: inverted === "^",
+                parts:    partsConverted,
+                // FIXME: Get the raw text from the input directly.
+                rawText:  rawText
+              };
+            })(result0[1], result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -2471,18 +2452,18 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(begin, end) {
-                if (begin.data.charCodeAt(0) > end.data.charCodeAt(0)) {
-                  throw new this.SyntaxError(
-                    "Invalid character range: " + begin.rawText + "-" + end.rawText + "."
-                  );
-                }
-          
-                return {
-                  data:    [begin.data, end.data],
-                  // FIXME: Get the raw text from the input directly.
-                  rawText: begin.rawText + "-" + end.rawText
-                };
-              })(result0[0], result0[2]);
+              if (begin.data.charCodeAt(0) > end.data.charCodeAt(0)) {
+                throw new this.SyntaxError(
+                  "Invalid character range: " + begin.rawText + "-" + end.rawText + "."
+                );
+              }
+        
+              return {
+                data:    [begin.data, end.data],
+                // FIXME: Get the raw text from the input directly.
+                rawText: begin.rawText + "-" + end.rawText
+              };
+            })(result0[0], result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -2513,12 +2494,12 @@ PEG.parser = (function(){
         result0 = parse_bracketDelimitedCharacter();
         if (result0 !== null) {
           result0 = (function(char_) {
-                return {
-                  data:    char_,
-                  // FIXME: Get the raw text from the input directly.
-                  rawText: quoteForRegexpClass(char_)
-                };
-              })(result0);
+              return {
+                data:    char_,
+                // FIXME: Get the raw text from the input directly.
+                rawText: quoteForRegexpClass(char_)
+              };
+            })(result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -2556,7 +2537,6 @@ PEG.parser = (function(){
                 result0 = parse_unicodeEscapeSequence();
                 if (result0 === null) {
                   result0 = parse_eolEscapeSequence();
-                  
                 }
               }
             }
@@ -2609,7 +2589,6 @@ PEG.parser = (function(){
           }
           if (result0 === null) {
             result0 = parse_eolChar();
-            
           }
         }
         reportFailures--;
@@ -2704,7 +2683,6 @@ PEG.parser = (function(){
               }
               if (result1 === null) {
                 result1 = parse_eolChar();
-                
               }
             }
           }
@@ -2741,14 +2719,14 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(char_) {
-                return char_
-                  .replace("b", "\b")
-                  .replace("f", "\f")
-                  .replace("n", "\n")
-                  .replace("r", "\r")
-                  .replace("t", "\t")
-                  .replace("v", "\x0B"); // IE does not recognize "\v".
-              })(result0[2]);
+              return char_
+                .replace("b", "\b")
+                .replace("f", "\f")
+                .replace("n", "\n")
+                .replace("r", "\r")
+                .replace("t", "\t")
+                .replace("v", "\x0B"); // IE does not recognize "\v".
+            })(result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -2866,8 +2844,8 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(h1, h2) {
-                return String.fromCharCode(parseInt(h1 + h2, 16));
-              })(result0[1], result0[2]);
+              return String.fromCharCode(parseInt(h1 + h2, 16));
+            })(result0[1], result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -2937,8 +2915,8 @@ PEG.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(h1, h2, h3, h4) {
-                return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
-              })(result0[1], result0[2], result0[3], result0[4]);
+              return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
+            })(result0[1], result0[2], result0[3], result0[4]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -3081,7 +3059,6 @@ PEG.parser = (function(){
         result0 = parse_lowerCaseLetter();
         if (result0 === null) {
           result0 = parse_upperCaseLetter();
-          
         }
         
         
@@ -3173,7 +3150,6 @@ PEG.parser = (function(){
           result1 = parse_eol();
           if (result1 === null) {
             result1 = parse_comment();
-            
           }
         }
         while (result1 !== null) {
@@ -3183,7 +3159,6 @@ PEG.parser = (function(){
             result1 = parse_eol();
             if (result1 === null) {
               result1 = parse_comment();
-              
             }
           }
         }
@@ -3212,7 +3187,6 @@ PEG.parser = (function(){
         result0 = parse_singleLineComment();
         if (result0 === null) {
           result0 = parse_multiLineComment();
-          
         }
         reportFailures--;
         if (reportFailures === 0 && result0 === null) {
@@ -3535,7 +3509,6 @@ PEG.parser = (function(){
                     matchFailed("\"\\u2029\"");
                   }
                 }
-                
               }
             }
           }
