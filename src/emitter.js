@@ -269,7 +269,7 @@ PEG.compiler.emitter = function(ast) {
         '     */',
         '    parse: function(input, startRule) {',
         '      var parseFunctions = {',
-        '        #block parseFunctionTableItems',
+        '        #block parseFunctionTableItems.join(",\\n")',
         '      };',
         '      ',
         '      if (startRule !== undefined) {',
@@ -352,8 +352,10 @@ PEG.compiler.emitter = function(ast) {
         '        rightmostFailuresExpected.push(failure);',
         '      }',
         '      ',
-        '      #block parseFunctionDefinitions',
-        '      ',
+        '      #for definition in parseFunctionDefinitions',
+        '        #block definition',
+        '        ',
+        '      #end',
         '      function buildErrorMessage() {',
         '        function buildExpected(failuresExpected) {',
         '          failuresExpected.sort();',
@@ -419,7 +421,9 @@ PEG.compiler.emitter = function(ast) {
         '        return { line: line, column: column };',
         '      }',
         '      ',
-        '      #block initializerCode',
+        '      #if initializerCode !== ""',
+        '        #block initializerCode',
+        '      #end',
         '      ',
         '      var result = parseFunctions[startRule]();',
         '      ',
@@ -478,8 +482,8 @@ PEG.compiler.emitter = function(ast) {
         '})()',
         {
           initializerCode:          initializerCode,
-          parseFunctionTableItems:  parseFunctionTableItems.join(',\n'),
-          parseFunctionDefinitions: parseFunctionDefinitions.join('\n\n'),
+          parseFunctionTableItems:  parseFunctionTableItems,
+          parseFunctionDefinitions: parseFunctionDefinitions,
           startRule:                node.startRule
         }
       );
