@@ -627,19 +627,14 @@ PEG.compiler.emitter = function(ast) {
       });
 
       var code = formatCode(
-        '#{resultVar} = #{elementResultVarArray};',
+        '#{resultVar} = [#{elementResultVars.join(", ")}];',
         {
-          resultVar:             resultVar(context.resultIndex),
-          elementResultVarArray: '[' + elementResultVars.join(', ') + ']'
+          resultVar:         resultVar(context.resultIndex),
+          elementResultVars: elementResultVars
         }
       );
-      var elementContext;
 
       for (var i = node.elements.length - 1; i >= 0; i--) {
-        elementContext = {
-          resultIndex: context.resultIndex + i,
-          posIndex:    context.posIndex + 1
-        };
         code = formatCode(
           '#block elementCode',
           'if (#{elementResultVar} !== null) {',
@@ -649,7 +644,10 @@ PEG.compiler.emitter = function(ast) {
           '  pos = #{posVar};',
           '}',
           {
-            elementCode:      emit(node.elements[i], elementContext),
+            elementCode:      emit(node.elements[i], {
+              resultIndex: context.resultIndex + i,
+              posIndex:    context.posIndex + 1
+            }),
             elementResultVar: elementResultVars[i],
             code:             code,
             posVar:           posVar(context.posIndex),
