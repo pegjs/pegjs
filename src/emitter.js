@@ -495,54 +495,32 @@ PEG.compiler.emitter = function(ast) {
         posIndex:    0
       };
 
-      var resultVars = map(range(node.resultStackDepth), resultVar);
-      var posVars    = map(range(node.posStackDepth),    posVar);
-
-      var resultVarsCode = resultVars.length > 0 ? 'var ' + resultVars.join(', ') + ';' : '';
-      var posVarsCode    = posVars.length    > 0 ? 'var ' + posVars.join(', ')    + ';' : '';
-
-      var setReportFailuresCode;
-      var restoreReportFailuresCode;
-      var reportFailureCode;
-
-      if (node.displayName !== null) {
-        setReportFailuresCode = formatCode(
-          'reportFailures++;'
-        );
-        restoreReportFailuresCode = formatCode(
-          'reportFailures--;'
-        );
-        reportFailureCode = formatCode(
-          'if (reportFailures === 0 && #{resultVar} === null) {',
-          '  matchFailed(#{string(displayName)});',
-          '}',
-          {
-            displayName: node.displayName,
-            resultVar:   resultVar(context.resultIndex)
-          }
-        );
-      } else {
-        setReportFailuresCode = "";
-        restoreReportFailuresCode = "";
-        reportFailureCode = "";
-      }
-
       return formatCode(
-        'function parse_#{name}() {',
-        '  var cacheKey = "#{name}@" + pos;',
+        'function parse_#{node.name}() {',
+        '  var cacheKey = "#{node.name}@" + pos;',
         '  var cachedResult = cache[cacheKey];',
         '  if (cachedResult) {',
         '    pos = cachedResult.nextPos;',
         '    return cachedResult.result;',
         '  }',
         '  ',
-        '  #block resultVarsCode',
-        '  #block posVarsCode',
+        '  #if resultVars.length > 0',
+        '    var #{resultVars.join(", ")};',
+        '  #end',
+        '  #if posVars.length > 0',
+        '    var #{posVars.join(", ")};',
+        '  #end',
         '  ',
-        '  #block setReportFailuresCode',
+        '  #if node.displayName !== null',
+        '    reportFailures++;',
+        '  #end',
         '  #block code',
-        '  #block restoreReportFailuresCode',
-        '  #block reportFailureCode',
+        '  #if node.displayName !== null',
+        '    reportFailures--;',
+        '    if (reportFailures === 0 && #{resultVar} === null) {',
+        '      matchFailed(#{string(node.displayName)});',
+        '    }',
+        '  #end',
         '  ',
         '  cache[cacheKey] = {',
         '    nextPos: pos,',
@@ -551,14 +529,11 @@ PEG.compiler.emitter = function(ast) {
         '  return #{resultVar};',
         '}',
         {
-          name:                      node.name,
-          resultVarsCode:            resultVarsCode,
-          posVarsCode:               posVarsCode,
-          setReportFailuresCode:     setReportFailuresCode,
-          restoreReportFailuresCode: restoreReportFailuresCode,
-          reportFailureCode:         reportFailureCode,
-          code:                      emit(node.expression, context),
-          resultVar:                 resultVar(context.resultIndex)
+          node:       node,
+          resultVars: map(range(node.resultStackDepth), resultVar),
+          posVars:    map(range(node.posStackDepth), posVar),
+          code:       emit(node.expression, context),
+          resultVar:  resultVar(context.resultIndex)
         }
       );
     },
