@@ -496,7 +496,14 @@ PEG.compiler.emitter = function(ast) {
     rule: function(node) {
       var context = {
         resultIndex: 0,
-        posIndex:    0
+        posIndex:    0,
+        delta:       function(resultIndexDelta, posIndexDelta) {
+          return {
+            resultIndex: this.resultIndex + resultIndexDelta,
+            posIndex:    this.posIndex    + posIndexDelta,
+            delta:       this.delta
+          };
+        }
       };
 
       return formatCode(
@@ -623,10 +630,7 @@ PEG.compiler.emitter = function(ast) {
           '  pos = #{posVar};',
           '}',
           {
-            elementCode:      emit(node.elements[i], {
-              resultIndex: context.resultIndex + i,
-              posIndex:    context.posIndex + 1
-            }),
+            elementCode:      emit(node.elements[i], context.delta(i, 1)),
             elementResultVar: elementResultVars[i],
             code:             code,
             posVar:           posVar(context.posIndex),
@@ -662,10 +666,7 @@ PEG.compiler.emitter = function(ast) {
         '  #{resultVar} = null;',
         '}',
         {
-          expressionCode: emit(node.expression, {
-            resultIndex: context.resultIndex,
-            posIndex:    context.posIndex + 1
-          }),
+          expressionCode: emit(node.expression, context.delta(0, 1)),
           posVar:         posVar(context.posIndex),
           resultVar:      resultVar(context.resultIndex)
         }
@@ -685,10 +686,7 @@ PEG.compiler.emitter = function(ast) {
         '  pos = #{posVar};',
         '}',
         {
-          expressionCode: emit(node.expression, {
-            resultIndex: context.resultIndex,
-            posIndex:    context.posIndex + 1
-          }),
+          expressionCode: emit(node.expression, context.delta(0, 1)),
           posVar:         posVar(context.posIndex),
           resultVar:      resultVar(context.resultIndex)
         }
@@ -735,10 +733,7 @@ PEG.compiler.emitter = function(ast) {
         '  #block expressionCode',
         '}',
         {
-          expressionCode:      emit(node.expression, {
-            resultIndex: context.resultIndex + 1,
-            posIndex:    context.posIndex
-          }),
+          expressionCode:      emit(node.expression, context.delta(1, 0)),
           expressionResultVar: resultVar(context.resultIndex + 1),
           resultVar:           resultVar(context.resultIndex)
         }
@@ -758,10 +753,7 @@ PEG.compiler.emitter = function(ast) {
         '  #{resultVar} = null;',
         '}',
         {
-          expressionCode:      emit(node.expression, {
-            resultIndex: context.resultIndex + 1,
-            posIndex:    context.posIndex
-          }),
+          expressionCode:      emit(node.expression, context.delta(1, 0)),
           expressionResultVar: resultVar(context.resultIndex + 1),
           resultVar:           resultVar(context.resultIndex)
         }
@@ -812,10 +804,7 @@ PEG.compiler.emitter = function(ast) {
         '}',
         {
           node:           node,
-          expressionCode: emit(node.expression, {
-            resultIndex: context.resultIndex,
-            posIndex:    context.posIndex + 1
-          }),
+          expressionCode: emit(node.expression, context.delta(0, 1)),
           formalParams:   formalParams,
           actualParams:   actualParams,
           posVar:         posVar(context.posIndex),
