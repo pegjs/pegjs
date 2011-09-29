@@ -20,9 +20,9 @@ Getting Started
 Installation
 ------------
 
-### Command Line / Server-side
+### Node.js
 
-To use command-line version, install [Node.js](http://nodejs.org/) and [npm](http://npmjs.org/) first. You can then install PEG.js:
+To use the command-line version, install [Node.js](http://nodejs.org/) and [npm](http://npmjs.org/) first. You can then install PEG.js:
 
     $ npm install pegjs
 
@@ -57,7 +57,7 @@ In Node.js, require the PEG.js parser generator module:
 
     var PEG = require("pegjs");
 
-In browser, include the PEG.js library in your web page or application using the `<script>` tag. The API will be available through the `PEG` global object.
+In browser, include the PEG.js library in your web page or application using the `<script>` tag. The API will be available via the `PEG` global object.
 
 To generate a parser, call the `PEG.buildParser` method and pass your grammar as a parameter:
 
@@ -221,6 +221,6 @@ Development
   * [Google Group](http://groups.google.com/group/pegjs)
   * [Twitter](http://twitter.com/peg_js)
 
-PEG.js is developed by [David Majda](http://majda.cz/) ([@dmajda](http://twitter.com/dmajda)). You are welcome to contribute code. Unless your contribution is really trivial you should get in touch with me first — this can prevent wasted effort on both sides. You can send code both as patch or GitHub pull request.
+PEG.js is developed by [David Majda](http://majda.cz/) ([@dmajda](http://twitter.com/dmajda)). You are welcome to contribute code. Unless your contribution is really trivial you should get in touch with me first — this can prevent wasted effort on both sides. You can send code both as a patch or a GitHub pull request.
 
 Note that PEG.js is still very much work in progress. There are no compatibility guarantees until version 1.0.
