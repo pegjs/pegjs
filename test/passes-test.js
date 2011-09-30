@@ -169,42 +169,42 @@ test("computes stack depths", function() {
     /* Sequence */
     {
       grammar:          'start = "a" "b" "c"',
-      resultStackDepth: 4,
+      resultStackDepth: 3,
       posStackDepth:    2
     },
     {
       grammar:          'start = "a" "b" "c"*',
-      resultStackDepth: 5,
+      resultStackDepth: 4,
       posStackDepth:    2
     },
     {
       grammar:          'start = "a" "b"* "c"',
-      resultStackDepth: 4,
+      resultStackDepth: 3,
       posStackDepth:    2
     },
     {
       grammar:          'start = "a" ("b"*)* "c"',
-      resultStackDepth: 5,
+      resultStackDepth: 4,
       posStackDepth:    2
     },
     {
       grammar:          'start = "a"* "b" "c"',
-      resultStackDepth: 4,
+      resultStackDepth: 3,
       posStackDepth:    2
     },
     {
       grammar:          'start = ("a"*)* "b" "c"',
-      resultStackDepth: 4,
+      resultStackDepth: 3,
       posStackDepth:    2
     },
     {
       grammar:          'start = (("a"*)*)* "b" "c"',
-      resultStackDepth: 5,
+      resultStackDepth: 4,
       posStackDepth:    2
     },
     {
       grammar:          'start = "a" &"b" "c"',
-      resultStackDepth: 4,
+      resultStackDepth: 3,
       posStackDepth:    3
     },
 

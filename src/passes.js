@@ -124,7 +124,7 @@ PEG.compiler.passes = {
       sequence:
         function(node) {
           each(node.elements, compute);
-          node.resultStackDepth = 1 + Math.max.apply(
+          node.resultStackDepth = Math.max.apply(
             null,
             map(node.elements, function(e, i) { return i + e.resultStackDepth; })
           );
