@@ -124,14 +124,18 @@ PEG.compiler.passes = {
       sequence:
         function(node) {
           each(node.elements, compute);
-          node.resultStackDepth = Math.max.apply(
-            null,
-            map(node.elements, function(e, i) { return i + e.resultStackDepth; })
-          );
-          node.posStackDepth = 1 + Math.max.apply(
-            null,
-            map(node.elements, function(e) { return e.posStackDepth; })
-          );
+          node.resultStackDepth = node.elements.length > 0
+            ? Math.max.apply(
+                null,
+                map(node.elements, function(e, i) { return i + e.resultStackDepth; })
+              )
+            : 0;
+          node.posStackDepth = node.elements.length > 0
+            ? 1 + Math.max.apply(
+                null,
+                map(node.elements, function(e) { return e.posStackDepth; })
+              )
+            : 1;
         },
 
       labeled:      computeFromExpression(0, 0),

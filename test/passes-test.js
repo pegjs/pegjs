@@ -168,6 +168,11 @@ test("computes stack depths", function() {
 
     /* Sequence */
     {
+      grammar:          'start = ',
+      resultStackDepth: 1,
+      posStackDepth:    1
+    },
+    {
       grammar:          'start = "a" "b" "c"',
       resultStackDepth: 3,
       posStackDepth:    1
