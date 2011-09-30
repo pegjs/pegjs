@@ -334,11 +334,16 @@ test("parses identifier", function() {
 /* Canonical literal is "\"abcd\"". */
 test("parses literal", function() {
   parserParses('start = "abcd"', literalGrammar("abcd"));
+});
+
+/* Canonical string is "\"abcd\"". */
+test("parses string", function() {
+  parserParses('start = "abcd"', literalGrammar("abcd"));
   parserParses("start = 'abcd'", literalGrammar("abcd"));
 });
 
-/* Canonical doubleQuotedLiteral is "\"abcd\"". */
-test("parses doubleQuotedLiteral", function() {
+/* Canonical doubleQuotedString is "\"abcd\"". */
+test("parses doubleQuotedString", function() {
   parserParses('start = ""',       literalGrammar(""));
   parserParses('start = "a"',      literalGrammar("a"));
   parserParses('start = "abc"',    literalGrammar("abc"));
@@ -368,8 +373,8 @@ test("parses simpleDoubleQuotedCharacter", function() {
   parserDoesNotParse('start = "\u2029"');
 });
 
-/* Canonical singleQuotedLiteral is "'abcd'". */
-test("parses singleQuotedLiteral", function() {
+/* Canonical singleQuotedString is "'abcd'". */
+test("parses singleQuotedString", function() {
   parserParses("start = ''",       literalGrammar(""));
   parserParses("start = 'a'",      literalGrammar("a"));
   parserParses("start = 'abc'",    literalGrammar("abc"));

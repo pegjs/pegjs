@@ -20,7 +20,7 @@ initializer
     }
 
 rule
-  = name:identifier displayName:(literal / "") equals expression:expression semicolon? {
+  = name:identifier displayName:(string / "") equals expression:expression semicolon? {
       return {
         type:        "rule",
         name:        name,
@@ -130,18 +130,13 @@ suffixed
   / primary
 
 primary
-  = name:identifier !(( literal / "") equals) {
+  = name:identifier !(( string / "") equals) {
       return {
         type: "rule_ref",
         name: name
       };
     }
-  / value:literal {
-      return {
-        type:  "literal",
-        value: value
-      };
-    }
+  / literal
   / dot { return { type: "any" }; }
   / class
   / lparen expression:expression rparen { return expression; }
@@ -200,9 +195,17 @@ identifier "identifier"
  * vaguely).
  */
 literal "literal"
-  = literal:(doubleQuotedLiteral / singleQuotedLiteral) __ { return literal; }
+  = value:string {
+      return {
+        type:  "literal",
+        value: value
+      };
+    }
 
-doubleQuotedLiteral
+string "string"
+  = string:(doubleQuotedString / singleQuotedString) __ { return string; }
+
+doubleQuotedString
   = '"' chars:doubleQuotedCharacter* '"' { return chars.join(""); }
 
 doubleQuotedCharacter
@@ -216,7 +219,7 @@ doubleQuotedCharacter
 simpleDoubleQuotedCharacter
   = !('"' / "\\" / eolChar) char_:. { return char_; }
 
-singleQuotedLiteral
+singleQuotedString
   = "'" chars:singleQuotedCharacter* "'" { return chars.join(""); }
 
 singleQuotedCharacter
