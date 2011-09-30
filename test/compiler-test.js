@@ -186,12 +186,21 @@ test("rule references", function() {
 });
 
 test("literals", function() {
-  var parser = PEG.buildParser('start = "abcd"');
-  parses(parser, "abcd", "abcd");
-  doesNotParse(parser, "");
-  doesNotParse(parser, "abc");
-  doesNotParse(parser, "abcde");
-  doesNotParse(parser, "efgh");
+  var zeroCharParser = PEG.buildParser('start = ""');
+  parses(zeroCharParser, "", "");
+  doesNotParse(zeroCharParser, "a");
+
+  var oneCharParser = PEG.buildParser('start = "a"');
+  parses(oneCharParser, "a", "a");
+  doesNotParse(oneCharParser, "");
+  doesNotParse(oneCharParser, "b");
+
+  var multiCharParser = PEG.buildParser('start = "abcd"');
+  parses(multiCharParser, "abcd", "abcd");
+  doesNotParse(multiCharParser, "");
+  doesNotParse(multiCharParser, "abc");
+  doesNotParse(multiCharParser, "abcde");
+  doesNotParse(multiCharParser, "efgh");
 
   /*
    * Test that the parsing position moves forward after successful parsing of
