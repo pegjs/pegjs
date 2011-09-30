@@ -106,7 +106,7 @@ PEG.compiler.passes = {
           }
         },
 
-      rule:         computeFromExpression(1, 1),
+      rule:         computeFromExpression(1, 0),
 
       choice:
         function(node) {

@@ -153,75 +153,75 @@ test("computes stack depths", function() {
     {
       grammar:          'start = "a" / "b" / "c"',
       resultStackDepth: 1,
-      posStackDepth:    1
+      posStackDepth:    0
     },
     {
       grammar:          'start = "a" / "b"* / "c"',
       resultStackDepth: 2,
-      posStackDepth:    1
+      posStackDepth:    0
     },
     {
       grammar:          'start = "a" / &"b" / "c"',
       resultStackDepth: 1,
-      posStackDepth:    2
+      posStackDepth:    1
     },
 
     /* Sequence */
     {
       grammar:          'start = "a" "b" "c"',
       resultStackDepth: 3,
-      posStackDepth:    2
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" "b" "c"*',
       resultStackDepth: 4,
-      posStackDepth:    2
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" "b"* "c"',
       resultStackDepth: 3,
-      posStackDepth:    2
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" ("b"*)* "c"',
       resultStackDepth: 4,
-      posStackDepth:    2
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a"* "b" "c"',
       resultStackDepth: 3,
-      posStackDepth:    2
+      posStackDepth:    1
     },
     {
       grammar:          'start = ("a"*)* "b" "c"',
       resultStackDepth: 3,
-      posStackDepth:    2
+      posStackDepth:    1
     },
     {
       grammar:          'start = (("a"*)*)* "b" "c"',
       resultStackDepth: 4,
-      posStackDepth:    2
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" &"b" "c"',
       resultStackDepth: 3,
-      posStackDepth:    3
+      posStackDepth:    2
     },
 
     /* Others */
-    { grammar: 'start = label:"a"',    resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = &"a"',         resultStackDepth: 1, posStackDepth: 2 },
-    { grammar: 'start = !"a"',         resultStackDepth: 1, posStackDepth: 2 },
-    { grammar: 'start = &{ code }',    resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = !{ code }',    resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = "a"?',         resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = "a"*',         resultStackDepth: 2, posStackDepth: 1 },
-    { grammar: 'start = "a"+',         resultStackDepth: 2, posStackDepth: 1 },
-    { grammar: 'start = "a" { code }', resultStackDepth: 1, posStackDepth: 2 },
-    { grammar: 'start = a',            resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = "a"',          resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = .',            resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = [a-z]',        resultStackDepth: 1, posStackDepth: 1 }
+    { grammar: 'start = label:"a"',    resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = &"a"',         resultStackDepth: 1, posStackDepth: 1 },
+    { grammar: 'start = !"a"',         resultStackDepth: 1, posStackDepth: 1 },
+    { grammar: 'start = &{ code }',    resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = !{ code }',    resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = "a"?',         resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = "a"*',         resultStackDepth: 2, posStackDepth: 0 },
+    { grammar: 'start = "a"+',         resultStackDepth: 2, posStackDepth: 0 },
+    { grammar: 'start = "a" { code }', resultStackDepth: 1, posStackDepth: 1 },
+    { grammar: 'start = a',            resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = "a"',          resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = .',            resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = [a-z]',        resultStackDepth: 1, posStackDepth: 0 }
   ];
 
   for (var i = 0; i < cases.length; i++) {

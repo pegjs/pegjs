@@ -154,7 +154,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2, result3;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -220,7 +220,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -266,7 +266,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2, result3, result4;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -333,7 +333,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2, result3;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         pos1 = pos;
@@ -417,7 +417,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -496,7 +496,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -551,7 +551,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -683,7 +683,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -787,7 +787,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2, pos3, pos4;
+        var pos0, pos1, pos2, pos3;
         
         pos0 = pos;
         pos1 = pos;
@@ -900,7 +900,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         reportFailures++;
         pos0 = pos;
@@ -945,7 +945,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1020,7 +1020,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1;
+        var pos0;
         
         pos0 = pos;
         result1 = parse_nonBraceCharacter();
@@ -1056,7 +1056,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         if (/^[^{}]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
@@ -1084,7 +1083,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1132,7 +1131,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1180,7 +1179,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1228,7 +1227,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1276,7 +1275,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1324,7 +1323,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1372,7 +1371,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1420,7 +1419,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1468,7 +1467,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1516,7 +1515,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1564,7 +1563,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1612,7 +1611,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1660,7 +1659,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         reportFailures++;
         pos0 = pos;
@@ -1790,7 +1789,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         reportFailures++;
         pos0 = pos;
@@ -1859,7 +1858,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         reportFailures++;
         pos0 = pos;
@@ -1907,7 +1906,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -1974,7 +1973,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         result0 = parse_simpleDoubleQuotedCharacter();
         if (result0 === null) {
@@ -2009,7 +2007,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         pos1 = pos;
@@ -2088,7 +2086,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -2155,7 +2153,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         result0 = parse_simpleSingleQuotedCharacter();
         if (result0 === null) {
@@ -2190,7 +2187,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         pos1 = pos;
@@ -2269,7 +2266,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2, result3, result4, result5;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         reportFailures++;
         pos0 = pos;
@@ -2399,7 +2396,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -2465,7 +2462,7 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0, pos1;
+        var pos0;
         
         pos0 = pos;
         result0 = parse_bracketDelimitedCharacter();
@@ -2498,7 +2495,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         result0 = parse_simpleBracketDelimitedCharacter();
         if (result0 === null) {
@@ -2533,7 +2529,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         pos1 = pos;
@@ -2612,7 +2608,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         pos1 = pos;
@@ -2716,7 +2712,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         pos1 = pos;
@@ -2773,7 +2769,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -2829,7 +2825,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2, result3, result4;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -2897,7 +2893,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0, pos1, pos2;
+        var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
@@ -2945,7 +2941,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         if (/^[0-9]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
@@ -2973,7 +2968,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         if (/^[0-9a-fA-F]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
@@ -3001,7 +2995,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         result0 = parse_lowerCaseLetter();
         if (result0 === null) {
@@ -3024,7 +3017,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         if (/^[a-z]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
@@ -3052,7 +3044,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         if (/^[A-Z]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
@@ -3080,7 +3071,6 @@ PEG.parser = (function(){
         }
         
         var result0, result1;
-        var pos0;
         
         result0 = [];
         result1 = parse_whitespace();
@@ -3117,7 +3107,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         reportFailures++;
         result0 = parse_singleLineComment();
@@ -3145,7 +3134,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2, result3;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         if (input.substr(pos, 2) === "//") {
@@ -3251,7 +3240,7 @@ PEG.parser = (function(){
         }
         
         var result0, result1, result2, result3;
-        var pos0, pos1, pos2, pos3;
+        var pos0, pos1, pos2;
         
         pos0 = pos;
         if (input.substr(pos, 2) === "/*") {
@@ -3387,7 +3376,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         reportFailures++;
         if (input.charCodeAt(pos) === 10) {
@@ -3464,7 +3452,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         if (/^[\n\r\u2028\u2029]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
@@ -3492,7 +3479,6 @@ PEG.parser = (function(){
         }
         
         var result0;
-        var pos0;
         
         reportFailures++;
         if (/^[ \t\x0B\f\xA0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]/.test(input.charAt(pos))) {
