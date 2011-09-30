@@ -161,6 +161,13 @@ var initializerGrammar = {
   startRule:   "a"
 };
 
+var namedRuleGrammar = {
+  type:        "grammar",
+  initializer: null,
+  rules:       { start: rule("start", "abcd", literalAbcd) },
+  startRule:   "start"
+};
+
 /* Canonical grammar is "a: \"abcd\"; b: \"efgh\"; c: \"ijkl\";". */
 test("parses grammar", function() {
   parserParses(
@@ -344,10 +351,10 @@ test("parses literal", function() {
 
 /* Canonical string is "\"abcd\"". */
 test("parses string", function() {
-  parserParses('start = "abcd"', literalGrammar("abcd"));
-  parserParses("start = 'abcd'", literalGrammar("abcd"));
+  parserParses('start "abcd" = "abcd"',   namedRuleGrammar);
+  parserParses('start \'abcd\' = "abcd"', namedRuleGrammar);
 
-  parserParses('start = "abcd"\n', literalGrammar("abcd"));
+  parserParses('start "abcd"\n= "abcd"',  namedRuleGrammar);
 });
 
 /* Canonical doubleQuotedString is "\"abcd\"". */
