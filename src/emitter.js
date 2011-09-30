@@ -585,12 +585,28 @@ PEG.compiler.emitter = function(ast) {
             '#if node.value.length === 0',
             '  #{resultVar} = "";',
             '#else',
-            '  #if node.value.length === 1',
-            '    if (input.charCodeAt(pos) === #{node.value.charCodeAt(0)}) {',
+            '  #if !node.ignoreCase',
+            '    #if node.value.length === 1',
+            '      if (input.charCodeAt(pos) === #{node.value.charCodeAt(0)}) {',
+            '    #else',
+            '      if (input.substr(pos, #{node.value.length}) === #{string(node.value)}) {',
+            '    #end',
             '  #else',
-            '    if (input.substr(pos, #{node.value.length}) === #{string(node.value)}) {',
+            /*
+             * One-char literals are not optimized when case-insensitive
+             * matching is enabled. This is because there is no simple way to
+             * lowercase a character code that works for character outside ASCII
+             * letters. Moreover, |toLowerCase| can change string length,
+             * meaning the result of lowercasing a character can be more
+             * characters.
+             */
+            '    if (input.substr(pos, #{node.value.length}).toLowerCase() === #{string(node.value.toLowerCase())}) {',
             '  #end',
-            '    #{resultVar} = #{string(node.value)};',
+            '    #if !node.ignoreCase',
+            '      #{resultVar} = #{string(node.value)};',
+            '    #else',
+            '      #{resultVar} = input.substr(pos, #{node.value.length});',
+            '    #end',
             '    pos += #{node.value.length};',
             '  } else {',
             '    #{resultVar} = null;',

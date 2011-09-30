@@ -190,17 +190,33 @@ test("literals", function() {
   parses(zeroCharParser, "", "");
   doesNotParse(zeroCharParser, "a");
 
-  var oneCharParser = PEG.buildParser('start = "a"');
-  parses(oneCharParser, "a", "a");
-  doesNotParse(oneCharParser, "");
-  doesNotParse(oneCharParser, "b");
+  var oneCharCaseSensitiveParser = PEG.buildParser('start = "a"');
+  parses(oneCharCaseSensitiveParser, "a", "a");
+  doesNotParse(oneCharCaseSensitiveParser, "");
+  doesNotParse(oneCharCaseSensitiveParser, "A");
+  doesNotParse(oneCharCaseSensitiveParser, "b");
 
-  var multiCharParser = PEG.buildParser('start = "abcd"');
-  parses(multiCharParser, "abcd", "abcd");
-  doesNotParse(multiCharParser, "");
-  doesNotParse(multiCharParser, "abc");
-  doesNotParse(multiCharParser, "abcde");
-  doesNotParse(multiCharParser, "efgh");
+  var multiCharCaseSensitiveParser = PEG.buildParser('start = "abcd"');
+  parses(multiCharCaseSensitiveParser, "abcd", "abcd");
+  doesNotParse(multiCharCaseSensitiveParser, "");
+  doesNotParse(multiCharCaseSensitiveParser, "abc");
+  doesNotParse(multiCharCaseSensitiveParser, "abcde");
+  doesNotParse(multiCharCaseSensitiveParser, "ABCD");
+  doesNotParse(multiCharCaseSensitiveParser, "efgh");
+
+  var oneCharCaseInsensitiveParser = PEG.buildParser('start = "a"i');
+  parses(oneCharCaseInsensitiveParser, "a", "a");
+  parses(oneCharCaseInsensitiveParser, "A", "A");
+  doesNotParse(oneCharCaseInsensitiveParser, "");
+  doesNotParse(oneCharCaseInsensitiveParser, "b");
+
+  var multiCharCaseInsensitiveParser = PEG.buildParser('start = "abcd"i');
+  parses(multiCharCaseInsensitiveParser, "abcd", "abcd");
+  parses(multiCharCaseInsensitiveParser, "ABCD", "ABCD");
+  doesNotParse(multiCharCaseInsensitiveParser, "");
+  doesNotParse(multiCharCaseInsensitiveParser, "abc");
+  doesNotParse(multiCharCaseInsensitiveParser, "abcde");
+  doesNotParse(multiCharCaseInsensitiveParser, "efgh");
 
   /*
    * Test that the parsing position moves forward after successful parsing of

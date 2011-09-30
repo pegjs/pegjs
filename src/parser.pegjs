@@ -195,10 +195,11 @@ identifier "identifier"
  * vaguely).
  */
 literal "literal"
-  = value:string {
+  = value:(doubleQuotedString / singleQuotedString) flags:"i"? __ {
       return {
-        type:  "literal",
-        value: value
+        type:       "literal",
+        value:      value,
+        ignoreCase: flags === "i"
       };
     }
 

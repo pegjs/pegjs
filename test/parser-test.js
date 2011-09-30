@@ -83,10 +83,11 @@ function ruleRef(name) {
   };
 }
 
-function literal(value) {
+function literal(value, ignoreCase) {
   return {
-    type:  "literal",
-    value: value
+    type:       "literal",
+    value:      value,
+    ignoreCase: ignoreCase
   };
 }
 
@@ -103,9 +104,9 @@ function klass(inverted, parts, rawText) {
   };
 }
 
-var literalAbcd  = literal("abcd");
-var literalEfgh  = literal("efgh");
-var literalIjkl  = literal("ijkl");
+var literalAbcd  = literal("abcd", false);
+var literalEfgh  = literal("efgh", false);
+var literalIjkl  = literal("ijkl", false);
 
 var optionalLiteral = optional(literalAbcd);
 
@@ -128,7 +129,7 @@ function oneRuleGrammar(expression) {
   };
 }
 
-var simpleGrammar = oneRuleGrammar(literal("abcd"));
+var simpleGrammar = oneRuleGrammar(literal("abcd", false));
 
 function identifierGrammar(identifier) {
   return oneRuleGrammar(ruleRef(identifier));
@@ -136,7 +137,7 @@ function identifierGrammar(identifier) {
 
 var literal_ = literal;
 function literalGrammar(literal) {
-  return oneRuleGrammar(literal_(literal));
+  return oneRuleGrammar(literal_(literal, false));
 }
 
 function classGrammar(inverted, parts, rawText) {
@@ -147,7 +148,7 @@ var anyGrammar = oneRuleGrammar(any());
 
 var action_ = action;
 function actionGrammar(action) {
-  return oneRuleGrammar(action_(literal("a"), action));
+  return oneRuleGrammar(action_(literal("a", false), action));
 }
 
 var initializerGrammar = {
@@ -334,6 +335,8 @@ test("parses identifier", function() {
 /* Canonical literal is "\"abcd\"". */
 test("parses literal", function() {
   parserParses('start = "abcd"', literalGrammar("abcd"));
+  parserParses("start = 'abcd'", literalGrammar("abcd"));
+  parserParses('start = "abcd"i', oneRuleGrammar(literal("abcd", true)));
 });
 
 /* Canonical string is "\"abcd\"". */

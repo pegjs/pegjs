@@ -128,7 +128,7 @@ There are several types of parsing expressions, some of them containing subexpre
 
 #### "*literal*"<br>'*literal*'
 
-Match exact literal string and return it. The string syntax is the same as in JavaScript.
+Match exact literal string and return it. The string syntax is the same as in JavaScript. Appending `i` right after the literal makes the match case-insensitive.
 
 #### .
 

@@ -1793,19 +1793,51 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var result0;
-        var pos0, pos1;
+        var result0, result1, result2, result3;
+        var pos0, pos1, pos2;
         
         reportFailures++;
         pos0 = pos;
-        result0 = parse_string();
+        pos1 = pos;
+        result0 = parse_doubleQuotedString();
+        if (result0 === null) {
+          result0 = parse_singleQuotedString();
+        }
         if (result0 !== null) {
-          result0 = (function(value) {
+          if (input.charCodeAt(pos) === 105) {
+            result1 = "i";
+            pos += 1;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"i\"");
+            }
+          }
+          result1 = result1 !== null ? result1 : "";
+          if (result1 !== null) {
+            result2 = parse___();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(value, flags) {
               return {
-                type:  "literal",
-                value: value
+                type:       "literal",
+                value:      value,
+                ignoreCase: flags === "i"
               };
-            })(result0);
+            })(result0[0], result0[1]);
         }
         if (result0 === null) {
           pos = pos0;

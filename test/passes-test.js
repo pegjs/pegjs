@@ -16,7 +16,7 @@ test("removes proxy rules", function() {
     type:        "rule",
     name:        "proxied",
     displayName: null,
-    expression:  { type: "literal", value: "a" }
+    expression:  { type: "literal", value: "a", ignoreCase: false }
   };
 
   var proxiedRuleRef = {
@@ -50,8 +50,8 @@ test("removes proxy rules", function() {
         type:         "choice",
         alternatives: [
           proxiedRuleRef,
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" }
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false }
         ]
       })
     },
@@ -60,8 +60,8 @@ test("removes proxy rules", function() {
       ast:     simpleGrammarWithStartAndProxied({
         type:         "choice",
         alternatives: [
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" },
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false },
           proxiedRuleRef
         ]
       })
@@ -72,8 +72,8 @@ test("removes proxy rules", function() {
         type:     "sequence",
         elements: [
           proxiedRuleRef,
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" }
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false }
         ]
       })
     },
@@ -82,8 +82,8 @@ test("removes proxy rules", function() {
       ast:     simpleGrammarWithStartAndProxied({
         type:     "sequence",
         elements: [
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" },
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false },
           proxiedRuleRef
         ]
       })
