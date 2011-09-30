@@ -273,9 +273,7 @@ PEG.parser = (function(){
         result0 = parse_identifier();
         if (result0 !== null) {
           result1 = parse_string();
-          if (result1 === null) {
-            result1 = "";
-          }
+          result1 = result1 !== null ? result1 : "";
           if (result1 !== null) {
             result2 = parse_equals();
             if (result2 !== null) {
@@ -799,9 +797,7 @@ PEG.parser = (function(){
           reportFailures++;
           pos3 = pos;
           result1 = parse_string();
-          if (result1 === null) {
-            result1 = "";
-          }
+          result1 = result1 !== null ? result1 : "";
           if (result1 !== null) {
             result2 = parse_equals();
             if (result2 !== null) {

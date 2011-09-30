@@ -20,7 +20,7 @@ initializer
     }
 
 rule
-  = name:identifier displayName:(string / "") equals expression:expression semicolon? {
+  = name:identifier displayName:string? equals expression:expression semicolon? {
       return {
         type:        "rule",
         name:        name,
@@ -130,7 +130,7 @@ suffixed
   / primary
 
 primary
-  = name:identifier !(( string / "") equals) {
+  = name:identifier !(string? equals) {
       return {
         type: "rule_ref",
         name: name
