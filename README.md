@@ -136,7 +136,7 @@ Match exactly one character and return it as a string.
 
 #### [*characters*]
 
-Match one character from a set and return it as a string. The characters in the list can be escaped in exactly the same way as in JavaScript string. The list of characters can also contain ranges (e.g. `[a-z]` means “all lowercase letters”). Preceding the characters with `^` inverts the matched set (e.g. `[^a-z]` means “all character but lowercase letters”).
+Match one character from a set and return it as a string. The characters in the list can be escaped in exactly the same way as in JavaScript string. The list of characters can also contain ranges (e.g. `[a-z]` means “all lowercase letters”). Preceding the characters with `^` inverts the matched set (e.g. `[^a-z]` means “all character but lowercase letters”). Appending `i` right after the right bracket makes the match case-insensitive.
 
 #### *rule*
 

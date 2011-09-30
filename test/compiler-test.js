@@ -246,26 +246,62 @@ test("classes", function() {
   doesNotParse(emptyClassParser, "a");
   doesNotParse(emptyClassParser, "ab");
 
-  var nonEmptyClassParser = PEG.buildParser('start = [ab-d]');
-  parses(nonEmptyClassParser, "a", "a");
-  parses(nonEmptyClassParser, "b", "b");
-  parses(nonEmptyClassParser, "c", "c");
-  parses(nonEmptyClassParser, "d", "d");
-  doesNotParse(nonEmptyClassParser, "");
-  doesNotParse(nonEmptyClassParser, "ab");
-
   var invertedEmptyClassParser = PEG.buildParser('start = [^]');
   doesNotParse(invertedEmptyClassParser, "");
   parses(invertedEmptyClassParser, "a", "a");
   doesNotParse(invertedEmptyClassParser, "ab");
 
-  var invertedNonEmptyClassParser = PEG.buildParser('start = [^ab-d]');
-  doesNotParse(invertedNonEmptyClassParser, "a", "a");
-  doesNotParse(invertedNonEmptyClassParser, "b", "b");
-  doesNotParse(invertedNonEmptyClassParser, "c", "c");
-  doesNotParse(invertedNonEmptyClassParser, "d", "d");
-  doesNotParse(invertedNonEmptyClassParser, "");
-  doesNotParse(invertedNonEmptyClassParser, "ab");
+  var nonEmptyCaseSensitiveClassParser = PEG.buildParser('start = [ab-d]');
+  parses(nonEmptyCaseSensitiveClassParser, "a", "a");
+  parses(nonEmptyCaseSensitiveClassParser, "b", "b");
+  parses(nonEmptyCaseSensitiveClassParser, "c", "c");
+  parses(nonEmptyCaseSensitiveClassParser, "d", "d");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "A");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "B");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "C");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "D");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "e");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "ab");
+
+  var invertedNonEmptyCaseSensitiveClassParser = PEG.buildParser('start = [^ab-d]');
+  parses(invertedNonEmptyCaseSensitiveClassParser, "A", "A");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "B", "B");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "C", "C");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "D", "D");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "e", "e");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "a", "a");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "b", "b");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "c", "c");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "d", "d");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "ab");
+
+  var nonEmptyCaseInsensitiveClassParser = PEG.buildParser('start = [ab-d]i');
+  parses(nonEmptyCaseInsensitiveClassParser, "a", "a");
+  parses(nonEmptyCaseInsensitiveClassParser, "b", "b");
+  parses(nonEmptyCaseInsensitiveClassParser, "c", "c");
+  parses(nonEmptyCaseInsensitiveClassParser, "d", "d");
+  parses(nonEmptyCaseInsensitiveClassParser, "A", "A");
+  parses(nonEmptyCaseInsensitiveClassParser, "B", "B");
+  parses(nonEmptyCaseInsensitiveClassParser, "C", "C");
+  parses(nonEmptyCaseInsensitiveClassParser, "D", "D");
+  doesNotParse(nonEmptyCaseInsensitiveClassParser, "");
+  doesNotParse(nonEmptyCaseInsensitiveClassParser, "e");
+  doesNotParse(nonEmptyCaseInsensitiveClassParser, "ab");
+
+  var invertedNonEmptyCaseInsensitiveClassParser = PEG.buildParser('start = [^ab-d]i');
+  parses(invertedNonEmptyCaseInsensitiveClassParser, "e", "e");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "a", "a");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "b", "b");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "c", "c");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "d", "d");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "A", "A");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "B", "B");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "C", "C");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "D", "D");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "ab");
 
   /*
    * Test that the parsing position moves forward after successful parsing of

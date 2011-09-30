@@ -95,12 +95,13 @@ function any() {
   return { type: "any" };
 }
 
-function klass(inverted, parts, rawText) {
+function klass(inverted, ignoreCase, parts, rawText) {
   return {
-    type:     "class",
-    inverted: inverted,
-    parts:    parts,
-    rawText:  rawText
+    type:       "class",
+    inverted:   inverted,
+    ignoreCase: ignoreCase,
+    parts:      parts,
+    rawText:    rawText
   };
 }
 
@@ -141,7 +142,7 @@ function literalGrammar(literal) {
 }
 
 function classGrammar(inverted, parts, rawText) {
-  return oneRuleGrammar(klass(inverted, parts, rawText));
+  return oneRuleGrammar(klass(inverted, false, parts, rawText));
 }
 
 var anyGrammar = oneRuleGrammar(any());
@@ -416,6 +417,10 @@ test("parses class", function() {
   parserParses(
     "start = [a-de-hi-l]",
     classGrammar(false, [["a", "d"], ["e", "h"], ["i", "l"]], "[a-de-hi-l]")
+  );
+  parserParses(
+    "start = [a-d]i",
+    oneRuleGrammar(klass(false, true, [["a", "d"]], "[a-d]i"))
   );
 
   parserParses("start = [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d]"));

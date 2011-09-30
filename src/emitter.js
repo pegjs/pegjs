@@ -911,7 +911,7 @@ PEG.compiler.emitter = function(ast) {
                   + quoteForRegexpClass(part[1])
                 : quoteForRegexpClass(part);
             }).join('')
-          + ']/';
+          + ']/' + (node.ignoreCase ? 'i' : '');
       } else {
         /*
          * Stupid IE considers regexps /[]/ and /[^]/ syntactically invalid, so

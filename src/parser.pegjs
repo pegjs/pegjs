@@ -235,19 +235,21 @@ simpleSingleQuotedCharacter
   = !("'" / "\\" / eolChar) char_:. { return char_; }
 
 class "character class"
-  = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" __ {
+  = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" flags:"i"? __ {
       var partsConverted = map(parts, function(part) { return part.data; });
       var rawText = "["
         + inverted
         + map(parts, function(part) { return part.rawText; }).join("")
-        + "]";
+        + "]"
+        + flags;
 
       return {
-        type:     "class",
-        inverted: inverted === "^",
-        parts:    partsConverted,
+        type:       "class",
+        inverted:   inverted === "^",
+        ignoreCase: flags === "i",
+        parts:      partsConverted,
         // FIXME: Get the raw text from the input directly.
-        rawText:  rawText
+        rawText:    rawText
       };
     }
 

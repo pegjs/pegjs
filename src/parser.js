@@ -2272,7 +2272,7 @@ PEG.parser = (function(){
           return cachedResult.result;
         }
         
-        var result0, result1, result2, result3, result4, result5;
+        var result0, result1, result2, result3, result4, result5, result6;
         var pos0, pos1, pos2;
         
         reportFailures++;
@@ -2322,9 +2322,24 @@ PEG.parser = (function(){
                 }
               }
               if (result3 !== null) {
-                result4 = parse___();
+                if (input.charCodeAt(pos) === 105) {
+                  result4 = "i";
+                  pos += 1;
+                } else {
+                  result4 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"i\"");
+                  }
+                }
+                result4 = result4 !== null ? result4 : "";
                 if (result4 !== null) {
-                  result0 = [result0, result1, result2, result3, result4];
+                  result5 = parse___();
+                  if (result5 !== null) {
+                    result0 = [result0, result1, result2, result3, result4, result5];
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
                 } else {
                   result0 = null;
                   pos = pos1;
@@ -2346,21 +2361,23 @@ PEG.parser = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(inverted, parts) {
+          result0 = (function(inverted, parts, flags) {
               var partsConverted = map(parts, function(part) { return part.data; });
               var rawText = "["
                 + inverted
                 + map(parts, function(part) { return part.rawText; }).join("")
-                + "]";
+                + "]"
+                + flags;
         
               return {
-                type:     "class",
-                inverted: inverted === "^",
-                parts:    partsConverted,
+                type:       "class",
+                inverted:   inverted === "^",
+                ignoreCase: flags === "i",
+                parts:      partsConverted,
                 // FIXME: Get the raw text from the input directly.
-                rawText:  rawText
+                rawText:    rawText
               };
-            })(result0[1], result0[2]);
+            })(result0[1], result0[2], result0[4]);
         }
         if (result0 === null) {
           pos = pos0;
