@@ -338,12 +338,16 @@ test("parses literal", function() {
   parserParses('start = "abcd"', literalGrammar("abcd"));
   parserParses("start = 'abcd'", literalGrammar("abcd"));
   parserParses('start = "abcd"i', oneRuleGrammar(literal("abcd", true)));
+
+  parserParses('start = "abcd"\n', literalGrammar("abcd"));
 });
 
 /* Canonical string is "\"abcd\"". */
 test("parses string", function() {
   parserParses('start = "abcd"', literalGrammar("abcd"));
   parserParses("start = 'abcd'", literalGrammar("abcd"));
+
+  parserParses('start = "abcd"\n', literalGrammar("abcd"));
 });
 
 /* Canonical doubleQuotedString is "\"abcd\"". */
@@ -351,8 +355,6 @@ test("parses doubleQuotedString", function() {
   parserParses('start = ""',       literalGrammar(""));
   parserParses('start = "a"',      literalGrammar("a"));
   parserParses('start = "abc"',    literalGrammar("abc"));
-
-  parserParses('start = "abcd"\n', literalGrammar("abcd"));
 });
 
 /* Canonical doubleQuotedCharacter is "a". */
@@ -382,8 +384,6 @@ test("parses singleQuotedString", function() {
   parserParses("start = ''",       literalGrammar(""));
   parserParses("start = 'a'",      literalGrammar("a"));
   parserParses("start = 'abc'",    literalGrammar("abc"));
-
-  parserParses("start = 'abcd'\n", literalGrammar("abcd"));
 });
 
 /* Canonical singleQuotedCharacter is "a". */
