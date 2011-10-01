@@ -444,23 +444,30 @@ test("error messages", function() {
 });
 
 test("error positions", function() {
-  var parser = PEG.buildParser([
+  var simpleParser = PEG.buildParser('start = "a"');
+
+  /* Regular match failure */
+  doesNotParseWithPos(simpleParser, "b", 1, 1);
+
+  /* Trailing input */
+  doesNotParseWithPos(simpleParser, "ab", 1, 2);
+
+  var digitsParser = PEG.buildParser([
     'start  = line (("\\r" / "\\n" / "\\u2028" / "\\u2029")+ line)*',
     'line   = digits (" "+ digits)*',
     'digits = digits:[0-9]+ { return digits.join(""); }'
   ].join("\n"));
 
-  doesNotParseWithPos(parser, "a", 1, 1);
-  doesNotParseWithPos(parser, "1\n2\n\n3\n\n\n4 5 x", 7, 5);
+  doesNotParseWithPos(digitsParser, "1\n2\n\n3\n\n\n4 5 x", 7, 5);
 
   /* Non-Unix newlines */
-  doesNotParseWithPos(parser, "1\rx", 2, 1);   // Old Mac
-  doesNotParseWithPos(parser, "1\r\nx", 2, 1); // Windows
-  doesNotParseWithPos(parser, "1\n\rx", 3, 1); // mismatched
+  doesNotParseWithPos(digitsParser, "1\rx", 2, 1);   // Old Mac
+  doesNotParseWithPos(digitsParser, "1\r\nx", 2, 1); // Windows
+  doesNotParseWithPos(digitsParser, "1\n\rx", 3, 1); // mismatched
 
   /* Strange newlines */
-  doesNotParseWithPos(parser, "1\u2028x", 2, 1); // line separator
-  doesNotParseWithPos(parser, "1\u2029x", 2, 1); // paragraph separator
+  doesNotParseWithPos(digitsParser, "1\u2028x", 2, 1); // line separator
+  doesNotParseWithPos(digitsParser, "1\u2029x", 2, 1); // paragraph separator
 });
 
 test("start rule", function() {

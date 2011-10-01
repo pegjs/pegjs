@@ -376,7 +376,7 @@ PEG.compiler.emitter = function(ast) {
             '        var column = 1;',
             '        var seenCR = false;',
             '        ',
-            '        for (var i = 0; i <  rightmostFailuresPos; i++) {',
+            '        for (var i = 0; i < Math.max(pos, rightmostFailuresPos); i++) {',
             '          var ch = input.charAt(i);',
             '          if (ch === "\\n") {',
             '            if (!seenCR) { line++; }',
