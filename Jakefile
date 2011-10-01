@@ -88,6 +88,16 @@ function copyDir(src, dest) {
   });
 }
 
+function dirExists(dir) {
+  try {
+    var stats = fs.statSync(file);
+  } catch (e) {
+    return false;
+  }
+
+  return stats.isDirectory();
+}
+
 function removeDir(dir) {
   fs.readdirSync(dir).every(function(file) {
     var file = dir  + "/" + file;
@@ -151,7 +161,9 @@ task("build", [], function() {
 
 desc("Remove built peg.js file (created by \"build\")");
 task("clean", [], function() {
-  removeDir(LIB_DIR);
+  if (dirExists(LIB_DIR)) {
+    removeDir(LIB_DIR);
+  }
 });
 
 desc("Prepare the distribution files");
@@ -189,7 +201,9 @@ task("dist", ["build"], function() {
 
 desc("Remove the distribution files (created by \"dist\")");
 task("distclean", [], function() {
-  removeDir(DIST_DIR);
+  if (dirExists(DIST_DIR)) {
+    removeDir(DIST_DIR);
+  }
 });
 
 desc("Run the test suite");
