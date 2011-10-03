@@ -8,7 +8,7 @@
  */
 PEG.compiler.checks = {
   /* Checks that all referenced rules exist. */
-  reportMissingReferencedRules: function(ast) {
+  reportMissingRules: function(ast) {
     function nop() {}
 
     function checkExpression(node) { check(node.expression); }

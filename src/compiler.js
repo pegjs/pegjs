@@ -7,7 +7,7 @@ PEG.compiler = {
    */
   compile: function(ast) {
     var CHECK_NAMES = [
-      "reportMissingReferencedRules",
+      "reportMissingRules",
       "reportLeftRecursion"
     ];
 

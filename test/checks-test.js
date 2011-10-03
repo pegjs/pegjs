@@ -7,7 +7,7 @@ test("reports missing referenced rules", function() {
     raises(
       function() {
         var ast = PEG.parser.parse(grammar);
-        PEG.compiler.checks.reportMissingReferencedRules(ast);
+        PEG.compiler.checks.reportMissingRules(ast);
       },
       function(e) {
         return e instanceof PEG.GrammarError
