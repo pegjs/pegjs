@@ -6,23 +6,14 @@ PEG.compiler = {
    * cause its malfunction.
    */
   compile: function(ast) {
-    var CHECK_NAMES = [
-      "reportMissingRules",
-      "reportLeftRecursion"
-    ];
-
     var PASS_NAMES = [
+      "reportMissingRules",
+      "reportLeftRecursion",
       "removeProxyRules",
       "computeStackDepths"
     ];
 
-    var i;
-
-    for (i = 0; i < CHECK_NAMES.length; i++) {
-      this.checks[CHECK_NAMES[i]](ast);
-    }
-
-    for (i = 0; i < PASS_NAMES.length; i++) {
+    for (var i = 0; i < PASS_NAMES.length; i++) {
       this.passes[PASS_NAMES[i]](ast);
     }
 
@@ -34,6 +25,5 @@ PEG.compiler = {
   }
 };
 
-// @include "checks.js"
 // @include "passes.js"
 // @include "emitter.js"
