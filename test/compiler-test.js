@@ -165,7 +165,7 @@ test("actions", function() {
   parses(actionKnowsPositionInsideParser, "acdef", [["a", "c"], 2]);
 
   var actionKnowsEndPositionInsideParser = PEG.buildParser(
-    'start = "e" "d" ([bc]* { return _chunk.end; }) "a"'
+    'start = "e" "d" ([b-c]* { return _chunk.end; }) "a"'
   );
   parses(actionKnowsEndPositionInsideParser, "edcba", ["e", "d", 4, "a"]);
 
@@ -219,12 +219,37 @@ test("rule references", function() {
 });
 
 test("literals", function() {
-  var parser = PEG.buildParser('start = "abcd"');
-  parses(parser, "abcd", "abcd");
-  doesNotParse(parser, "");
-  doesNotParse(parser, "abc");
-  doesNotParse(parser, "abcde");
-  doesNotParse(parser, "efgh");
+  var zeroCharParser = PEG.buildParser('start = ""');
+  parses(zeroCharParser, "", "");
+  doesNotParse(zeroCharParser, "a");
+
+  var oneCharCaseSensitiveParser = PEG.buildParser('start = "a"');
+  parses(oneCharCaseSensitiveParser, "a", "a");
+  doesNotParse(oneCharCaseSensitiveParser, "");
+  doesNotParse(oneCharCaseSensitiveParser, "A");
+  doesNotParse(oneCharCaseSensitiveParser, "b");
+
+  var multiCharCaseSensitiveParser = PEG.buildParser('start = "abcd"');
+  parses(multiCharCaseSensitiveParser, "abcd", "abcd");
+  doesNotParse(multiCharCaseSensitiveParser, "");
+  doesNotParse(multiCharCaseSensitiveParser, "abc");
+  doesNotParse(multiCharCaseSensitiveParser, "abcde");
+  doesNotParse(multiCharCaseSensitiveParser, "ABCD");
+  doesNotParse(multiCharCaseSensitiveParser, "efgh");
+
+  var oneCharCaseInsensitiveParser = PEG.buildParser('start = "a"i');
+  parses(oneCharCaseInsensitiveParser, "a", "a");
+  parses(oneCharCaseInsensitiveParser, "A", "A");
+  doesNotParse(oneCharCaseInsensitiveParser, "");
+  doesNotParse(oneCharCaseInsensitiveParser, "b");
+
+  var multiCharCaseInsensitiveParser = PEG.buildParser('start = "abcd"i');
+  parses(multiCharCaseInsensitiveParser, "abcd", "abcd");
+  parses(multiCharCaseInsensitiveParser, "ABCD", "ABCD");
+  doesNotParse(multiCharCaseInsensitiveParser, "");
+  doesNotParse(multiCharCaseInsensitiveParser, "abc");
+  doesNotParse(multiCharCaseInsensitiveParser, "abcde");
+  doesNotParse(multiCharCaseInsensitiveParser, "efgh");
 
   /*
    * Test that the parsing position moves forward after successful parsing of
@@ -254,26 +279,62 @@ test("classes", function() {
   doesNotParse(emptyClassParser, "a");
   doesNotParse(emptyClassParser, "ab");
 
-  var nonEmptyClassParser = PEG.buildParser('start = [ab-d]');
-  parses(nonEmptyClassParser, "a", "a");
-  parses(nonEmptyClassParser, "b", "b");
-  parses(nonEmptyClassParser, "c", "c");
-  parses(nonEmptyClassParser, "d", "d");
-  doesNotParse(nonEmptyClassParser, "");
-  doesNotParse(nonEmptyClassParser, "ab");
-
   var invertedEmptyClassParser = PEG.buildParser('start = [^]');
   doesNotParse(invertedEmptyClassParser, "");
   parses(invertedEmptyClassParser, "a", "a");
   doesNotParse(invertedEmptyClassParser, "ab");
 
-  var invertedNonEmptyClassParser = PEG.buildParser('start = [^ab-d]');
-  doesNotParse(invertedNonEmptyClassParser, "a", "a");
-  doesNotParse(invertedNonEmptyClassParser, "b", "b");
-  doesNotParse(invertedNonEmptyClassParser, "c", "c");
-  doesNotParse(invertedNonEmptyClassParser, "d", "d");
-  doesNotParse(invertedNonEmptyClassParser, "");
-  doesNotParse(invertedNonEmptyClassParser, "ab");
+  var nonEmptyCaseSensitiveClassParser = PEG.buildParser('start = [ab-d]');
+  parses(nonEmptyCaseSensitiveClassParser, "a", "a");
+  parses(nonEmptyCaseSensitiveClassParser, "b", "b");
+  parses(nonEmptyCaseSensitiveClassParser, "c", "c");
+  parses(nonEmptyCaseSensitiveClassParser, "d", "d");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "A");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "B");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "C");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "D");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "e");
+  doesNotParse(nonEmptyCaseSensitiveClassParser, "ab");
+
+  var invertedNonEmptyCaseSensitiveClassParser = PEG.buildParser('start = [^ab-d]');
+  parses(invertedNonEmptyCaseSensitiveClassParser, "A", "A");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "B", "B");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "C", "C");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "D", "D");
+  parses(invertedNonEmptyCaseSensitiveClassParser, "e", "e");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "a", "a");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "b", "b");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "c", "c");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "d", "d");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "");
+  doesNotParse(invertedNonEmptyCaseSensitiveClassParser, "ab");
+
+  var nonEmptyCaseInsensitiveClassParser = PEG.buildParser('start = [ab-d]i');
+  parses(nonEmptyCaseInsensitiveClassParser, "a", "a");
+  parses(nonEmptyCaseInsensitiveClassParser, "b", "b");
+  parses(nonEmptyCaseInsensitiveClassParser, "c", "c");
+  parses(nonEmptyCaseInsensitiveClassParser, "d", "d");
+  parses(nonEmptyCaseInsensitiveClassParser, "A", "A");
+  parses(nonEmptyCaseInsensitiveClassParser, "B", "B");
+  parses(nonEmptyCaseInsensitiveClassParser, "C", "C");
+  parses(nonEmptyCaseInsensitiveClassParser, "D", "D");
+  doesNotParse(nonEmptyCaseInsensitiveClassParser, "");
+  doesNotParse(nonEmptyCaseInsensitiveClassParser, "e");
+  doesNotParse(nonEmptyCaseInsensitiveClassParser, "ab");
+
+  var invertedNonEmptyCaseInsensitiveClassParser = PEG.buildParser('start = [^ab-d]i');
+  parses(invertedNonEmptyCaseInsensitiveClassParser, "e", "e");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "a", "a");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "b", "b");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "c", "c");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "d", "d");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "A", "A");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "B", "B");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "C", "C");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "D", "D");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "");
+  doesNotParse(invertedNonEmptyCaseInsensitiveClassParser, "ab");
 
   /*
    * Test that the parsing position moves forward after successful parsing of
@@ -416,23 +477,30 @@ test("error messages", function() {
 });
 
 test("error positions", function() {
-  var parser = PEG.buildParser([
+  var simpleParser = PEG.buildParser('start = "a"');
+
+  /* Regular match failure */
+  doesNotParseWithPos(simpleParser, "b", 1, 1);
+
+  /* Trailing input */
+  doesNotParseWithPos(simpleParser, "ab", 1, 2);
+
+  var digitsParser = PEG.buildParser([
     'start  = line (("\\r" / "\\n" / "\\u2028" / "\\u2029")+ line)*',
     'line   = digits (" "+ digits)*',
     'digits = digits:[0-9]+ { return digits.join(""); }'
   ].join("\n"));
 
-  doesNotParseWithPos(parser, "a", 1, 1);
-  doesNotParseWithPos(parser, "1\n2\n\n3\n\n\n4 5 x", 7, 5);
+  doesNotParseWithPos(digitsParser, "1\n2\n\n3\n\n\n4 5 x", 7, 5);
 
   /* Non-Unix newlines */
-  doesNotParseWithPos(parser, "1\rx", 2, 1);   // Old Mac
-  doesNotParseWithPos(parser, "1\r\nx", 2, 1); // Windows
-  doesNotParseWithPos(parser, "1\n\rx", 3, 1); // mismatched
+  doesNotParseWithPos(digitsParser, "1\rx", 2, 1);   // Old Mac
+  doesNotParseWithPos(digitsParser, "1\r\nx", 2, 1); // Windows
+  doesNotParseWithPos(digitsParser, "1\n\rx", 3, 1); // mismatched
 
   /* Strange newlines */
-  doesNotParseWithPos(parser, "1\u2028x", 2, 1); // line separator
-  doesNotParseWithPos(parser, "1\u2029x", 2, 1); // paragraph separator
+  doesNotParseWithPos(digitsParser, "1\u2028x", 2, 1); // line separator
+  doesNotParseWithPos(digitsParser, "1\u2029x", 2, 1); // paragraph separator
 });
 
 test("start rule", function() {
@@ -450,7 +518,7 @@ test("start rule", function() {
 
   /* Invalid rule name */
   raises(
-    function() { parser.parse("whatever", "c") },
+    function() { parser.parse("whatever", "c"); },
     function(e) {
       return e instanceof Error && e.message === "Invalid rule name: \"c\".";
     }
@@ -528,7 +596,7 @@ test("non-context-free language", function() {
   var parser = PEG.buildParser([
     'S = &(A "c") a:"a"+ B:B !("a" / "b" / "c") { return a.join("") + B; }',
     'A = a:"a" A:A? b:"b" { return a + A + b; }',
-    'B = b:"b" B:B? c:"c" { return b + B + c; }',
+    'B = b:"b" B:B? c:"c" { return b + B + c; }'
   ].join("\n"));
 
   parses(parser, "abc", "abc");

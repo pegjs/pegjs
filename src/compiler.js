@@ -1,28 +1,27 @@
 PEG.compiler = {
   /*
+   * Names of passes that will get run during the compilation (in the specified
+   * order).
+   */
+  appliedPassNames: [
+    "reportMissingRules",
+    "reportLeftRecursion",
+    "removeProxyRules",
+    "computeStackDepths"
+  ],
+
+  /*
    * Generates a parser from a specified grammar AST. Throws |PEG.GrammarError|
    * if the AST contains a semantic error. Note that not all errors are detected
    * during the generation and some may protrude to the generated parser and
    * cause its malfunction.
    */
   compile: function(ast) {
-    var CHECK_NAMES = [
-      "missingReferencedRules",
-      "leftRecursion"
-    ];
+    var that = this;
 
-    var PASS_NAMES = [
-      "proxyRules",
-      "stackDepths"
-    ];
-
-    for (var i = 0; i < CHECK_NAMES.length; i++) {
-      this.checks[CHECK_NAMES[i]](ast);
-    }
-
-    for (var i = 0; i < PASS_NAMES.length; i++) {
-      ast = this.passes[PASS_NAMES[i]](ast);
-    }
+    each(this.appliedPassNames, function(passName) {
+      that.passes[passName](ast);
+    });
 
     var source = this.emitter(ast);
     var result = eval(source);
@@ -32,6 +31,5 @@ PEG.compiler = {
   }
 };
 
-// @include "checks.js"
 // @include "passes.js"
 // @include "emitter.js"

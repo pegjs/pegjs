@@ -77,7 +77,6 @@ QUnit.done = function(details) {
 [
   "helpers.js",
   "parser-test.js",
-  "checks-test.js",
   "passes-test.js",
   "compiler-test.js",
 ].forEach(function(file) {

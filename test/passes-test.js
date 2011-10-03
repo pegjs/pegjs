@@ -2,6 +2,73 @@
 
 module("PEG.compiler.passes");
 
+test("reports missing referenced rules", function() {
+  function testGrammar(grammar) {
+    raises(
+      function() {
+        var ast = PEG.parser.parse(grammar);
+        PEG.compiler.passes.reportMissingRules(ast);
+      },
+      function(e) {
+        return e instanceof PEG.GrammarError
+          && e.message === "Referenced rule \"missing\" does not exist.";
+      }
+    );
+  }
+
+  var grammars = [
+    'start = missing',
+    'start = missing / "a" / "b"',
+    'start = "a" / "b" / missing',
+    'start = missing "a" "b"',
+    'start = "a" "b" missing',
+    'start = label:missing',
+    'start = &missing',
+    'start = !missing',
+    'start = missing?',
+    'start = missing*',
+    'start = missing+',
+    'start = missing { }'
+  ];
+
+  for (var i = 0; i < grammars.length; i++) { testGrammar(grammars[i]); }
+});
+
+test("reports left recursion", function() {
+  function testGrammar(grammar) {
+    raises(
+      function() {
+        var ast = PEG.parser.parse(grammar);
+        PEG.compiler.passes.reportLeftRecursion(ast);
+      },
+      function(e) {
+        return e instanceof PEG.GrammarError
+          && e.message === "Left recursion detected for rule \"start\".";
+      }
+    );
+  }
+
+  var grammars = [
+    /* Direct */
+    'start = start',
+    'start = start / "a" / "b"',
+    'start = "a" / "b" / start',
+    'start = start "a" "b"',
+    'start = label:start',
+    'start = &start',
+    'start = !start',
+    'start = start?',
+    'start = start*',
+    'start = start+',
+    'start = start { }',
+
+    /* Indirect */
+    'start = stop; stop = start'
+  ];
+
+  for (var i = 0; i < grammars.length; i++) { testGrammar(grammars[i]); }
+});
+
 test("removes proxy rules", function() {
   function simpleGrammar(rules, startRule) {
     return {
@@ -9,20 +76,20 @@ test("removes proxy rules", function() {
       initializer: null,
       rules:       rules,
       startRule:   startRule
-    }
+    };
   }
 
   var proxiedRule = {
     type:        "rule",
     name:        "proxied",
     displayName: null,
-    expression:  { type: "literal", value: "a" }
+    expression:  { type: "literal", value: "a", ignoreCase: false }
   };
 
   var proxiedRuleRef = {
     type: "rule_ref",
     name: "proxied"
-  }
+  };
 
   function simpleGrammarWithStartAndProxied(startRuleExpression) {
     return simpleGrammar(
@@ -50,8 +117,8 @@ test("removes proxy rules", function() {
         type:         "choice",
         alternatives: [
           proxiedRuleRef,
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" }
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false }
         ]
       })
     },
@@ -60,8 +127,8 @@ test("removes proxy rules", function() {
       ast:     simpleGrammarWithStartAndProxied({
         type:         "choice",
         alternatives: [
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" },
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false },
           proxiedRuleRef
         ]
       })
@@ -72,8 +139,8 @@ test("removes proxy rules", function() {
         type:     "sequence",
         elements: [
           proxiedRuleRef,
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" }
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false }
         ]
       })
     },
@@ -82,8 +149,8 @@ test("removes proxy rules", function() {
       ast:     simpleGrammarWithStartAndProxied({
         type:     "sequence",
         elements: [
-          { type: "literal", value: "a" },
-          { type: "literal", value: "b" },
+          { type: "literal", value: "a", ignoreCase: false },
+          { type: "literal", value: "b", ignoreCase: false },
           proxiedRuleRef
         ]
       })
@@ -143,7 +210,9 @@ test("removes proxy rules", function() {
 
   for (var i = 0; i < cases.length; i++) {
     var ast = PEG.parser.parse(cases[i].grammar);
-    deepEqual(PEG.compiler.passes.proxyRules(ast), cases[i].ast);
+    PEG.compiler.passes.removeProxyRules(ast);
+
+    deepEqual(ast, cases[i].ast);
   }
 });
 
@@ -153,80 +222,85 @@ test("computes stack depths", function() {
     {
       grammar:          'start = "a" / "b" / "c"',
       resultStackDepth: 1,
-      posStackDepth:    1
+      posStackDepth:    0
     },
     {
       grammar:          'start = "a" / "b"* / "c"',
       resultStackDepth: 2,
-      posStackDepth:    1
+      posStackDepth:    0
     },
     {
       grammar:          'start = "a" / &"b" / "c"',
       resultStackDepth: 1,
-      posStackDepth:    2
+      posStackDepth:    1
     },
 
     /* Sequence */
     {
+      grammar:          'start = ',
+      resultStackDepth: 1,
+      posStackDepth:    1
+    },
+    {
       grammar:          'start = "a" "b" "c"',
-      resultStackDepth: 4,
-      posStackDepth:    2
+      resultStackDepth: 3,
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" "b" "c"*',
-      resultStackDepth: 5,
-      posStackDepth:    2
+      resultStackDepth: 4,
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" "b"* "c"',
-      resultStackDepth: 4,
-      posStackDepth:    2
+      resultStackDepth: 3,
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" ("b"*)* "c"',
-      resultStackDepth: 5,
-      posStackDepth:    2
+      resultStackDepth: 4,
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a"* "b" "c"',
-      resultStackDepth: 4,
-      posStackDepth:    2
+      resultStackDepth: 3,
+      posStackDepth:    1
     },
     {
       grammar:          'start = ("a"*)* "b" "c"',
-      resultStackDepth: 4,
-      posStackDepth:    2
+      resultStackDepth: 3,
+      posStackDepth:    1
     },
     {
       grammar:          'start = (("a"*)*)* "b" "c"',
-      resultStackDepth: 5,
-      posStackDepth:    2
+      resultStackDepth: 4,
+      posStackDepth:    1
     },
     {
       grammar:          'start = "a" &"b" "c"',
-      resultStackDepth: 4,
-      posStackDepth:    3
+      resultStackDepth: 3,
+      posStackDepth:    2
     },
 
     /* Others */
-    { grammar: 'start = label:"a"',    resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = &"a"',         resultStackDepth: 1, posStackDepth: 2 },
-    { grammar: 'start = !"a"',         resultStackDepth: 1, posStackDepth: 2 },
-    { grammar: 'start = &{ code }',    resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = !{ code }',    resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = "a"?',         resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = "a"*',         resultStackDepth: 2, posStackDepth: 1 },
-    { grammar: 'start = "a"+',         resultStackDepth: 2, posStackDepth: 1 },
-    { grammar: 'start = "a" { code }', resultStackDepth: 1, posStackDepth: 2 },
-    { grammar: 'start = a',            resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = "a"',          resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = .',            resultStackDepth: 1, posStackDepth: 1 },
-    { grammar: 'start = [a-z]',        resultStackDepth: 1, posStackDepth: 1 }
+    { grammar: 'start = label:"a"',    resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = &"a"',         resultStackDepth: 1, posStackDepth: 1 },
+    { grammar: 'start = !"a"',         resultStackDepth: 1, posStackDepth: 1 },
+    { grammar: 'start = &{ code }',    resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = !{ code }',    resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = "a"?',         resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = "a"*',         resultStackDepth: 2, posStackDepth: 0 },
+    { grammar: 'start = "a"+',         resultStackDepth: 2, posStackDepth: 0 },
+    { grammar: 'start = "a" { code }', resultStackDepth: 1, posStackDepth: 1 },
+    { grammar: 'start = a',            resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = "a"',          resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = .',            resultStackDepth: 1, posStackDepth: 0 },
+    { grammar: 'start = [a-z]',        resultStackDepth: 1, posStackDepth: 0 }
   ];
 
   for (var i = 0; i < cases.length; i++) {
     var ast = PEG.parser.parse(cases[i].grammar);
-    PEG.compiler.passes.stackDepths(ast)
+    PEG.compiler.passes.computeStackDepths(ast);
 
     deepEqual(ast.rules["start"].resultStackDepth, cases[i].resultStackDepth);
     deepEqual(ast.rules["start"].posStackDepth,    cases[i].posStackDepth);

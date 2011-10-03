@@ -1,0 +1,9 @@
+{
+  "curly":    true,
+  "eqeqeq":   true,
+  "evil":     true,
+  "laxbreak": true,
+  "noempty":  true,
+  "nonew":    true,
+  "sub":      true
+}

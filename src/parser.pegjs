@@ -8,7 +8,7 @@ grammar
         initializer: initializer !== "" ? initializer : null,
         rules:       rulesConverted,
         startRule:   rules[0].name
-      }
+      };
     }
 
 initializer
@@ -20,7 +20,7 @@ initializer
     }
 
 rule
-  = name:identifier displayName:(literal / "") equals expression:expression semicolon? {
+  = name:identifier displayName:string? equals expression:expression semicolon? {
       return {
         type:        "rule",
         name:        name,
@@ -42,7 +42,7 @@ choice
         return {
           type:         "choice",
           alternatives: alternatives
-        }
+        };
       } else {
         return head;
       }
@@ -50,7 +50,7 @@ choice
 
 sequence
   = elements:labeled* code:action {
-      var expression = elements.length != 1
+      var expression = elements.length !== 1
         ? {
             type:     "sequence",
             elements: elements
@@ -63,7 +63,7 @@ sequence
       };
     }
   / elements:labeled* {
-      return elements.length != 1
+      return elements.length !== 1
         ? {
             type:     "sequence",
             elements: elements
@@ -130,18 +130,13 @@ suffixed
   / primary
 
 primary
-  = name:identifier !(( literal / "") equals) {
+  = name:identifier !(string? equals) {
       return {
         type: "rule_ref",
         name: name
       };
     }
-  / value:literal {
-      return {
-        type:  "literal",
-        value: value
-      };
-    }
+  / literal
   / dot { return { type: "any" }; }
   / class
   / lparen expression:expression rparen { return expression; }
@@ -200,9 +195,18 @@ identifier "identifier"
  * vaguely).
  */
 literal "literal"
-  = literal:(doubleQuotedLiteral / singleQuotedLiteral) __ { return literal; }
+  = value:(doubleQuotedString / singleQuotedString) flags:"i"? __ {
+      return {
+        type:       "literal",
+        value:      value,
+        ignoreCase: flags === "i"
+      };
+    }
 
-doubleQuotedLiteral
+string "string"
+  = string:(doubleQuotedString / singleQuotedString) __ { return string; }
+
+doubleQuotedString
   = '"' chars:doubleQuotedCharacter* '"' { return chars.join(""); }
 
 doubleQuotedCharacter
@@ -216,7 +220,7 @@ doubleQuotedCharacter
 simpleDoubleQuotedCharacter
   = !('"' / "\\" / eolChar) char_:. { return char_; }
 
-singleQuotedLiteral
+singleQuotedString
   = "'" chars:singleQuotedCharacter* "'" { return chars.join(""); }
 
 singleQuotedCharacter
@@ -231,19 +235,21 @@ simpleSingleQuotedCharacter
   = !("'" / "\\" / eolChar) char_:. { return char_; }
 
 class "character class"
-  = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" __ {
+  = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" flags:"i"? __ {
       var partsConverted = map(parts, function(part) { return part.data; });
       var rawText = "["
         + inverted
         + map(parts, function(part) { return part.rawText; }).join("")
-        + "]";
+        + "]"
+        + flags;
 
       return {
-        type:     "class",
-        inverted: inverted === "^",
-        parts:    partsConverted,
+        type:       "class",
+        inverted:   inverted === "^",
+        ignoreCase: flags === "i",
+        parts:      partsConverted,
         // FIXME: Get the raw text from the input directly.
-        rawText:  rawText
+        rawText:    rawText
       };
     }
 
@@ -259,7 +265,7 @@ classCharacterRange
         data:    [begin.data, end.data],
         // FIXME: Get the raw text from the input directly.
         rawText: begin.rawText + "-" + end.rawText
-      }
+      };
     }
 
 classCharacter
@@ -290,20 +296,20 @@ simpleEscapeSequence
         .replace("n", "\n")
         .replace("r", "\r")
         .replace("t", "\t")
-        .replace("v", "\x0B") // IE does not recognize "\v".
+        .replace("v", "\x0B"); // IE does not recognize "\v".
     }
 
 zeroEscapeSequence
-  = "\\0" !digit { return "\0"; }
+  = "\\0" !digit { return "\x00"; }
 
 hexEscapeSequence
   = "\\x" h1:hexDigit h2:hexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2));
+      return String.fromCharCode(parseInt(h1 + h2, 16));
     }
 
 unicodeEscapeSequence
   = "\\u" h1:hexDigit h2:hexDigit h3:hexDigit h4:hexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
+      return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
     }
 
 eolEscapeSequence
