@@ -854,14 +854,12 @@ PEG.compiler.emitter = function(ast) {
         formalParams = [];
         actualParams = [];
 
-        var elements = node.expression.elements;
-        var elementsLength = elements.length;
-        for (var i = 0; i < elementsLength; i++) {
-          if (elements[i].type === "labeled") {
-            formalParams.push(elements[i].label);
+        each(node.expression.elements, function(element, i) {
+          if (element.type === "labeled") {
+            formalParams.push(element.label);
             actualParams.push(resultVar(context.resultIndex) + '[' + i + ']');
           }
-        }
+        });
       } else if (node.expression.type === "labeled") {
         formalParams = [node.expression.label];
         actualParams = [resultVar(context.resultIndex)];
