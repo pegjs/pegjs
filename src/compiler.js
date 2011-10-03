@@ -7,13 +7,13 @@ PEG.compiler = {
    */
   compile: function(ast) {
     var CHECK_NAMES = [
-      "missingReferencedRules",
-      "leftRecursion"
+      "reportMissingReferencedRules",
+      "reportLeftRecursion"
     ];
 
     var PASS_NAMES = [
-      "proxyRules",
-      "stackDepths"
+      "removeProxyRules",
+      "computeStackDepths"
     ];
 
     var i;

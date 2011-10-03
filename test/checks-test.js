@@ -7,7 +7,7 @@ test("reports missing referenced rules", function() {
     raises(
       function() {
         var ast = PEG.parser.parse(grammar);
-        PEG.compiler.checks.missingReferencedRules(ast);
+        PEG.compiler.checks.reportMissingReferencedRules(ast);
       },
       function(e) {
         return e instanceof PEG.GrammarError
@@ -39,7 +39,7 @@ test("reports left recursion", function() {
     raises(
       function() {
         var ast = PEG.parser.parse(grammar);
-        PEG.compiler.checks.leftRecursion(ast);
+        PEG.compiler.checks.reportLeftRecursion(ast);
       },
       function(e) {
         return e instanceof PEG.GrammarError

@@ -8,7 +8,7 @@
  */
 PEG.compiler.checks = {
   /* Checks that all referenced rules exist. */
-  missingReferencedRules: function(ast) {
+  reportMissingReferencedRules: function(ast) {
     function nop() {}
 
     function checkExpression(node) { check(node.expression); }
@@ -56,7 +56,7 @@ PEG.compiler.checks = {
   },
 
   /* Checks that no left recursion is present. */
-  leftRecursion: function(ast) {
+  reportLeftRecursion: function(ast) {
     function nop() {}
 
     function checkExpression(node, appliedRules) {

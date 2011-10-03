@@ -143,7 +143,7 @@ test("removes proxy rules", function() {
 
   for (var i = 0; i < cases.length; i++) {
     var ast = PEG.parser.parse(cases[i].grammar);
-    deepEqual(PEG.compiler.passes.proxyRules(ast), cases[i].ast);
+    deepEqual(PEG.compiler.passes.removeProxyRules(ast), cases[i].ast);
   }
 });
 
@@ -231,7 +231,7 @@ test("computes stack depths", function() {
 
   for (var i = 0; i < cases.length; i++) {
     var ast = PEG.parser.parse(cases[i].grammar);
-    PEG.compiler.passes.stackDepths(ast);
+    PEG.compiler.passes.computeStackDepths(ast);
 
     deepEqual(ast.rules["start"].resultStackDepth, cases[i].resultStackDepth);
     deepEqual(ast.rules["start"].posStackDepth,    cases[i].posStackDepth);
