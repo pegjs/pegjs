@@ -3,6 +3,8 @@ PEG.js
 
 PEG.js is a simple parser generator for JavaScript that produces fast parsers with excellent error reporting. You can use it to process complex data or computer languages and build transformers, interpreters, compilers and other tools easily.
 
+*NB:* This version is compatible with `node-js` version `0.5.8+`, if you get conflits on `sys`/`util` modules or something like that, ensure you have this version.   
+
 Features
 --------
 

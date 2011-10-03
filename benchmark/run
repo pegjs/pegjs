@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var sys = require("sys");
-var fs  = require("fs");
-var PEG = require("../lib/peg");
+var util = require("util");
+var fs   = require("fs");
+var PEG  = require("../lib/peg");
 
 [
   "benchmarks.js",
@@ -37,21 +37,21 @@ function center(text, length) {
 }
 
 function writeTableHeader() {
-  sys.puts("┌─────────────────────────────────────┬───────────┬────────────┬──────────────┐");
-  sys.puts("│                Test                 │ Inp. size │ Avg. time  │  Avg. speed  │");
+  util.puts("┌─────────────────────────────────────┬───────────┬────────────┬──────────────┐");
+  util.puts("│                Test                 │ Inp. size │ Avg. time  │  Avg. speed  │");
 }
 
 function writeHeading(heading) {
-  sys.puts("├─────────────────────────────────────┴───────────┴────────────┴──────────────┤");
-  sys.puts("│ " + center(heading, 75) + " │");
-  sys.puts("├─────────────────────────────────────┬───────────┬────────────┬──────────────┤");
+  util.puts("├─────────────────────────────────────┴───────────┴────────────┴──────────────┤");
+  util.puts("│ " + center(heading, 75) + " │");
+  util.puts("├─────────────────────────────────────┬───────────┬────────────┬──────────────┤");
 }
 
 function writeResult(title, inputSize, parseTime) {
   var KB      = 1024;
   var MS_IN_S = 1000;
 
-  sys.puts("│ "
+  util.puts("│ "
     + padRight(title, 35)
     + " │ "
     + padLeft((inputSize / KB).toFixed(2), 6)
@@ -64,11 +64,11 @@ function writeResult(title, inputSize, parseTime) {
 }
 
 function writeSeparator() {
-  sys.puts("├─────────────────────────────────────┼───────────┼────────────┼──────────────┤");
+  util.puts("├─────────────────────────────────────┼───────────┼────────────┼──────────────┤");
 }
 
 function writeTableFooter() {
-  sys.puts("└─────────────────────────────────────┴───────────┴────────────┴──────────────┘");
+  util.puts("└─────────────────────────────────────┴───────────┴────────────┴──────────────┘");
 }
 
 /* Helpers */
@@ -78,7 +78,7 @@ function exitFailure() {
 }
 
 function abort(message) {
-  sys.error(message);
+  util.error(message);
   exitFailure();
 }
 
@@ -100,8 +100,8 @@ switch (args.length) {
     abort("Too many arguments.");
 }
 
-sys.puts("Each test is run " + runCount + " times.");
-sys.puts("");
+util.puts("Each test is run " + runCount + " times.");
+util.puts("");
 
 Runner.run(benchmarks, runCount, {
   readFile: function(file) {
