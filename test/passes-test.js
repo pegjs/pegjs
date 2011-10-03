@@ -143,7 +143,9 @@ test("removes proxy rules", function() {
 
   for (var i = 0; i < cases.length; i++) {
     var ast = PEG.parser.parse(cases[i].grammar);
-    deepEqual(PEG.compiler.passes.removeProxyRules(ast), cases[i].ast);
+    PEG.compiler.passes.removeProxyRules(ast);
+
+    deepEqual(ast, cases[i].ast);
   }
 });
 

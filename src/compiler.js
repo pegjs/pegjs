@@ -23,7 +23,7 @@ PEG.compiler = {
     }
 
     for (i = 0; i < PASS_NAMES.length; i++) {
-      ast = this.passes[PASS_NAMES[i]](ast);
+      this.passes[PASS_NAMES[i]](ast);
     }
 
     var source = this.emitter(ast);
