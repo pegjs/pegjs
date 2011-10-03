@@ -17,9 +17,11 @@ PEG.compiler = {
    * cause its malfunction.
    */
   compile: function(ast) {
-    for (var i = 0; i < this.appliedPassNames.length; i++) {
-      this.passes[this.appliedPassNames[i]](ast);
-    }
+    var that = this;
+
+    each(this.appliedPassNames, function(passName) {
+      that.passes[passName](ast);
+    });
 
     var source = this.emitter(ast);
     var result = eval(source);
