@@ -540,10 +540,10 @@ PEG.compiler.emitter = function(ast) {
             '}'
           ],
           semantic_and: [
-            '#{resultVar} = (function(#{formalParams}) {#{node.code}})(#{actualParams}) ? "" : null;'
+            '#{resultVar} = (function(#{formalParams.join(", ")}) {#{node.code}})(#{actualParams.join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{resultVar} = (function(#{formalParams}) {#{node.code}})(#{actualParams}) ? null : "";'
+            '#{resultVar} = (function(#{formalParams.join(", ")}) {#{node.code}})(#{actualParams.join(", ")}) ? null : "";'
           ],
           optional: [
             '#block expressionCode',
@@ -805,42 +805,40 @@ PEG.compiler.emitter = function(ast) {
       });
     },
 
-    semantic_and: function(node, resultVar, previousResults) {
+    semantic_and: function(node, context, resultVar, previousResults) {
       var formalParams = [];
       var actualParams = [];
-      for (var i = 0; i < node.previousElements.length; i++) {
+      /*for (var i = 0; i < node.previousElements.length; i++) {
         var element = node.previousElements[i];
         if (element.type === "labeled") {
           formalParams.push(element.label);
           actualParams.push(previousResults[i]);
-        }
-      }
+        };
+      };*/
       return fill("semantic_and", {
-          node:         node,
-          resultVar:    resultVar(context.resultIndex),
-          formalParams: formalParams,
-          actualParams: actualParams
-        }
-      );
+        node:         node,
+        resultVar:    resultVar(context.resultIndex),
+        formalParams: formalParams,
+        actualParams: actualParams
+      });
     },
 
-    semantic_not: function(node, resultVar, previousResults) {
+    semantic_not: function(node, context, resultVar, previousResults) {
       var formalParams = [];
       var actualParams = [];
-      for (var i = 0; i < node.previousElements.length; i++) {
+      /*for (var i = 0; i < node.previousElements.length; i++) {
         var element = node.previousElements[i];
         if (element.type === "labeled") {
           formalParams.push(element.label);
           actualParams.push(previousResults[i]);
-        }
-      }
-      return fill("semantic_and", {
-          node:         node,
-          resultVar:    resultVar(context.resultIndex),
-          formalParams: formalParams,
-          actualParams: actualParams
-        }
-      );
+        };
+      };*/
+      return fill("semantic_not", {
+        node:         node,
+        resultVar:    resultVar(context.resultIndex),
+        formalParams: formalParams,
+        actualParams: actualParams
+      });
     },
 
     optional: function(node, context) {
