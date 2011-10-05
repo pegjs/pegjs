@@ -146,7 +146,7 @@ task("parser", [], function() {
     if (e.line !== undefined && e.column !== undefined) {
       abort(e.line + ":" + e.column + ": " + e.message);
     } else {
-      abort(e.stack);
+      abort(e.message + ":: " + e.stack);
     }
   }
 
