@@ -50,18 +50,18 @@ choice
 
 sequence
   = elements:labeled* code:action {
-      for (var i = 1; i < elements.length; i++) {
-        var element = elements[i];
-        if (element.type == "semantic_and" || element.type == "semantic_not") {
-          element.previousElements = elements.slice(0, i)
-        }
-      } 
       var expression = elements.length !== 1
         ? {
             type:     "sequence",
             elements: elements
           }
         : elements[0];
+      for (var i = 1; i < elements.length; i++) {
+        var element = elements[i];
+        if (element.type == "semantic_and" || element.type == "semantic_not") {
+          element.previousElements = elements.slice(0, i)
+        }
+      }  
       return {
         type:       "action",
         expression: expression,
@@ -72,9 +72,9 @@ sequence
       for (var i = 1; i < elements.length; i++) {
         var element = elements[i];
         if (element.type == "semantic_and" || element.type == "semantic_not") {
-          element.previousElements = elements.slice(0, i)
+          element.previousElements = elements.slice(0, i);
         }
-      } 
+      }
       return elements.length !== 1
         ? {
             type:     "sequence",

@@ -447,6 +447,12 @@ PEG.parser = (function(){
                     elements: elements
                   }
                 : elements[0];
+              for (var i = 1; i < elements.length; i++) {
+                var element = elements[i];
+                if (element.type == "semantic_and" || element.type == "semantic_not") {
+                  element.previousElements = elements.slice(0, i)
+                }
+              }    
               return {
                 type:       "action",
                 expression: expression,
@@ -467,6 +473,12 @@ PEG.parser = (function(){
           }
           if (result0 !== null) {
             result0 = (function(elements) {
+                for (var i = 1; i < elements.length; i++) {
+                  var element = elements[i];
+                  if (element.type == "semantic_and" || element.type == "semantic_not") {
+                    element.previousElements = elements.slice(0, i);
+                  }
+                }
                 return elements.length !== 1
                   ? {
                       type:     "sequence",
