@@ -1,4 +1,4 @@
-var sys          = require("sys");
+var util         = require("util");
 var fs           = require("fs");
 var path         = require("path");
 var childProcess = require("child_process");
@@ -53,7 +53,7 @@ function exitFailure() {
 }
 
 function abort(message) {
-  sys.error(message);
+  util.error(message);
   exitFailure();
 }
 

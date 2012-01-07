@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var sys   = require("sys");
+var util  = require("util");
 var fs    = require("fs");
 var PEG   = require("../lib/peg");
 var QUnit = require("./vendor/qunit/qunit").QUnit;
@@ -19,8 +19,8 @@ QUnit.config.blocking = true;
 QUnit.config.updateRate = 0;
 
 QUnit.moduleStart = function(details) {
-  sys.puts("");
-  sys.puts(bold(details.name));
+  util.puts("");
+  util.puts(bold(details.name));
 };
 
 var failedAssertions = [];
@@ -31,12 +31,12 @@ QUnit.testStart = function(details) {
 
 QUnit.testDone = function(details) {
   if (details.failed == 0) {
-    sys.puts('✔ ' + details.name);
+    util.puts('✔ ' + details.name);
   } else {
-    sys.puts(error('✖ ' + details.name));
-    sys.puts("");
+    util.puts(error('✖ ' + details.name));
+    util.puts("");
     failedAssertions.forEach(function(assertion) {
-      sys.puts(assertion);
+      util.puts(assertion);
     });
   }
 };
@@ -59,15 +59,15 @@ QUnit.log = function(details) {
 };
 
 QUnit.done = function(details) {
-  sys.puts("");
+  util.puts("");
   if (details.failed > 0) {
-    sys.puts(bold(error("FAILURES: "))
+    util.puts(bold(error("FAILURES: "))
       + details.failed + "/"
       + details.total + " assertions failed ("
       + details.runtime + " ms)"
     );
   } else {
-    sys.puts(bold(ok('OK: '))
+    util.puts(bold(ok('OK: '))
       + details.total + " assertions ("
       + details.runtime + " ms)"
     )
