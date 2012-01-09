@@ -64,7 +64,7 @@ LineTerminatorSequence "end of line"
   = "\n"
   / "\r\n"
   / "\r"
-  / "\u2028" // line spearator
+  / "\u2028" // line separator
   / "\u2029" // paragraph separator
 
 Comment "comment"
