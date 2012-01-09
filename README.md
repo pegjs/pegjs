@@ -3,6 +3,8 @@ PEG.js
 
 PEG.js is a simple parser generator for JavaScript that produces fast parsers with excellent error reporting. You can use it to process complex data or computer languages and build transformers, interpreters, compilers and other tools easily.
 
+*NB:* This version is compatible with `node-js` version `0.5.8+`, if you get conflits on `sys`/`util` modules or something like that, ensure you have this version.   
+
 Features
 --------
 
@@ -172,11 +174,15 @@ The predicate is a piece of JavaScript code that is executed as if it was inside
 
 The code inside the predicate has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the predicate code must be balanced.
 
+Also, there is a `_chunk` special variable you have access to: it contains a properties like `_chunk.pos` (a start of expression match), `_chunk.end` (an end of expression match), and `_chunk.match` (the input string part that matched the expression). Currently they are not tested a lot, so in some complex cases they may contain not the values you expect, please report issues on those.
+
 #### ! { *predicate* }
 
 The predicate is a piece of JavaScript code that is executed as if it was inside a function. It should return some JavaScript value using the `return` statement. If the returned value evaluates to `false` in boolean context, just return an empty string and do not advance the parser position; otherwise consider the match failed.
 
 The code inside the predicate has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the predicate code must be balanced.
+
+Also, there is a `_chunk` special variable you have access to: it contains a properties like `_chunk.pos` (a start of expression match), `_chunk.end` (an end of expression match), and `_chunk.match` (the input string part that matched the expression). Currently they are not tested a lot, so in some complex cases they may contain not the values you expect, please report issues on those.
 
 #### *label* : *expression*
 
@@ -195,6 +201,8 @@ Match the expression. If the match is successful, run the action, otherwise cons
 The action is a piece of JavaScript code that is executed as if it was inside a function. It gets the match results of labeled expressions in preceding expression as its arguments. The action should return some JavaScript value using the `return` statement. This value is considered match result of the preceding expression. The action can return `null` to indicate a match failure.
 
 The code inside the action has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the action code must be balanced.
+
+Also, there is a `_chunk` special variable you have access to: it contains a properties like `_chunk.pos` (a start of expression match), `_chunk.end` (an end of expression match), and `_chunk.match` (the input string part that matched the expression). Currently they are not tested a lot, so in some complex cases they may contain not the values you expect, please report issues on those.
 
 #### *expression<sub>1</sub>* / *expression<sub>2</sub>* / ... / *expression<sub>n</sub>*
 
@@ -224,3 +232,4 @@ Development
 PEG.js is developed by [David Majda](http://majda.cz/) ([@dmajda](http://twitter.com/dmajda)). You are welcome to contribute code. Unless your contribution is really trivial you should get in touch with me first — this can prevent wasted effort on both sides. You can send code both as a patch or a GitHub pull request.
 
 Note that PEG.js is still very much work in progress. There are no compatibility guarantees until version 1.0.
+

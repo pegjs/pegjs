@@ -68,6 +68,15 @@ test("semantic and", function() {
 
   var rejectingParser = PEG.buildParser('start = "a" &{ return false; } "b"');
   doesNotParse(rejectingParser, "ab");
+
+  var oddParser = PEG.buildParser('start = as:"a"* &{ return as.length % 2; }');
+  doesNotParse(oddParser, "aa");
+  parses(oddParser, "aaa", [["a", "a", "a"], ""]);
+
+  var oddParserWithAction = PEG.buildParser(
+    'start = as:"a"* &{ return as.length % 2; } "b" { return as; }');
+  doesNotParse(oddParserWithAction, "aab");
+  parses(oddParserWithAction, "aaab", ["a", "a", "a"]);
 });
 
 test("semantic not", function() {
@@ -76,6 +85,15 @@ test("semantic not", function() {
 
   var rejectingParser = PEG.buildParser('start = "a" !{ return true; } "b"');
   doesNotParse(rejectingParser, "ab");
+
+  var evenParser = PEG.buildParser('start = as:"a"* !{ return as.length % 2; }');
+  parses(evenParser, "aa", [["a", "a"], ""]);
+  doesNotParse(evenParser, "aaa");
+
+  var evenParserWithAction = PEG.buildParser(
+    'start = as:"a"* !{ return as.length % 2; } "b" { return as; }');
+  parses(evenParserWithAction, "aab", ["a", "a"]);
+  doesNotParse(evenParserWithAction, "aaab");
 });
 
 test("optional expressions", function() {
@@ -99,35 +117,37 @@ test("one or more expressions", function() {
 });
 
 test("actions", function() {
+  var sys_args = 1;
+
   var singleElementUnlabeledParser = PEG.buildParser(
     'start = "a" { return arguments.length; }'
   );
-  parses(singleElementUnlabeledParser, "a", 0);
+  parses(singleElementUnlabeledParser, "a", sys_args);
 
   var singleElementLabeledParser = PEG.buildParser(
     'start = a:"a" { return [arguments.length, a]; }'
   );
-  parses(singleElementLabeledParser, "a", [1, "a"]);
+  parses(singleElementLabeledParser, "a", [sys_args + 1, "a"]);
 
   var multiElementUnlabeledParser = PEG.buildParser(
     'start = "a" "b" "c" { return arguments.length; }'
   );
-  parses(multiElementUnlabeledParser, "abc", 0);
+  parses(multiElementUnlabeledParser, "abc", sys_args);
 
   var multiElementLabeledParser = PEG.buildParser(
     'start = a:"a" "b" c:"c" { return [arguments.length, a, c]; }'
   );
-  parses(multiElementLabeledParser, "abc", [2, "a", "c"]);
+  parses(multiElementLabeledParser, "abc", [sys_args + 2, "a", "c"]);
 
   var innerElementsUnlabeledParser = PEG.buildParser(
     'start = "a" ("b" "c" "d" { return arguments.length; }) "e"'
   );
-  parses(innerElementsUnlabeledParser, "abcde", ["a", 0, "e"]);
+  parses(innerElementsUnlabeledParser, "abcde", ["a", sys_args, "e"]);
 
   var innerElementsLabeledParser = PEG.buildParser(
     'start = "a" (b:"b" "c" d:"d" { return [arguments.length, b, d]; }) "e"'
   );
-  parses(innerElementsLabeledParser, "abcde", ["a", [2, "b", "d"], "e"]);
+  parses(innerElementsLabeledParser, "abcde", ["a", [sys_args + 2, "b", "d"], "e"]);
 
   /*
    * Test that the parsing position returns after successfull parsing of the
@@ -141,6 +161,36 @@ test("actions", function() {
     'start = "a" { ok(false, "action got called when it should not be"); }'
   );
   doesNotParse(notAMatchParser, "b");
+
+  var actionKnowsPositionParser = PEG.buildParser(
+    'start = [a-c]* { return _chunk.pos; }'
+  );
+  parses(actionKnowsPositionParser, "abc", 0);
+
+  var actionKnowsEndPositionParser = PEG.buildParser(
+    'start = "a" "b" [c-e]* { return _chunk.end; }'
+  );
+  parses(actionKnowsEndPositionParser, "abcde", 5);
+
+  var actionKnowsMatchParser = PEG.buildParser(
+    'start = [a-d]* { return _chunk.match; }'
+  );
+  parses(actionKnowsMatchParser, "abcd", "abcd");
+
+  var actionKnowsPositionInsideParser = PEG.buildParser(
+    'start = [a-c]* ([d-f]* { return _chunk.pos; })'
+  );
+  parses(actionKnowsPositionInsideParser, "acdef", [["a", "c"], 2]);
+
+  var actionKnowsEndPositionInsideParser = PEG.buildParser(
+    'start = "e" "d" ([b-c]* { return _chunk.end; }) "a"'
+  );
+  parses(actionKnowsEndPositionInsideParser, "edcba", ["e", "d", 4, "a"]);
+
+  var actionKnowsMatchInsideParser = PEG.buildParser(
+    'start = [vad]* ([tier]* { return _chunk.match; }) "s" [temn]*'
+  );
+  parses(actionKnowsMatchInsideParser, "advertisment", [["a","d","v"], "erti", "s", ["m","e","n","t"]]);
 });
 
 test("initializer", function() {
@@ -173,6 +223,7 @@ test("initializer", function() {
     '{ function f() { return 42; } }; start = "a" !{ return f() !== 42; }'
   );
   parses(functionInSemanticNotParser, "a", ["a", ""]);
+
 });
 
 test("rule references", function() {
@@ -604,3 +655,4 @@ test("nested comments", function() {
 });
 
 })();
+

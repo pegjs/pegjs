@@ -273,6 +273,7 @@ PEG.compiler.emitter = function(ast) {
             '      var rightmostFailuresPos = 0;',
             '      var rightmostFailuresExpected = [];',
             '      var cache = {};',
+            '      var _chunk = {"pos":-1,"end":-1,"match":""};',            
             '      ',
             /* This needs to be in sync with |padLeft| in utils.js. */
             '      function padLeft(input, padding, length) {',
@@ -553,10 +554,10 @@ PEG.compiler.emitter = function(ast) {
             '}'
           ],
           semantic_and: [
-            '#{resultVar} = (function() {#{node.code}})() ? "" : null;'
+            '#{resultVar} = (function(#{formalParams.join(", ")}) {#{node.code}})(#{actualParams.join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{resultVar} = (function() {#{node.code}})() ? null : "";'
+            '#{resultVar} = (function(#{formalParams.join(", ")}) {#{node.code}})(#{actualParams.join(", ")}) ? null : "";'
           ],
           optional: [
             '#block expressionCode',
@@ -585,12 +586,15 @@ PEG.compiler.emitter = function(ast) {
           action: [
             '#{posVar} = pos;',
             '#block expressionCode',
+            '_chunk.pos = #{posVar};',
+            '_chunk.end = pos;',
+            '_chunk.match = input.substring(#{posVar},pos);',            
             'if (#{resultVar} !== null) {',
             '  #{resultVar} = (function(#{formalParams.join(", ")}) {#{node.code}})(#{actualParams.join(", ")});',
             '}',
             'if (#{resultVar} === null) {',
             '  pos = #{posVar};',
-            '}'
+            '}'            
           ],
           rule_ref: [
             '#{resultVar} = parse_#{node.name}();'
@@ -783,7 +787,8 @@ PEG.compiler.emitter = function(ast) {
 
       for (var i = node.elements.length - 1; i >= 0; i--) {
         code = fill("sequence.iteration", {
-          elementCode:      emit(node.elements[i], context.delta(i, 1)),
+          elementCode:      emit(node.elements[i], context.delta(i, 1),
+                                 elementResultVars.slice(0, i)),
           elementResultVar: elementResultVars[i],
           code:             code,
           posVar:           posVar(context.posIndex),
@@ -814,17 +819,43 @@ PEG.compiler.emitter = function(ast) {
       });
     },
 
-    semantic_and: function(node, context) {
+    semantic_and: function(node, context, previousResults) {
+      var formalParams = [];
+      var actualParams = [];
+      if (node.previousElements !== undefined) {
+        for (var i = 0; i < node.previousElements.length; i++) {
+          var element = node.previousElements[i];
+          if (element.type === "labeled") {
+            formalParams.push(element.label);
+            actualParams.push(previousResults[i]);
+          }
+        }
+      }  
       return fill("semantic_and", {
-        node:      node,
-        resultVar: resultVar(context.resultIndex)
+        node:         node,
+        resultVar:    resultVar(context.resultIndex),
+        formalParams: formalParams,
+        actualParams: actualParams
       });
     },
 
-    semantic_not: function(node, context) {
+    semantic_not: function(node, context, previousResults) {
+      var formalParams = [];
+      var actualParams = [];
+      if (node.previousElements !== undefined) {
+        for (var i = 0; i < node.previousElements.length; i++) {
+          var element = node.previousElements[i];
+          if (element.type === "labeled") {
+            formalParams.push(element.label);
+            actualParams.push(previousResults[i]);
+          }
+        }
+      }
       return fill("semantic_not", {
-        node:      node,
-        resultVar: resultVar(context.resultIndex)
+        node:         node,
+        resultVar:    resultVar(context.resultIndex),
+        formalParams: formalParams,
+        actualParams: actualParams
       });
     },
 
@@ -881,6 +912,9 @@ PEG.compiler.emitter = function(ast) {
         formalParams = [];
         actualParams = [];
       }
+
+      formalParams.push("_chunk");
+      actualParams.push("_chunk");
 
       return fill("action", {
         node:           node,
@@ -942,3 +976,4 @@ PEG.compiler.emitter = function(ast) {
 
   return emit(ast);
 };
+
