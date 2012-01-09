@@ -101,9 +101,9 @@ PEG.compiler.emitter = function(ast) {
 
             return [
               c + '=' + params[1] + ';'
-                +  l + '=' + c + '.length;'
+                + l + '=' + c + '.length;'
                 + 'for(' + i + '=0;' + i + '<' + l + ';' + i + '++){'
-                +  params[0] + '=' + c + '[' + i + '];',
+                + params[0] + '=' + c + '[' + i + '];',
               [params[0], c, l, i]
             ];
           },
@@ -127,11 +127,25 @@ PEG.compiler.emitter = function(ast) {
         "block": {
           params: /^(.*)$/,
           compile: function(state, prefix, params) {
+            var x = '__x', // __x for "prefix",
+                n = '__n', // __n for "lines"
+                l = '__l', // __l for "length"
+                i = '__i'; // __i for "index"
+
+            /*
+             * Originally, the generated code used |String.prototype.replace|, but
+             * it is buggy in certain versions of V8 so it was rewritten. See the
+             * tests for details.
+             */
             return [
-              push('(' + params[0] + ').toString().replace(/^/gm, "'
-                + stringEscape(prefix.substring(state.indentLevel()))
-                + '") + "\\n"'),
-              []
+              x + '="' + stringEscape(prefix.substring(state.indentLevel())) + '";'
+                + n + '=(' + params[0] + ').toString().split("\\n");'
+                + l + '=' + n + '.length;'
+                + 'for(' + i + '=0;' + i + '<' + l + ';' + i + '++){'
+                + n + '[' + i +']=' + x + '+' + n + '[' + i + ']+"\\n";'
+                + '}'
+                + push(n + '.join("")'),
+              [x, n, l, i]
             ];
           },
           stackOp: "nop"
