@@ -19,11 +19,12 @@ doesNotParseWithMessage = function(parser, input, message) {
   );
 };
 
-doesNotParseWithPos = function(parser, input, line, column) {
+doesNotParseWithPos = function(parser, input, offset, line, column) {
   raises(
     function() { parser.parse(input); },
     function(e) {
       return e instanceof parser.SyntaxError
+        && e.offset === offset
         && e.line === line
         && e.column === column;
     }

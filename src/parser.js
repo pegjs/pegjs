@@ -3598,6 +3598,7 @@ PEG.parser = (function(){
         var errorPosition = computeErrorPosition();
         throw new this.SyntaxError(
           buildErrorMessage(),
+          Math.max(pos, rightmostFailuresPos),
           errorPosition.line,
           errorPosition.column
         );
@@ -3612,9 +3613,10 @@ PEG.parser = (function(){
   
   /* Thrown when a parser encounters a syntax error. */
   
-  result.SyntaxError = function(message, line, column) {
+  result.SyntaxError = function(message, offset, line, column) {
     this.name = "SyntaxError";
     this.message = message;
+    this.offset = offset;
     this.line = line;
     this.column = column;
   };
