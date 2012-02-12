@@ -1509,7 +1509,7 @@ SourceElements
 /*
  * The specification also allows |FunctionDeclaration| here. We do it
  * implicitly, because we consider |FunctionDeclaration| and
- * |FunctionExpression| as statements. See the coment at the |Statement| rule.
+ * |FunctionExpression| as statements. See the comment at the |Statement| rule.
  */
 SourceElement
   = Statement
