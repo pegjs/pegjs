@@ -100,7 +100,8 @@ while (args.length > 0 && isOption(args[0])) {
 
 switch (args.length) {
   case 0:
-    var inputStream = process.openStdin();
+    process.stdin.resume();
+    var inputStream = process.stdin;
     var outputStream = process.stdout;
     break;
 
