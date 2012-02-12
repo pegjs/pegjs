@@ -138,5 +138,7 @@ readStream(inputStream, function(input) {
   }
 
   outputStream.write(exportVar + " = " + parser.toSource() + ";\n");
-  outputStream.end();
+  if (outputStream !== process.stdout) {
+    outputStream.end();
+  }
 });
