@@ -466,6 +466,8 @@ PEG.compiler.emitter = function(ast) {
             '    }',
             '    ',
             '    this.name = "SyntaxError";',
+            '    this.expected = expected;',
+            '    this.found = found;',
             '    this.message = buildMessage(expected, found);',
             '    this.offset = offset;',
             '    this.line = line;',

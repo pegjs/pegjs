@@ -19,6 +19,25 @@ doesNotParseWithMessage = function(parser, input, message) {
   );
 };
 
+doesNotParseWithDetails = function(parser, input, expected, found, message) {
+  raises(
+    function() { parser.parse(input); },
+    function(e) {
+      var i;
+
+      if (!(e instanceof parser.SyntaxError))    { return false; }
+      if (e.expected.length !== expected.length) { return false; }
+      for (i = 0; i < e.expected.length; i++) {
+        if (e.expected[i] !== expected[i])       { return false; }
+      }
+      if (e.found !== found)                     { return false; }
+      if (e.message !== message)                 { return false; }
+
+      return true;
+    }
+  );
+};
+
 doesNotParseWithPos = function(parser, input, offset, line, column) {
   raises(
     function() { parser.parse(input); },
