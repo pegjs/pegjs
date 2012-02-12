@@ -37,6 +37,8 @@ PEG.GrammarError.prototype = Error.prototype;
 
 if (typeof module === "object") {
   module.exports = PEG;
+} else if (typeof define === 'function' && define.amd) {
+  define(PEG);
 } else if (typeof window === "object") {
   window.PEG = PEG;
 } else {
