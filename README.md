@@ -205,8 +205,8 @@ Compatibility
 
 Both the parser generator and generated parsers should run well in the following environments:
 
-  * Node.js 0.4.4+
-  * IE 6+
+  * Node.js 0.6.6+
+  * IE 8+
   * Firefox
   * Chrome
   * Safari
