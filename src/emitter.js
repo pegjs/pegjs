@@ -1,5 +1,7 @@
 /* Emits the generated code for the AST. */
-PEG.compiler.emitter = function(ast) {
+PEG.compiler.emitter = function(ast, options) {
+  options = options || {};
+
   var Codie = (function(undefined) {
     function stringEscape(s) {
       function hex(ch) { return ch.charCodeAt(0).toString(16).toUpperCase(); }
@@ -674,11 +676,12 @@ PEG.compiler.emitter = function(ast) {
   })();
 
   function fill(name, vars) {
-    vars.string = quote;
-    vars.pluck  = pluck;
-    vars.keys   = keys;
-    vars.values = values;
-    vars.emit   = emit;
+    vars.string  = quote;
+    vars.pluck   = pluck;
+    vars.keys    = keys;
+    vars.values  = values;
+    vars.emit    = emit;
+    vars.options = options;
 
     return templates[name](vars);
   }

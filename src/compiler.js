@@ -17,14 +17,14 @@ PEG.compiler = {
    * during the generation and some may protrude to the generated parser and
    * cause its malfunction.
    */
-  compile: function(ast) {
+  compile: function(ast, options) {
     var that = this;
 
     each(this.appliedPassNames, function(passName) {
       that.passes[passName](ast);
     });
 
-    var source = this.emitter(ast);
+    var source = this.emitter(ast, options);
     var result = eval(source);
     result._source = source;
 
