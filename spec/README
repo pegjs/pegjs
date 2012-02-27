@@ -1,0 +1,33 @@
+PEG.js Spec Suite
+=================
+
+This is the PEG.js spec suite. It ensures PEG.js works correctly. All specs
+should always pass on all supported platforms.
+
+Running in a browser
+--------------------
+
+  1. Start a web server and make it serve the PEG.js root directory (one level
+     up from this one).
+
+  2. Point your browser to an URL corresponding to the index.html file.
+
+  3. Watch the specs pass (or fail).
+
+If you have Python installed, you can just run the following command in the
+PEG.js root directory
+
+  python -m SimpleHTTPServer
+
+and load http://localhost:8000/spec/ in your browser.
+
+Running from a command-line
+---------------------------
+
+  1. Make sure you have Node.js and the "jasmine-node" npm pacakge installed.
+
+  2. Run the following command:
+
+       jasmine-node --verbose .
+
+  3. Watch the specs pass (or fail).

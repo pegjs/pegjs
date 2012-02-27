@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>PEG.js Spec Suite</title>
+    <link rel="stylesheet" href="vendor/jasmine/jasmine.css">
+    <script src="vendor/jasmine/jasmine.js"></script>
+    <script src="vendor/jasmine/jasmine-html.js"></script>
+    <script src="../lib/peg.js"></script>
+    <script src="parser.spec.js"></script>
+    <script>
+      (function() {
+        var env      = jasmine.getEnv(),
+            reporter = new jasmine.HtmlReporter();
+
+        env.addReporter(reporter);
+        env.specFilter = reporter.specFilter;
+
+        window.onload = function() { env.execute(); }
+      })();
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
