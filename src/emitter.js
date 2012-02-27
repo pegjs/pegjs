@@ -563,10 +563,10 @@ PEG.compiler.emitter = function(ast) {
             '}'
           ],
           semantic_and: [
-            '#{node.resultVar} = (function() {#{node.code}})() ? "" : null;'
+            '#{node.resultVar} = (function(#{keys(node.params).join(", ")}) {#{node.code}})(#{values(node.params).join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{node.resultVar} = (function() {#{node.code}})() ? null : "";'
+            '#{node.resultVar} = (function(#{keys(node.params).join(", ")}) {#{node.code}})(#{values(node.params).join(", ")}) ? null : "";'
           ],
           optional: [
             '#block emit(node.expression)',

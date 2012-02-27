@@ -68,6 +68,42 @@ test("semantic and", function() {
 
   var rejectingParser = PEG.buildParser('start = "a" &{ return false; } "b"');
   doesNotParse(rejectingParser, "ab");
+
+  var singleElementUnlabeledParser = PEG.buildParser(
+    'start = "a" &{ return arguments.length === 0; }'
+  );
+  parses(singleElementUnlabeledParser, "a", ["a", ""]);
+
+  var singleElementLabeledParser = PEG.buildParser(
+    'start = a:"a" &{ return arguments.length === 1 && a === "a"; }'
+  );
+  parses(singleElementLabeledParser, "a", ["a", ""]);
+
+  var multiElementUnlabeledParser = PEG.buildParser(
+    'start = "a" "b" "c" &{ return arguments.length === 0; }'
+  );
+  parses(multiElementUnlabeledParser, "abc", ["a", "b", "c", ""]);
+
+  var multiElementLabeledParser = PEG.buildParser([
+    'start = a:"a" "b" c:"c"',
+    '        &{ return arguments.length === 2 && a === "a" && c === "c"; }'
+  ].join("\n"));
+  parses(multiElementLabeledParser, "abc", ["a", "b", "c", ""]);
+
+  var innerElementsUnlabeledParser = PEG.buildParser(
+    'start = "a" ("b" "c" "d" &{ return arguments.length === 0; }) "e"'
+  );
+  parses(innerElementsUnlabeledParser, "abcde", ["a", ["b", "c", "d", ""], "e"]);
+
+  var innerElementsLabeledParser = PEG.buildParser([
+    'start = "a"',
+    '        (',
+    '          b:"b" "c" d:"d"',
+    '          &{ return arguments.length === 2 && b === "b" && d === "d"; }',
+    '        )',
+    '        "e"'
+  ].join("\n"));
+  parses(innerElementsLabeledParser, "abcde", ["a", ["b", "c", "d", ""], "e"]);
 });
 
 test("semantic not", function() {
@@ -76,6 +112,42 @@ test("semantic not", function() {
 
   var rejectingParser = PEG.buildParser('start = "a" !{ return true; } "b"');
   doesNotParse(rejectingParser, "ab");
+
+  var singleElementUnlabeledParser = PEG.buildParser(
+    'start = "a" !{ return arguments.length !== 0; }'
+  );
+  parses(singleElementUnlabeledParser, "a", ["a", ""]);
+
+  var singleElementLabeledParser = PEG.buildParser(
+    'start = a:"a" !{ return arguments.length !== 1 || a !== "a"; }'
+  );
+  parses(singleElementLabeledParser, "a", ["a", ""]);
+
+  var multiElementUnlabeledParser = PEG.buildParser(
+    'start = "a" "b" "c" !{ return arguments.length !== 0; }'
+  );
+  parses(multiElementUnlabeledParser, "abc", ["a", "b", "c", ""]);
+
+  var multiElementLabeledParser = PEG.buildParser([
+    'start = a:"a" "b" c:"c"',
+    '        !{ return arguments.length !== 2 || a !== "a" || c !== "c"; }'
+  ].join("\n"));
+  parses(multiElementLabeledParser, "abc", ["a", "b", "c", ""]);
+
+  var innerElementsUnlabeledParser = PEG.buildParser(
+    'start = "a" ("b" "c" "d" !{ return arguments.length !== 0; }) "e"'
+  );
+  parses(innerElementsUnlabeledParser, "abcde", ["a", ["b", "c", "d", ""], "e"]);
+
+  var innerElementsLabeledParser = PEG.buildParser([
+    'start = "a"',
+    '        (',
+    '          b:"b" "c" d:"d"',
+    '          !{ return arguments.length !== 2 || b !== "b" || d !== "d"; }',
+    '        )',
+    '        "e"'
+  ].join("\n"));
+  parses(innerElementsLabeledParser, "abcde", ["a", ["b", "c", "d", ""], "e"]);
 });
 
 test("optional expressions", function() {

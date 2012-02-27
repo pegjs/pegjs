@@ -447,12 +447,24 @@ test("computes params", function() {
   function extractExpression(node) { return node.expression; }
 
   var cases = [
-    /* Recursive walk */
+    /* Bacics */
     {
       grammar:   'start = a:"a" { }',
       extractor: extractNode,
       params:    { a: "result0" }
     },
+    {
+      grammar:   'start = a:"a" &{ }',
+      extractor: function(node) { return node.elements[1]; },
+      params:    { a: "result0" }
+    },
+    {
+      grammar:   'start = a:"a" !{ }',
+      extractor: function(node) { return node.elements[1]; },
+      params:    { a: "result0" }
+    },
+
+    /* Recursive walk */
     {
       grammar:   'start = a:"a" { } / "b" / "c"',
       extractor: function(node) { return node.alternatives[0]; },

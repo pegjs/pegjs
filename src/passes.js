@@ -318,15 +318,16 @@ PEG.compiler.passes = {
 
   /*
    * This pass walks through the AST and tracks what labels are visible at each
-   * point. For "action" nodes it computes parameter names and values for the
-   * function used in generated code. (In the emitter, user's code is wrapped
-   * into a function that is immediately executed. Its parameter names
-   * correspond to visible labels and its parameter values to their captured
-   * values). Implicitly, this pass defines scoping rules for labels.
+   * point. For "action", "semantic_and" and "semantic_or" nodes it computes
+   * parameter names and values for the function used in generated code. (In the
+   * emitter, user's code is wrapped into a function that is immediately
+   * executed. Its parameter names correspond to visible labels and its
+   * parameter values to their captured values). Implicitly, this pass defines
+   * scoping rules for labels.
    *
-   * After running this pass, all "action" nodes will have a |params| property
-   * containing an object mapping parameter names to the expressions that will
-   * be used as their values.
+   * After running this pass, all "action", "semantic_and" and "semantic_or"
+   * nodes will have a |params| property containing an object mapping parameter
+   * names to the expressions that will be used as their values.
    */
   computeParams: function(ast) {
     var envs = [];
@@ -341,6 +342,15 @@ PEG.compiler.passes = {
 
     function computeForScopedExpression(node) {
       scoped(function() { compute(node.expression); });
+    }
+
+    function computeParams(node) {
+      var env = envs[envs.length - 1], params = {}, name;
+
+      for (name in env) {
+        params[name] = env[name];
+      }
+      node.params = params;
     }
 
     var compute = buildNodeVisitor({
@@ -389,8 +399,8 @@ PEG.compiler.passes = {
 
       simple_and:   computeForScopedExpression,
       simple_not:   computeForScopedExpression,
-      semantic_and: nop,
-      semantic_not: nop,
+      semantic_and: computeParams,
+      semantic_not: computeParams,
       optional:     computeForScopedExpression,
       zero_or_more: computeForScopedExpression,
       one_or_more:  computeForScopedExpression,
@@ -398,14 +408,8 @@ PEG.compiler.passes = {
       action:
         function(node) {
           scoped(function() {
-            var env = envs[envs.length - 1], params = {}, name;
-
             compute(node.expression);
-
-            for (name in env) {
-              params[name] = env[name];
-            }
-            node.params = params;
+            computeParams(node);
           });
         },
 
