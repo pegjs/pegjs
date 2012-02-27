@@ -42,6 +42,10 @@ function map(array, callback) {
   return result;
 }
 
+function pluck(array, key) {
+  return map(array, function (e) { return e[key]; });
+}
+
 /*
  * Returns a string padded on the left to a desired length with a character.
  *

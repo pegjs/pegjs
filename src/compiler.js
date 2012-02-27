@@ -7,7 +7,7 @@ PEG.compiler = {
     "reportMissingRules",
     "reportLeftRecursion",
     "removeProxyRules",
-    "computeStackDepths"
+    "computeVarNames"
   ],
 
   /*
