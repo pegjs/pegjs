@@ -46,6 +46,22 @@ function pluck(array, key) {
   return map(array, function (e) { return e[key]; });
 }
 
+function keys(object) {
+  var result = [];
+  for (var key in object) {
+    result.push(key);
+  }
+  return result;
+}
+
+function values(object) {
+  var result = [];
+  for (var key in object) {
+    result.push(object[key]);
+  }
+  return result;
+}
+
 /*
  * Returns a string padded on the left to a desired length with a character.
  *

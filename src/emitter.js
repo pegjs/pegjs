@@ -596,7 +596,7 @@ PEG.compiler.emitter = function(ast) {
             '#{node.posVar} = pos;',
             '#block emit(node.expression)',
             'if (#{node.resultVar} !== null) {',
-            '  #{node.resultVar} = (function(#{formalParams.join(", ")}) {#{node.code}})(#{actualParams.join(", ")});',
+            '  #{node.resultVar} = (function(#{keys(node.params).join(", ")}) {#{node.code}})(#{values(node.params).join(", ")});',
             '}',
             'if (#{node.resultVar} === null) {',
             '  pos = #{node.posVar};',
@@ -674,6 +674,8 @@ PEG.compiler.emitter = function(ast) {
   function fill(name, vars) {
     vars.string = quote;
     vars.pluck  = pluck;
+    vars.keys   = keys;
+    vars.values = values;
     vars.emit   = emit;
 
     return templates[name](vars);
@@ -770,48 +772,10 @@ PEG.compiler.emitter = function(ast) {
     optional:     emitSimple("optional"),
     zero_or_more: emitSimple("zero_or_more"),
     one_or_more:  emitSimple("one_or_more"),
-
-    action: function(node) {
-      /*
-       * In case of sequences, we splat their elements into function arguments
-       * one by one. Example:
-       *
-       *   start: a:"a" b:"b" c:"c" { alert(arguments.length) }  // => 3
-       *
-       * This behavior is reflected in this function.
-       */
-
-      var formalParams;
-      var actualParams;
-
-      if (node.expression.type === "sequence") {
-        formalParams = [];
-        actualParams = [];
-
-        each(node.expression.elements, function(element, i) {
-          if (element.type === "labeled") {
-            formalParams.push(element.label);
-            actualParams.push(node.resultVar + '[' + i + ']');
-          }
-        });
-      } else if (node.expression.type === "labeled") {
-        formalParams = [node.expression.label];
-        actualParams = [node.resultVar];
-      } else {
-        formalParams = [];
-        actualParams = [];
-      }
-
-      return fill("action", {
-        node:           node,
-        formalParams:   formalParams,
-        actualParams:   actualParams
-      });
-    },
-
-    rule_ref: emitSimple("rule_ref"),
-    literal:  emitSimple("literal"),
-    any:      emitSimple("any"),
+    action:       emitSimple("action"),
+    rule_ref:     emitSimple("rule_ref"),
+    literal:      emitSimple("literal"),
+    any:          emitSimple("any"),
 
     "class": function(node) {
       var regexp;

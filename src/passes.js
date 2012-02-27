@@ -314,5 +314,107 @@ PEG.compiler.passes = {
     });
 
     compute(ast, { result: 0, pos: 0 });
+  },
+
+  /*
+   * This pass walks through the AST and tracks what labels are visible at each
+   * point. For "action" nodes it computes parameter names and values for the
+   * function used in generated code. (In the emitter, user's code is wrapped
+   * into a function that is immediately executed. Its parameter names
+   * correspond to visible labels and its parameter values to their captured
+   * values). Implicitly, this pass defines scoping rules for labels.
+   *
+   * After running this pass, all "action" nodes will have a |params| property
+   * containing an object mapping parameter names to the expressions that will
+   * be used as their values.
+   */
+  computeParams: function(ast) {
+    var envs = [];
+
+    function scoped(f) {
+      envs.push({});
+      f();
+      envs.pop();
+    }
+
+    function nop() {}
+
+    function computeForScopedExpression(node) {
+      scoped(function() { compute(node.expression); });
+    }
+
+    var compute = buildNodeVisitor({
+      grammar:
+        function(node) {
+          var name;
+
+          for (name in node.rules) {
+            compute(node.rules[name]);
+          }
+        },
+
+      rule:         computeForScopedExpression,
+
+      choice:
+        function(node) {
+          scoped(function() { each(node.alternatives, compute); });
+        },
+
+      sequence:
+        function(node) {
+          var env = envs[envs.length - 1], name;
+
+          function fixup(name) {
+            each(pluck(node.elements, "resultVar"), function(resultVar, i) {
+              if (env[name].substr(0, resultVar.length) === resultVar) {
+                env[name] = node.resultVar + "[" + i + "]"
+                          + env[name].substr(resultVar.length);
+              }
+            });
+          }
+
+          each(node.elements, compute);
+
+          for (name in env) {
+            fixup(name);
+          }
+        },
+
+      labeled:
+        function(node) {
+          envs[envs.length - 1][node.label] = node.resultVar;
+
+          scoped(function() { compute(node.expression); });
+        },
+
+      simple_and:   computeForScopedExpression,
+      simple_not:   computeForScopedExpression,
+      semantic_and: nop,
+      semantic_not: nop,
+      optional:     computeForScopedExpression,
+      zero_or_more: computeForScopedExpression,
+      one_or_more:  computeForScopedExpression,
+
+      action:
+        function(node) {
+          scoped(function() {
+            var env = envs[envs.length - 1], params = {}, name;
+
+            compute(node.expression);
+
+            for (name in env) {
+              params[name] = env[name];
+            }
+            node.params = params;
+          });
+        },
+
+      rule_ref:     nop,
+      literal:      nop,
+      any:          nop,
+      "class":      nop
+    });
+
+    compute(ast);
   }
 };
