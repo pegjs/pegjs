@@ -12,6 +12,15 @@ function range(start, stop) {
   return result;
 }
 
+function find(array, callback) {
+  var length = array.length;
+  for (var i = 0; i < length; i++) {
+    if (callback(array[i])) {
+      return array[i];
+    }
+  }
+}
+
 function contains(array, value) {
   /*
    * Stupid IE does not have Array.prototype.indexOf, otherwise this function
@@ -167,4 +176,8 @@ function buildNodeVisitor(functions) {
   return function(node) {
     return functions[node.type].apply(null, arguments);
   };
+}
+
+function findRuleByName(ast, name) {
+  return find(ast.rules, function(r) { return r.name === name; });
 }

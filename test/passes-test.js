@@ -93,15 +93,15 @@ test("removes proxy rules", function() {
 
   function simpleGrammarWithStartAndProxied(startRuleExpression) {
     return simpleGrammar(
-      {
-        start: {
+      [
+        {
           type:        "rule",
           name:        "start",
           displayName: null,
           expression:  startRuleExpression
         },
-        proxied: proxiedRule
-      },
+        proxiedRule
+      ],
       "start"
     );
   }
@@ -109,7 +109,7 @@ test("removes proxy rules", function() {
   var cases = [
     {
       grammar: 'start = proxy; proxy = proxied; proxied = "a"',
-      ast:     simpleGrammar({ proxied: proxiedRule }, "proxied")
+      ast:     simpleGrammar([proxiedRule], "proxied")
     },
     {
       grammar: 'start = proxy / "a" / "b"; proxy = proxied; proxied = "a"',
@@ -436,9 +436,9 @@ test("computes variable names", function() {
     var ast = PEG.parser.parse(cases[i].grammar);
     PEG.compiler.passes.computeVarNames(ast);
 
-    deepEqual(ast.rules["start"].resultVars, cases[i].resultVars);
-    deepEqual(ast.rules["start"].posVars,    cases[i].posVars);
-    checkDetails(ast.rules["start"].expression, cases[i].details);
+    deepEqual(ast.rules[0].resultVars, cases[i].resultVars);
+    deepEqual(ast.rules[0].posVars,    cases[i].posVars);
+    checkDetails(ast.rules[0].expression, cases[i].details);
   }
 });
 
@@ -588,7 +588,7 @@ test("computes params", function() {
     PEG.compiler.passes.computeParams(ast);
 
     deepEqual(
-      cases[i].extractor(ast.rules["start"].expression).params,
+      cases[i].extractor(ast.rules[0].expression).params,
       cases[i].params
     );
   }

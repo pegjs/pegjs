@@ -125,7 +125,7 @@ function oneRuleGrammar(expression) {
   return {
     type:        "grammar",
     initializer: null,
-    rules:       { start: rule("start", null, expression) },
+    rules:       [rule("start", null, expression)],
     startRule:   "start"
   };
 }
@@ -155,16 +155,14 @@ function actionGrammar(action) {
 var initializerGrammar = {
   type:        "grammar",
   initializer: initializer(" code "),
-  rules: {
-    a: rule("a", null, literalAbcd)
-  },
+  rules:       [rule("a", null, literalAbcd)],
   startRule:   "a"
 };
 
 var namedRuleGrammar = {
   type:        "grammar",
   initializer: null,
-  rules:       { start: rule("start", "abcd", literalAbcd) },
+  rules:       [rule("start", "abcd", literalAbcd)],
   startRule:   "start"
 };
 
@@ -175,7 +173,7 @@ test("parses grammar", function() {
     {
       type:        "grammar",
       initializer: null,
-      rules:       { a: rule("a", null, literalAbcd) },
+      rules:       [rule("a", null, literalAbcd)],
       startRule:   "a"
     }
   );
@@ -185,11 +183,11 @@ test("parses grammar", function() {
     {
       type:        "grammar",
       initializer: null,
-      rules: {
-        a: rule("a", null, literalAbcd),
-        b: rule("b", null, literalEfgh),
-        c: rule("c", null, literalIjkl)
-      },
+      rules: [
+        rule("a", null, literalAbcd),
+        rule("b", null, literalEfgh),
+        rule("c", null, literalIjkl)
+      ],
       startRule:   "a"
     }
   );
@@ -212,7 +210,7 @@ test("parses rule", function() {
     {
       type:        "grammar",
       initializer: null,
-      rules:       { start: rule("start", "start rule", choiceLiterals) },
+      rules:       [rule("start", "start rule", choiceLiterals)],
       startRule:   "start"
     }
   );

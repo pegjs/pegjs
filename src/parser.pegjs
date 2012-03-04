@@ -1,12 +1,9 @@
 grammar
   = __ initializer:initializer? rules:rule+ {
-      var rulesConverted = {};
-      each(rules, function(rule) { rulesConverted[rule.name] = rule; });
-
       return {
         type:        "grammar",
         initializer: initializer !== "" ? initializer : null,
-        rules:       rulesConverted,
+        rules:       rules,
         startRule:   rules[0].name
       };
     }

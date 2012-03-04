@@ -17,13 +17,7 @@ PEG.compiler.passes = {
     }
 
     var check = buildNodeVisitor({
-      grammar:
-        function(node) {
-          for (var name in node.rules) {
-            check(node.rules[name]);
-          }
-        },
-
+      grammar:      checkSubnodes("rules"),
       rule:         checkExpression,
       choice:       checkSubnodes("alternatives"),
       sequence:     checkSubnodes("elements"),
@@ -39,7 +33,7 @@ PEG.compiler.passes = {
 
       rule_ref:
         function(node) {
-          if (ast.rules[node.name] === undefined) {
+          if (!findRuleByName(ast, node.name)) {
             throw new PEG.GrammarError(
               "Referenced rule \"" + node.name + "\" does not exist."
             );
@@ -62,25 +56,23 @@ PEG.compiler.passes = {
       check(node.expression, appliedRules);
     }
 
+    function checkSubnodes(propertyName) {
+      return function(node, appliedRules) {
+        each(node[propertyName], function(subnode) {
+          check(subnode, appliedRules);
+        });
+      };
+    }
+
     var check = buildNodeVisitor({
-      grammar:
-        function(node, appliedRules) {
-          for (var name in node.rules) {
-            check(node.rules[name], appliedRules);
-          }
-        },
+      grammar:     checkSubnodes("rules"),
 
       rule:
         function(node, appliedRules) {
           check(node.expression, appliedRules.concat(node.name));
         },
 
-      choice:
-        function(node, appliedRules) {
-          each(node.alternatives, function(alternative) {
-            check(alternative, appliedRules);
-          });
-        },
+      choice:      checkSubnodes("alternatives"),
 
       sequence:
         function(node, appliedRules) {
@@ -106,7 +98,7 @@ PEG.compiler.passes = {
               "Left recursion detected for rule \"" + node.name + "\"."
             );
           }
-          check(ast.rules[node.name], appliedRules);
+          check(findRuleByName(ast, node.name), appliedRules);
         },
 
       literal:      nop,
@@ -141,13 +133,7 @@ PEG.compiler.passes = {
       }
 
       var replace = buildNodeVisitor({
-        grammar:
-          function(node, from, to) {
-            for (var name in node.rules) {
-              replace(node.rules[name], from, to);
-            }
-          },
-
+        grammar:      replaceInSubnodes("rules"),
         rule:         replaceInExpression,
         choice:       replaceInSubnodes("alternatives"),
         sequence:     replaceInSubnodes("elements"),
@@ -176,15 +162,23 @@ PEG.compiler.passes = {
       replace(ast, from, to);
     }
 
-    for (var name in ast.rules) {
-      if (isProxyRule(ast.rules[name])) {
-        replaceRuleRefs(ast, ast.rules[name].name, ast.rules[name].expression.name);
-        if (name === ast.startRule) {
-          ast.startRule = ast.rules[name].expression.name;
+    var indices = [];
+
+    each(ast.rules, function(rule, i) {
+      if (isProxyRule(rule)) {
+        replaceRuleRefs(ast, rule.name, rule.expression.name);
+        if (rule.name === ast.startRule) {
+          ast.startRule = rule.expression.name;
         }
-        delete ast.rules[name];
+        indices.push(i);
       }
-    }
+    });
+
+    indices.reverse();
+
+    each(indices, function(index) {
+      ast.rules.splice(index, 1);
+    });
   },
 
   /*
@@ -240,11 +234,9 @@ PEG.compiler.passes = {
     var compute = buildNodeVisitor({
       grammar:
         function(node, index) {
-          var name;
-
-          for (name in node.rules) {
-            compute(node.rules[name], index);
-          }
+          each(node.rules, function(node) {
+            compute(node, index);
+          });
         },
 
       rule:
@@ -356,11 +348,7 @@ PEG.compiler.passes = {
     var compute = buildNodeVisitor({
       grammar:
         function(node) {
-          var name;
-
-          for (name in node.rules) {
-            compute(node.rules[name]);
-          }
+          each(node.rules, compute);
         },
 
       rule:         computeForScopedExpression,

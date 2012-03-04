@@ -281,7 +281,9 @@ PEG.compiler.emitter = function(ast) {
             '     */',
             '    parse: function(input, startRule) {',
             '      var parseFunctions = {',
-            '        #block parseFunctionTableItems.join(",\\n")',
+            '        #for rule in node.rules',
+            '          #{string(rule.name) + ": parse_" + rule.name},',
+            '        #end',
             '      };',
             '      ',
             '      if (startRule !== undefined) {',
@@ -340,8 +342,8 @@ PEG.compiler.emitter = function(ast) {
             '        rightmostFailuresExpected.push(failure);',
             '      }',
             '      ',
-            '      #for definition in parseFunctionDefinitions',
-            '        #block definition',
+            '      #for rule in node.rules',
+            '        #block emit(rule)',
             '        ',
             '      #end',
             '      ',
@@ -686,26 +688,7 @@ PEG.compiler.emitter = function(ast) {
   }
 
   var emit = buildNodeVisitor({
-    grammar: function(node) {
-      var name;
-
-      var parseFunctionTableItems = [];
-      for (name in node.rules) {
-        parseFunctionTableItems.push(quote(name) + ": parse_" + name);
-      }
-      parseFunctionTableItems.sort();
-
-      var parseFunctionDefinitions = [];
-      for (name in node.rules) {
-        parseFunctionDefinitions.push(emit(node.rules[name]));
-      }
-
-      return fill("grammar", {
-        node:                     node,
-        parseFunctionTableItems:  parseFunctionTableItems,
-        parseFunctionDefinitions: parseFunctionDefinitions
-      });
-    },
+    grammar: emitSimple("grammar"),
 
     initializer: function(node) { return node.code; },
 
