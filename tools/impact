@@ -9,11 +9,11 @@ set -e
 
 prepare() {
   git checkout --quiet "$1"
-  jake build
+  make build
 }
 
 run_benchmark() {
-  echo $(jake benchmark | awk 'BEGIN { FS = " *│ *" } /Total/ { split($5, a, " "); print a[1] }')
+  echo $(make benchmark | awk 'BEGIN { FS = " *│ *" } /Total/ { split($5, a, " "); print a[1] }')
 }
 
 measure_speed() {

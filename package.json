@@ -15,7 +15,6 @@
     "url":  "http://github.com/dmajda/pegjs.git"
   },
   "devDependencies": {
-    "jake":      ">= 0.1.22",
     "uglify-js": ">= 1.2.4",
     "jshint":    ">= 0.5.5"
   },
