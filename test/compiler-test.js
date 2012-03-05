@@ -70,36 +70,50 @@ test("semantic and", function() {
   doesNotParse(rejectingParser, "ab");
 
   var singleElementUnlabeledParser = PEG.buildParser(
-    'start = "a" &{ return arguments.length === 0; }'
+    'start = "a" &{ return arguments.length === 1 && offset === 1; }'
   );
   parses(singleElementUnlabeledParser, "a", ["a", ""]);
 
-  var singleElementLabeledParser = PEG.buildParser(
-    'start = a:"a" &{ return arguments.length === 1 && a === "a"; }'
-  );
+  var singleElementLabeledParser = PEG.buildParser([
+    'start = a:"a" &{',
+    '          return arguments.length === 2',
+    '            && offset === 1',
+    '            && a === "a";',
+    '        }'
+  ].join("\n"));
   parses(singleElementLabeledParser, "a", ["a", ""]);
 
   var multiElementUnlabeledParser = PEG.buildParser(
-    'start = "a" "b" "c" &{ return arguments.length === 0; }'
+    'start = "a" "b" "c" &{ return arguments.length === 1 && offset === 3; }'
   );
   parses(multiElementUnlabeledParser, "abc", ["a", "b", "c", ""]);
 
   var multiElementLabeledParser = PEG.buildParser([
-    'start = a:"a" "b" c:"c"',
-    '        &{ return arguments.length === 2 && a === "a" && c === "c"; }'
+    'start = a:"a" "b" c:"c" &{',
+    '          return arguments.length === 3',
+    '            && offset === 3',
+    '            && a === "a"',
+    '            && c === "c";',
+    '        }'
   ].join("\n"));
   parses(multiElementLabeledParser, "abc", ["a", "b", "c", ""]);
 
-  var innerElementsUnlabeledParser = PEG.buildParser(
-    'start = "a" ("b" "c" "d" &{ return arguments.length === 0; }) "e"'
-  );
+  var innerElementsUnlabeledParser = PEG.buildParser([
+    'start = "a"',
+    '        ("b" "c" "d" &{ return arguments.length === 1 && offset === 4; })',
+    '        "e"'
+  ].join("\n"));
   parses(innerElementsUnlabeledParser, "abcde", ["a", ["b", "c", "d", ""], "e"]);
 
   var innerElementsLabeledParser = PEG.buildParser([
     'start = "a"',
     '        (',
-    '          b:"b" "c" d:"d"',
-    '          &{ return arguments.length === 2 && b === "b" && d === "d"; }',
+    '          b:"b" "c" d:"d" &{',
+    '            return arguments.length === 3',
+    '              && offset === 4',
+    '              && b === "b"',
+    '              && d === "d";',
+    '          }',
     '        )',
     '        "e"'
   ].join("\n"));
@@ -114,36 +128,50 @@ test("semantic not", function() {
   doesNotParse(rejectingParser, "ab");
 
   var singleElementUnlabeledParser = PEG.buildParser(
-    'start = "a" !{ return arguments.length !== 0; }'
+    'start = "a" !{ return arguments.length !== 1 || offset !== 1; }'
   );
   parses(singleElementUnlabeledParser, "a", ["a", ""]);
 
-  var singleElementLabeledParser = PEG.buildParser(
-    'start = a:"a" !{ return arguments.length !== 1 || a !== "a"; }'
-  );
+  var singleElementLabeledParser = PEG.buildParser([
+    'start = a:"a" !{',
+    '          return arguments.length !== 2',
+    '            || offset !== 1',
+    '            || a !== "a";',
+    '        }'
+  ].join("\n"));
   parses(singleElementLabeledParser, "a", ["a", ""]);
 
   var multiElementUnlabeledParser = PEG.buildParser(
-    'start = "a" "b" "c" !{ return arguments.length !== 0; }'
+    'start = "a" "b" "c" !{ return arguments.length !== 1 || offset !== 3; }'
   );
   parses(multiElementUnlabeledParser, "abc", ["a", "b", "c", ""]);
 
   var multiElementLabeledParser = PEG.buildParser([
-    'start = a:"a" "b" c:"c"',
-    '        !{ return arguments.length !== 2 || a !== "a" || c !== "c"; }'
+    'start = a:"a" "b" c:"c" !{',
+    '          return arguments.length !== 3',
+    '            || offset !== 3',
+    '            || a !== "a"',
+    '            || c !== "c";',
+    '        }'
   ].join("\n"));
   parses(multiElementLabeledParser, "abc", ["a", "b", "c", ""]);
 
-  var innerElementsUnlabeledParser = PEG.buildParser(
-    'start = "a" ("b" "c" "d" !{ return arguments.length !== 0; }) "e"'
-  );
+  var innerElementsUnlabeledParser = PEG.buildParser([
+    'start = "a"',
+    '        ("b" "c" "d" !{ return arguments.length !== 1 || offset !== 4; })',
+    '        "e"'
+  ].join("\n"));
   parses(innerElementsUnlabeledParser, "abcde", ["a", ["b", "c", "d", ""], "e"]);
 
   var innerElementsLabeledParser = PEG.buildParser([
     'start = "a"',
     '        (',
-    '          b:"b" "c" d:"d"',
-    '          !{ return arguments.length !== 2 || b !== "b" || d !== "d"; }',
+    '          b:"b" "c" d:"d" !{',
+    '            return arguments.length !== 3',
+    '              || offset !== 4',
+    '              || b !== "b"',
+    '              || d !== "d";',
+    '          }',
     '        )',
     '        "e"'
   ].join("\n"));
@@ -174,32 +202,34 @@ test("actions", function() {
   var singleElementUnlabeledParser = PEG.buildParser(
     'start = "a" { return arguments.length; }'
   );
-  parses(singleElementUnlabeledParser, "a", 0);
+  parses(singleElementUnlabeledParser, "a", 1);
 
   var singleElementLabeledParser = PEG.buildParser(
-    'start = a:"a" { return [arguments.length, a]; }'
+    'start = a:"a" { return [arguments.length, offset, a]; }'
   );
-  parses(singleElementLabeledParser, "a", [1, "a"]);
+  parses(singleElementLabeledParser, "a", [2, 0, "a"]);
 
   var multiElementUnlabeledParser = PEG.buildParser(
     'start = "a" "b" "c" { return arguments.length; }'
   );
-  parses(multiElementUnlabeledParser, "abc", 0);
+  parses(multiElementUnlabeledParser, "abc", 1);
 
   var multiElementLabeledParser = PEG.buildParser(
-    'start = a:"a" "b" c:"c" { return [arguments.length, a, c]; }'
+    'start = a:"a" "b" c:"c" { return [arguments.length, offset, a, c]; }'
   );
-  parses(multiElementLabeledParser, "abc", [2, "a", "c"]);
+  parses(multiElementLabeledParser, "abc", [3, 0, "a", "c"]);
 
   var innerElementsUnlabeledParser = PEG.buildParser(
     'start = "a" ("b" "c" "d" { return arguments.length; }) "e"'
   );
-  parses(innerElementsUnlabeledParser, "abcde", ["a", 0, "e"]);
+  parses(innerElementsUnlabeledParser, "abcde", ["a", 1, "e"]);
 
-  var innerElementsLabeledParser = PEG.buildParser(
-    'start = "a" (b:"b" "c" d:"d" { return [arguments.length, b, d]; }) "e"'
-  );
-  parses(innerElementsLabeledParser, "abcde", ["a", [2, "b", "d"], "e"]);
+  var innerElementsLabeledParser = PEG.buildParser([
+    'start = "a"',
+    '        (b:"b" "c" d:"d" { return [arguments.length, offset, b, d]; })',
+    '        "e"'
+  ].join("\n"));
+  parses(innerElementsLabeledParser, "abcde", ["a", [3, 1, "b", "d"], "e"]);
 
   /*
    * Test that the parsing position returns after successfull parsing of the

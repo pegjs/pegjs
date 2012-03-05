@@ -565,10 +565,10 @@ PEG.compiler.emitter = function(ast) {
             '}'
           ],
           semantic_and: [
-            '#{node.resultVar} = (function(#{keys(node.params).join(", ")}) {#{node.code}})(#{values(node.params).join(", ")}) ? "" : null;'
+            '#{node.resultVar} = (function(#{["offset"].concat(keys(node.params)).join(", ")}) {#{node.code}})(#{["pos"].concat(values(node.params)).join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{node.resultVar} = (function(#{keys(node.params).join(", ")}) {#{node.code}})(#{values(node.params).join(", ")}) ? null : "";'
+            '#{node.resultVar} = (function(#{["offset"].concat(keys(node.params)).join(", ")}) {#{node.code}})(#{["pos"].concat(values(node.params)).join(", ")}) ? null : "";'
           ],
           optional: [
             '#block emit(node.expression)',
@@ -598,7 +598,7 @@ PEG.compiler.emitter = function(ast) {
             '#{node.posVar} = pos;',
             '#block emit(node.expression)',
             'if (#{node.resultVar} !== null) {',
-            '  #{node.resultVar} = (function(#{keys(node.params).join(", ")}) {#{node.code}})(#{values(node.params).join(", ")});',
+            '  #{node.resultVar} = (function(#{["offset"].concat(keys(node.params)).join(", ")}) {#{node.code}})(#{[node.posVar].concat(values(node.params)).join(", ")});',
             '}',
             'if (#{node.resultVar} === null) {',
             '  pos = #{node.posVar};',
