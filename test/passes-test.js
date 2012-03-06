@@ -579,6 +579,16 @@ test("computes params", function() {
         d: "result0[1][2]",
         e: "result0[2]"
       }
+    },
+    /*
+     * Regression tests for a bug where e.g. resultVar names like |result10|
+     * were incorrectly treated as names derived from |result1|, leading to
+     * incorrect substitution.
+     */
+    {
+      grammar:   'start = ("a" "b" "c" "d" "e" "f" "g" "h" "i" j:"j" { })*',
+      extractor: extractExpression,
+      params:    { j: "result1[9]" } // Buggy code put "result1[0]0" here.
     }
   ];
 

@@ -364,7 +364,7 @@ PEG.compiler.passes = {
 
           function fixup(name) {
             each(pluck(node.elements, "resultVar"), function(resultVar, i) {
-              if (env[name].substr(0, resultVar.length) === resultVar) {
+              if ((new RegExp("^" + resultVar + "(\\[\\d+\\])*$")).test(env[name])) {
                 env[name] = node.resultVar + "[" + i + "]"
                           + env[name].substr(resultVar.length);
               }
