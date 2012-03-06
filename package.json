@@ -1,6 +1,6 @@
 {
   "name":        "pegjs",
-  "version":     "@VERSION",
+  "version":     "0.6.3-dev",
   "description": "Parser generator for JavaScript",
   "homepage":    "http://pegjs.majda.cz/",
   "author": {
@@ -10,6 +10,9 @@
   },
   "main":        "lib/peg",
   "bin":         "bin/pegjs",
+  "scripts": {
+    "preinstall": "make build"
+  },
   "repository": {
     "type": "git",
     "url":  "http://github.com/dmajda/pegjs.git"
