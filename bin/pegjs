@@ -23,6 +23,7 @@ function printHelp() {
   util.puts("Options:");
   util.puts("  -e, --export-var <variable>  name of the variable where the parser object");
   util.puts("                               will be stored (default: \"module.exports\")");
+  util.puts("      --track-line-and-column  make generated parser track line and column");
   util.puts("  -v, --version                print version information and exit");
   util.puts("  -h, --help                   print help and exit");
 }
@@ -64,6 +65,7 @@ function readStream(inputStream, callback) {
 
 /* This makes the generated parser a CommonJS module by default. */
 var exportVar = "module.exports";
+var options = { trackLineAndColumn: false };
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
@@ -74,6 +76,10 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the -e/--export-var option.");
       }
       exportVar = args[0];
+      break;
+
+    case "--track-line-and-column":
+      options.trackLineAndColumn = true;
       break;
 
     case "-v":
@@ -129,7 +135,7 @@ switch (args.length) {
 
 readStream(inputStream, function(input) {
   try {
-    var parser = PEG.buildParser(input);
+    var parser = PEG.buildParser(input, options);
   } catch (e) {
     if (e.line !== undefined && e.column !== undefined) {
       abort(e.line + ":" + e.column + ": " + e.message);
