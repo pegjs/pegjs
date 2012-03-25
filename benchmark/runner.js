@@ -1,5 +1,5 @@
 Runner = {
-  run: function(benchmarks, runCount, callbacks) {
+  run: function(benchmarks, runCount, options, callbacks) {
 
     /* Queue */
 
@@ -52,7 +52,8 @@ Runner = {
         callbacks.benchmarkStart(benchmarks[i]);
 
         state.parser = PEG.buildParser(
-          callbacks.readFile("../examples/" + benchmarks[i].id + ".pegjs")
+          callbacks.readFile("../examples/" + benchmarks[i].id + ".pegjs"),
+          options
         );
         state.benchmarkInputSize = 0;
         state.benchmarkParseTime = 0;

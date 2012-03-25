@@ -62,7 +62,11 @@ $("#run").click(function() {
     return;
   }
 
-  Runner.run(benchmarks, runCount, {
+  var options = {
+    trackLineAndColumn: $("#track-line-and-column").is(":checked")
+  };
+
+  Runner.run(benchmarks, runCount, options, {
     readFile: function(file) {
       return $.ajax({
         type:     "GET",
@@ -101,7 +105,7 @@ $("#run").click(function() {
     },
 
     start: function() {
-      $("#run-count, #run").attr("disabled", "disabled");
+      $("#run-count, #track-line-and-column, #run").attr("disabled", "disabled");
 
       resultsTable.show();
       $("#results-table tr").slice(1).remove();
@@ -118,7 +122,7 @@ $("#run").click(function() {
 
       $.scrollTo("max", { axis: "y", duration: 500 });
 
-      $("#run-count, #run").removeAttr("disabled");
+      $("#run-count, #track-line-and-column, #run").removeAttr("disabled");
     }
   });
 
