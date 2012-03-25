@@ -1,6 +1,7 @@
 /* Emits the generated code for the AST. */
 PEG.compiler.emitter = function(ast, options) {
   options = options || {};
+  options.trackLineAndColumn = options.trackLineAndColumn || false;
 
   var Codie = (function(undefined) {
     function stringEscape(s) {
@@ -296,9 +297,9 @@ PEG.compiler.emitter = function(ast, options) {
             '        startRule = #{string(node.startRule)};',
             '      }',
             '      ',
-            '      var pos = 0;',
+            '      #{posInit("pos")};',
             '      var reportFailures = 0;', // 0 = report, anything > 0 = do not report
-            '      var rightmostFailuresPos = 0;',
+            '      #{posInit("rightmostFailuresPos")};',
             '      var rightmostFailuresExpected = [];',
             '      var cache = {};',
             '      ',
@@ -331,13 +332,45 @@ PEG.compiler.emitter = function(ast, options) {
             '        return \'\\\\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), \'0\', length);',
             '      }',
             '      ',
+            '      #if options.trackLineAndColumn',
+            '        function clone(object) {',
+            '          var result = {};',
+            '          for (var key in object) {',
+            '            result[key] = object[key];',
+            '          }',
+            '          return result;',
+            '        }',
+            '        ',
+            '        function advance(pos, n) {',
+            '          var endOffset = pos.offset + n;',
+            '          ',
+            '          for (var offset = pos.offset; offset < endOffset; offset++) {',
+            '            var ch = input.charAt(offset);',
+            '            if (ch === "\\n") {',
+            '              if (!pos.seenCR) { pos.line++; }',
+            '              pos.column = 1;',
+            '              pos.seenCR = false;',
+            '            } else if (ch === "\\r" || ch === "\\u2028" || ch === "\\u2029") {',
+            '              pos.line++;',
+            '              pos.column = 1;',
+            '              pos.seenCR = true;',
+            '            } else {',
+            '              pos.column++;',
+            '              pos.seenCR = false;',
+            '            }',
+            '          }',
+            '          ',
+            '          pos.offset += n;',
+            '        }',
+            '        ',
+            '      #end',
             '      function matchFailed(failure) {',
-            '        if (pos < rightmostFailuresPos) {',
+            '        if (#{posOffset("pos")} < #{posOffset("rightmostFailuresPos")}) {',
             '          return;',
             '        }',
             '        ',
-            '        if (pos > rightmostFailuresPos) {',
-            '          rightmostFailuresPos = pos;',
+            '        if (#{posOffset("pos")} > #{posOffset("rightmostFailuresPos")}) {',
+            '          rightmostFailuresPos = #{posClone("pos")};',
             '          rightmostFailuresExpected = [];',
             '        }',
             '        ',
@@ -363,36 +396,38 @@ PEG.compiler.emitter = function(ast, options) {
             '        return cleanExpected;',
             '      }',
             '      ',
-            '      function computeErrorPosition() {',
-            '        /*',
-            '         * The first idea was to use |String.split| to break the input up to the',
-            '         * error position along newlines and derive the line and column from',
-            '         * there. However IE\'s |split| implementation is so broken that it was',
-            '         * enough to prevent it.',
-            '         */',
-            '        ',
-            '        var line = 1;',
-            '        var column = 1;',
-            '        var seenCR = false;',
-            '        ',
-            '        for (var i = 0; i < Math.max(pos, rightmostFailuresPos); i++) {',
-            '          var ch = input.charAt(i);',
-            '          if (ch === "\\n") {',
-            '            if (!seenCR) { line++; }',
-            '            column = 1;',
-            '            seenCR = false;',
-            '          } else if (ch === "\\r" || ch === "\\u2028" || ch === "\\u2029") {',
-            '            line++;',
-            '            column = 1;',
-            '            seenCR = true;',
-            '          } else {',
-            '            column++;',
-            '            seenCR = false;',
+            '      #if !options.trackLineAndColumn',
+            '        function computeErrorPosition() {',
+            '          /*',
+            '           * The first idea was to use |String.split| to break the input up to the',
+            '           * error position along newlines and derive the line and column from',
+            '           * there. However IE\'s |split| implementation is so broken that it was',
+            '           * enough to prevent it.',
+            '           */',
+            '          ',
+            '          var line = 1;',
+            '          var column = 1;',
+            '          var seenCR = false;',
+            '          ',
+            '          for (var i = 0; i < Math.max(pos, rightmostFailuresPos); i++) {',
+            '            var ch = input.charAt(i);',
+            '            if (ch === "\\n") {',
+            '              if (!seenCR) { line++; }',
+            '              column = 1;',
+            '              seenCR = false;',
+            '            } else if (ch === "\\r" || ch === "\\u2028" || ch === "\\u2029") {',
+            '              line++;',
+            '              column = 1;',
+            '              seenCR = true;',
+            '            } else {',
+            '              column++;',
+            '              seenCR = false;',
+            '            }',
             '          }',
+            '          ',
+            '          return { line: line, column: column };',
             '        }',
-            '        ',
-            '        return { line: line, column: column };',
-            '      }',
+            '      #end',
             '      ',
             '      #if node.initializer',
             '        #block emit(node.initializer)',
@@ -406,28 +441,32 @@ PEG.compiler.emitter = function(ast, options) {
             '       * 1. The parser successfully parsed the whole input.',
             '       *',
             '       *    - |result !== null|',
-            '       *    - |pos === input.length|',
+            '       *    - |#{posOffset("pos")} === input.length|',
             '       *    - |rightmostFailuresExpected| may or may not contain something',
             '       *',
             '       * 2. The parser successfully parsed only a part of the input.',
             '       *',
             '       *    - |result !== null|',
-            '       *    - |pos < input.length|',
+            '       *    - |#{posOffset("pos")} < input.length|',
             '       *    - |rightmostFailuresExpected| may or may not contain something',
             '       *',
             '       * 3. The parser did not successfully parse any part of the input.',
             '       *',
             '       *   - |result === null|',
-            '       *   - |pos === 0|',
+            '       *   - |#{posOffset("pos")} === 0|',
             '       *   - |rightmostFailuresExpected| contains at least one failure',
             '       *',
             '       * All code following this comment (including called functions) must',
             '       * handle these states.',
             '       */',
-            '      if (result === null || pos !== input.length) {',
-            '        var offset = Math.max(pos, rightmostFailuresPos);',
+            '      if (result === null || #{posOffset("pos")} !== input.length) {',
+            '        var offset = Math.max(#{posOffset("pos")}, #{posOffset("rightmostFailuresPos")});',
             '        var found = offset < input.length ? input.charAt(offset) : null;',
-            '        var errorPosition = computeErrorPosition();',
+            '        #if options.trackLineAndColumn',
+            '          var errorPosition = #{posOffset("pos")} > #{posOffset("rightmostFailuresPos")} ? pos : rightmostFailuresPos;',
+            '        #else',
+            '          var errorPosition = computeErrorPosition();',
+            '        #end',
             '        ',
             '        throw new this.SyntaxError(',
             '          cleanupExpected(rightmostFailuresExpected),',
@@ -485,10 +524,10 @@ PEG.compiler.emitter = function(ast, options) {
           ],
           rule: [
             'function parse_#{node.name}() {',
-            '  var cacheKey = "#{node.name}@" + pos;',
+            '  var cacheKey = "#{node.name}@" + #{posOffset("pos")};',
             '  var cachedResult = cache[cacheKey];',
             '  if (cachedResult) {',
-            '    pos = cachedResult.nextPos;',
+            '    pos = #{posClone("cachedResult.nextPos")};',
             '    return cachedResult.result;',
             '  }',
             '  ',
@@ -511,7 +550,7 @@ PEG.compiler.emitter = function(ast, options) {
             '  #end',
             '  ',
             '  cache[cacheKey] = {',
-            '    nextPos: pos,',
+            '    nextPos: #{posClone("pos")},',
             '    result:  #{node.resultVar}',
             '  };',
             '  return #{node.resultVar};',
@@ -527,7 +566,7 @@ PEG.compiler.emitter = function(ast, options) {
             '}'
           ],
           sequence: [
-            '#{node.posVar} = pos;',
+            '#{posSave(node)};',
             '#block code'
           ],
           "sequence.iteration": [
@@ -536,26 +575,26 @@ PEG.compiler.emitter = function(ast, options) {
             '  #block code',
             '} else {',
             '  #{node.resultVar} = null;',
-            '  pos = #{node.posVar};',
+            '  #{posRestore(node)};',
             '}'
           ],
           "sequence.inner": [
             '#{node.resultVar} = [#{pluck(node.elements, "resultVar").join(", ")}];'
           ],
           simple_and: [
-            '#{node.posVar} = pos;',
+            '#{posSave(node)};',
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
             'if (#{node.resultVar} !== null) {',
             '  #{node.resultVar} = "";',
-            '  pos = #{node.posVar};',
+            '  #{posRestore(node)};',
             '} else {',
             '  #{node.resultVar} = null;',
             '}'
           ],
           simple_not: [
-            '#{node.posVar} = pos;',
+            '#{posSave(node)};',
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
@@ -563,14 +602,14 @@ PEG.compiler.emitter = function(ast, options) {
             '  #{node.resultVar} = "";',
             '} else {',
             '  #{node.resultVar} = null;',
-            '  pos = #{node.posVar};',
+            '  #{posRestore(node)};',
             '}'
           ],
           semantic_and: [
-            '#{node.resultVar} = (function(#{["offset"].concat(keys(node.params)).join(", ")}) {#{node.code}})(#{["pos"].concat(values(node.params)).join(", ")}) ? "" : null;'
+            '#{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(values(node.params)).join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{node.resultVar} = (function(#{["offset"].concat(keys(node.params)).join(", ")}) {#{node.code}})(#{["pos"].concat(values(node.params)).join(", ")}) ? null : "";'
+            '#{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(values(node.params)).join(", ")}) ? null : "";'
           ],
           optional: [
             '#block emit(node.expression)',
@@ -597,13 +636,13 @@ PEG.compiler.emitter = function(ast, options) {
             '}'
           ],
           action: [
-            '#{node.posVar} = pos;',
+            '#{posSave(node)};',
             '#block emit(node.expression)',
             'if (#{node.resultVar} !== null) {',
-            '  #{node.resultVar} = (function(#{["offset"].concat(keys(node.params)).join(", ")}) {#{node.code}})(#{[node.posVar].concat(values(node.params)).join(", ")});',
+            '  #{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [node.posVar + ".offset", node.posVar + ".line", node.posVar + ".column"] : [node.posVar]).concat(values(node.params)).join(", ")});',
             '}',
             'if (#{node.resultVar} === null) {',
-            '  pos = #{node.posVar};',
+            '  #{posRestore(node)};',
             '}'
           ],
           rule_ref: [
@@ -615,9 +654,9 @@ PEG.compiler.emitter = function(ast, options) {
             '#else',
             '  #if !node.ignoreCase',
             '    #if node.value.length === 1',
-            '      if (input.charCodeAt(pos) === #{node.value.charCodeAt(0)}) {',
+            '      if (input.charCodeAt(#{posOffset("pos")}) === #{node.value.charCodeAt(0)}) {',
             '    #else',
-            '      if (input.substr(pos, #{node.value.length}) === #{string(node.value)}) {',
+            '      if (input.substr(#{posOffset("pos")}, #{node.value.length}) === #{string(node.value)}) {',
             '    #end',
             '  #else',
             /*
@@ -628,14 +667,14 @@ PEG.compiler.emitter = function(ast, options) {
              * meaning the result of lowercasing a character can be more
              * characters.
              */
-            '    if (input.substr(pos, #{node.value.length}).toLowerCase() === #{string(node.value.toLowerCase())}) {',
+            '    if (input.substr(#{posOffset("pos")}, #{node.value.length}).toLowerCase() === #{string(node.value.toLowerCase())}) {',
             '  #end',
             '    #if !node.ignoreCase',
             '      #{node.resultVar} = #{string(node.value)};',
             '    #else',
-            '      #{node.resultVar} = input.substr(pos, #{node.value.length});',
+            '      #{node.resultVar} = input.substr(#{posOffset("pos")}, #{node.value.length});',
             '    #end',
-            '    pos += #{node.value.length};',
+            '    #{posAdvance(node.value.length)};',
             '  } else {',
             '    #{node.resultVar} = null;',
             '    if (reportFailures === 0) {',
@@ -645,9 +684,9 @@ PEG.compiler.emitter = function(ast, options) {
             '#end'
           ],
           any: [
-            'if (input.length > pos) {',
-            '  #{node.resultVar} = input.charAt(pos);',
-            '  pos++;',
+            'if (input.length > #{posOffset("pos")}) {',
+            '  #{node.resultVar} = input.charAt(#{posOffset("pos")});',
+            '  #{posAdvance(1)};',
             '} else {',
             '  #{node.resultVar} = null;',
             '  if (reportFailures === 0) {',
@@ -656,9 +695,9 @@ PEG.compiler.emitter = function(ast, options) {
             '}'
           ],
           "class": [
-            'if (#{regexp}.test(input.charAt(pos))) {',
-            '  #{node.resultVar} = input.charAt(pos);',
-            '  pos++;',
+            'if (#{regexp}.test(input.charAt(#{posOffset("pos")}))) {',
+            '  #{node.resultVar} = input.charAt(#{posOffset("pos")});',
+            '  #{posAdvance(1)};',
             '} else {',
             '  #{node.resultVar} = null;',
             '  if (reportFailures === 0) {',
@@ -682,6 +721,34 @@ PEG.compiler.emitter = function(ast, options) {
     vars.values  = values;
     vars.emit    = emit;
     vars.options = options;
+
+    /* Position-handling macros */
+    if (options.trackLineAndColumn) {
+      vars.posInit    = function(name) {
+        return "var "
+             + name
+             + " = "
+             + "{ offset: 0, line: 1, column: 1, seenCR: false }";
+      };
+      vars.posClone   = function(name) { return "clone(" + name + ")"; };
+      vars.posOffset  = function(name) { return name + ".offset"; };
+
+      vars.posAdvance = function(n)    { return "advance(pos, " + n + ")"; };
+    } else {
+      vars.posInit    = function(name) { return "var " + name + " = 0"; };
+      vars.posClone   = function(name) { return name; };
+      vars.posOffset  = function(name) { return name; };
+
+      vars.posAdvance = function(n) {
+        return n === 1 ? "pos++" : "pos += " + n;
+      };
+    }
+    vars.posSave    = function(node) {
+      return node.posVar + " = " + vars.posClone("pos");
+    };
+    vars.posRestore = function(node) {
+      return "pos" + " = " + vars.posClone(node.posVar);
+    };
 
     return templates[name](vars);
   }
