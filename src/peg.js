@@ -9,7 +9,7 @@
 var PEG = (function(undefined) {
 
 var PEG = {
-  /* PEG.js version. */
+  /* PEG.js version (uses semantic versioning). */
   VERSION: "@VERSION",
 
   /*
