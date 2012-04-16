@@ -1,7 +1,9 @@
 /* Emits the generated code for the AST. */
 PEG.compiler.emitter = function(ast, options) {
   options = options || {};
-  options.trackLineAndColumn = options.trackLineAndColumn || false;
+  if (options.trackLineAndColumn === undefined) {
+    options.trackLineAndColumn = false;
+  }
 
   /*
    * Codie 1.1.0
