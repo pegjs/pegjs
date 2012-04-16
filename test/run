@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
-var util  = require("util");
-var fs    = require("fs");
-var PEG   = require("../lib/peg");
-var QUnit = require("./vendor/qunit/qunit");
+var util  = require("util"),
+    fs    = require("fs"),
+    PEG   = require("../lib/peg"),
+    QUnit = require("./vendor/qunit/qunit");
+
+var failedAssertions = [];
 
 function bold(s)    { return "\u001B[1m"  + s + "\u001B[22m"; };
 function message(s) { return "\u001B[35m" + s + "\u001B[39m"; };
@@ -15,15 +17,13 @@ function indent(s) {
 }
 
 QUnit.init();
-QUnit.config.blocking = true;
+QUnit.config.blocking   = true;
 QUnit.config.updateRate = 0;
 
 QUnit.moduleStart(function(details) {
   util.puts("");
   util.puts(bold(details.name));
 });
-
-var failedAssertions = [];
 
 QUnit.testStart(function(details) {
   failedAssertions = [];
@@ -42,9 +42,10 @@ QUnit.testDone(function(details) {
 });
 
 QUnit.log(function(details) {
+  var output = "";
+
   if (details.result) { return; }
 
-  var output = ""
   if (details.message) {
     output += indent("Message:  " + message(details.message)) + "\n";
   }
