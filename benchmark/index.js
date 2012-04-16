@@ -63,6 +63,7 @@ $("#run").click(function() {
   }
 
   var options = {
+    cache:              $("#cache").is(":checked"),
     trackLineAndColumn: $("#track-line-and-column").is(":checked")
   };
 
@@ -105,7 +106,7 @@ $("#run").click(function() {
     },
 
     start: function() {
-      $("#run-count, #track-line-and-column, #run").attr("disabled", "disabled");
+      $("#run-count, #cache, #track-line-and-column, #run").attr("disabled", "disabled");
 
       resultsTable.show();
       $("#results-table tr").slice(1).remove();
@@ -122,7 +123,7 @@ $("#run").click(function() {
 
       $.scrollTo("max", { axis: "y", duration: 500 });
 
-      $("#run-count, #track-line-and-column, #run").removeAttr("disabled");
+      $("#run-count, #cache, #track-line-and-column, #run").removeAttr("disabled");
     }
   });
 

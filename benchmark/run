@@ -80,6 +80,7 @@ function printHelp() {
   util.puts("");
   util.puts("Options:");
   util.puts("  -n, --run-count <n>          number of runs (default: 10)");
+  util.puts("      --cache                  make tested parsers cache results");
   util.puts("      --track-line-and-column  make tested parsers track line and column");
 }
 
@@ -125,6 +126,10 @@ while (args.length > 0 && isOption(args[0])) {
       if (isNaN(runCount) || runCount <= 0) {
         abort("Number of runs must be a positive integer.");
       }
+      break;
+
+    case "--cache":
+      options.cache = true;
       break;
 
     case "--track-line-and-column":
