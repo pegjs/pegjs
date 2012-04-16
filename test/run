@@ -3,7 +3,7 @@
 var util  = require("util");
 var fs    = require("fs");
 var PEG   = require("../lib/peg");
-var QUnit = require("./vendor/qunit/qunit").QUnit;
+var QUnit = require("./vendor/qunit/qunit");
 
 function bold(s)    { return "\u001B[1m"  + s + "\u001B[22m"; };
 function message(s) { return "\u001B[35m" + s + "\u001B[39m"; };
@@ -18,18 +18,18 @@ QUnit.init();
 QUnit.config.blocking = true;
 QUnit.config.updateRate = 0;
 
-QUnit.moduleStart = function(details) {
+QUnit.moduleStart(function(details) {
   util.puts("");
   util.puts(bold(details.name));
-};
+});
 
 var failedAssertions = [];
 
-QUnit.testStart = function(details) {
+QUnit.testStart(function(details) {
   failedAssertions = [];
-};
+});
 
-QUnit.testDone = function(details) {
+QUnit.testDone(function(details) {
   if (details.failed == 0) {
     util.puts('✔ ' + details.name);
   } else {
@@ -39,9 +39,9 @@ QUnit.testDone = function(details) {
       util.puts(assertion);
     });
   }
-};
+});
 
-QUnit.log = function(details) {
+QUnit.log(function(details) {
   if (details.result) { return; }
 
   var output = ""
@@ -56,9 +56,9 @@ QUnit.log = function(details) {
   }
 
   failedAssertions.push(output);
-};
+});
 
-QUnit.done = function(details) {
+QUnit.done(function(details) {
   util.puts("");
   if (details.failed > 0) {
     util.puts(bold(error("FAILURES: "))
@@ -72,7 +72,7 @@ QUnit.done = function(details) {
       + details.runtime + " ms)"
     )
   }
-};
+});
 
 [
   "helpers.js",
