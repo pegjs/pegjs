@@ -1,63 +1,72 @@
-parses = function(parser, input, expected) {
-  deepEqual(parser.parse(input), expected);
-};
+(function(global) {
 
-parsesWithStartRule = function(parser, input, startRule, expected) {
-  deepEqual(parser.parse(input, startRule), expected);
-};
+var extensions = {
+  parses: function(parser, input, expected) {
+    QUnit.deepEqual(parser.parse(input), expected);
+  },
 
-doesNotParse = function(parser, input) {
-  raises(function() { parser.parse(input); }, parser.SyntaxError);
-};
+  parsesWithStartRule: function(parser, input, startRule, expected) {
+    QUnit.deepEqual(parser.parse(input, startRule), expected);
+  },
 
-doesNotParseWithMessage = function(parser, input, message) {
-  raises(
-    function() { parser.parse(input); },
-    function(e) {
-      return e instanceof parser.SyntaxError && e.message === message;
-    }
-  );
-};
+  doesNotParse: function(parser, input) {
+    QUnit.raises(function() { parser.parse(input); }, parser.SyntaxError);
+  },
 
-doesNotParseWithDetails = function(parser, input, expected, found, message) {
-  raises(
-    function() { parser.parse(input); },
-    function(e) {
-      var i;
-
-      if (!(e instanceof parser.SyntaxError))    { return false; }
-      if (e.expected.length !== expected.length) { return false; }
-      for (i = 0; i < e.expected.length; i++) {
-        if (e.expected[i] !== expected[i])       { return false; }
+  doesNotParseWithMessage: function(parser, input, message) {
+    QUnit.raises(
+      function() { parser.parse(input); },
+      function(e) {
+        return e instanceof parser.SyntaxError && e.message === message;
       }
-      if (e.found !== found)                     { return false; }
-      if (e.message !== message)                 { return false; }
+    );
+  },
 
-      return true;
-    }
-  );
+  doesNotParseWithDetails: function(parser, input, expected, found, message) {
+    QUnit.raises(
+      function() { parser.parse(input); },
+      function(e) {
+        var i;
+
+        if (!(e instanceof parser.SyntaxError))    { return false; }
+        if (e.expected.length !== expected.length) { return false; }
+        for (i = 0; i < e.expected.length; i++) {
+          if (e.expected[i] !== expected[i])       { return false; }
+        }
+        if (e.found !== found)                     { return false; }
+        if (e.message !== message)                 { return false; }
+
+        return true;
+      }
+    );
+  },
+
+  doesNotParseWithPos: function(parser, input, offset, line, column) {
+    QUnit.raises(
+      function() { parser.parse(input); },
+      function(e) {
+        return e instanceof parser.SyntaxError
+          && e.offset === offset
+          && e.line === line
+          && e.column === column;
+      }
+    );
+  },
+
+  parserParses: function(input, expected) {
+    QUnit.parses(PEG.parser, input, expected);
+  },
+
+  parserDoesNotParse: function(input) {
+    QUnit.doesNotParse(PEG.parser, input);
+  },
+
+  parserDoesNotParseWithMessage: function(input, message) {
+    QUnit.doesNotParseWithMessage(PEG.parser, input, message);
+  }
 };
 
-doesNotParseWithPos = function(parser, input, offset, line, column) {
-  raises(
-    function() { parser.parse(input); },
-    function(e) {
-      return e instanceof parser.SyntaxError
-        && e.offset === offset
-        && e.line === line
-        && e.column === column;
-    }
-  );
-};
+QUnit.extend(QUnit,  extensions);
+QUnit.extend(global, extensions);
 
-parserParses = function(input, expected) {
-  parses(PEG.parser, input, expected);
-};
-
-parserDoesNotParse = function(input) {
-  doesNotParse(PEG.parser, input);
-};
-
-parserDoesNotParseWithMessage = function(input, message) {
-  doesNotParseWithMessage(PEG.parser, input, message);
-};
+})(this);
