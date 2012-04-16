@@ -1,5 +1,11 @@
-/* PEG.js @VERSION (http://pegjs.majda.cz/) */
-
+/*
+ * PEG.js @VERSION
+ *
+ * http://pegjs.majda.cz/
+ *
+ * Copyright (c) 2010-2012 David Majda
+ * Licensend under the MIT license.
+ */
 (function(undefined) {
 
 var PEG = {
