@@ -23,6 +23,7 @@ function printHelp() {
   util.puts("Options:");
   util.puts("  -e, --export-var <variable>  name of the variable where the parser object");
   util.puts("                               will be stored (default: \"module.exports\")");
+  util.puts("      --cache                  make generated parser cache results");
   util.puts("      --track-line-and-column  make generated parser track line and column");
   util.puts("  -v, --version                print version information and exit");
   util.puts("  -h, --help                   print help and exit");
@@ -65,7 +66,10 @@ function readStream(inputStream, callback) {
 
 /* This makes the generated parser a CommonJS module by default. */
 var exportVar = "module.exports";
-var options = { trackLineAndColumn: false };
+var options = {
+  cache:              false,
+  trackLineAndColumn: false
+};
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
@@ -76,6 +80,10 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the -e/--export-var option.");
       }
       exportVar = args[0];
+      break;
+
+    case "--cache":
+      options.cache = true;
       break;
 
     case "--track-line-and-column":
