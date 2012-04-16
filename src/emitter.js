@@ -1,6 +1,9 @@
 /* Emits the generated code for the AST. */
 PEG.compiler.emitter = function(ast, options) {
   options = options || {};
+  if (options.cache === undefined) {
+    options.cache = false;
+  }
   if (options.trackLineAndColumn === undefined) {
     options.trackLineAndColumn = false;
   }
@@ -321,7 +324,9 @@ PEG.compiler.emitter = function(ast, options) {
             '      var reportFailures = 0;', // 0 = report, anything > 0 = do not report
             '      #{posInit("rightmostFailuresPos")};',
             '      var rightmostFailuresExpected = [];',
-            '      var cache = {};',
+            '      #if options.cache',
+            '        var cache = {};',
+            '      #end',
             '      ',
             /* This needs to be in sync with |padLeft| in utils.js. */
             '      function padLeft(input, padding, length) {',
@@ -544,13 +549,15 @@ PEG.compiler.emitter = function(ast, options) {
           ],
           rule: [
             'function parse_#{node.name}() {',
-            '  var cacheKey = "#{node.name}@" + #{posOffset("pos")};',
-            '  var cachedResult = cache[cacheKey];',
-            '  if (cachedResult) {',
-            '    pos = #{posClone("cachedResult.nextPos")};',
-            '    return cachedResult.result;',
-            '  }',
-            '  ',
+            '  #if options.cache',
+            '    var cacheKey = "#{node.name}@" + #{posOffset("pos")};',
+            '    var cachedResult = cache[cacheKey];',
+            '    if (cachedResult) {',
+            '      pos = #{posClone("cachedResult.nextPos")};',
+            '      return cachedResult.result;',
+            '    }',
+            '    ',
+            '  #end',
             '  #if node.resultVars.length > 0',
             '    var #{node.resultVars.join(", ")};',
             '  #end',
@@ -568,11 +575,13 @@ PEG.compiler.emitter = function(ast, options) {
             '      matchFailed(#{string(node.displayName)});',
             '    }',
             '  #end',
-            '  ',
-            '  cache[cacheKey] = {',
-            '    nextPos: #{posClone("pos")},',
-            '    result:  #{node.resultVar}',
-            '  };',
+            '  #if options.cache',
+            '    ',
+            '    cache[cacheKey] = {',
+            '      nextPos: #{posClone("pos")},',
+            '      result:  #{node.resultVar}',
+            '    };',
+            '  #end',
             '  return #{node.resultVar};',
             '}'
           ],

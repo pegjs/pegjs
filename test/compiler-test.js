@@ -785,16 +785,23 @@ testWithVaryingTrackLineAndColumn("classes", function(options) {
 });
 
 testWithVaryingTrackLineAndColumn("cache", function(options) {
-  /*
-   * Should trigger a codepath where the cache is used (for the "a" rule).
-   */
-  var parser = PEG.buildParser([
-    'start = (a b) / (a c)',
-    'a     = "a"',
-    'b     = "b"',
-    'c     = "c"'
-  ].join("\n"), options);
-  parses(parser, "ac", ["a", "c"]);
+  var grammar = [
+    '{ var n = 0; }',
+    'start = (a "b") / (a "c") { return n; }',
+    'a     = "a" { n++; }',
+  ].join("\n");
+
+  /* Without cache */
+
+  parses(PEG.buildParser(grammar, options), "ac", 2);
+
+  options.cache = false;
+  parses(PEG.buildParser(grammar, options), "ac", 2);
+
+  /* With cache */
+
+  options.cache = true;
+  parses(PEG.buildParser(grammar, options), "ac", 1);
 });
 
 testWithVaryingTrackLineAndColumn("indempotence", function(options) {
