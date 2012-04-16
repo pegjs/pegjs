@@ -6,7 +6,7 @@
  * Copyright (c) 2010-2012 David Majda
  * Licensend under the MIT license.
  */
-(function(undefined) {
+var PEG = (function(undefined) {
 
 var PEG = {
   /* PEG.js version. */
@@ -41,12 +41,10 @@ PEG.GrammarError.prototype = Error.prototype;
 // @include "parser.js"
 // @include "compiler.js"
 
-if (typeof module === "object") {
-  module.exports = PEG;
-} else if (typeof window === "object") {
-  window.PEG = PEG;
-} else {
-  throw new Error("Can't export PEG library (no \"module\" nor \"window\" object detected).");
-}
+return PEG;
 
 })();
+
+if (typeof module !== "undefined") {
+  module.exports = PEG;
+}
