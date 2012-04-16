@@ -12,9 +12,7 @@ function message(s) { return "\u001B[35m" + s + "\u001B[39m"; };
 function ok(s)      { return "\u001B[32m" + s + "\u001B[39m"; };
 function error(s)   { return "\u001B[31m" + s + "\u001B[39m"; };
 
-function indent(s) {
-  return s.split("\n").map(function(line) { return "    " + line; }).join("\n");
-}
+function indent(s) { return s.replace(/^/gm, "    "); }
 
 QUnit.init();
 QUnit.config.blocking   = true;
