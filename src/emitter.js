@@ -303,7 +303,7 @@ PEG.compiler.emitter = function(ast, options) {
             '    parse: function(input, startRule) {',
             '      var parseFunctions = {',
             '        #for rule in node.rules',
-            '          #{string(rule.name) + ": parse_" + rule.name},',
+            '          #{string(rule.name) + ": parse_" + rule.name + (rule !== node.rules[node.rules.length - 1] ? "," : "")}',
             '        #end',
             '      };',
             '      ',

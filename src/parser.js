@@ -92,7 +92,7 @@ PEG.parser = (function(){
         "multiLineComment": parse_multiLineComment,
         "eol": parse_eol,
         "eolChar": parse_eolChar,
-        "whitespace": parse_whitespace,
+        "whitespace": parse_whitespace
       };
       
       if (startRule !== undefined) {
