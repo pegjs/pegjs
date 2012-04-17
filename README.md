@@ -22,15 +22,19 @@ Installation
 
 ### Node.js
 
-To use the command-line version, install [Node.js](http://nodejs.org/) and [npm](http://npmjs.org/) first. You can then install PEG.js:
+To use the `pegjs` command, install PEG.js globally:
+
+    $ npm install -g pegjs
+
+To use the JavaScript API, install PEG.js locally:
 
     $ npm install pegjs
 
-Once installed, you can use the `pegjs` command to generate your parser from a grammar and use the JavaScript API from Node.js.
+If you need both the `pegjs` command and the JavaScript API, install PEG.js both ways.
 
 ### Browser
 
-[Download](http://pegjs.majda.cz/#download) the PEG.js library (regular or minified version) and include it in your web page or application using the `<script>` tag.
+[Download](http://pegjs.majda.cz/#download) the PEG.js library (regular or minified version).
 
 Generating a Parser
 -------------------
@@ -57,7 +61,7 @@ In Node.js, require the PEG.js parser generator module:
 
     var PEG = require("pegjs");
 
-In browser, include the PEG.js library in your web page or application using the `<script>` tag. The API will be available via the `PEG` global object.
+In browser, include the PEG.js library in your web page or application using the `<script>` tag. The API will be available in the `PEG` global object.
 
 To generate a parser, call the `PEG.buildParser` method and pass your grammar as a parameter:
 
