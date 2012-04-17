@@ -55,6 +55,11 @@ If you omit both input and ouptut file, standard input and output are used.
 
 By default, the parser object is assigned to `module.exports`, which makes the output a Node.js module. You can assign it to another variable by passing a variable name using the `-e`/`--export-var` option. This may be helpful if you want to use the parser in browser environment.
 
+You can tweak the generated parser with two options:
+
+  * `--cache` — makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower
+  * `--track-line-and-column` — makes the parser track line and column (available as `line` and `column` variables in the actions and predicates)
+
 ### JavaScript API
 
 In Node.js, require the PEG.js parser generator module:
@@ -70,6 +75,11 @@ To generate a parser, call the `PEG.buildParser` method and pass your grammar as
 The method will return generated parser object or throw an exception if the grammar is invalid. The exception will contain `message` property with more details about the error.
 
 To get parser’s source code, call the `toSource` method on the parser.
+
+You can tweak the generated parser by passing a second parameter with an options object to `PEG.buildParser`. The following options are supported:
+
+  * `cache` — if `true`, makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower (default: `false`)
+  * `track-line-and-column` — if `true`, makes the parser track line and column (available as `line` and `column` variables in the actions and predicates) (default: `false`)
 
 Using the Parser
 ----------------
@@ -174,13 +184,21 @@ Try to match the expression and. If the match does not succeed, just return an e
 
 The predicate is a piece of JavaScript code that is executed as if it was inside a function. It gets the match results of labeled expressions in preceding expression as its arguments. It should return some JavaScript value using the `return` statement. If the returned value evaluates to `true` in boolean context, just return an empty string and do not advance the parser position; otherwise consider the match failed.
 
-The code inside the predicate has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the predicate code must be balanced.
+The code inside the predicate can access all variables and functions defined in the initializer at the beginning of the grammar.
+
+The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
+
+Note that curly braces in the predicate code must be balanced.
 
 #### ! { *predicate* }
 
 The predicate is a piece of JavaScript code that is executed as if it was inside a function. It gets the match results of labeled expressions in preceding expression as its arguments. It should return some JavaScript value using the `return` statement. If the returned value evaluates to `false` in boolean context, just return an empty string and do not advance the parser position; otherwise consider the match failed.
 
-The code inside the predicate has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the predicate code must be balanced.
+The code inside the predicate can access all variables and functions defined in the initializer at the beginning of the grammar.
+
+The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
+
+Note that curly braces in the predicate code must be balanced.
 
 #### *label* : *expression*
 
@@ -198,7 +216,11 @@ Match the expression. If the match is successful, run the action, otherwise cons
 
 The action is a piece of JavaScript code that is executed as if it was inside a function. It gets the match results of labeled expressions in preceding expression as its arguments. The action should return some JavaScript value using the `return` statement. This value is considered match result of the preceding expression. The action can return `null` to indicate a match failure.
 
-The code inside the action has access to all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the action code must be balanced.
+The code inside the action can access all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the action code must be balanced.
+
+The code inside the action can also access the parse position at the beginning of the action's expression using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the line and column at the beginning of the action's expression using the `line` and `column` variables. Both are one-based indexes.
+
+Note that curly braces in the action code must be balanced.
 
 #### *expression<sub>1</sub>* / *expression<sub>2</sub>* / ... / *expression<sub>n</sub>*
 
