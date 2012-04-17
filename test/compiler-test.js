@@ -788,7 +788,7 @@ testWithVaryingTrackLineAndColumn("cache", function(options) {
   var grammar = [
     '{ var n = 0; }',
     'start = (a "b") / (a "c") { return n; }',
-    'a     = "a" { n++; }',
+    'a     = "a" { n++; }'
   ].join("\n");
 
   /* Without cache */
