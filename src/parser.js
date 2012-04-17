@@ -107,7 +107,6 @@ PEG.parser = (function(){
       var reportFailures = 0;
       var rightmostFailuresPos = 0;
       var rightmostFailuresExpected = [];
-      var cache = {};
       
       function padLeft(input, padding, length) {
         var result = input;
@@ -150,13 +149,6 @@ PEG.parser = (function(){
       }
       
       function parse_grammar() {
-        var cacheKey = "grammar@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2, result3;
         var pos0, pos1;
         
@@ -204,22 +196,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_initializer() {
-        var cacheKey = "initializer@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -250,22 +230,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_rule() {
-        var cacheKey = "rule@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2, result3, result4;
         var pos0, pos1;
         
@@ -317,22 +285,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_choice() {
-        var cacheKey = "choice@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2, result3;
         var pos0, pos1, pos2;
         
@@ -401,22 +357,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_sequence() {
-        var cacheKey = "sequence@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -480,22 +424,10 @@ PEG.parser = (function(){
             pos = pos0;
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_labeled() {
-        var cacheKey = "labeled@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -535,22 +467,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           result0 = parse_prefixed();
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_prefixed() {
-        var cacheKey = "prefixed@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -667,22 +587,10 @@ PEG.parser = (function(){
             }
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_suffixed() {
-        var cacheKey = "suffixed@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -771,22 +679,10 @@ PEG.parser = (function(){
             }
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_primary() {
-        var cacheKey = "primary@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1, pos2, pos3;
         
@@ -884,22 +780,10 @@ PEG.parser = (function(){
             }
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_action() {
-        var cacheKey = "action@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -929,22 +813,10 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("action");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_braced() {
-        var cacheKey = "braced@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -1004,22 +876,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_nonBraceCharacters() {
-        var cacheKey = "nonBraceCharacters@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0;
         
@@ -1040,22 +900,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_nonBraceCharacter() {
-        var cacheKey = "nonBraceCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         if (/^[^{}]/.test(input.charAt(pos))) {
@@ -1067,22 +915,10 @@ PEG.parser = (function(){
             matchFailed("[^{}]");
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_equals() {
-        var cacheKey = "equals@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1115,22 +951,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_colon() {
-        var cacheKey = "colon@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1163,22 +987,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_semicolon() {
-        var cacheKey = "semicolon@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1211,22 +1023,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_slash() {
-        var cacheKey = "slash@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1259,22 +1059,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_and() {
-        var cacheKey = "and@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1307,22 +1095,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_not() {
-        var cacheKey = "not@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1355,22 +1131,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_question() {
-        var cacheKey = "question@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1403,22 +1167,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_star() {
-        var cacheKey = "star@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1451,22 +1203,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_plus() {
-        var cacheKey = "plus@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1499,22 +1239,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_lparen() {
-        var cacheKey = "lparen@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1547,22 +1275,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_rparen() {
-        var cacheKey = "rparen@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1595,22 +1311,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_dot() {
-        var cacheKey = "dot@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1643,22 +1347,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_identifier() {
-        var cacheKey = "identifier@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -1773,22 +1465,10 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("identifier");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_literal() {
-        var cacheKey = "literal@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -1842,22 +1522,10 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("literal");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_string() {
-        var cacheKey = "string@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -1890,22 +1558,10 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("string");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_doubleQuotedString() {
-        var cacheKey = "doubleQuotedString@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -1957,22 +1613,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_doubleQuotedCharacter() {
-        var cacheKey = "doubleQuotedCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         result0 = parse_simpleDoubleQuotedCharacter();
@@ -1991,22 +1635,10 @@ PEG.parser = (function(){
             }
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_simpleDoubleQuotedCharacter() {
-        var cacheKey = "simpleDoubleQuotedCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1, pos2;
         
@@ -2070,22 +1702,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_singleQuotedString() {
-        var cacheKey = "singleQuotedString@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -2137,22 +1757,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_singleQuotedCharacter() {
-        var cacheKey = "singleQuotedCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         result0 = parse_simpleSingleQuotedCharacter();
@@ -2171,22 +1779,10 @@ PEG.parser = (function(){
             }
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_simpleSingleQuotedCharacter() {
-        var cacheKey = "simpleSingleQuotedCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1, pos2;
         
@@ -2250,22 +1846,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_class() {
-        var cacheKey = "class@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2, result3, result4, result5;
         var pos0, pos1;
         
@@ -2380,22 +1964,10 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("character class");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_classCharacterRange() {
-        var cacheKey = "classCharacterRange@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -2446,22 +2018,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_classCharacter() {
-        var cacheKey = "classCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         var pos0;
         
@@ -2479,22 +2039,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_bracketDelimitedCharacter() {
-        var cacheKey = "bracketDelimitedCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         result0 = parse_simpleBracketDelimitedCharacter();
@@ -2513,22 +2061,10 @@ PEG.parser = (function(){
             }
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_simpleBracketDelimitedCharacter() {
-        var cacheKey = "simpleBracketDelimitedCharacter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1, pos2;
         
@@ -2592,22 +2128,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_simpleEscapeSequence() {
-        var cacheKey = "simpleEscapeSequence@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1, pos2;
         
@@ -2696,22 +2220,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_zeroEscapeSequence() {
-        var cacheKey = "zeroEscapeSequence@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1, pos2;
         
@@ -2753,22 +2265,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_hexEscapeSequence() {
-        var cacheKey = "hexEscapeSequence@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2;
         var pos0, pos1;
         
@@ -2809,22 +2309,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_unicodeEscapeSequence() {
-        var cacheKey = "unicodeEscapeSequence@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2, result3, result4;
         var pos0, pos1;
         
@@ -2877,22 +2365,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_eolEscapeSequence() {
-        var cacheKey = "eolEscapeSequence@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         var pos0, pos1;
         
@@ -2925,22 +2401,10 @@ PEG.parser = (function(){
         if (result0 === null) {
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_digit() {
-        var cacheKey = "digit@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         if (/^[0-9]/.test(input.charAt(pos))) {
@@ -2952,22 +2416,10 @@ PEG.parser = (function(){
             matchFailed("[0-9]");
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_hexDigit() {
-        var cacheKey = "hexDigit@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         if (/^[0-9a-fA-F]/.test(input.charAt(pos))) {
@@ -2979,44 +2431,20 @@ PEG.parser = (function(){
             matchFailed("[0-9a-fA-F]");
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_letter() {
-        var cacheKey = "letter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         result0 = parse_lowerCaseLetter();
         if (result0 === null) {
           result0 = parse_upperCaseLetter();
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_lowerCaseLetter() {
-        var cacheKey = "lowerCaseLetter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         if (/^[a-z]/.test(input.charAt(pos))) {
@@ -3028,22 +2456,10 @@ PEG.parser = (function(){
             matchFailed("[a-z]");
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_upperCaseLetter() {
-        var cacheKey = "upperCaseLetter@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         if (/^[A-Z]/.test(input.charAt(pos))) {
@@ -3055,22 +2471,10 @@ PEG.parser = (function(){
             matchFailed("[A-Z]");
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse___() {
-        var cacheKey = "__@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1;
         
         result0 = [];
@@ -3091,22 +2495,10 @@ PEG.parser = (function(){
             }
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_comment() {
-        var cacheKey = "comment@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         reportFailures++;
@@ -3118,22 +2510,10 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("comment");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_singleLineComment() {
-        var cacheKey = "singleLineComment@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2, result3;
         var pos0, pos1, pos2;
         
@@ -3224,22 +2604,10 @@ PEG.parser = (function(){
           result0 = null;
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_multiLineComment() {
-        var cacheKey = "multiLineComment@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0, result1, result2, result3;
         var pos0, pos1, pos2;
         
@@ -3360,22 +2728,10 @@ PEG.parser = (function(){
           result0 = null;
           pos = pos0;
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_eol() {
-        var cacheKey = "eol@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         reportFailures++;
@@ -3436,22 +2792,10 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("end of line");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_eolChar() {
-        var cacheKey = "eolChar@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         if (/^[\n\r\u2028\u2029]/.test(input.charAt(pos))) {
@@ -3463,22 +2807,10 @@ PEG.parser = (function(){
             matchFailed("[\\n\\r\\u2028\\u2029]");
           }
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
       function parse_whitespace() {
-        var cacheKey = "whitespace@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
         var result0;
         
         reportFailures++;
@@ -3495,11 +2827,6 @@ PEG.parser = (function(){
         if (reportFailures === 0 && result0 === null) {
           matchFailed("whitespace");
         }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
         return result0;
       }
       
