@@ -79,7 +79,7 @@ To get parser’s source code, call the `toSource` method on the parser.
 You can tweak the generated parser by passing a second parameter with an options object to `PEG.buildParser`. The following options are supported:
 
   * `cache` — if `true`, makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower (default: `false`)
-  * `track-line-and-column` — if `true`, makes the parser track line and column (available as `line` and `column` variables in the actions and predicates) (default: `false`)
+  * `trackLineAndColumn` — if `true`, makes the parser track line and column (available as `line` and `column` variables in the actions and predicates) (default: `false`)
 
 Using the Parser
 ----------------
