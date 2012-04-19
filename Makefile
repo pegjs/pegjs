@@ -133,12 +133,12 @@ benchmark: build
 
 # Run JSHint on the source
 hint: build
-	$(JSHINT)               \
-	  $(SRC_DIR)/*.js       \
-	  $(TEST_DIR)/*.js      \
-	  $(TEST_RUN)           \
-	  $(BENCHMARK_DIR)/*.js \
-	  $(BENCHMARK_RUN)      \
+	$(JSHINT)                                                                \
+	  `find $(SRC_DIR) -name '*.js'`                                         \
+	  `find $(TEST_DIR) -name '*.js' -and -not -path '$(TEST_DIR)/vendor/*'` \
+	  $(TEST_RUN)                                                            \
+	  $(BENCHMARK_DIR)/*.js                                                  \
+	  $(BENCHMARK_RUN)                                                       \
 	  $(PEGJS)
 
 .PHONY: test benchmark hint parser build clean dist distclean

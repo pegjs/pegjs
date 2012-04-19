@@ -32,5 +32,5 @@ PEG.compiler = {
   }
 };
 
-// @include "passes.js"
-// @include "emitter.js"
+// @include "compiler/passes.js"
+// @include "compiler/emitter.js"
