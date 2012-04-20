@@ -72,6 +72,11 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical unicodeEscapeSequence is "\\uFFFF". */
+  it("parses unicodeEscapeSequence", function() {
+    expect('start = "\\uFFFF"').toParseAs(literalGrammar("\uFFFF"));
+  });
+
   /* Canonical eolEscapeSequence is "\\\n". */
   it("parses eolEscapeSequence", function() {
     expect('start = "\\\n"'    ).toParseAs(literalGrammar("\n"));

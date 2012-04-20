@@ -504,16 +504,4 @@ test("parses hexEscapeSequence", function() {
   parserParses('start = "\\x000"', literalGrammar("\x000"));
 });
 
-/* Canonical unicodeEscapeSequence is "\\u0120". */
-test("parses unicodeEscapeSequence", function() {
-  parserParses('start = "\\u0120"',  literalGrammar("\u0120"));
-  parserParses('start = "\\u0129"',  literalGrammar("\u0129"));
-  parserParses('start = "\\u012a"',  literalGrammar("\u012a"));
-  parserParses('start = "\\u012f"',  literalGrammar("\u012f"));
-  parserParses('start = "\\u012A"',  literalGrammar("\u012A"));
-  parserParses('start = "\\u012F"',  literalGrammar("\u012F"));
-  parserDoesNotParse('start = "\\u012"');
-  parserParses('start = "\\u01234"', literalGrammar("\u01234"));
-});
-
 })();
