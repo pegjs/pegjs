@@ -72,6 +72,21 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical simpleEscapeSequence is "\\n". */
+  it("parses simpleEscapeSequence", function() {
+    expect('start = "\\b"').toParseAs(literalGrammar("\b"));
+    expect('start = "\\f"').toParseAs(literalGrammar("\f"));
+    expect('start = "\\n"').toParseAs(literalGrammar("\n"));
+    expect('start = "\\r"').toParseAs(literalGrammar("\r"));
+    expect('start = "\\t"').toParseAs(literalGrammar("\t"));
+    expect('start = "\\v"').toParseAs(literalGrammar("\x0B")); // no "\v" in IE
+    expect('start = "\\a"').toParseAs(literalGrammar("a"));
+
+    expect('start = "\\1"').toFailToParse();
+    expect('start = "\\x"').toFailToParse();
+    expect('start = "\\u"').toFailToParse();
+  });
+
   /* Canonical zeroEscapeSequence is "\\0". */
   it("parses zeroEscapeSequence", function() {
     expect('start = "\\0"').toParseAs(literalGrammar("\x00"));

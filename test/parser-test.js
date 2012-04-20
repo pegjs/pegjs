@@ -469,20 +469,4 @@ test("parses simpleBracketDelimitedCharacter", function() {
   parserDoesNotParse("start = [\u2029]");
 });
 
-/* Canonical simpleEscapeSequence is "\\n". */
-test("parses simpleEscapeSequence", function() {
-  parserParses('start = "\\\'"', literalGrammar("'"));
-  parserParses('start = "\\""',  literalGrammar("\""));
-  parserParses('start = "\\\\"', literalGrammar("\\"));
-  parserParses('start = "\\b"',  literalGrammar("\b"));
-  parserParses('start = "\\f"',  literalGrammar("\f"));
-  parserParses('start = "\\n"',  literalGrammar("\n"));
-  parserParses('start = "\\r"',  literalGrammar("\r"));
-  parserParses('start = "\\t"',  literalGrammar("\t"));
-  /* IE does not recognize "\v". */
-  parserParses('start = "\\v"',  literalGrammar("\x0B"));
-
-  parserParses('start = "\\a"',  literalGrammar("a"));
-});
-
 })();
