@@ -516,13 +516,4 @@ test("parses unicodeEscapeSequence", function() {
   parserParses('start = "\\u01234"', literalGrammar("\u01234"));
 });
 
-/* Canonical eolEscapeSequence is "\\\n". */
-test("parses eolEscapeSequence", function() {
-  parserParses('start = "\\\n"',     literalGrammar("\n"));
-  parserParses('start = "\\\r\n"',   literalGrammar("\r\n"));
-  parserParses('start = "\\\r"',     literalGrammar("\r"));
-  parserParses('start = "\\\u2028"', literalGrammar("\u2028"));
-  parserParses('start = "\\\u2029"', literalGrammar("\u2029"));
-});
-
 })();

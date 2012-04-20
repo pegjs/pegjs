@@ -1,8 +1,8 @@
 describe("PEG.js grammar parser", function() {
   var trivialGrammar;
 
-  beforeEach(function() {
-    trivialGrammar = {
+  function literalGrammar(value) {
+    return {
       type:        "grammar",
       initializer: null,
       rules:       [
@@ -10,11 +10,15 @@ describe("PEG.js grammar parser", function() {
           type:        "rule",
           name:        "start",
           displayName: null,
-          expression:  { type: "literal", value: "abcd", ignoreCase: false }
+          expression:  { type: "literal", value: value, ignoreCase: false }
         }
       ],
       startRule:   "start"
     };
+  }
+
+  beforeEach(function() {
+    trivialGrammar = literalGrammar("abcd");
 
     this.addMatchers({
       toParseAs:     function(expected) {
@@ -66,6 +70,15 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical eolEscapeSequence is "\\\n". */
+  it("parses eolEscapeSequence", function() {
+    expect('start = "\\\n"'    ).toParseAs(literalGrammar("\n"));
+    expect('start = "\\\r\n"'  ).toParseAs(literalGrammar("\r\n"));
+    expect('start = "\\\r"'    ).toParseAs(literalGrammar("\r"));
+    expect('start = "\\\u2028"').toParseAs(literalGrammar("\u2028"));
+    expect('start = "\\\u2029"').toParseAs(literalGrammar("\u2029"));
   });
 
   /* Trivial character class rules are not tested. */
