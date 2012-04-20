@@ -362,14 +362,4 @@ test("parses doubleQuotedString", function() {
   parserParses('start = "abc"',    literalGrammar("abc"));
 });
 
-/* Canonical doubleQuotedCharacter is "a". */
-test("parses doubleQuotedCharacter", function() {
-  parserParses('start = "a"',       literalGrammar("a"));
-  parserParses('start = "\\n"',     literalGrammar("\n"));
-  parserParses('start = "\\0"',     literalGrammar("\x00"));
-  parserParses('start = "\\x00"',   literalGrammar("\x00"));
-  parserParses('start = "\\u0120"', literalGrammar("\u0120"));
-  parserParses('start = "\\\n"',    literalGrammar("\n"));
-});
-
 })();

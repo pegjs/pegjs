@@ -115,6 +115,16 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical doubleQuotedCharacter is "a". */
+  it("parses doubleQuotedCharacter", function() {
+    expect('start = "a"'      ).toParseAs(literalGrammar("a"));
+    expect('start = "\\n"'    ).toParseAs(literalGrammar("\n"));
+    expect('start = "\\0"'    ).toParseAs(literalGrammar("\x00"));
+    expect('start = "\\xFF"'  ).toParseAs(literalGrammar("\xFF"));
+    expect('start = "\\uFFFF"').toParseAs(literalGrammar("\uFFFF"));
+    expect('start = "\\\n"'   ).toParseAs(literalGrammar("\n"));
+  });
+
   /* Canonical simpleDoubleQuotedCharacter is "a". */
   it("parses simpleDoubleQuotedCharacter", function() {
     expect('start = "a"').toParseAs(literalGrammar("a"));
