@@ -442,9 +442,4 @@ test("parses classCharacterRange", function() {
   );
 });
 
-/* Canonical classCharacter is "a". */
-test("parses classCharacter", function() {
-  parserParses("start = [a]", classGrammar(false, ["a"], "[a]"));
-});
-
 })();

@@ -86,6 +86,14 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical classCharacter is "a". */
+  it("parses classCharacter", function() {
+    expect('start = [a]').toParseAs(classGrammar(["a"], "[a]"));
+
+    /* This test demonstrates that |rawText| is not really "raw". */
+    expect('start = [\u0080]').toParseAs(classGrammar(["\x80"], "[\\x80]"));
+  });
+
   /* Canonical bracketDelimitedCharacter is "a". */
   it("parses bracketDelimitedCharacter", function() {
     expect('start = [a]'      ).toParseAs(classGrammar(["a"],      "[a]"));
