@@ -338,13 +338,4 @@ test("parses identifier", function() {
   parserParses('start = a\n',  identifierGrammar("a"));
 });
 
-/* Canonical literal is "\"abcd\"". */
-test("parses literal", function() {
-  parserParses('start = "abcd"', literalGrammar("abcd"));
-  parserParses("start = 'abcd'", literalGrammar("abcd"));
-  parserParses('start = "abcd"i', oneRuleGrammar(literal("abcd", true)));
-
-  parserParses('start = "abcd"\n', literalGrammar("abcd"));
-});
-
 })();

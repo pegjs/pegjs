@@ -18,10 +18,12 @@ describe("PEG.js grammar parser", function() {
   }
 
   function literalGrammar(value) {
+    var ignoreCase = arguments.length > 1 ? arguments[1] : false;
+
     return oneRuleGrammar(null, {
       type:       "literal",
       value:      value,
-      ignoreCase: false
+      ignoreCase: ignoreCase
     });
   }
 
@@ -117,6 +119,16 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical literal is "\"abcd\"". */
+  it("parses literal", function() {
+    expect('start = "abcd"' ).toParseAs(literalGrammar("abcd"));
+    expect("start = 'abcd'" ).toParseAs(literalGrammar("abcd"));
+
+    expect('start = "abcd"i').toParseAs(literalGrammar("abcd", true));
+
+    expect('start = "abcd"\n').toParseAs(literalGrammar("abcd"));
   });
 
   /* Canonical string is "\"abcd\"". */
