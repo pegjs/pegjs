@@ -134,6 +134,15 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical primary is "\"abcd\"". */
+  it("parses primary", function() {
+    expect('start = a'       ).toParseAs(ruleRefGrammar("a"));
+    expect('start = "abcd"'  ).toParseAs(literalGrammar("abcd"));
+    expect('start = .'       ).toParseAs(oneRuleGrammar(null, { type: "any" }));
+    expect('start = [a-d]'   ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
+    expect('start = ("abcd")').toParseAs(literalGrammar("abcd"));
+  });
+
   /* Canonical action is "{ code }". */
   it("parses action", function() {
     expect('start = "abcd" { code }').toParseAs(actionGrammar(" code "));

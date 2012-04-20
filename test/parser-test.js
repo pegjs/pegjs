@@ -293,13 +293,4 @@ test("parses suffixed", function() {
   parserParses('start = "abcd"',  literalGrammar("abcd"));
 });
 
-/* Canonical primary is "\"abcd\"". */
-test("parses primary", function() {
-  parserParses('start = a',        identifierGrammar("a"));
-  parserParses('start = "abcd"',   literalGrammar("abcd"));
-  parserParses('start = .',        anyGrammar);
-  parserParses('start = [a-d]',    classGrammar(false, [["a", "d"]], "[a-d]"));
-  parserParses('start = ("abcd")', literalGrammar("abcd"));
-});
-
 })();
