@@ -86,6 +86,16 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical bracketDelimitedCharacter is "a". */
+  it("parses bracketDelimitedCharacter", function() {
+    expect('start = [a]'      ).toParseAs(classGrammar(["a"],      "[a]"));
+    expect('start = [\\n]'    ).toParseAs(classGrammar(["\n"],     "[\\n]"));
+    expect('start = [\\0]'    ).toParseAs(classGrammar(["\x00"],   "[\\0]"));
+    expect('start = [\\xFF]'  ).toParseAs(classGrammar(["\xFF"],   "[\\xFF]"));
+    expect('start = [\\uFFFF]').toParseAs(classGrammar(["\uFFFF"], "[\\uFFFF]"));
+    expect('start = [\\\n]'   ).toParseAs(classGrammar(["\n"],     "[\\n]"));
+  });
+
   /* Canonical simpleBracketDelimiedCharacter is "a". */
   it("parses simpleBracketDelimitedCharacter", function() {
     expect('start = [a]').toParseAs(classGrammar(["a"], "[a]"));

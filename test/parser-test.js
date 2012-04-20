@@ -447,14 +447,4 @@ test("parses classCharacter", function() {
   parserParses("start = [a]", classGrammar(false, ["a"], "[a]"));
 });
 
-/* Canonical bracketDelimitedCharacter is "a". */
-test("parses bracketDelimitedCharacter", function() {
-  parserParses("start = [a]",       classGrammar(false, ["a"], "[a]"));
-  parserParses("start = [\\n]",     classGrammar(false, ["\n"], "[\\n]"));
-  parserParses("start = [\\0]",     classGrammar(false, ["\x00"], "[\\0]"));
-  parserParses("start = [\\x00]",   classGrammar(false, ["\x00"], "[\\0]"));
-  parserParses("start = [\\u0120]", classGrammar(false, ["\u0120"], "[\\u0120]"));
-  parserParses("start = [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
-});
-
 })();
