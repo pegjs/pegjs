@@ -21,7 +21,7 @@ PEG.compiler = {
     var that = this;
 
     each(this.appliedPassNames, function(passName) {
-      that.passes[passName](ast);
+      that.passes[passName](ast, options);
     });
 
     var source = this.emitter(ast, options);
