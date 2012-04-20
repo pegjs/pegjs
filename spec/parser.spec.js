@@ -68,6 +68,13 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical singleLineComment is "// comment". */
+  it("parses singleLineComment", function() {
+    expect('start =//\n"abcd"'   ).toParseAs(trivialGrammar);
+    expect('start =//a\n"abcd"'  ).toParseAs(trivialGrammar);
+    expect('start =//aaa\n"abcd"').toParseAs(trivialGrammar);
+  });
+
   // Canonical multiLineComment is "/* comment */".
   it("parses multiLineComment", function() {
     expect('start =/**/"abcd"'   ).toParseAs(trivialGrammar);

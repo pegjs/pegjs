@@ -541,12 +541,5 @@ test("parses comment", function() {
   parserParses('start =// comment\n"abcd"',  simpleGrammar);
   parserParses('start =/* comment */"abcd"', simpleGrammar);
 });
-/* Canonical singleLineComment is "// comment". */
-test("parses singleLineComment", function() {
-  parserParses('start =//\n"abcd"',    simpleGrammar);
-  parserParses('start =//a\n"abcd"',   simpleGrammar);
-  parserParses('start =//aaa\n"abcd"', simpleGrammar);
-  parserParses('start = "abcd"//',     simpleGrammar);
-});
 
 })();
