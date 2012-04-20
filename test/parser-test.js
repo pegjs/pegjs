@@ -315,6 +315,4 @@ test("parses braced", function() {
   parserParses('start = "a" {aaa}', actionGrammar("aaa"));
 });
 
-/* Trivial character rules are not tested. */
-
 })();
