@@ -22,10 +22,13 @@ describe("PEG.js grammar parser", function() {
   }
 
   function classGrammar(parts, rawText) {
+    var inverted   = arguments.length > 2 ? arguments[2] : false,
+        ignoreCase = arguments.length > 3 ? arguments[3] : false;
+
     return oneRuleGrammar({
       type:       "class",
-      inverted:   false,
-      ignoreCase: false,
+      inverted:   inverted,
+      ignoreCase: ignoreCase,
       parts:      parts,
       rawText:    rawText
     });
@@ -110,6 +113,29 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical class is "[a-d]". */
+  it("parses class", function() {
+    expect('start = []'         ).toParseAs(classGrammar([],           "[]"));
+    expect('start = [a-d]'      ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
+    expect('start = [a]'        ).toParseAs(classGrammar(["a"],        "[a]"));
+    expect('start = [a-de-hi-l]').toParseAs(
+      classGrammar([["a", "d"], ["e", "h"], ["i", "l"]], "[a-de-hi-l]")
+    );
+
+    expect('start = [^a-d]').toParseAs(
+      classGrammar([["a", "d"]], "[^a-d]", true, false)
+    );
+    expect('start = [a-d]i').toParseAs(
+      classGrammar([["a", "d"]], "[a-d]i", false, true)
+    );
+
+    expect('start = [\u0080\u0081\u0082]').toParseAs(
+      classGrammar(["\u0080", "\u0081", "\u0082"], "[\\x80\\x81\\x82]")
+    );
+
+    expect('start = [a-d]\n').toParseAs(classGrammar([["a", "d"]], "[a-d]"));
   });
 
   /* Canonical classCharacterRange is "a-d". */

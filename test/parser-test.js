@@ -413,22 +413,4 @@ test("parses simpleSingleQuotedCharacter", function() {
   parserDoesNotParse("start = '\u2029'");
 });
 
-/* Canonical class is "[a-d]". */
-test("parses class", function() {
-  parserParses("start = []",     classGrammar(false, [],           "[]"));
-  parserParses("start = [a-d]",  classGrammar(false, [["a", "d"]], "[a-d]"));
-  parserParses("start = [^a-d]", classGrammar(true,  [["a", "d"]], "[^a-d]"));
-  parserParses("start = [a]",    classGrammar(false, ["a"],        "[a]"));
-  parserParses(
-    "start = [a-de-hi-l]",
-    classGrammar(false, [["a", "d"], ["e", "h"], ["i", "l"]], "[a-de-hi-l]")
-  );
-  parserParses(
-    "start = [a-d]i",
-    oneRuleGrammar(klass(false, true, [["a", "d"]], "[a-d]i"))
-  );
-
-  parserParses("start = [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d]"));
-});
-
 })();
