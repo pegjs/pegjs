@@ -68,6 +68,15 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical __ is "\n". */
+  it("parses __", function() {
+    expect('start ="abcd"'             ).toParseAs(trivialGrammar);
+    expect('start = "abcd"'            ).toParseAs(trivialGrammar);
+    expect('start =\n"abcd"'           ).toParseAs(trivialGrammar);
+    expect('start =/* comment */"abcd"').toParseAs(trivialGrammar);
+    expect('start =   "abcd"'          ).toParseAs(trivialGrammar);
+  });
+
   // Canonical comment is "/* comment */".
   it("parses comment", function() {
     expect('start =// comment\n"abcd"' ).toParseAs(trivialGrammar);

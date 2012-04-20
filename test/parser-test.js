@@ -525,15 +525,6 @@ test("parses eolEscapeSequence", function() {
   parserParses('start = "\\\u2029"', literalGrammar("\u2029"));
 });
 
-/* Canonical __ is "\n". */
-test("parses __", function() {
-  parserParses('start ="abcd"',              simpleGrammar);
-  parserParses('start = "abcd"',             simpleGrammar);
-  parserParses('start =\n"abcd"',            simpleGrammar);
-  parserParses('start =/* comment */"abcd"', simpleGrammar);
-  parserParses('start =   "abcd"',           simpleGrammar);
-});
-
 /* Trivial character class rules are not tested. */
 
 })();
