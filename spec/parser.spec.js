@@ -134,6 +134,13 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical action is "{ code }". */
+  it("parses action", function() {
+    expect('start = "abcd" { code }').toParseAs(actionGrammar(" code "));
+
+    expect('start = "abcd" { code }\n').toParseAs(actionGrammar(" code "));
+  });
+
   /* Canonical braced is "{ code }". */
   it("parses braced", function() {
     expect('start = "abcd" {}'   ).toParseAs(actionGrammar(""));

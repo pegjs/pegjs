@@ -302,9 +302,4 @@ test("parses primary", function() {
   parserParses('start = ("abcd")', literalGrammar("abcd"));
 });
 
-/* Canonical action is "{ code }". */
-test("parses action", function() {
-  parserParses('start = "a" { code }', actionGrammar(" code "));
-});
-
 })();
