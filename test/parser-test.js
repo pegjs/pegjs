@@ -536,10 +536,4 @@ test("parses __", function() {
 
 /* Trivial character class rules are not tested. */
 
-// Canonical comment is "\/* comment *\/".
-test("parses comment", function() {
-  parserParses('start =// comment\n"abcd"',  simpleGrammar);
-  parserParses('start =/* comment */"abcd"', simpleGrammar);
-});
-
 })();
