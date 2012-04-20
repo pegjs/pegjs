@@ -549,18 +549,4 @@ test("parses singleLineComment", function() {
   parserParses('start = "abcd"//',     simpleGrammar);
 });
 
-// Canonical multiLineComment is "\/* comment *\/".
-test("parses multiLineComment", function() {
-  parserParses('start =/**/"abcd"',    simpleGrammar);
-  parserParses('start =/*a*/"abcd"',   simpleGrammar);
-  parserParses('start =/*aaa*/"abcd"', simpleGrammar);
-  parserParses('start =/*\n*/"abcd"',  simpleGrammar);
-  parserParses('start =/***/"abcd"',   simpleGrammar);
-  parserParses('start =/*a/*/"abcd"',  simpleGrammar);
-
-  parserDoesNotParse('start =/*"abcd"');
-  parserDoesNotParse('start =/*/"abcd"');
-  parserDoesNotParse('start =/*/**/*/"abcd"');
-});
-
 })();

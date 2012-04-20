@@ -17,7 +17,7 @@ describe("PEG.js grammar parser", function() {
     };
 
     this.addMatchers({
-      toParseAs: function(expected) {
+      toParseAs:     function(expected) {
         var result;
 
         try {
@@ -41,8 +41,41 @@ describe("PEG.js grammar parser", function() {
 
           return false;
         }
+      },
+
+      toFailToParse: function() {
+        var result;
+
+        try {
+          result = PEG.parser.parse(this.actual);
+
+          this.message = function() {
+            return "Expected " + jasmine.pp(this.actual) + " to fail to parse, "
+                 + "but it parsed as " + jasmine.pp(result) + ".";
+          };
+
+          return false;
+        } catch (e) {
+          this.message = function() {
+            return "Expected " + jasmine.pp(this.actual) + " to parse, "
+                 + "but it failed with message "
+                 + jasmine.pp(e.message) + ".";
+          };
+
+          return true;
+        }
       }
     });
+  });
+
+  // Canonical multiLineComment is "/* comment */".
+  it("parses multiLineComment", function() {
+    expect('start =/**/"abcd"'   ).toParseAs(trivialGrammar);
+    expect('start =/*a*/"abcd"'  ).toParseAs(trivialGrammar);
+    expect('start =/*aaa*/"abcd"').toParseAs(trivialGrammar);
+    expect('start =/***/"abcd"'  ).toParseAs(trivialGrammar);
+
+    expect('start =/**/*/"abcd"').toFailToParse();
   });
 
   /* Canonical eol is "\n". */
