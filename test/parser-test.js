@@ -355,11 +355,4 @@ test("parses string", function() {
   parserParses('start "abcd"\n= "abcd"',  namedRuleGrammar);
 });
 
-/* Canonical doubleQuotedString is "\"abcd\"". */
-test("parses doubleQuotedString", function() {
-  parserParses('start = ""',       literalGrammar(""));
-  parserParses('start = "a"',      literalGrammar("a"));
-  parserParses('start = "abc"',    literalGrammar("abc"));
-});
-
 })();
