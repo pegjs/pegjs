@@ -384,11 +384,4 @@ test("parses simpleDoubleQuotedCharacter", function() {
   parserDoesNotParse('start = "\u2029"');
 });
 
-/* Canonical singleQuotedString is "'abcd'". */
-test("parses singleQuotedString", function() {
-  parserParses("start = ''",       literalGrammar(""));
-  parserParses("start = 'a'",      literalGrammar("a"));
-  parserParses("start = 'abc'",    literalGrammar("abc"));
-});
-
 })();

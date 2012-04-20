@@ -115,6 +115,13 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical singleQuotedString is "'abcd'". */
+  it("parses singleQuotedString", function() {
+    expect("start = ''"   ).toParseAs(literalGrammar(""));
+    expect("start = 'a'"  ).toParseAs(literalGrammar("a"));
+    expect("start = 'abc'").toParseAs(literalGrammar("abc"));
+  });
+
   /* Canonical singleQuotedCharacter is "a". */
   it("parses singleQuotedCharacter", function() {
     expect("start = 'a'"      ).toParseAs(literalGrammar("a"));
