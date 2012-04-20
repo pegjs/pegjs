@@ -1,5 +1,6 @@
 describe("PEG.js grammar parser", function() {
-  var trivialGrammar;
+  var trivialGrammar,
+      literalAbcd = { type: "literal", value: "abcd", ignoreCase: false };
 
   function oneRuleGrammar(displayName, expression) {
     return {
@@ -15,6 +16,14 @@ describe("PEG.js grammar parser", function() {
       ],
       startRule:   "start"
     };
+  }
+
+  function actionGrammar(code) {
+    return oneRuleGrammar(null, {
+      type:       "action",
+      expression: literalAbcd,
+      code:       code
+    });
   }
 
   function ruleRefGrammar(name) {
@@ -125,6 +134,14 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical braced is "{ code }". */
+  it("parses braced", function() {
+    expect('start = "abcd" {}'   ).toParseAs(actionGrammar(""));
+    expect('start = "abcd" {a}'  ).toParseAs(actionGrammar("a"));
+    expect('start = "abcd" {{a}}').toParseAs(actionGrammar("{a}"));
+    expect('start = "abcd" {aaa}').toParseAs(actionGrammar("aaa"));
+  });
+
   /* Trivial character rules are not tested. */
 
   /* Canonical identifier is "a". */
@@ -153,11 +170,7 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical string is "\"abcd\"". */
   it("parses string", function() {
-    var grammar = oneRuleGrammar("abcd", {
-      type:       "literal",
-      value:      "abcd",
-      ignoreCase: false
-    });
+    var grammar = oneRuleGrammar("abcd", literalAbcd);
 
     expect('start "abcd" = "abcd"'  ).toParseAs(grammar);
     expect('start \'abcd\' = "abcd"').toParseAs(grammar);

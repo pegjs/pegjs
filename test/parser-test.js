@@ -307,12 +307,4 @@ test("parses action", function() {
   parserParses('start = "a" { code }', actionGrammar(" code "));
 });
 
-/* Canonical braced is "{ code }". */
-test("parses braced", function() {
-  parserParses('start = "a" {}',    actionGrammar(""));
-  parserParses('start = "a" {a}',   actionGrammar("a"));
-  parserParses('start = "a" {{a}}', actionGrammar("{a}"));
-  parserParses('start = "a" {aaa}', actionGrammar("aaa"));
-});
-
 })();
