@@ -115,6 +115,15 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical simpleDoubleQuotedCharacter is "a". */
+  it("parses simpleDoubleQuotedCharacter", function() {
+    expect('start = "a"').toParseAs(literalGrammar("a"));
+
+    expect('start = """' ).toFailToParse();
+    expect('start = "\\"').toFailToParse();
+    expect('start = "\n"').toFailToParse();
+  });
+
   /* Canonical singleQuotedString is "'abcd'". */
   it("parses singleQuotedString", function() {
     expect("start = ''"   ).toParseAs(literalGrammar(""));

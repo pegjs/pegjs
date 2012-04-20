@@ -372,16 +372,4 @@ test("parses doubleQuotedCharacter", function() {
   parserParses('start = "\\\n"',    literalGrammar("\n"));
 });
 
-/* Canonical simpleDoubleQuotedCharacter is "a". */
-test("parses simpleDoubleQuotedCharacter", function() {
-  parserParses('start = "a"',  literalGrammar("a"));
-  parserParses('start = "\'"', literalGrammar("'"));
-  parserDoesNotParse('start = """');
-  parserDoesNotParse('start = "\\"');
-  parserDoesNotParse('start = "\n"');
-  parserDoesNotParse('start = "\r"');
-  parserDoesNotParse('start = "\u2028"');
-  parserDoesNotParse('start = "\u2029"');
-});
-
 })();
