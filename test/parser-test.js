@@ -431,15 +431,4 @@ test("parses class", function() {
   parserParses("start = [a-d]\n", classGrammar(false, [["a", "d"]], "[a-d]"));
 });
 
-/* Canonical classCharacterRange is "a-d". */
-test("parses classCharacterRange", function() {
-  parserParses("start = [a-d]", classGrammar(false, [["a", "d"]], "[a-d]"));
-  parserParses("start = [a-a]", classGrammar(false, [["a", "a"]], "[a-a]"));
-  parserDoesNotParse("start = [b-a]");
-  parserDoesNotParseWithMessage(
-    "start = [b-a]",
-    "Invalid character range: b-a."
-  );
-});
-
 })();

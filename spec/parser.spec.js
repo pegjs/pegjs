@@ -61,28 +61,67 @@ describe("PEG.js grammar parser", function() {
         }
       },
 
-      toFailToParse: function() {
-        var result;
+      toFailToParse: function(details) {
+        /*
+         * Extracted into a function just to silence JSHint complaining about
+         * creating functions in a loop.
+         */
+        function buildKeyMessage(key, value) {
+          return function() {
+            return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
+                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                 + "but " + jasmine.pp(key) + " "
+                 + "is " + jasmine.pp(value) + ".";
+          };
+        }
+
+        var result, key;
 
         try {
           result = PEG.parser.parse(this.actual);
 
           this.message = function() {
-            return "Expected " + jasmine.pp(this.actual) + " to fail to parse, "
+            return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
+                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
                  + "but it parsed as " + jasmine.pp(result) + ".";
           };
 
           return false;
         } catch (e) {
-          this.message = function() {
-            return "Expected " + jasmine.pp(this.actual) + " to parse, "
-                 + "but it failed with message "
-                 + jasmine.pp(e.message) + ".";
-          };
+          if (this.isNot) {
+            this.message = function() {
+              return "Expected " + jasmine.pp(this.actual) + " to parse, "
+                   + "but it failed with message "
+                   + jasmine.pp(e.message) + ".";
+            };
+          } else {
+            if (details) {
+              for (key in details) {
+                if (!this.env.equals_(e[key], details[key])) {
+                  this.message = buildKeyMessage(key, e[key]);
+
+                  return false;
+                }
+              }
+            }
+          }
 
           return true;
         }
       }
+    });
+  });
+
+  /* Canonical classCharacterRange is "a-d". */
+  it("parses classCharacterRange", function() {
+    expect('start = [a-d]').toParseAs(classGrammar([["a", "d"]], "[a-d]"));
+    expect('start = [a-a]').toParseAs(classGrammar([["a", "a"]], "[a-a]"));
+
+    expect('start = [b-a]').toFailToParse({
+      message: "Invalid character range: b-a."
+    });
+    expect('start = [\u0081-\u0080]').toFailToParse({
+      message: "Invalid character range: \\x81-\\x80."
     });
   });
 
