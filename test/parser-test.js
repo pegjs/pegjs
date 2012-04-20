@@ -457,16 +457,4 @@ test("parses bracketDelimitedCharacter", function() {
   parserParses("start = [\\\n]",    classGrammar(false, ["\n"], "[\\n]"));
 });
 
-/* Canonical simpleBracketDelimiedCharacter is "a". */
-test("parses simpleBracketDelimitedCharacter", function() {
-  parserParses("start = [a]",  classGrammar(false, ["a"], "[a]"));
-  parserParses("start = [[]",  classGrammar(false, ["["], "[[]"));
-  parserDoesNotParse("start = []]");
-  parserDoesNotParse("start = [\\]");
-  parserDoesNotParse("start = [\n]");
-  parserDoesNotParse("start = [\r]");
-  parserDoesNotParse("start = [\u2028]");
-  parserDoesNotParse("start = [\u2029]");
-});
-
 })();

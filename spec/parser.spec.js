@@ -1,7 +1,7 @@
 describe("PEG.js grammar parser", function() {
   var trivialGrammar;
 
-  function literalGrammar(value) {
+  function oneRuleGrammar(expression) {
     return {
       type:        "grammar",
       initializer: null,
@@ -10,11 +10,25 @@ describe("PEG.js grammar parser", function() {
           type:        "rule",
           name:        "start",
           displayName: null,
-          expression:  { type: "literal", value: value, ignoreCase: false }
+          expression:  expression
         }
       ],
       startRule:   "start"
     };
+  }
+
+  function literalGrammar(value) {
+    return oneRuleGrammar({ type: "literal", value: value, ignoreCase: false });
+  }
+
+  function classGrammar(parts, rawText) {
+    return oneRuleGrammar({
+      type:       "class",
+      inverted:   false,
+      ignoreCase: false,
+      parts:      parts,
+      rawText:    rawText
+    });
   }
 
   beforeEach(function() {
@@ -70,6 +84,15 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical simpleBracketDelimiedCharacter is "a". */
+  it("parses simpleBracketDelimitedCharacter", function() {
+    expect('start = [a]').toParseAs(classGrammar(["a"], "[a]"));
+
+    expect('start = []]' ).toFailToParse();
+    expect('start = [\\]').toFailToParse();
+    expect('start = [\n]').toFailToParse();
   });
 
   /* Canonical simpleEscapeSequence is "\\n". */
