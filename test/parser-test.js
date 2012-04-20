@@ -580,31 +580,4 @@ test("parses eolChar", function() {
   parserParses('start =\u2029"abcd"', simpleGrammar);
 });
 
-/* Canonical whitespace is " ". */
-test("parses whitespace", function() {
-  parserParses('start =\t"abcd"',     simpleGrammar);
-  /* IE does not recognize "\v". */
-  parserParses('start =\x0B"abcd"',   simpleGrammar);
-  parserParses('start =\f"abcd"',     simpleGrammar);
-  parserParses('start = "abcd"',      simpleGrammar);
-  parserParses('start =\u00A0"abcd"', simpleGrammar);
-  parserParses('start =\uFEFF"abcd"', simpleGrammar);
-  parserParses('start =\u1680"abcd"', simpleGrammar);
-  parserParses('start =\u180E"abcd"', simpleGrammar);
-  parserParses('start =\u2000"abcd"', simpleGrammar);
-  parserParses('start =\u2001"abcd"', simpleGrammar);
-  parserParses('start =\u2002"abcd"', simpleGrammar);
-  parserParses('start =\u2003"abcd"', simpleGrammar);
-  parserParses('start =\u2004"abcd"', simpleGrammar);
-  parserParses('start =\u2005"abcd"', simpleGrammar);
-  parserParses('start =\u2006"abcd"', simpleGrammar);
-  parserParses('start =\u2007"abcd"', simpleGrammar);
-  parserParses('start =\u2008"abcd"', simpleGrammar);
-  parserParses('start =\u2009"abcd"', simpleGrammar);
-  parserParses('start =\u200A"abcd"', simpleGrammar);
-  parserParses('start =\u202F"abcd"', simpleGrammar);
-  parserParses('start =\u205F"abcd"', simpleGrammar);
-  parserParses('start =\u3000"abcd"', simpleGrammar);
-});
-
 })();
