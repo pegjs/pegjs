@@ -563,13 +563,4 @@ test("parses multiLineComment", function() {
   parserDoesNotParse('start =/*/**/*/"abcd"');
 });
 
-/* Canonical eol is "\n". */
-test("parses eol", function() {
-  parserParses('start =\n"abcd"',     simpleGrammar);
-  parserParses('start =\r\n"abcd"',   simpleGrammar);
-  parserParses('start =\r"abcd"',     simpleGrammar);
-  parserParses('start =\u2028"abcd"', simpleGrammar);
-  parserParses('start =\u2029"abcd"', simpleGrammar);
-});
-
 })();
