@@ -45,6 +45,14 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical eolChar is "\n". */
+  it("parses eolChar", function() {
+    expect('start =\n"abcd"'    ).toParseAs(trivialGrammar);
+    expect('start =\r"abcd"'    ).toParseAs(trivialGrammar);
+    expect('start =\u2028"abcd"').toParseAs(trivialGrammar);
+    expect('start =\u2029"abcd"').toParseAs(trivialGrammar);
+  });
+
   /* Canonical whitespace is " ". */
   it("parses whitespace", function() {
     expect('start =\t"abcd"'    ).toParseAs(trivialGrammar);

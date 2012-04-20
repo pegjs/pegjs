@@ -572,12 +572,4 @@ test("parses eol", function() {
   parserParses('start =\u2029"abcd"', simpleGrammar);
 });
 
-/* Canonical eolChar is "\n". */
-test("parses eolChar", function() {
-  parserParses('start =\n"abcd"',     simpleGrammar);
-  parserParses('start =\r"abcd"',     simpleGrammar);
-  parserParses('start =\u2028"abcd"', simpleGrammar);
-  parserParses('start =\u2029"abcd"', simpleGrammar);
-});
-
 })();
