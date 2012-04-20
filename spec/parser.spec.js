@@ -68,6 +68,8 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Trivial character class rules are not tested. */
+
   /* Canonical __ is "\n". */
   it("parses __", function() {
     expect('start ="abcd"'             ).toParseAs(trivialGrammar);

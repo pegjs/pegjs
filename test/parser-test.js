@@ -525,6 +525,4 @@ test("parses eolEscapeSequence", function() {
   parserParses('start = "\\\u2029"', literalGrammar("\u2029"));
 });
 
-/* Trivial character class rules are not tested. */
-
 })();
