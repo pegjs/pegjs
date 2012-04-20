@@ -485,11 +485,4 @@ test("parses simpleEscapeSequence", function() {
   parserParses('start = "\\a"',  literalGrammar("a"));
 });
 
-/* Canonical zeroEscapeSequence is "\\0". */
-test("parses zeroEscapeSequence", function() {
-  parserParses('start = "\\0"', literalGrammar("\x00"));
-  parserDoesNotParse('start = "\\00"');
-  parserDoesNotParse('start = "\\09"');
-});
-
 })();

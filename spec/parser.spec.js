@@ -72,6 +72,14 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical zeroEscapeSequence is "\\0". */
+  it("parses zeroEscapeSequence", function() {
+    expect('start = "\\0"').toParseAs(literalGrammar("\x00"));
+
+    expect('start = "\\00"').toFailToParse();
+    expect('start = "\\09"').toFailToParse();
+  });
+
   /* Canonical hexEscapeSequence is "\\xFF". */
   it("parses hexEscapeSequence", function() {
     expect('start = "\\xFF"').toParseAs(literalGrammar("\xFF"));
