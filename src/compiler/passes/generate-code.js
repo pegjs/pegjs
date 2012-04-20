@@ -1,5 +1,5 @@
-/* Emits the generated code for the AST. */
-PEG.compiler.emitter = function(ast, options) {
+/* Generates the parser code. */
+PEG.compiler.passes.generateCode = function(ast, options) {
   options = options || {};
   if (options.cache === undefined) {
     options.cache = false;
@@ -885,5 +885,5 @@ PEG.compiler.emitter = function(ast, options) {
     }
   });
 
-  return emit(ast);
+  ast.code = emit(ast);
 };

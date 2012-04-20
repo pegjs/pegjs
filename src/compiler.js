@@ -8,7 +8,8 @@ PEG.compiler = {
     "reportLeftRecursion",
     "removeProxyRules",
     "computeVarNames",
-    "computeParams"
+    "computeParams",
+    "generateCode"
   ],
 
   /*
@@ -24,7 +25,7 @@ PEG.compiler = {
       that.passes[passName](ast, options);
     });
 
-    var source = this.emitter(ast, options);
+    var source = ast.code;
     var result = eval(source);
     result._source = source;
 
@@ -33,4 +34,3 @@ PEG.compiler = {
 };
 
 // @include "compiler/passes.js"
-// @include "compiler/emitter.js"

@@ -12,3 +12,4 @@ PEG.compiler.passes = {};
 // @include "passes/remove-proxy-rules.js"
 // @include "passes/compute-var-names.js"
 // @include "passes/compute-params.js"
+// @include "passes/generate-code.js"
