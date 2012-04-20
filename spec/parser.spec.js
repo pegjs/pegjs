@@ -17,6 +17,10 @@ describe("PEG.js grammar parser", function() {
     };
   }
 
+  function ruleRefGrammar(name) {
+    return oneRuleGrammar(null, { type: "rule_ref", name: name });
+  }
+
   function literalGrammar(value) {
     var ignoreCase = arguments.length > 1 ? arguments[1] : false;
 
@@ -119,6 +123,20 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical identifier is "a". */
+  it("parses identifier", function() {
+    expect('start = a'   ).toParseAs(ruleRefGrammar("a"));
+    expect('start = _'   ).toParseAs(ruleRefGrammar("_"));
+    expect('start = $'   ).toParseAs(ruleRefGrammar("$"));
+    expect('start = aa'  ).toParseAs(ruleRefGrammar("aa"));
+    expect('start = a0'  ).toParseAs(ruleRefGrammar("a0"));
+    expect('start = a_'  ).toParseAs(ruleRefGrammar("a_"));
+    expect('start = a$'  ).toParseAs(ruleRefGrammar("a$"));
+    expect('start = abcd').toParseAs(ruleRefGrammar("abcd"));
+
+    expect('start = a\n').toParseAs(ruleRefGrammar("a"));
   });
 
   /* Canonical literal is "\"abcd\"". */

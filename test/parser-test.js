@@ -317,25 +317,4 @@ test("parses braced", function() {
 
 /* Trivial character rules are not tested. */
 
-/* Canonical identifier is "a". */
-test("parses identifier", function() {
-  parserParses('start = a',    identifierGrammar("a"));
-  parserParses('start = z',    identifierGrammar("z"));
-  parserParses('start = A',    identifierGrammar("A"));
-  parserParses('start = Z',    identifierGrammar("Z"));
-  parserParses('start = _',    identifierGrammar("_"));
-  parserParses('start = $',    identifierGrammar("$"));
-  parserParses('start = aa',   identifierGrammar("aa"));
-  parserParses('start = az',   identifierGrammar("az"));
-  parserParses('start = aA',   identifierGrammar("aA"));
-  parserParses('start = aZ',   identifierGrammar("aZ"));
-  parserParses('start = a0',   identifierGrammar("a0"));
-  parserParses('start = a9',   identifierGrammar("a9"));
-  parserParses('start = a_',   identifierGrammar("a_"));
-  parserParses('start = a$',   identifierGrammar("a$"));
-  parserParses('start = abcd', identifierGrammar("abcd"));
-
-  parserParses('start = a\n',  identifierGrammar("a"));
-});
-
 })();
