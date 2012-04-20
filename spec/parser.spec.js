@@ -72,6 +72,11 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical hexEscapeSequence is "\\xFF". */
+  it("parses hexEscapeSequence", function() {
+    expect('start = "\\xFF"').toParseAs(literalGrammar("\xFF"));
+  });
+
   /* Canonical unicodeEscapeSequence is "\\uFFFF". */
   it("parses unicodeEscapeSequence", function() {
     expect('start = "\\uFFFF"').toParseAs(literalGrammar("\uFFFF"));

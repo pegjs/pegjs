@@ -492,16 +492,4 @@ test("parses zeroEscapeSequence", function() {
   parserDoesNotParse('start = "\\09"');
 });
 
-/* Canonical hexEscapeSequence is "\\x00". */
-test("parses hexEscapeSequence", function() {
-  parserParses('start = "\\x00"',  literalGrammar("\x00"));
-  parserParses('start = "\\x09"',  literalGrammar("\x09"));
-  parserParses('start = "\\x0a"',  literalGrammar("\x0a"));
-  parserParses('start = "\\x0f"',  literalGrammar("\x0f"));
-  parserParses('start = "\\x0A"',  literalGrammar("\x0A"));
-  parserParses('start = "\\x0F"',  literalGrammar("\x0F"));
-  parserDoesNotParse('start = "\\x0"');
-  parserParses('start = "\\x000"', literalGrammar("\x000"));
-});
-
 })();
