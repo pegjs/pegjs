@@ -1,7 +1,7 @@
 describe("PEG.js grammar parser", function() {
   var trivialGrammar;
 
-  function oneRuleGrammar(expression) {
+  function oneRuleGrammar(displayName, expression) {
     return {
       type:        "grammar",
       initializer: null,
@@ -9,7 +9,7 @@ describe("PEG.js grammar parser", function() {
         {
           type:        "rule",
           name:        "start",
-          displayName: null,
+          displayName: displayName,
           expression:  expression
         }
       ],
@@ -18,14 +18,18 @@ describe("PEG.js grammar parser", function() {
   }
 
   function literalGrammar(value) {
-    return oneRuleGrammar({ type: "literal", value: value, ignoreCase: false });
+    return oneRuleGrammar(null, {
+      type:       "literal",
+      value:      value,
+      ignoreCase: false
+    });
   }
 
   function classGrammar(parts, rawText) {
     var inverted   = arguments.length > 2 ? arguments[2] : false,
         ignoreCase = arguments.length > 3 ? arguments[3] : false;
 
-    return oneRuleGrammar({
+    return oneRuleGrammar(null, {
       type:       "class",
       inverted:   inverted,
       ignoreCase: ignoreCase,
@@ -113,6 +117,20 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical string is "\"abcd\"". */
+  it("parses string", function() {
+    var grammar = oneRuleGrammar("abcd", {
+      type:       "literal",
+      value:      "abcd",
+      ignoreCase: false
+    });
+
+    expect('start "abcd" = "abcd"'  ).toParseAs(grammar);
+    expect('start \'abcd\' = "abcd"').toParseAs(grammar);
+
+    expect('start "abcd"\n= "abcd"').toParseAs(grammar);
   });
 
   /* Canonical doubleQuotedString is "\"abcd\"". */

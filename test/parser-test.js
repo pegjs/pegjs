@@ -347,12 +347,4 @@ test("parses literal", function() {
   parserParses('start = "abcd"\n', literalGrammar("abcd"));
 });
 
-/* Canonical string is "\"abcd\"". */
-test("parses string", function() {
-  parserParses('start "abcd" = "abcd"',   namedRuleGrammar);
-  parserParses('start \'abcd\' = "abcd"', namedRuleGrammar);
-
-  parserParses('start "abcd"\n= "abcd"',  namedRuleGrammar);
-});
-
 })();
