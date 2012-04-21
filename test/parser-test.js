@@ -220,12 +220,4 @@ test("parses rule", function() {
   );
 });
 
-/* Canonical expression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
-test("parses expression", function() {
-  parserParses(
-    'start = "abcd" / "efgh" / "ijkl"',
-    oneRuleGrammar(choiceLiterals)
-  );
-});
-
 })();

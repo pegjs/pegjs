@@ -16,6 +16,10 @@ describe("PEG.js grammar parser", function() {
       sequenceOfLabeleds = {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl]
+      },
+      choiceOfLiterals = {
+        type:         "choice",
+        alternatives: [literalAbcd, literalEfgh, literalIjkl]
       };
 
   function oneRuleGrammar(displayName, expression) {
@@ -148,6 +152,13 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical expression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
+  it("parses expression", function() {
+    expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
+      oneRuleGrammar(null, choiceOfLiterals)
+    );
   });
 
   /* Canonical choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
