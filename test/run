@@ -75,7 +75,6 @@ QUnit.done(function(details) {
 
 [
   "helpers.js",
-  "parser-test.js",
   "compiler-test.js",
   "compiler/passes/report-missing-rules-test.js",
   "compiler/passes/report-left-recursion-test.js",
