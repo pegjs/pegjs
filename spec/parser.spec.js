@@ -157,6 +157,32 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
+  it("parses grammar", function() {
+    var ruleA = { type: "rule", name: "a", displayName: null, expression: literalAbcd },
+        ruleB = { type: "rule", name: "b", displayName: null, expression: literalEfgh },
+        ruleC = { type: "rule", name: "c", displayName: null, expression: literalIjkl };
+
+    expect('a = "abcd"').toParseAs({
+      type:        "grammar",
+      initializer: null,
+      rules:       [ruleA],
+      startRule:   "a"
+    });
+    expect('{ code } a = "abcd"').toParseAs({
+      type:        "grammar",
+      initializer: { type: "initializer", code: " code " },
+      rules:       [ruleA],
+      startRule:   "a"
+    });
+    expect('a = "abcd"; b = "efgh"; c = "ijkl"').toParseAs({
+      type:        "grammar",
+      initializer: null,
+      rules:       [ruleA, ruleB, ruleC],
+      startRule:   "a"
+    });
+  });
+
   /* Canonical initializer is "{ code }". */
   it("parses initializer", function() {
     var grammar = oneRuleGrammar(literalAbcd, {

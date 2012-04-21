@@ -166,32 +166,4 @@ var namedRuleGrammar = {
   startRule:   "start"
 };
 
-/* Canonical grammar is "a: \"abcd\"; b: \"efgh\"; c: \"ijkl\";". */
-test("parses grammar", function() {
-  parserParses(
-    'a = "abcd"',
-    {
-      type:        "grammar",
-      initializer: null,
-      rules:       [rule("a", null, literalAbcd)],
-      startRule:   "a"
-    }
-  );
-  parserParses('{ code }; a = "abcd"', initializerGrammar);
-  parserParses(
-    'a = "abcd"; b = "efgh"; c = "ijkl"',
-    {
-      type:        "grammar",
-      initializer: null,
-      rules: [
-        rule("a", null, literalAbcd),
-        rule("b", null, literalEfgh),
-        rule("c", null, literalIjkl)
-      ],
-      startRule:   "a"
-    }
-  );
-});
-
-
 })();
