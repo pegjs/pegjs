@@ -22,10 +22,13 @@ describe("PEG.js grammar parser", function() {
         alternatives: [literalAbcd, literalEfgh, literalIjkl]
       };
 
-  function oneRuleGrammar(displayName, expression) {
+  function oneRuleGrammar(expression) {
+    var initializer = arguments.length > 1 ? arguments[1] : null,
+        displayName = arguments.length > 2 ? arguments[2] : null;
+
     return {
       type:        "grammar",
-      initializer: null,
+      initializer: initializer,
       rules:       [
         {
           type:        "rule",
@@ -39,7 +42,7 @@ describe("PEG.js grammar parser", function() {
   }
 
   function actionGrammar(code) {
-    return oneRuleGrammar(null, {
+    return oneRuleGrammar({
       type:       "action",
       expression: literalAbcd,
       code:       code
@@ -47,13 +50,13 @@ describe("PEG.js grammar parser", function() {
   }
 
   function ruleRefGrammar(name) {
-    return oneRuleGrammar(null, { type: "rule_ref", name: name });
+    return oneRuleGrammar({ type: "rule_ref", name: name });
   }
 
   function literalGrammar(value) {
     var ignoreCase = arguments.length > 1 ? arguments[1] : false;
 
-    return oneRuleGrammar(null, {
+    return oneRuleGrammar({
       type:       "literal",
       value:      value,
       ignoreCase: ignoreCase
@@ -64,7 +67,7 @@ describe("PEG.js grammar parser", function() {
     var inverted   = arguments.length > 2 ? arguments[2] : false,
         ignoreCase = arguments.length > 3 ? arguments[3] : false;
 
-    return oneRuleGrammar(null, {
+    return oneRuleGrammar({
       type:       "class",
       inverted:   inverted,
       ignoreCase: ignoreCase,
@@ -157,31 +160,31 @@ describe("PEG.js grammar parser", function() {
   /* Canonical rule is "a: \"abcd\"". */
   it("parses rule", function() {
     expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
-      oneRuleGrammar(null, choiceOfLiterals)
+      oneRuleGrammar(choiceOfLiterals)
     );
     expect('start "start rule" = "abcd" / "efgh" / "ijkl"').toParseAs(
-      oneRuleGrammar("start rule", choiceOfLiterals)
+      oneRuleGrammar(choiceOfLiterals, null, "start rule")
     );
     expect('start = "abcd" / "efgh" / "ijkl";').toParseAs(
-      oneRuleGrammar(null, choiceOfLiterals)
+      oneRuleGrammar(choiceOfLiterals)
     );
   });
 
   /* Canonical expression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
   it("parses expression", function() {
     expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
-      oneRuleGrammar(null, choiceOfLiterals)
+      oneRuleGrammar(choiceOfLiterals)
     );
   });
 
   /* Canonical choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
   it("parses choice", function() {
     expect('start = "abcd" "efgh" "ijkl"').toParseAs(
-      oneRuleGrammar(null, sequenceOfLiterals)
+      oneRuleGrammar(sequenceOfLiterals)
     );
     expect(
       'start = "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl"'
-    ).toParseAs(oneRuleGrammar(null, {
+    ).toParseAs(oneRuleGrammar({
       type:         "choice",
       alternatives: [sequenceOfLiterals, sequenceOfLiterals, sequenceOfLiterals]
     }));
@@ -190,21 +193,17 @@ describe("PEG.js grammar parser", function() {
   /* Canonical sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
   it("parses sequence", function() {
     expect('start = { code }').toParseAs(
-      oneRuleGrammar(null, {
+      oneRuleGrammar({
         type:       "action",
         expression: sequenceEmpty,
         code:       " code "
       })
     );
     expect('start = a:"abcd" { code }').toParseAs(
-      oneRuleGrammar(null, {
-        type:       "action",
-        expression: labeledAbcd,
-        code:       " code "
-      })
+      oneRuleGrammar({ type: "action", expression: labeledAbcd, code: " code " })
     );
     expect('start = a:"abcd" b:"efgh" c:"ijkl" { code }').toParseAs(
-      oneRuleGrammar(null, {
+      oneRuleGrammar({
         type:       "action",
         expression: sequenceOfLabeleds,
         code:       " code "
@@ -212,57 +211,55 @@ describe("PEG.js grammar parser", function() {
     );
 
     expect('start = ').toParseAs(
-      oneRuleGrammar(null, sequenceEmpty)
+      oneRuleGrammar(sequenceEmpty)
     );
     expect('start = a:"abcd"').toParseAs(
-      oneRuleGrammar(null, labeledAbcd)
+      oneRuleGrammar(labeledAbcd)
     );
     expect('start = a:"abcd" b:"efgh" c:"ijkl"').toParseAs(
-      oneRuleGrammar(null, sequenceOfLabeleds)
+      oneRuleGrammar(sequenceOfLabeleds)
     );
   });
 
   /* Canonical labeled is "label:\"abcd\"". */
   it("parses labeled", function() {
-    expect('start = label:!"abcd"').toParseAs(oneRuleGrammar(null, {
+    expect('start = label:!"abcd"').toParseAs(oneRuleGrammar({
       type:       "labeled",
       label:      "label",
       expression: simpleNotLiteral
     }));
-    expect('start = !"abcd"'      ).toParseAs(
-      oneRuleGrammar(null, simpleNotLiteral)
-    );
+    expect('start = !"abcd"'      ).toParseAs(oneRuleGrammar(simpleNotLiteral));
   });
 
   /* Canonical prefixed is "!\"abcd\"". */
   it("parses prefixed", function() {
-    expect('start = &{ code }').toParseAs(oneRuleGrammar(null, {
+    expect('start = &{ code }').toParseAs(oneRuleGrammar({
       type: "semantic_and",
       code: " code "
     }));
-    expect('start = &"abcd"?' ).toParseAs(oneRuleGrammar(null, {
+    expect('start = &"abcd"?' ).toParseAs(oneRuleGrammar({
       type:       "simple_and",
       expression: optionalLiteral
     }));
-    expect('start = !{ code }').toParseAs(oneRuleGrammar(null, {
+    expect('start = !{ code }').toParseAs(oneRuleGrammar({
       type: "semantic_not",
       code: " code "
     }));
-    expect('start = !"abcd"?' ).toParseAs(oneRuleGrammar(null, {
+    expect('start = !"abcd"?' ).toParseAs(oneRuleGrammar({
       type:       "simple_not",
       expression: optionalLiteral
     }));
-    expect('start = "abcd"?'  ).toParseAs(oneRuleGrammar(null, optionalLiteral));
+    expect('start = "abcd"?'  ).toParseAs(oneRuleGrammar(optionalLiteral));
   });
 
   /* Canonical suffixed is "\"abcd\"?". */
   it("parses suffixed", function() {
-    expect('start = "abcd"?').toParseAs(oneRuleGrammar(null, optionalLiteral));
-    expect('start = "abcd"*').toParseAs(oneRuleGrammar(null, {
+    expect('start = "abcd"?').toParseAs(oneRuleGrammar(optionalLiteral));
+    expect('start = "abcd"*').toParseAs(oneRuleGrammar({
       type:       "zero_or_more",
       expression: literalAbcd
     }));
-    expect('start = "abcd"+').toParseAs(oneRuleGrammar(null, {
+    expect('start = "abcd"+').toParseAs(oneRuleGrammar({
       type:       "one_or_more",
       expression: literalAbcd
     }));
@@ -273,7 +270,7 @@ describe("PEG.js grammar parser", function() {
   it("parses primary", function() {
     expect('start = a'       ).toParseAs(ruleRefGrammar("a"));
     expect('start = "abcd"'  ).toParseAs(literalGrammar("abcd"));
-    expect('start = .'       ).toParseAs(oneRuleGrammar(null, { type: "any" }));
+    expect('start = .'       ).toParseAs(oneRuleGrammar({ type: "any" }));
     expect('start = [a-d]'   ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
     expect('start = ("abcd")').toParseAs(literalGrammar("abcd"));
   });
@@ -321,7 +318,7 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical string is "\"abcd\"". */
   it("parses string", function() {
-    var grammar = oneRuleGrammar("abcd", literalAbcd);
+    var grammar = oneRuleGrammar(literalAbcd, null, "abcd");
 
     expect('start "abcd" = "abcd"'  ).toParseAs(grammar);
     expect('start \'abcd\' = "abcd"').toParseAs(grammar);
