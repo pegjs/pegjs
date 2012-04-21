@@ -267,13 +267,4 @@ test("parses sequence", function() {
   );
 });
 
-/* Canonical labeled is "label:\"abcd\"". */
-test("parses labeled", function() {
-  parserParses(
-    'start = label:!"abcd"',
-    oneRuleGrammar(labeled("label", simpleNot(literalAbcd)))
-  );
-  parserParses('start = !"abcd"', oneRuleGrammar(simpleNot(literalAbcd)));
-});
-
 })();

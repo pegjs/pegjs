@@ -1,7 +1,8 @@
 describe("PEG.js grammar parser", function() {
   var trivialGrammar,
-      literalAbcd     = { type: "literal", value: "abcd", ignoreCase: false },
-      optionalLiteral = { type: "optional", expression: literalAbcd };
+      literalAbcd      = { type: "literal", value: "abcd", ignoreCase: false },
+      optionalLiteral  = { type: "optional",   expression: literalAbcd },
+      simpleNotLiteral = { type: "simple_not", expression: literalAbcd };
 
   function oneRuleGrammar(displayName, expression) {
     return {
@@ -133,6 +134,18 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical labeled is "label:\"abcd\"". */
+  it("parses labeled", function() {
+    expect('start = label:!"abcd"').toParseAs(oneRuleGrammar(null, {
+      type:       "labeled",
+      label:      "label",
+      expression: simpleNotLiteral
+    }));
+    expect('start = !"abcd"'      ).toParseAs(
+      oneRuleGrammar(null, simpleNotLiteral)
+    );
   });
 
   /* Canonical prefixed is "!\"abcd\"". */
