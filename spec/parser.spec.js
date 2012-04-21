@@ -1,6 +1,7 @@
 describe("PEG.js grammar parser", function() {
   var trivialGrammar,
-      literalAbcd = { type: "literal", value: "abcd", ignoreCase: false };
+      literalAbcd     = { type: "literal", value: "abcd", ignoreCase: false },
+      optionalLiteral = { type: "optional", expression: literalAbcd };
 
   function oneRuleGrammar(displayName, expression) {
     return {
@@ -132,6 +133,20 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical suffixed is "\"abcd\"?". */
+  it("parses suffixed", function() {
+    expect('start = "abcd"?').toParseAs(oneRuleGrammar(null, optionalLiteral));
+    expect('start = "abcd"*').toParseAs(oneRuleGrammar(null, {
+      type:       "zero_or_more",
+      expression: literalAbcd
+    }));
+    expect('start = "abcd"+').toParseAs(oneRuleGrammar(null, {
+      type:       "one_or_more",
+      expression: literalAbcd
+    }));
+    expect('start = "abcd"' ).toParseAs(literalGrammar("abcd"));
   });
 
   /* Canonical primary is "\"abcd\"". */

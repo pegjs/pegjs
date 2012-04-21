@@ -285,12 +285,4 @@ test("parses prefixed", function() {
   parserParses('start = "abcd"?',   oneRuleGrammar(optionalLiteral));
 });
 
-/* Canonical suffixed is "\"abcd\"?". */
-test("parses suffixed", function() {
-  parserParses('start = "abcd"?', oneRuleGrammar(optionalLiteral));
-  parserParses('start = "abcd"*', oneRuleGrammar(zeroOrMore(literalAbcd)));
-  parserParses('start = "abcd"+', oneRuleGrammar(oneOrMore(literalAbcd)));
-  parserParses('start = "abcd"',  literalGrammar("abcd"));
-});
-
 })();
