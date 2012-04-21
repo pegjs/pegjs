@@ -199,25 +199,4 @@ test("parses initializer", function() {
   parserParses('{ code };a = "abcd"', initializerGrammar);
 });
 
-/* Canonical rule is "a: \"abcd\"". */
-test("parses rule", function() {
-  parserParses(
-    'start = "abcd" / "efgh" / "ijkl"',
-    oneRuleGrammar(choiceLiterals)
-  );
-  parserParses(
-    'start "start rule" = "abcd" / "efgh" / "ijkl"',
-    {
-      type:        "grammar",
-      initializer: null,
-      rules:       [rule("start", "start rule", choiceLiterals)],
-      startRule:   "start"
-    }
-  );
-  parserParses(
-    'start = "abcd" / "efgh" / "ijkl";',
-    oneRuleGrammar(choiceLiterals)
-  );
-});
-
 })();

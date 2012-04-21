@@ -154,6 +154,19 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical rule is "a: \"abcd\"". */
+  it("parses rule", function() {
+    expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
+      oneRuleGrammar(null, choiceOfLiterals)
+    );
+    expect('start "start rule" = "abcd" / "efgh" / "ijkl"').toParseAs(
+      oneRuleGrammar("start rule", choiceOfLiterals)
+    );
+    expect('start = "abcd" / "efgh" / "ijkl";').toParseAs(
+      oneRuleGrammar(null, choiceOfLiterals)
+    );
+  });
+
   /* Canonical expression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
   it("parses expression", function() {
     expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
