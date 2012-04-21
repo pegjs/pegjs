@@ -135,6 +135,27 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical prefixed is "!\"abcd\"". */
+  it("parses prefixed", function() {
+    expect('start = &{ code }').toParseAs(oneRuleGrammar(null, {
+      type: "semantic_and",
+      code: " code "
+    }));
+    expect('start = &"abcd"?' ).toParseAs(oneRuleGrammar(null, {
+      type:       "simple_and",
+      expression: optionalLiteral
+    }));
+    expect('start = !{ code }').toParseAs(oneRuleGrammar(null, {
+      type: "semantic_not",
+      code: " code "
+    }));
+    expect('start = !"abcd"?' ).toParseAs(oneRuleGrammar(null, {
+      type:       "simple_not",
+      expression: optionalLiteral
+    }));
+    expect('start = "abcd"?'  ).toParseAs(oneRuleGrammar(null, optionalLiteral));
+  });
+
   /* Canonical suffixed is "\"abcd\"?". */
   it("parses suffixed", function() {
     expect('start = "abcd"?').toParseAs(oneRuleGrammar(null, optionalLiteral));

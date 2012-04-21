@@ -276,13 +276,4 @@ test("parses labeled", function() {
   parserParses('start = !"abcd"', oneRuleGrammar(simpleNot(literalAbcd)));
 });
 
-/* Canonical prefixed is "!\"abcd\"". */
-test("parses prefixed", function() {
-  parserParses('start = &{ code }', oneRuleGrammar(semanticAnd(" code ")));
-  parserParses('start = &"abcd"?',  oneRuleGrammar(simpleAnd(optionalLiteral)));
-  parserParses('start = !{ code }', oneRuleGrammar(semanticNot(" code ")));
-  parserParses('start = !"abcd"?',  oneRuleGrammar(simpleNot(optionalLiteral)));
-  parserParses('start = "abcd"?',   oneRuleGrammar(optionalLiteral));
-});
-
 })();
