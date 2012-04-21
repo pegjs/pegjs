@@ -193,10 +193,5 @@ test("parses grammar", function() {
   );
 });
 
-/* Canonical initializer is "{ code }". */
-test("parses initializer", function() {
-  parserParses('{ code }a = "abcd"', initializerGrammar);
-  parserParses('{ code };a = "abcd"', initializerGrammar);
-});
 
 })();

@@ -157,6 +157,17 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
+  /* Canonical initializer is "{ code }". */
+  it("parses initializer", function() {
+    var grammar = oneRuleGrammar(literalAbcd, {
+          type: "initializer",
+          code: " code "
+        }, null);
+
+    expect('{ code } start = "abcd"' ).toParseAs(grammar);
+    expect('{ code }; start = "abcd"').toParseAs(grammar);
+  });
+
   /* Canonical rule is "a: \"abcd\"". */
   it("parses rule", function() {
     expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
