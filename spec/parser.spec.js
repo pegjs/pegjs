@@ -9,6 +9,10 @@ describe("PEG.js grammar parser", function() {
       labeledEfgh        = { type: "labeled", label: "b", expression: literalEfgh },
       labeledIjkl        = { type: "labeled", label: "c", expression: literalIjkl },
       sequenceEmpty      = { type: "sequence", elements: [] },
+      sequenceOfLiterals = {
+        type:     "sequence",
+        elements: [literalAbcd, literalEfgh, literalIjkl]
+      },
       sequenceOfLabeleds = {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl]
@@ -144,6 +148,19 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
+  it("parses choice", function() {
+    expect('start = "abcd" "efgh" "ijkl"').toParseAs(
+      oneRuleGrammar(null, sequenceOfLiterals)
+    );
+    expect(
+      'start = "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl"'
+    ).toParseAs(oneRuleGrammar(null, {
+      type:         "choice",
+      alternatives: [sequenceOfLiterals, sequenceOfLiterals, sequenceOfLiterals]
+    }));
   });
 
   /* Canonical sequence is "\"abcd\" \"efgh\" \"ijkl\"". */

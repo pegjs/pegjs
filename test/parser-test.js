@@ -228,20 +228,4 @@ test("parses expression", function() {
   );
 });
 
-/* Canonical choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
-test("parses choice", function() {
-  parserParses(
-    'start = "abcd" "efgh" "ijkl"',
-    oneRuleGrammar(sequenceLiterals)
-  );
-  parserParses(
-    'start = "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl"',
-    oneRuleGrammar(choice([
-      sequenceLiterals,
-      sequenceLiterals,
-      sequenceLiterals
-    ]))
-  );
-});
-
 })();
