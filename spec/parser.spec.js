@@ -1,8 +1,18 @@
 describe("PEG.js grammar parser", function() {
   var trivialGrammar,
-      literalAbcd      = { type: "literal", value: "abcd", ignoreCase: false },
-      optionalLiteral  = { type: "optional",   expression: literalAbcd },
-      simpleNotLiteral = { type: "simple_not", expression: literalAbcd };
+      literalAbcd        = { type: "literal", value: "abcd", ignoreCase: false },
+      literalEfgh        = { type: "literal", value: "efgh", ignoreCase: false },
+      literalIjkl        = { type: "literal", value: "ijkl", ignoreCase: false },
+      optionalLiteral    = { type: "optional",   expression: literalAbcd },
+      simpleNotLiteral   = { type: "simple_not", expression: literalAbcd },
+      labeledAbcd        = { type: "labeled", label: "a", expression: literalAbcd },
+      labeledEfgh        = { type: "labeled", label: "b", expression: literalEfgh },
+      labeledIjkl        = { type: "labeled", label: "c", expression: literalIjkl },
+      sequenceEmpty      = { type: "sequence", elements: [] },
+      sequenceOfLabeleds = {
+        type:     "sequence",
+        elements: [labeledAbcd, labeledEfgh, labeledIjkl]
+      };
 
   function oneRuleGrammar(displayName, expression) {
     return {
@@ -134,6 +144,41 @@ describe("PEG.js grammar parser", function() {
         }
       }
     });
+  });
+
+  /* Canonical sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
+  it("parses sequence", function() {
+    expect('start = { code }').toParseAs(
+      oneRuleGrammar(null, {
+        type:       "action",
+        expression: sequenceEmpty,
+        code:       " code "
+      })
+    );
+    expect('start = a:"abcd" { code }').toParseAs(
+      oneRuleGrammar(null, {
+        type:       "action",
+        expression: labeledAbcd,
+        code:       " code "
+      })
+    );
+    expect('start = a:"abcd" b:"efgh" c:"ijkl" { code }').toParseAs(
+      oneRuleGrammar(null, {
+        type:       "action",
+        expression: sequenceOfLabeleds,
+        code:       " code "
+      })
+    );
+
+    expect('start = ').toParseAs(
+      oneRuleGrammar(null, sequenceEmpty)
+    );
+    expect('start = a:"abcd"').toParseAs(
+      oneRuleGrammar(null, labeledAbcd)
+    );
+    expect('start = a:"abcd" b:"efgh" c:"ijkl"').toParseAs(
+      oneRuleGrammar(null, sequenceOfLabeleds)
+    );
   });
 
   /* Canonical labeled is "label:\"abcd\"". */

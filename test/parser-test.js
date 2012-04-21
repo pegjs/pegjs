@@ -244,27 +244,4 @@ test("parses choice", function() {
   );
 });
 
-/* Canonical sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
-test("parses sequence", function() {
-  parserParses(
-    'start = { code }',
-    oneRuleGrammar(action(sequenceEmpty, " code "))
-  );
-  parserParses(
-    'start = a:"abcd" { code }',
-    oneRuleGrammar(action(labeledAbcd, " code "))
-  );
-  parserParses(
-    'start = a:"abcd" e:"efgh" i:"ijkl" { code }',
-    oneRuleGrammar(action(sequenceLabeleds, " code "))
-  );
-
-  parserParses('start = ',         oneRuleGrammar(sequenceEmpty));
-  parserParses('start = a:"abcd"', oneRuleGrammar(labeledAbcd));
-  parserParses(
-    'start = a:"abcd" e:"efgh" i:"ijkl"',
-    oneRuleGrammar(sequenceLabeleds)
-  );
-});
-
 })();
