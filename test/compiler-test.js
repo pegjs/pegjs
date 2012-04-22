@@ -429,12 +429,6 @@ test("semantic not (with trackLineAndColumn: true)", function() {
   parses(digitsParser, "1\u2029x", [2, 1]); // paragraph separator
 });
 
-testWithVaryingTrackLineAndColumn("optional expressions", function(options) {
-  var parser = PEG.buildParser('start = "a"?', options);
-  parses(parser, "", "");
-  parses(parser, "a", "a");
-});
-
 testWithVaryingTrackLineAndColumn("initializer", function(options) {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }',
