@@ -91,6 +91,19 @@ describe("generated parser", function() {
     });
   });
 
+  describe("choice matching", function() {
+    varyAll(function(options) {
+      it("matches correctly", function() {
+        var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
+
+        expect(parser).toParse("a", "a");
+        expect(parser).toParse("b", "b");
+        expect(parser).toParse("c", "c");
+        expect(parser).toFailToParse("d");
+      });
+    });
+  });
+
   describe("sequence matching", function() {
     varyAll(function(options) {
       it("matches empty sequence correctly", function() {

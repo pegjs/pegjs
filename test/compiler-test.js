@@ -13,16 +13,6 @@ function testWithVaryingTrackLineAndColumn(name, callback) {
   );
 }
 
-testWithVaryingTrackLineAndColumn("choices", function(options) {
-  var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
-  parses(parser, "a", "a");
-  parses(parser, "b", "b");
-  parses(parser, "c", "c");
-  doesNotParse(parser, "");
-  doesNotParse(parser, "ab");
-  doesNotParse(parser, "d");
-});
-
 testWithVaryingTrackLineAndColumn("initializer", function(options) {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }',
