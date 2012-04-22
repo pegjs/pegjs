@@ -91,6 +91,18 @@ describe("generated parser", function() {
     });
   });
 
+  describe("zero or more matching", function() {
+    varyAll(function(options) {
+      it("matches correctly", function() {
+        var parser = PEG.buildParser('start = "a"*', options);
+
+        expect(parser).toParse("",    []);
+        expect(parser).toParse("a",   ["a"]);
+        expect(parser).toParse("aaa", ["a", "a", "a"]);
+      });
+    });
+  });
+
   describe("one or more matching", function() {
     varyAll(function(options) {
       it("matches correctly", function() {
