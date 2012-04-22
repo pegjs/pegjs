@@ -66,24 +66,50 @@ describe("generated parser", function() {
         }
       },
 
-      toFailToParse: function(input) {
-        var result;
+      toFailToParse: function(input, details) {
+        /*
+         * Extracted into a function just to silence JSHint complaining about
+         * creating functions in a loop.
+         */
+        function buildKeyMessage(key, value) {
+          return function() {
+            return "Expected " + jasmine.pp(input) + " to fail to parse"
+                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                 + "but " + jasmine.pp(key) + " "
+                 + "is " + jasmine.pp(value) + ".";
+          };
+        }
+
+        var result, key;
 
         try {
           result = this.actual.parse(input);
 
           this.message = function() {
-            return "Expected " + jasmine.pp(input) + " to fail to parse, "
+            return "Expected " + jasmine.pp(input) + " to fail to parse"
+                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
                  + "but it parsed as " + jasmine.pp(result) + ".";
           };
 
           return false;
         } catch (e) {
-          this.message = function() {
-            return "Expected " + jasmine.pp(input) + " to parse, "
-                 + "but it failed with message "
-                 + jasmine.pp(e.message) + ".";
-          };
+          if (this.isNot) {
+            this.message = function() {
+              return "Expected " + jasmine.pp(input) + " to parse, "
+                   + "but it failed with message "
+                   + jasmine.pp(e.message) + ".";
+            };
+          } else {
+            if (details) {
+              for (key in details) {
+                if (!this.env.equals_(e[key], details[key])) {
+                  this.message = buildKeyMessage(key, e[key]);
+
+                  return false;
+                }
+              }
+            }
+          }
 
           return true;
         }
@@ -640,6 +666,68 @@ describe("generated parser", function() {
         var parser = PEG.buildParser('start = [a] .', options);
 
         expect(parser).toParse("ab", ["a", "b"]);
+      });
+    });
+  });
+
+  describe("error reporting", function() {
+    varyAll(function(options) {
+      describe("position reporting", function() {
+        it("reports position correctly with invalid input", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("b", { offset: 0, line: 1, column: 1 });
+        });
+
+        it("reports position correctly with trailing input", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("aa", { offset: 1, line: 1, column: 2});
+        });
+
+        it("reports position correctly in complex cases", function() {
+          var parser = PEG.buildParser([
+                'start  = line (nl+ line)*',
+                'line   = digit (" "+ digit)*',
+                'digit  = [0-9]',
+                'nl     = ("\\r" / "\\n" / "\\u2028" / "\\u2029")'
+              ].join("\n"), options);
+
+          expect(parser).toFailToParse("1\n2\n\n3\n\n\n4 5 x", {
+            offset: 13,
+            line:   7,
+            column: 5
+          });
+
+          /* Non-Unix newlines */
+          expect(parser).toFailToParse("1\rx", {   // Old Mac
+            offset: 2,
+            line:   2,
+            column: 1
+          });
+          expect(parser).toFailToParse("1\r\nx", { // Windows
+            offset: 3,
+            line:   2,
+            column: 1
+          });
+          expect(parser).toFailToParse("1\n\rx", { // mismatched
+            offset: 3,
+            line:   3,
+            column: 1
+          });
+
+          /* Strange newlines */
+          expect(parser).toFailToParse("1\u2028x", { // line separator
+            offset: 2,
+            line:   2,
+            column: 1
+          });
+          expect(parser).toFailToParse("1\u2029x", { // paragraph separator
+            offset: 2,
+            line:   2,
+            column: 1
+          });
+        });
       });
     });
   });

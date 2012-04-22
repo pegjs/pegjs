@@ -160,31 +160,4 @@ testWithVaryingTrackLineAndColumn("error details", function(options) {
   );
 });
 
-testWithVaryingTrackLineAndColumn("error positions", function(options) {
-  var simpleParser = PEG.buildParser('start = "a"', options);
-
-  /* Regular match failure */
-  doesNotParseWithPos(simpleParser, "b", 0, 1, 1);
-
-  /* Trailing input */
-  doesNotParseWithPos(simpleParser, "ab", 1, 1, 2);
-
-  var digitsParser = PEG.buildParser([
-    'start  = line (("\\r" / "\\n" / "\\u2028" / "\\u2029")+ line)*',
-    'line   = digits (" "+ digits)*',
-    'digits = digits:[0-9]+ { return digits.join(""); }'
-  ].join("\n"), options);
-
-  doesNotParseWithPos(digitsParser, "1\n2\n\n3\n\n\n4 5 x", 13, 7, 5);
-
-  /* Non-Unix newlines */
-  doesNotParseWithPos(digitsParser, "1\rx", 2, 2, 1);   // Old Mac
-  doesNotParseWithPos(digitsParser, "1\r\nx", 3, 2, 1); // Windows
-  doesNotParseWithPos(digitsParser, "1\n\rx", 3, 3, 1); // mismatched
-
-  /* Strange newlines */
-  doesNotParseWithPos(digitsParser, "1\u2028x", 2, 2, 1); // line separator
-  doesNotParseWithPos(digitsParser, "1\u2029x", 2, 2, 1); // paragraph separator
-});
-
 })();
