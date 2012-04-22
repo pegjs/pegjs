@@ -91,6 +91,23 @@ describe("generated parser", function() {
     });
   });
 
+  describe("simple not matching", function() {
+    varyAll(function(options) {
+      it("matches correctly", function() {
+        var parser = PEG.buildParser('start = !"a" "b"', options);
+
+        expect(parser).toParse("b", ["", "b"]);
+        expect(parser).toFailToParse("a");
+      });
+
+      it("does not advance position on failure", function() {
+        var parser = PEG.buildParser('start = !"a" / "a"', options);
+
+        expect(parser).toParse("a", "a");
+      });
+    });
+  });
+
   describe("semantic and code", function() {
     varyAll(function(options) {
       it("causes successful match by returning |true|", function() {

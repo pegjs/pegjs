@@ -60,19 +60,6 @@ testWithVaryingTrackLineAndColumn("simple and", function(options) {
    */
 });
 
-testWithVaryingTrackLineAndColumn("simple not", function(options) {
-  var parser = PEG.buildParser('start = "a" !"b"', options);
-  parses(parser, "a", ["a", ""]);
-  doesNotParse(parser, "ab");
-
-  /*
-   * Test that the parsing position returns after successful parsing of a
-   * predicate.
-   */
-  var posTestParser = PEG.buildParser('start = "a" !"b" "c"');
-  parses(posTestParser, "ac", ["a", "", "c"]);
-});
-
 testWithVaryingTrackLineAndColumn("initializer", function(options) {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }',
