@@ -643,50 +643,6 @@ testWithVaryingTrackLineAndColumn("rule references", function(options) {
   parses(parser, "Python", "Python");
 });
 
-testWithVaryingTrackLineAndColumn("literals", function(options) {
-  var zeroCharParser = PEG.buildParser('start = ""', options);
-  parses(zeroCharParser, "", "");
-  doesNotParse(zeroCharParser, "a");
-
-  var oneCharCaseSensitiveParser = PEG.buildParser('start = "a"', options);
-  parses(oneCharCaseSensitiveParser, "a", "a");
-  doesNotParse(oneCharCaseSensitiveParser, "");
-  doesNotParse(oneCharCaseSensitiveParser, "A");
-  doesNotParse(oneCharCaseSensitiveParser, "b");
-
-  var multiCharCaseSensitiveParser = PEG.buildParser('start = "abcd"', options);
-  parses(multiCharCaseSensitiveParser, "abcd", "abcd");
-  doesNotParse(multiCharCaseSensitiveParser, "");
-  doesNotParse(multiCharCaseSensitiveParser, "abc");
-  doesNotParse(multiCharCaseSensitiveParser, "abcde");
-  doesNotParse(multiCharCaseSensitiveParser, "ABCD");
-  doesNotParse(multiCharCaseSensitiveParser, "efgh");
-
-  var oneCharCaseInsensitiveParser = PEG.buildParser('start = "a"i', options);
-  parses(oneCharCaseInsensitiveParser, "a", "a");
-  parses(oneCharCaseInsensitiveParser, "A", "A");
-  doesNotParse(oneCharCaseInsensitiveParser, "");
-  doesNotParse(oneCharCaseInsensitiveParser, "b");
-
-  var multiCharCaseInsensitiveParser = PEG.buildParser(
-    'start = "abcd"i',
-    options
-  );
-  parses(multiCharCaseInsensitiveParser, "abcd", "abcd");
-  parses(multiCharCaseInsensitiveParser, "ABCD", "ABCD");
-  doesNotParse(multiCharCaseInsensitiveParser, "");
-  doesNotParse(multiCharCaseInsensitiveParser, "abc");
-  doesNotParse(multiCharCaseInsensitiveParser, "abcde");
-  doesNotParse(multiCharCaseInsensitiveParser, "efgh");
-
-  /*
-   * Test that the parsing position moves forward after successful parsing of
-   * a literal.
-   */
-  var posTestParser = PEG.buildParser('start = "a" "b"', options);
-  parses(posTestParser, "ab", ["a", "b"]);
-});
-
 testWithVaryingTrackLineAndColumn("anys", function(options) {
   var parser = PEG.buildParser('start = .', options);
   parses(parser, "a", "a");
