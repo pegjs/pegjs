@@ -91,6 +91,23 @@ describe("generated parser", function() {
     });
   });
 
+  describe("simple and matching", function() {
+    varyAll(function(options) {
+      it("matches correctly", function() {
+        var parser = PEG.buildParser('start = &"a" "a"', options);
+
+        expect(parser).toParse("a", ["", "a"]);
+        expect(parser).toFailToParse("b");
+      });
+
+      it("does not advance position on success", function() {
+        var parser = PEG.buildParser('start = &"a" "a"', options);
+
+        expect(parser).toParse("a", ["", "a"]);
+      });
+    });
+  });
+
   describe("simple not matching", function() {
     varyAll(function(options) {
       it("matches correctly", function() {

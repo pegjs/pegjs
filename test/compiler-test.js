@@ -49,17 +49,6 @@ testWithVaryingTrackLineAndColumn("labels", function(options) {
   doesNotParse(parser, "b");
 });
 
-testWithVaryingTrackLineAndColumn("simple and", function(options) {
-  var parser = PEG.buildParser('start = "a" &"b" "b"', options);
-  parses(parser, "ab", ["a", "", "b"]);
-  doesNotParse(parser, "ac");
-
-  /*
-   * Test that the parsing position returns after successful parsing of a
-   * predicate is not needed, it is implicit in the tests above.
-   */
-});
-
 testWithVaryingTrackLineAndColumn("initializer", function(options) {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }',
