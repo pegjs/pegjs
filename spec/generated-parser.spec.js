@@ -91,6 +91,17 @@ describe("generated parser", function() {
     });
   });
 
+  describe("labeled matching", function() {
+    varyAll(function(options) {
+      it("delegates to the expression", function() {
+        var parser = PEG.buildParser('start = a:"a"', options);
+
+        expect(parser).toParse("a", "a");
+        expect(parser).toFailToParse("b");
+      });
+    });
+  });
+
   describe("simple and matching", function() {
     varyAll(function(options) {
       it("matches correctly", function() {

@@ -43,12 +43,6 @@ testWithVaryingTrackLineAndColumn("sequences", function(options) {
   parses(posTestParser, "a", "a");
 });
 
-testWithVaryingTrackLineAndColumn("labels", function(options) {
-  var parser = PEG.buildParser('start = label:"a"', options);
-  parses(parser, "a", "a");
-  doesNotParse(parser, "b");
-});
-
 testWithVaryingTrackLineAndColumn("initializer", function(options) {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }',
