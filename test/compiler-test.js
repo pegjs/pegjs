@@ -13,44 +13,6 @@ function testWithVaryingTrackLineAndColumn(name, callback) {
   );
 }
 
-testWithVaryingTrackLineAndColumn("initializer", function(options) {
-  var variableInActionParser = PEG.buildParser(
-    '{ a = 42; }; start = "a" { return a; }',
-    options
-  );
-  parses(variableInActionParser, "a", 42);
-
-  var functionInActionParser = PEG.buildParser(
-    '{ function f() { return 42; } }; start = "a" { return f(); }',
-    options
-  );
-  parses(functionInActionParser, "a", 42);
-
-  var variableInSemanticAndParser = PEG.buildParser(
-    '{ a = 42; }; start = "a" &{ return a === 42; }',
-    options
-  );
-  parses(variableInSemanticAndParser, "a", ["a", ""]);
-
-  var functionInSemanticAndParser = PEG.buildParser(
-    '{ function f() { return 42; } }; start = "a" &{ return f() === 42; }',
-    options
-  );
-  parses(functionInSemanticAndParser, "a", ["a", ""]);
-
-  var variableInSemanticNotParser = PEG.buildParser(
-    '{ a = 42; }; start = "a" !{ return a !== 42; }',
-    options
-  );
-  parses(variableInSemanticNotParser, "a", ["a", ""]);
-
-  var functionInSemanticNotParser = PEG.buildParser(
-    '{ function f() { return 42; } }; start = "a" !{ return f() !== 42; }',
-    options
-  );
-  parses(functionInSemanticNotParser, "a", ["a", ""]);
-});
-
 testWithVaryingTrackLineAndColumn("cache", function(options) {
   var grammar = [
     '{ var n = 0; }',

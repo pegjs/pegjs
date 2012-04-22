@@ -91,6 +91,19 @@ describe("generated parser", function() {
     });
   });
 
+  describe("initializer code", function() {
+    varyAll(function(options) {
+      it("runs before the parsing begins", function() {
+        var parser = PEG.buildParser([
+              '{ var result = 42; }',
+              'start  = "a" { return result }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", 42);
+      });
+    });
+  });
+
   describe("choice matching", function() {
     varyAll(function(options) {
       it("matches correctly", function() {
@@ -227,6 +240,24 @@ describe("generated parser", function() {
           expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
         });
       }
+
+      it("can use variables defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ var v = 42 }',
+              'start = "a" &{ return v === 42; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
+
+      it("can use functions defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ function f() { return 42; } }',
+              'start = "a" &{ return f() === 42; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
     });
   });
 
@@ -286,6 +317,24 @@ describe("generated parser", function() {
           expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
         });
       }
+
+      it("can use variables defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ var v = 42 }',
+              'start = "a" !{ return v !== 42; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
+
+      it("can use functions defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ function f() { return 42; } }',
+              'start = "a" !{ return f() !== 42; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
     });
   });
 
@@ -386,6 +435,24 @@ describe("generated parser", function() {
           expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
         });
       }
+
+      it("can use variables defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ var v = 42 }',
+              'start = "a" { return v; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", 42);
+      });
+
+      it("can use functions defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ function f() { return 42; } }',
+              'start = "a" { return f(); }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", 42);
+      });
 
       it("does not advance position when the expression matches but the action returns |null|", function() {
         var parser = PEG.buildParser(
