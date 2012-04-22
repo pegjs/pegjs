@@ -137,4 +137,20 @@ describe("generated parser", function() {
       });
     });
   });
+
+  describe("any matching", function() {
+    varyAll(function(options) {
+      it("matches correctly", function() {
+        var parser = PEG.buildParser('start = .', options);
+
+        expect(parser).toParse("a", "a");
+      });
+
+      it("advances position on success", function() {
+        var parser = PEG.buildParser('start = . .', options);
+
+        expect(parser).toParse("ab", ["a", "b"]);
+      });
+    });
+  });
 });

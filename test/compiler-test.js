@@ -643,20 +643,6 @@ testWithVaryingTrackLineAndColumn("rule references", function(options) {
   parses(parser, "Python", "Python");
 });
 
-testWithVaryingTrackLineAndColumn("anys", function(options) {
-  var parser = PEG.buildParser('start = .', options);
-  parses(parser, "a", "a");
-  doesNotParse(parser, "");
-  doesNotParse(parser, "ab");
-
-  /*
-   * Test that the parsing position moves forward after successful parsing of
-   * an any.
-   */
-  var posTestParser = PEG.buildParser('start = . .', options);
-  parses(posTestParser, "ab", ["a", "b"]);
-});
-
 testWithVaryingTrackLineAndColumn("classes", function(options) {
   var emptyClassParser = PEG.buildParser('start = []', options);
   doesNotParse(emptyClassParser, "");
