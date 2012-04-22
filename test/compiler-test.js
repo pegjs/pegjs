@@ -442,13 +442,6 @@ testWithVaryingTrackLineAndColumn("zero or more expressions", function(options) 
   parses(parser, "aaa", ["a", "a", "a"]);
 });
 
-testWithVaryingTrackLineAndColumn("one or more expressions", function(options) {
-  var parser = PEG.buildParser('start = "a"+', options);
-  doesNotParse(parser, "");
-  parses(parser, "a", ["a"]);
-  parses(parser, "aaa", ["a", "a", "a"]);
-});
-
 testWithVaryingTrackLineAndColumn("initializer", function(options) {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }',
