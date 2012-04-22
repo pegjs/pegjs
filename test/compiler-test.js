@@ -13,26 +13,6 @@ function testWithVaryingTrackLineAndColumn(name, callback) {
   );
 }
 
-testWithVaryingTrackLineAndColumn("cache", function(options) {
-  var grammar = [
-    '{ var n = 0; }',
-    'start = (a "b") / (a "c") { return n; }',
-    'a     = "a" { n++; }'
-  ].join("\n");
-
-  /* Without cache */
-
-  parses(PEG.buildParser(grammar, options), "ac", 2);
-
-  options.cache = false;
-  parses(PEG.buildParser(grammar, options), "ac", 2);
-
-  /* With cache */
-
-  options.cache = true;
-  parses(PEG.buildParser(grammar, options), "ac", 1);
-});
-
 testWithVaryingTrackLineAndColumn("indempotence", function(options) {
   var parser1 = PEG.buildParser('start = "abcd"', options);
   var parser2 = PEG.buildParser('start = "abcd"', options);

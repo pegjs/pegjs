@@ -104,6 +104,30 @@ describe("generated parser", function() {
     });
   });
 
+  describe("rule matching", function() {
+    varyAll(function(options) {
+      var grammar = [
+            '{ var n = 0; }',
+            'start = (a "b") / (a "c") { return n; }',
+            'a     = "a" { n++; }'
+          ].join("\n");
+
+      if (options.cache) {
+        it("caches rule match results", function() {
+          var parser = PEG.buildParser(grammar, options);
+
+          expect(parser).toParse("ac", 1);
+        });
+      } else {
+        it("does not cache rule match results", function() {
+          var parser = PEG.buildParser(grammar, options);
+
+          expect(parser).toParse("ac", 2);
+        });
+      }
+    });
+  });
+
   describe("choice matching", function() {
     varyAll(function(options) {
       it("matches correctly", function() {
