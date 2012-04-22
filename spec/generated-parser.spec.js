@@ -621,4 +621,117 @@ describe("generated parser", function() {
       });
     });
   });
+
+  /*
+   * Following examples are from Wikipedia, see
+   * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
+   */
+  describe("complex examples", function() {
+    varyAll(function(options) {
+      it("handles arithmetics example correctly", function() {
+        /*
+         * Value   ← [0-9]+ / '(' Expr ')'
+         * Product ← Value (('*' / '/') Value)*
+         * Sum     ← Product (('+' / '-') Product)*
+         * Expr    ← Sum
+         */
+        var parser = PEG.buildParser([
+              'Expr    = Sum',
+              'Sum     = head:Product tail:(("+" / "-") Product)* {',
+              '            var result = head, i;',
+              '            for (i = 0; i < tail.length; i++) {',
+              '              if (tail[i][0] == "+") { result += tail[i][1]; }',
+              '              if (tail[i][0] == "-") { result -= tail[i][1]; }',
+              '            }',
+              '            return result;',
+              '          }',
+              'Product = head:Value tail:(("*" / "/") Value)* {',
+              '            var result = head, i;',
+              '            for (i = 0; i < tail.length; i++) {',
+              '              if (tail[i][0] == "*") { result *= tail[i][1]; }',
+              '              if (tail[i][0] == "/") { result /= tail[i][1]; }',
+              '            }',
+              '            return result;',
+              '          }',
+              'Value   = digits:[0-9]+     { return parseInt(digits.join(""), 10); }',
+              '        / "(" expr:Expr ")" { return expr; }'
+            ].join("\n"), options);
+
+        /* The "value" rule */
+        expect(parser).toParse("0",       0);
+        expect(parser).toParse("123",     123);
+        expect(parser).toParse("(42+43)", 42+43);
+
+        /* The "product" rule */
+        expect(parser).toParse("42",          42);
+        expect(parser).toParse("42*43",       42*43);
+        expect(parser).toParse("42*43*44*45", 42*43*44*45);
+        expect(parser).toParse("42/43",       42/43);
+        expect(parser).toParse("42/43/44/45", 42/43/44/45);
+
+        /* The "sum" rule */
+        expect(parser).toParse("42*43",                   42*43);
+        expect(parser).toParse("42*43+44*45",             42*43+44*45);
+        expect(parser).toParse("42*43+44*45+46*47+48*49", 42*43+44*45+46*47+48*49);
+        expect(parser).toParse("42*43-44*45",             42*43-44*45);
+        expect(parser).toParse("42*43-44*45-46*47-48*49", 42*43-44*45-46*47-48*49);
+
+        /* The "expr" rule */
+        expect(parser).toParse("42+43", 42+43);
+
+        /* Complex test */
+        expect(parser).toParse("(1+2)*(3+4)", (1+2)*(3+4));
+      });
+
+      it("handles non-context-free language correctly", function() {
+        /* The following parsing expression grammar describes the classic
+         * non-context-free language { a^n b^n c^n : n >= 1 }:
+         *
+         * S ← &(A c) a+ B !(a/b/c)
+         * A ← a A? b
+         * B ← b B? c
+         */
+        var parser = PEG.buildParser([
+              'S = &(A "c") a:"a"+ B:B !("a" / "b" / "c") { return a.join("") + B; }',
+              'A = a:"a" A:A? b:"b" { return a + A + b; }',
+              'B = b:"b" B:B? c:"c" { return b + B + c; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("abc",       "abc");
+        expect(parser).toParse("aaabbbccc", "aaabbbccc");
+        expect(parser).toFailToParse("aabbbccc");
+        expect(parser).toFailToParse("aaaabbbccc");
+        expect(parser).toFailToParse("aaabbccc");
+        expect(parser).toFailToParse("aaabbbbccc");
+        expect(parser).toFailToParse("aaabbbcc");
+        expect(parser).toFailToParse("aaabbbcccc");
+      });
+
+      it("handles nested comments example correctly", function() {
+        /*
+         * Begin ← "(*"
+         * End ← "*)"
+         * C ← Begin N* End
+         * N ← C / (!Begin !End Z)
+         * Z ← any single character
+         */
+        var parser = PEG.buildParser([
+              'C     = begin:Begin ns:N* end:End { return begin + ns.join("") + end; }',
+              'N     = C',
+              '      / !Begin !End z:Z { return z; }',
+              'Z     = .',
+              'Begin = "(*"',
+              'End   = "*)"'
+            ].join("\n"), options);
+
+        expect(parser).toParse("(**)",     "(**)");
+        expect(parser).toParse("(*abc*)",  "(*abc*)");
+        expect(parser).toParse("(*(**)*)", "(*(**)*)");
+        expect(parser).toParse(
+          "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)",
+          "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)"
+        );
+      });
+    });
+  });
 });
