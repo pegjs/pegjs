@@ -91,6 +91,65 @@ describe("generated parser", function() {
     });
   });
 
+  describe("semantic not code", function() {
+    varyAll(function(options) {
+      it("causes successful match by returning |false|", function() {
+        var parser = PEG.buildParser('start = !{ return false; }', options);
+
+        expect(parser).toParse("", "");
+      });
+
+      it("causes match failure by returning |true|", function() {
+        var parser = PEG.buildParser('start = !{ return true; }', options);
+
+        expect(parser).toFailToParse();
+      });
+
+      it("can use label variables", function() {
+        var parser = PEG.buildParser(
+              'start = a:"a" !{ return a !== "a"; }',
+              options
+            );
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
+
+      it("can use the |offset| variable to get the current parse position", function() {
+        var parser = PEG.buildParser(
+              'start = "a" !{ return offset !== 1; }',
+              options
+            );
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
+
+      if (options.trackLineAndColumn) {
+        it("can use the |line| and |column| variables to get the current line and column", function() {
+          var parser = PEG.buildParser([
+                '{ var result; }',
+                'start  = line (nl+ line)* { return result; }',
+                'line   = thing (" "+ thing)*',
+                'thing  = digit / mark',
+                'digit  = [0-9]',
+                'mark   = !{ result = [line, column]; return false; } "x"',
+                'nl     = ("\\r" / "\\n" / "\\u2028" / "\\u2029")'
+              ].join("\n"), options);
+
+          expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
+
+          /* Non-Unix newlines */
+          expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
+          expect(parser).toParse("1\r\nx", [2, 1]); // Windows
+          expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+
+          /* Strange newlines */
+          expect(parser).toParse("1\u2028x", [2, 1]); // line separator
+          expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        });
+      }
+    });
+  });
+
   describe("optional matching", function() {
     varyAll(function(options) {
       it("matches correctly", function() {
