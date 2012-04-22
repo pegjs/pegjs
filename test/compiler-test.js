@@ -13,13 +13,6 @@ function testWithVaryingTrackLineAndColumn(name, callback) {
   );
 }
 
-testWithVaryingTrackLineAndColumn("indempotence", function(options) {
-  var parser1 = PEG.buildParser('start = "abcd"', options);
-  var parser2 = PEG.buildParser('start = "abcd"', options);
-
-  strictEqual(parser1.toSource(), parser2.toSource());
-});
-
 testWithVaryingTrackLineAndColumn("error details", function(options) {
   var literalParser = PEG.buildParser('start = "abcd"', options);
   doesNotParseWithDetails(
