@@ -633,16 +633,6 @@ testWithVaryingTrackLineAndColumn("initializer", function(options) {
   parses(functionInSemanticNotParser, "a", ["a", ""]);
 });
 
-testWithVaryingTrackLineAndColumn("rule references", function(options) {
-  var parser = PEG.buildParser([
-    'start   = static / dynamic',
-    'static  = "C" / "C++" / "Java" / "C#"',
-    'dynamic = "Ruby" / "Python" / "JavaScript"'
-  ].join("\n"), options);
-  parses(parser, "Java", "Java");
-  parses(parser, "Python", "Python");
-});
-
 testWithVaryingTrackLineAndColumn("cache", function(options) {
   var grammar = [
     '{ var n = 0; }',

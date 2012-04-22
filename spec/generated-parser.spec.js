@@ -91,6 +91,21 @@ describe("generated parser", function() {
     });
   });
 
+  describe("rule reference matching", function() {
+    varyAll(function(options) {
+      it("follows rule references", function() {
+        var parser = PEG.buildParser([
+              'start   = static / dynamic',
+              'static  = "C" / "C++" / "Java" / "C#"',
+              'dynamic = "Ruby" / "Python" / "JavaScript"'
+            ].join("\n"), options);
+
+        expect(parser).toParse("Java",   "Java");
+        expect(parser).toParse("Python", "Python");
+      });
+    });
+  });
+
   describe("literal matching", function() {
     varyAll(function(options) {
       it("matches empty literal correctly", function() {
