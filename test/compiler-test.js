@@ -187,26 +187,4 @@ testWithVaryingTrackLineAndColumn("error positions", function(options) {
   doesNotParseWithPos(digitsParser, "1\u2029x", 2, 2, 1); // paragraph separator
 });
 
-testWithVaryingTrackLineAndColumn("start rule", function(options) {
-  var parser = PEG.buildParser([
-    'a = .* { return "alpha"; }',
-    'b = .* { return "beta"; }'
-  ].join("\n"), options);
-
-  /* Default start rule = the first one */
-  parses(parser, "whatever", "alpha");
-
-  /* Explicit specification of the start rule */
-  parsesWithStartRule(parser, "whatever", "a", "alpha");
-  parsesWithStartRule(parser, "whatever", "b", "beta");
-
-  /* Invalid rule name */
-  raises(
-    function() { parser.parse("whatever", "c"); },
-    function(e) {
-      return e instanceof Error && e.message === "Invalid rule name: \"c\".";
-    }
-  );
-});
-
 })();

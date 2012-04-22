@@ -91,6 +91,28 @@ describe("generated parser", function() {
     });
   });
 
+  describe("parse", function() {
+    var parser = PEG.buildParser([
+          'a = "x" { return "a"; }',
+          'b = "x" { return "b"; }'
+        ].join("\n"));
+
+    it("uses the fist rule as a start rule when no |startRule| is specified", function() {
+      expect(parser.parse("x")).toBe("a");
+    });
+
+    it("uses the specified rule as a start rule when |startRule| is specified", function() {
+      expect(parser.parse("x", "a")).toBe("a");
+      expect(parser.parse("x", "b")).toBe("b");
+    });
+
+    it("throws exception when the specified start rule does not exist", function() {
+      expect(function() {
+        parser.parse("x", "c");
+      }).toThrow("Invalid rule name: \"c\".");
+    });
+  });
+
   describe("initializer code", function() {
     varyAll(function(options) {
       it("runs before the parsing begins", function() {
