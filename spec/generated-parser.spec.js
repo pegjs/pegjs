@@ -91,6 +91,28 @@ describe("generated parser", function() {
     });
   });
 
+  describe("sequence matching", function() {
+    varyAll(function(options) {
+      it("matches empty sequence correctly", function() {
+        var parser = PEG.buildParser('start = ', options);
+
+        expect(parser).toParse("", []);
+      });
+
+      it("matches non-empty sequence correctly", function() {
+        var parser = PEG.buildParser('start = "a" "b" "c"', options);
+
+        expect(parser).toParse("abc", ["a", "b", "c"]);
+      });
+
+      it("does not advance position on failure", function() {
+        var parser = PEG.buildParser('start = "a" "b" / "a"', options);
+
+        expect(parser).toParse("a", "a");
+      });
+    });
+  });
+
   describe("labeled matching", function() {
     varyAll(function(options) {
       it("delegates to the expression", function() {

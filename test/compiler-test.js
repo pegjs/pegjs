@@ -23,26 +23,6 @@ testWithVaryingTrackLineAndColumn("choices", function(options) {
   doesNotParse(parser, "d");
 });
 
-testWithVaryingTrackLineAndColumn("sequences", function(options) {
-  var emptySequenceParser = PEG.buildParser('start = ', options);
-  parses(emptySequenceParser, "", []);
-  doesNotParse(emptySequenceParser, "abc");
-
-  var nonEmptySequenceParser = PEG.buildParser('start = "a" "b" "c"', options);
-  parses(nonEmptySequenceParser, "abc", ["a", "b", "c"]);
-  doesNotParse(nonEmptySequenceParser, "");
-  doesNotParse(nonEmptySequenceParser, "ab");
-  doesNotParse(nonEmptySequenceParser, "abcd");
-  doesNotParse(nonEmptySequenceParser, "efg");
-
-  /*
-   * Test that the parsing position returns after unsuccessful parsing of a
-   * sequence.
-   */
-  var posTestParser = PEG.buildParser('start = ("a" "b") / "a"', options);
-  parses(posTestParser, "a", "a");
-});
-
 testWithVaryingTrackLineAndColumn("initializer", function(options) {
   var variableInActionParser = PEG.buildParser(
     '{ a = 42; }; start = "a" { return a; }',
