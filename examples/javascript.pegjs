@@ -273,6 +273,7 @@ EscapeSequence
   = CharacterEscapeSequence
   / "0" !DecimalDigit { return "\0"; }
   / HexEscapeSequence
+  / OCTLEscapeSequence
   / UnicodeEscapeSequence
 
 CharacterEscapeSequence
@@ -302,6 +303,11 @@ EscapeCharacter
 HexEscapeSequence
   = "x" h1:HexDigit h2:HexDigit {
       return String.fromCharCode(parseInt("0x" + h1 + h2));
+    }
+
+OCTLEscapeSequence
+  = o1:DecimalDigit o2:DecimalDigit? o3:DecimalDigit? {
+      return String.fromCharCode(parseInt(o1 + (o2 || '') + (o3 || ''), 8));
     }
 
 UnicodeEscapeSequence
