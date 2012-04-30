@@ -75,7 +75,6 @@ QUnit.done(function(details) {
 
 [
   "helpers.js",
-  "compiler/passes/report-missing-rules-test.js",
   "compiler/passes/report-left-recursion-test.js",
   "compiler/passes/remove-proxy-rules-test.js",
   "compiler/passes/compute-var-names-test.js",
