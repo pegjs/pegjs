@@ -74,8 +74,7 @@ QUnit.done(function(details) {
 });
 
 [
-  "helpers.js",
-  "compiler/passes/remove-proxy-rules-test.js"
+  "helpers.js"
 ].forEach(function(file) {
   eval("with (QUnit) {" + fs.readFileSync(__dirname + "/" + file, "utf8") + "}");
 });
