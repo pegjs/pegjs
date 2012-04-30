@@ -173,6 +173,18 @@ describe("generated parser", function() {
           expect(parser).toParse("ac", 2);
         });
       }
+
+      it("does not overwrite expected string on failure when not named", function() {
+        var parser = PEG.buildParser('start = [0-9]', options);
+
+        expect(parser).toFailToParse("a", { expected: ["[0-9]"] });
+      });
+
+      it("overwrites expected string on failure when named", function() {
+        var parser = PEG.buildParser('start "digit" = [0-9]', options);
+
+        expect(parser).toFailToParse("a", { expected: ["digit"] });
+      });
     });
   });
 
@@ -236,6 +248,12 @@ describe("generated parser", function() {
 
         expect(parser).toParse("a", ["", "a"]);
       });
+
+      it("does not influence expected strings on failure", function() {
+        var parser = PEG.buildParser('start = &"a"', options);
+
+        expect(parser).toFailToParse("b", { expected: [] });
+      });
     });
   });
 
@@ -252,6 +270,12 @@ describe("generated parser", function() {
         var parser = PEG.buildParser('start = !"a" / "a"', options);
 
         expect(parser).toParse("a", "a");
+      });
+
+      it("does not influence expected strings on failure", function() {
+        var parser = PEG.buildParser('start = !"a"', options);
+
+        expect(parser).toFailToParse("a", { expected: [] });
       });
     });
   });
@@ -596,6 +620,12 @@ describe("generated parser", function() {
 
         expect(parser).toParse("ab", ["a", "b"]);
       });
+
+      it("sets expected string correctly on failure", function() {
+        var parser = PEG.buildParser('start = "a"', options);
+
+        expect(parser).toFailToParse("b", { expected: ['"a"'] });
+      });
     });
   });
 
@@ -611,6 +641,12 @@ describe("generated parser", function() {
         var parser = PEG.buildParser('start = . .', options);
 
         expect(parser).toParse("ab", ["a", "b"]);
+      });
+
+      it("sets expected string correctly on failure", function() {
+        var parser = PEG.buildParser('start = .', options);
+
+        expect(parser).toFailToParse("", { expected: ['any character'] });
       });
     });
   });
@@ -667,11 +703,117 @@ describe("generated parser", function() {
 
         expect(parser).toParse("ab", ["a", "b"]);
       });
+
+      it("sets expected string correctly on failure", function() {
+        var parser = PEG.buildParser('start = [a]', options);
+
+        expect(parser).toFailToParse("b", { expected: ["[a]"] });
+      });
     });
   });
 
   describe("error reporting", function() {
     varyAll(function(options) {
+      describe("behavior", function() {
+        it("reports only the rightmost error", function() {
+          var parser = PEG.buildParser('start = "a" "b" / "a" "c" "d"', options);
+
+          expect(parser).toFailToParse("ace", { offset: 2, expected: ['"d"'] });
+        });
+      });
+
+      describe("expected strings reporting", function() {
+        it("reports expected strings correctly with no alternative", function() {
+          var parser = PEG.buildParser('start = ', options);
+
+          expect(parser).toFailToParse("a", { expected: [] });
+        });
+
+        it("reports expected strings correctly with one alternative", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("b", { expected: ['"a"'] });
+        });
+
+        it("reports expected strings correctly with multiple alternatives", function() {
+          var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
+
+          expect(parser).toFailToParse("d", {
+            expected: ['"a"', '"b"', '"c"']
+          });
+        });
+
+        it("removes duplicates from expected strings", function() {
+          var parser = PEG.buildParser('start = "a" / "a"', options);
+
+          expect(parser).toFailToParse("b", { expected: ['"a"'] });
+        });
+
+        it("sorts expected strings", function() {
+          var parser = PEG.buildParser('start = "c" / "b" / "a"', options);
+
+          expect(parser).toFailToParse("d", {
+            expected: ['"a"', '"b"', '"c"']
+          });
+        });
+      });
+
+      describe("found string reporting", function() {
+        it("reports found string correctly at the end of input", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("", { found: null });
+        });
+
+        it("reports found string correctly in the middle of input", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("b", { found: "b" });
+        });
+      });
+
+      describe("message building", function() {
+        it("builds message correctly with no alternative", function() {
+          var parser = PEG.buildParser('start = ', options);
+
+          expect(parser).toFailToParse("a", {
+            message: 'Expected end of input but "a" found.'
+          });
+        });
+
+        it("builds message correctly with one alternative", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("b", {
+            message: 'Expected "a" but "b" found.'
+          });
+        });
+
+        it("builds message correctly with multiple alternatives", function() {
+          var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
+
+          expect(parser).toFailToParse("d", {
+            message: 'Expected "a", "b" or "c" but "d" found.'
+          });
+        });
+
+        it("builds message correctly at the end of input", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("", {
+            message: 'Expected "a" but end of input found.'
+          });
+        });
+
+        it("builds message correctly in the middle of input", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse("b", {
+            message: 'Expected "a" but "b" found.'
+          });
+        });
+      });
+
       describe("position reporting", function() {
         it("reports position correctly with invalid input", function() {
           var parser = PEG.buildParser('start = "a"', options);
