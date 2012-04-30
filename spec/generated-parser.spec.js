@@ -139,8 +139,8 @@ describe("generated parser", function() {
     });
   });
 
-  describe("initializer code", function() {
-    varyAll(function(options) {
+  varyAll(function(options) {
+    describe("initializer code", function() {
       it("runs before the parsing begins", function() {
         var parser = PEG.buildParser([
               '{ var result = 42; }',
@@ -150,10 +150,8 @@ describe("generated parser", function() {
         expect(parser).toParse("a", 42);
       });
     });
-  });
 
-  describe("rule matching", function() {
-    varyAll(function(options) {
+    describe("rule matching", function() {
       var grammar = [
             '{ var n = 0; }',
             'start = (a "b") / (a "c") { return n; }',
@@ -186,10 +184,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("a", { expected: ["digit"] });
       });
     });
-  });
 
-  describe("choice matching", function() {
-    varyAll(function(options) {
+    describe("choice matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
 
@@ -199,10 +195,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("d");
       });
     });
-  });
 
-  describe("sequence matching", function() {
-    varyAll(function(options) {
+    describe("sequence matching", function() {
       it("matches empty sequence correctly", function() {
         var parser = PEG.buildParser('start = ', options);
 
@@ -221,10 +215,8 @@ describe("generated parser", function() {
         expect(parser).toParse("a", "a");
       });
     });
-  });
 
-  describe("labeled matching", function() {
-    varyAll(function(options) {
+    describe("labeled matching", function() {
       it("delegates to the expression", function() {
         var parser = PEG.buildParser('start = a:"a"', options);
 
@@ -232,10 +224,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("b");
       });
     });
-  });
 
-  describe("simple and matching", function() {
-    varyAll(function(options) {
+    describe("simple and matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = &"a" "a"', options);
 
@@ -255,10 +245,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("b", { expected: [] });
       });
     });
-  });
 
-  describe("simple not matching", function() {
-    varyAll(function(options) {
+    describe("simple not matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = !"a" "b"', options);
 
@@ -278,10 +266,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("a", { expected: [] });
       });
     });
-  });
 
-  describe("semantic and code", function() {
-    varyAll(function(options) {
+    describe("semantic and code", function() {
       it("causes successful match by returning |true|", function() {
         var parser = PEG.buildParser('start = &{ return true; }', options);
 
@@ -355,10 +341,8 @@ describe("generated parser", function() {
         expect(parser).toParse("a", ["a", ""]);
       });
     });
-  });
 
-  describe("semantic not code", function() {
-    varyAll(function(options) {
+    describe("semantic not code", function() {
       it("causes successful match by returning |false|", function() {
         var parser = PEG.buildParser('start = !{ return false; }', options);
 
@@ -432,10 +416,8 @@ describe("generated parser", function() {
         expect(parser).toParse("a", ["a", ""]);
       });
     });
-  });
 
-  describe("optional matching", function() {
-    varyAll(function(options) {
+    describe("optional matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = "a"?', options);
 
@@ -443,10 +425,8 @@ describe("generated parser", function() {
         expect(parser).toParse("a", "a");
       });
     });
-  });
 
-  describe("zero or more matching", function() {
-    varyAll(function(options) {
+    describe("zero or more matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = "a"*', options);
 
@@ -455,10 +435,8 @@ describe("generated parser", function() {
         expect(parser).toParse("aaa", ["a", "a", "a"]);
       });
     });
-  });
 
-  describe("one or more matching", function() {
-    varyAll(function(options) {
+    describe("one or more matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = "a"+', options);
 
@@ -467,10 +445,8 @@ describe("generated parser", function() {
         expect(parser).toParse("aaa", ["a", "a", "a"]);
       });
     });
-  });
 
-  describe("action code", function() {
-    varyAll(function(options) {
+    describe("action code", function() {
       it("tranforms the expression result by returnung a non-|null| value", function() {
         var parser = PEG.buildParser('start = "a" { return 42; }', options);
 
@@ -559,10 +535,8 @@ describe("generated parser", function() {
         expect(parser).toParse("a", "a");
       });
     });
-  });
 
-  describe("rule reference matching", function() {
-    varyAll(function(options) {
+    describe("rule reference matching", function() {
       it("follows rule references", function() {
         var parser = PEG.buildParser([
               'start   = static / dynamic',
@@ -574,10 +548,8 @@ describe("generated parser", function() {
         expect(parser).toParse("Python", "Python");
       });
     });
-  });
 
-  describe("literal matching", function() {
-    varyAll(function(options) {
+    describe("literal matching", function() {
       it("matches empty literal correctly", function() {
         var parser = PEG.buildParser('start = ""', options);
 
@@ -627,10 +599,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("b", { expected: ['"a"'] });
       });
     });
-  });
 
-  describe("any matching", function() {
-    varyAll(function(options) {
+    describe("any matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = .', options);
 
@@ -649,10 +619,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("", { expected: ['any character'] });
       });
     });
-  });
 
-  describe("class matching", function() {
-    varyAll(function(options) {
+    describe("class matching", function() {
       it("matches empty class correctly", function() {
         var parser = PEG.buildParser('start = []', options);
 
@@ -710,10 +678,8 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("b", { expected: ["[a]"] });
       });
     });
-  });
 
-  describe("error reporting", function() {
-    varyAll(function(options) {
+    describe("error reporting", function() {
       describe("behavior", function() {
         it("reports only the rightmost error", function() {
           var parser = PEG.buildParser('start = "a" "b" / "a" "c" "d"', options);
@@ -872,14 +838,12 @@ describe("generated parser", function() {
         });
       });
     });
-  });
 
-  /*
-   * Following examples are from Wikipedia, see
-   * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
-   */
-  describe("complex examples", function() {
-    varyAll(function(options) {
+    /*
+     * Following examples are from Wikipedia, see
+     * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
+     */
+    describe("complex examples", function() {
       it("handles arithmetics example correctly", function() {
         /*
          * Value   ← [0-9]+ / '(' Expr ')'
