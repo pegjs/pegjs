@@ -2,7 +2,6 @@
 
 SRC_DIR       = src
 BIN_DIR       = bin
-TEST_DIR      = test
 SPEC_DIR      = spec
 BENCHMARK_DIR = benchmark
 EXAMPLES_DIR  = examples
@@ -36,7 +35,6 @@ JSHINT        = jshint
 UGLIFYJS      = uglifyjs
 JASMINE_NODE  = jasmine-node
 PEGJS         = $(BIN_DIR)/pegjs
-TEST_RUN      = $(TEST_DIR)/run
 BENCHMARK_RUN = $(BENCHMARK_DIR)/run
 
 # ===== Variables =====
@@ -125,10 +123,6 @@ dist: build
 distclean:
 	rm -rf $(DIST_DIR)
 
-# Run the test suite
-test: build
-	$(TEST_RUN)
-
 # Run the spec suite
 spec: build
 	$(JASMINE_NODE) --verbose $(SPEC_DIR)
@@ -141,12 +135,10 @@ benchmark: build
 hint: build
 	$(JSHINT)                                                                \
 	  `find $(SRC_DIR) -name '*.js'`                                         \
-	  `find $(TEST_DIR) -name '*.js' -and -not -path '$(TEST_DIR)/vendor/*'` \
-	  $(TEST_RUN)                                                            \
 	  `find $(SPEC_DIR) -name '*.js' -and -not -path '$(SPEC_DIR)/vendor/*'` \
 	  $(BENCHMARK_DIR)/*.js                                                  \
 	  $(BENCHMARK_RUN)                                                       \
 	  $(PEGJS)
 
-.PHONY: test spec benchmark hint parser build clean dist distclean
-.SILENT: test spec benchmark hint parser build clean dist distclean
+.PHONY: spec benchmark hint parser build clean dist distclean
+.SILENT: spec benchmark hint parser build clean dist distclean
