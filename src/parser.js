@@ -835,13 +835,13 @@ PEG.parser = (function(){
           result1 = [];
           result2 = parse_braced();
           if (result2 === null) {
-            result2 = parse_nonBraceCharacter();
+            result2 = parse_nonBraceCharacters();
           }
           while (result2 !== null) {
             result1.push(result2);
             result2 = parse_braced();
             if (result2 === null) {
-              result2 = parse_nonBraceCharacter();
+              result2 = parse_nonBraceCharacters();
             }
           }
           if (result1 !== null) {

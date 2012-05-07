@@ -321,10 +321,10 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical braced is "{ code }". */
   it("parses braced", function() {
-    expect('start = "abcd" {}'   ).toParseAs(actionGrammar(""));
-    expect('start = "abcd" {a}'  ).toParseAs(actionGrammar("a"));
-    expect('start = "abcd" {{a}}').toParseAs(actionGrammar("{a}"));
-    expect('start = "abcd" {aaa}').toParseAs(actionGrammar("aaa"));
+    expect('start = "abcd" {}'         ).toParseAs(actionGrammar(""));
+    expect('start = "abcd" {{a}}'      ).toParseAs(actionGrammar("{a}"));
+    expect('start = "abcd" {abcd}'     ).toParseAs(actionGrammar("abcd"));
+    expect('start = "abcd" {{a}{b}{c}}').toParseAs(actionGrammar("{a}{b}{c}"));
   });
 
   /* Trivial character rules are not tested. */

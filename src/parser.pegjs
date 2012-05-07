@@ -144,7 +144,7 @@ action "action"
   = braced:braced __ { return braced.substr(1, braced.length - 2); }
 
 braced
-  = "{" parts:(braced / nonBraceCharacter)* "}" {
+  = "{" parts:(braced / nonBraceCharacters)* "}" {
       return "{" + parts.join("") + "}";
     }
 
