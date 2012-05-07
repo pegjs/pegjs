@@ -242,11 +242,11 @@ class "character class"
 
       return {
         type:       "class",
-        inverted:   inverted === "^",
-        ignoreCase: flags === "i",
         parts:      partsConverted,
         // FIXME: Get the raw text from the input directly.
-        rawText:    rawText
+        rawText:    rawText,
+        inverted:   inverted === "^",
+        ignoreCase: flags === "i"
       };
     }
 

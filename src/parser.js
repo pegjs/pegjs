@@ -1949,11 +1949,11 @@ PEG.parser = (function(){
         
               return {
                 type:       "class",
-                inverted:   inverted === "^",
-                ignoreCase: flags === "i",
                 parts:      partsConverted,
                 // FIXME: Get the raw text from the input directly.
-                rawText:    rawText
+                rawText:    rawText,
+                inverted:   inverted === "^",
+                ignoreCase: flags === "i"
               };
             })(pos0, result0[1], result0[2], result0[4]);
         }

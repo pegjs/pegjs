@@ -69,10 +69,10 @@ describe("PEG.js grammar parser", function() {
 
     return oneRuleGrammar({
       type:       "class",
-      inverted:   inverted,
-      ignoreCase: ignoreCase,
       parts:      parts,
-      rawText:    rawText
+      rawText:    rawText,
+      inverted:   inverted,
+      ignoreCase: ignoreCase
     });
   }
 
