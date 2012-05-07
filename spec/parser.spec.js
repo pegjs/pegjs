@@ -327,6 +327,20 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd" {{a}{b}{c}}').toParseAs(actionGrammar("{a}{b}{c}"));
   });
 
+  /* Canonical nonBraceCharacters is "abcd". */
+  it("parses nonBraceCharacters", function() {
+    expect('start = "abcd" {a}'  ).toParseAs(actionGrammar("a"));
+    expect('start = "abcd" {abc}').toParseAs(actionGrammar("abc"));
+  });
+
+  /* Canonical nonBraceCharacter is "a". */
+  it("parses nonBraceCharacter", function() {
+    expect('start = "abcd" {a}').toParseAs(actionGrammar("a"));
+
+    expect('start = "abcd" {{}').toFailToParse();
+    expect('start = "abcd" {}}').toFailToParse();
+  });
+
   /* Trivial character rules are not tested. */
 
   /* Canonical identifier is "a". */
