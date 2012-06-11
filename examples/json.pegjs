@@ -1,6 +1,10 @@
+
 /* JSON parser based on the grammar described at http://json.org/. */
 
 /* ===== Syntactical Elements ===== */
+{  
+  null_ = new Object();	
+}
 
 start
   = _ object:object { return object; }
@@ -12,9 +16,9 @@ object
 members
   = head:pair tail:("," _ pair)* {
       var result = {};
-      result[head[0]] = head[1];
+      result[head[0]] = (head[1] === null_ ? null : head[1]);
       for (var i = 0; i < tail.length; i++) {
-        result[tail[i][2][0]] = tail[i][2][1];
+        result[tail[i][2][0]] = (tail[i][2][1] === null_ ? null : tail[i][2][1]);
       }
       return result;
     }
@@ -28,9 +32,9 @@ array
 
 elements
   = head:value tail:("," _ value)* {
-      var result = [head];
+      var result = [head === null_ ? null : head];
       for (var i = 0; i < tail.length; i++) {
-        result.push(tail[i][2]);
+        result.push(tail[i][2] === null_ ? null : tail[i][2]);
       }
       return result;
     }
@@ -42,8 +46,7 @@ value
   / array
   / "true" _  { return true;   }
   / "false" _ { return false;  }
-  // FIXME: We can't return null here because that would mean parse failure.
-  / "null" _  { return "null"; }
+  / "null" _  { return null_; }
 
 /* ===== Lexical Elements ===== */
 
