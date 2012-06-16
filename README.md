@@ -178,7 +178,7 @@ Try to match the expression. If the match succeeds, just return an empty string 
 
 #### ! *expression*
 
-Try to match the expression and. If the match does not succeed, just return an empty string and do not advance the parser position, otherwise consider the match failed.
+Try to match the expression. If the match does not succeed, just return an empty string and do not advance the parser position, otherwise consider the match failed.
 
 #### & { *predicate* }
 
