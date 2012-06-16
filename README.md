@@ -202,7 +202,7 @@ Note that curly braces in the predicate code must be balanced.
 
 #### *label* : *expression*
 
-Match the expression and remember its match result under given lablel. The label must be a JavaScript identifier.
+Match the expression and remember its match result under given label. The label must be a JavaScript identifier.
 
 Labeled expressions are useful together with actions, where saved match results can be accessed by action's JavaScript code.
 
