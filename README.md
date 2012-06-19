@@ -186,7 +186,7 @@ The predicate is a piece of JavaScript code that is executed as if it was inside
 
 The code inside the predicate can access all variables and functions defined in the initializer at the beginning of the grammar.
 
-The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
+The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string (available as `input`). If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
 
 Note that curly braces in the predicate code must be balanced.
 
@@ -196,7 +196,7 @@ The predicate is a piece of JavaScript code that is executed as if it was inside
 
 The code inside the predicate can access all variables and functions defined in the initializer at the beginning of the grammar.
 
-The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
+The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string (available as `input`). If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
 
 Note that curly braces in the predicate code must be balanced.
 
