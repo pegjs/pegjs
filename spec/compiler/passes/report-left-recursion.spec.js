@@ -42,6 +42,10 @@ describe("compiler pass |reportLeftRecursion|", function() {
     expect(pass).toReportLeftRecursionIn('start = start');
   });
 
+  it("reports left recursion inside a named", function() {
+    expect(pass).toReportLeftRecursionIn('start "start" = start');
+  });
+
   it("reports left recursion inside a choice", function() {
     expect(pass).toReportLeftRecursionIn('start = start / "a" / "b"');
     expect(pass).toReportLeftRecursionIn('start = "a" / "b" / start');

@@ -11,6 +11,7 @@ PEG.compiler.passes.reportMissingRules = function(ast) {
   var check = buildNodeVisitor({
     grammar:      checkSubnodes("rules"),
     rule:         checkExpression,
+    named:        checkExpression,
     choice:       checkSubnodes("alternatives"),
     sequence:     checkSubnodes("elements"),
     labeled:      checkExpression,

@@ -565,16 +565,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    var #{node.posVars.join(", ")};',
             '  #end',
             '  ',
-            '  #if node.displayName !== null',
-            '    reportFailures++;',
-            '  #end',
             '  #block emit(node.expression)',
-            '  #if node.displayName !== null',
-            '    reportFailures--;',
-            '    if (reportFailures === 0 && #{node.resultVar} === null) {',
-            '      matchFailed(#{string(node.displayName)});',
-            '    }',
-            '  #end',
             '  #if options.cache',
             '    ',
             '    cache[cacheKey] = {',
@@ -583,6 +574,14 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    };',
             '  #end',
             '  return #{node.resultVar};',
+            '}'
+          ],
+          named: [
+            'reportFailures++;',
+            '#block emit(node.expression)',
+            'reportFailures--;',
+            'if (reportFailures === 0 && #{node.resultVar} === null) {',
+            '  matchFailed(#{string(node.name)});',
             '}'
           ],
           choice: [
@@ -814,6 +813,8 @@ PEG.compiler.passes.generateCode = function(ast, options) {
      * properties of the current node's subnodes. It can't use any other
      * variables.
      */
+
+    named: emitSimple("named"),
 
     choice: function(node) {
       var code, nextAlternativesCode;

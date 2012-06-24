@@ -23,6 +23,13 @@ describe("compiler pass |removeProxyRules|", function() {
     });
   });
 
+  it("removes proxy rule from a named", function() {
+    expect(pass).toChangeAST(
+      proxyGrammar('start "start" = proxy'),
+      simpleDetails
+    );
+  });
+
   it("removes proxy rule from a choice", function() {
     expect(pass).toChangeAST(
       proxyGrammar('start = proxy / "a" / "b"'),

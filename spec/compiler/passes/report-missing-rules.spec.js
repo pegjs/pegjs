@@ -42,6 +42,10 @@ describe("compiler pass |reportMissingRules|", function() {
     expect(pass).toReportMissingRuleIn('start = missing');
   });
 
+  it("reports missing rule referenced from a named", function() {
+    expect(pass).toReportMissingRuleIn('start "start" = missing');
+  });
+
   it("reports missing rule referenced from a choice", function() {
     expect(pass).toReportMissingRuleIn('start = missing / "a" / "b"');
     expect(pass).toReportMissingRuleIn('start = "a" / "b" / missing');

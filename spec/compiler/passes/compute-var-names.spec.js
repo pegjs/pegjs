@@ -22,6 +22,17 @@ describe("compiler pass |computeVarNames|", function() {
 
   function ruleDetails(details) { return { rules: [details] }; }
 
+  it("computes variable names for a named", function() {
+    expect(pass).toChangeAST('start "start" = &"a"', ruleDetails({
+      resultVars: ["result0"],
+      posVars:    ["pos0"],
+      expression: {
+        resultVar:  "result0",
+        expression: { resultVar: "result0", posVar: "pos0" }
+      }
+    }));
+  });
+
   it("computes variable names for a choice", function() {
     expect(pass).toChangeAST('start = &"a" / &"b" / &"c"', ruleDetails({
       resultVars: ["result0"],

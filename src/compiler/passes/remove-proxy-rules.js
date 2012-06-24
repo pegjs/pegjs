@@ -24,6 +24,7 @@ PEG.compiler.passes.removeProxyRules = function(ast) {
     var replace = buildNodeVisitor({
       grammar:      replaceInSubnodes("rules"),
       rule:         replaceInExpression,
+      named:        replaceInExpression,
       choice:       replaceInSubnodes("alternatives"),
       sequence:     replaceInSubnodes("elements"),
       labeled:      replaceInExpression,

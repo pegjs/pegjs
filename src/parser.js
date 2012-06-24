@@ -277,8 +277,13 @@ PEG.parser = (function(){
               return {
                 type:        "rule",
                 name:        name,
-                displayName: displayName !== "" ? displayName : null,
-                expression:  expression
+                expression:  displayName !== ""
+                  ? {
+                      type:       "named",
+                      name:       displayName,
+                      expression: expression
+                    }
+                  : expression
               };
             })(pos0, result0[0], result0[1], result0[3]);
         }

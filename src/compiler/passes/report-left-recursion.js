@@ -22,6 +22,7 @@ PEG.compiler.passes.reportLeftRecursion = function(ast) {
         check(node.expression, appliedRules.concat(node.name));
       },
 
+    named:       checkExpression,
     choice:      checkSubnodes("alternatives"),
 
     sequence:

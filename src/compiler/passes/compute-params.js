@@ -42,6 +42,10 @@ PEG.compiler.passes.computeParams = function(ast) {
       },
 
     rule:         computeForScopedExpression,
+    named:
+      function(node) {
+        compute(node.expression);
+      },
 
     choice:
       function(node) {

@@ -41,6 +41,13 @@ describe("compiler pass |computeParams|", function() {
   });
 
   describe("recursive walk", function() {
+    it("computes params for a named", function() {
+      expect(pass).toChangeAST(
+        'start "start" = a:"a" { }',
+        innerExpressionDetails({ params: { a: "result0" } })
+      );
+    });
+
     it("computes params for a choice", function() {
       expect(pass).toChangeAST(
         'start = a:"a" { } / "b" / "c"',

@@ -64,6 +64,8 @@ PEG.compiler.passes.computeVarNames = function(ast) {
         node.posVars    = map(range(depth.pos),        posVar);
       },
 
+    named:        computeFromExpression({ result: 0, pos: 0 }),
+
     choice:
       function(node, index) {
         var depths = map(node.alternatives, function(alternative) {

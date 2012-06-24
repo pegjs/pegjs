@@ -171,17 +171,18 @@ describe("generated parser", function() {
           expect(parser).toParse("ac", 2);
         });
       }
+    });
 
-      it("does not overwrite expected string on failure when not named", function() {
-        var parser = PEG.buildParser('start = [0-9]', options);
+    describe("named matching", function() {
+      var parser = PEG.buildParser('start "start" = "a"');
 
-        expect(parser).toFailToParse("a", { expected: ["[0-9]"] });
+      it("delegates to the expression", function() {
+        expect(parser).toParse("a", "a");
+        expect(parser).toFailToParse("b");
       });
 
-      it("overwrites expected string on failure when named", function() {
-        var parser = PEG.buildParser('start "digit" = [0-9]', options);
-
-        expect(parser).toFailToParse("a", { expected: ["digit"] });
+      it("overwrites expected string on failure", function() {
+        expect(parser).toFailToParse("b", { expected: ["start"] });
       });
     });
 

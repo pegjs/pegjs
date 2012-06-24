@@ -23,18 +23,16 @@ describe("PEG.js grammar parser", function() {
       };
 
   function oneRuleGrammar(expression) {
-    var initializer = arguments.length > 1 ? arguments[1] : null,
-        displayName = arguments.length > 2 ? arguments[2] : null;
+    var initializer = arguments.length > 1 ? arguments[1] : null;
 
     return {
       type:        "grammar",
       initializer: initializer,
       rules:       [
         {
-          type:        "rule",
-          name:        "start",
-          displayName: displayName,
-          expression:  expression
+          type:       "rule",
+          name:       "start",
+          expression: expression
         }
       ],
       startRule:   "start"
@@ -159,9 +157,9 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
   it("parses grammar", function() {
-    var ruleA = { type: "rule", name: "a", displayName: null, expression: literalAbcd },
-        ruleB = { type: "rule", name: "b", displayName: null, expression: literalEfgh },
-        ruleC = { type: "rule", name: "c", displayName: null, expression: literalIjkl };
+    var ruleA = { type: "rule", name: "a", expression: literalAbcd },
+        ruleB = { type: "rule", name: "b", expression: literalEfgh },
+        ruleC = { type: "rule", name: "c", expression: literalIjkl };
 
     expect('a = "abcd"').toParseAs({
       type:        "grammar",
@@ -200,7 +198,11 @@ describe("PEG.js grammar parser", function() {
       oneRuleGrammar(choiceOfLiterals)
     );
     expect('start "start rule" = "abcd" / "efgh" / "ijkl"').toParseAs(
-      oneRuleGrammar(choiceOfLiterals, null, "start rule")
+      oneRuleGrammar({
+        type:       "named",
+        name:       "start rule",
+        expression: choiceOfLiterals
+      })
     );
     expect('start = "abcd" / "efgh" / "ijkl";').toParseAs(
       oneRuleGrammar(choiceOfLiterals)
@@ -369,7 +371,11 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical string is "\"abcd\"". */
   it("parses string", function() {
-    var grammar = oneRuleGrammar(literalAbcd, null, "abcd");
+    var grammar = oneRuleGrammar({
+      type:       "named",
+      name:       "abcd",
+      expression: literalAbcd
+    });
 
     expect('start "abcd" = "abcd"'  ).toParseAs(grammar);
     expect('start \'abcd\' = "abcd"').toParseAs(grammar);

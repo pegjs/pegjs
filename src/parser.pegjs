@@ -21,8 +21,13 @@ rule
       return {
         type:        "rule",
         name:        name,
-        displayName: displayName !== "" ? displayName : null,
-        expression:  expression
+        expression:  displayName !== ""
+          ? {
+              type:       "named",
+              name:       displayName,
+              expression: expression
+            }
+          : expression
       };
     }
 
