@@ -97,8 +97,8 @@ PEG.compiler.passes.computeParams = function(ast) {
 
     rule_ref:     nop,
     literal:      nop,
-    any:          nop,
-    "class":      nop
+    "class":      nop,
+    any:          nop
   });
 
   compute(ast);

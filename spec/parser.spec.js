@@ -309,8 +309,8 @@ describe("PEG.js grammar parser", function() {
   it("parses primary", function() {
     expect('start = a'       ).toParseAs(ruleRefGrammar("a"));
     expect('start = "abcd"'  ).toParseAs(literalGrammar("abcd"));
-    expect('start = .'       ).toParseAs(oneRuleGrammar({ type: "any" }));
     expect('start = [a-d]'   ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
+    expect('start = .'       ).toParseAs(oneRuleGrammar({ type: "any" }));
     expect('start = ("abcd")').toParseAs(literalGrammar("abcd"));
   });
 

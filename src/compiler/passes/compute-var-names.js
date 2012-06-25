@@ -119,8 +119,8 @@ PEG.compiler.passes.computeVarNames = function(ast) {
     action:       computeFromExpression({ result: 0, pos: 1 }),
     rule_ref:     computeLeaf,
     literal:      computeLeaf,
-    any:          computeLeaf,
-    "class":      computeLeaf
+    "class":      computeLeaf,
+    any:          computeLeaf
   });
 
   compute(ast, { result: 0, pos: 0 });

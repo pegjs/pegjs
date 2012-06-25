@@ -601,26 +601,6 @@ describe("generated parser", function() {
       });
     });
 
-    describe("any matching", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = .', options);
-
-        expect(parser).toParse("a", "a");
-      });
-
-      it("advances position on success", function() {
-        var parser = PEG.buildParser('start = . .', options);
-
-        expect(parser).toParse("ab", ["a", "b"]);
-      });
-
-      it("sets expected string correctly on failure", function() {
-        var parser = PEG.buildParser('start = .', options);
-
-        expect(parser).toFailToParse("", { expected: ['any character'] });
-      });
-    });
-
     describe("class matching", function() {
       it("matches empty class correctly", function() {
         var parser = PEG.buildParser('start = []', options);
@@ -677,6 +657,26 @@ describe("generated parser", function() {
         var parser = PEG.buildParser('start = [a]', options);
 
         expect(parser).toFailToParse("b", { expected: ["[a]"] });
+      });
+    });
+
+    describe("any matching", function() {
+      it("matches correctly", function() {
+        var parser = PEG.buildParser('start = .', options);
+
+        expect(parser).toParse("a", "a");
+      });
+
+      it("advances position on success", function() {
+        var parser = PEG.buildParser('start = . .', options);
+
+        expect(parser).toParse("ab", ["a", "b"]);
+      });
+
+      it("sets expected string correctly on failure", function() {
+        var parser = PEG.buildParser('start = .', options);
+
+        expect(parser).toFailToParse("", { expected: ['any character'] });
       });
     });
 

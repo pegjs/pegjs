@@ -45,8 +45,8 @@ PEG.compiler.passes.removeProxyRules = function(ast) {
         },
 
       literal:      nop,
-      any:          nop,
-      "class":      nop
+      "class":      nop,
+      any:          nop
     });
 
     replace(ast, from, to);

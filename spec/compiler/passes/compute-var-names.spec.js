@@ -211,16 +211,16 @@ describe("compiler pass |computeVarNames|", function() {
     }));
   });
 
-  it("computes variable names for an any", function() {
-    expect(pass).toChangeAST('start = .', ruleDetails({
+  it("computes variable names for a class", function() {
+    expect(pass).toChangeAST('start = [a-z]', ruleDetails({
       resultVars: ["result0"],
       posVars:    [],
       expression: leafDetails
     }));
   });
 
-  it("computes variable names for a class", function() {
-    expect(pass).toChangeAST('start = [a-z]', ruleDetails({
+  it("computes variable names for an any", function() {
+    expect(pass).toChangeAST('start = .', ruleDetails({
       resultVars: ["result0"],
       posVars:    [],
       expression: leafDetails

@@ -53,8 +53,8 @@ PEG.compiler.passes.reportLeftRecursion = function(ast) {
       },
 
     literal:      nop,
-    any:          nop,
-    "class":      nop
+    "class":      nop,
+    any:          nop
   });
 
   check(ast, []);

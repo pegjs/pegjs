@@ -139,8 +139,8 @@ primary
       };
     }
   / literal
-  / dot { return { type: "any" }; }
   / class
+  / dot { return { type: "any" }; }
   / lparen expression:expression rparen { return expression; }
 
 /* "Lexical" elements */

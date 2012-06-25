@@ -711,17 +711,6 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '  }',
             '#end'
           ],
-          any: [
-            'if (input.length > #{posOffset("pos")}) {',
-            '  #{node.resultVar} = input.charAt(#{posOffset("pos")});',
-            '  #{posAdvance(1)};',
-            '} else {',
-            '  #{node.resultVar} = null;',
-            '  if (reportFailures === 0) {',
-            '    matchFailed("any character");',
-            '  }',
-            '}'
-          ],
           "class": [
             'if (#{regexp}.test(input.charAt(#{posOffset("pos")}))) {',
             '  #{node.resultVar} = input.charAt(#{posOffset("pos")});',
@@ -730,6 +719,17 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '  #{node.resultVar} = null;',
             '  if (reportFailures === 0) {',
             '    matchFailed(#{string(node.rawText)});',
+            '  }',
+            '}'
+          ],
+          any: [
+            'if (input.length > #{posOffset("pos")}) {',
+            '  #{node.resultVar} = input.charAt(#{posOffset("pos")});',
+            '  #{posAdvance(1)};',
+            '} else {',
+            '  #{node.resultVar} = null;',
+            '  if (reportFailures === 0) {',
+            '    matchFailed("any character");',
             '  }',
             '}'
           ]
@@ -858,7 +858,6 @@ PEG.compiler.passes.generateCode = function(ast, options) {
     action:       emitSimple("action"),
     rule_ref:     emitSimple("rule_ref"),
     literal:      emitSimple("literal"),
-    any:          emitSimple("any"),
 
     "class": function(node) {
       var regexp;
@@ -883,7 +882,9 @@ PEG.compiler.passes.generateCode = function(ast, options) {
       }
 
       return fill("class", { node: node, regexp: regexp });
-    }
+    },
+
+    any: emitSimple("any")
   });
 
   ast.code = emit(ast);

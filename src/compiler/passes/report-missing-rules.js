@@ -34,8 +34,8 @@ PEG.compiler.passes.reportMissingRules = function(ast) {
       },
 
     literal:      nop,
-    any:          nop,
-    "class":      nop
+    "class":      nop,
+    any:          nop
   });
 
   check(ast);

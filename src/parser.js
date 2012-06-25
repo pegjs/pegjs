@@ -743,16 +743,16 @@ PEG.parser = (function(){
         if (result0 === null) {
           result0 = parse_literal();
           if (result0 === null) {
-            pos0 = pos;
-            result0 = parse_dot();
-            if (result0 !== null) {
-              result0 = (function(offset) { return { type: "any" }; })(pos0);
-            }
+            result0 = parse_class();
             if (result0 === null) {
-              pos = pos0;
-            }
-            if (result0 === null) {
-              result0 = parse_class();
+              pos0 = pos;
+              result0 = parse_dot();
+              if (result0 !== null) {
+                result0 = (function(offset) { return { type: "any" }; })(pos0);
+              }
+              if (result0 === null) {
+                pos = pos0;
+              }
               if (result0 === null) {
                 pos0 = pos;
                 pos1 = pos;
