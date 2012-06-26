@@ -51,6 +51,18 @@ describe("compiler pass |computeVarNames|", function() {
     }));
   });
 
+  it("computes variable names for an action", function() {
+    expect(pass).toChangeAST('start = &"a" { code }', ruleDetails({
+      resultVars: ["result0"],
+      posVars:    ["pos0", "pos1"],
+      expression: {
+        resultVar:  "result0",
+        posVar:     "pos0",
+        expression: { resultVar: "result0", posVar: "pos1" }
+      }
+    }));
+  });
+
   it("computes variable names for a sequence", function() {
     expect(pass).toChangeAST('start = ', ruleDetails({
       resultVars: ["result0"],
@@ -179,18 +191,6 @@ describe("compiler pass |computeVarNames|", function() {
       expression: {
         resultVar:  "result0",
         expression: { resultVar: "result1", posVar: "pos0" }
-      }
-    }));
-  });
-
-  it("computes variable names for an action", function() {
-    expect(pass).toChangeAST('start = &"a" { code }', ruleDetails({
-      resultVars: ["result0"],
-      posVars:    ["pos0", "pos1"],
-      expression: {
-        resultVar:  "result0",
-        posVar:     "pos0",
-        expression: { resultVar: "result0", posVar: "pos1" }
       }
     }));
   });

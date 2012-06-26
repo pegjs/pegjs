@@ -51,6 +51,10 @@ describe("compiler pass |reportLeftRecursion|", function() {
     expect(pass).toReportLeftRecursionIn('start = "a" / "b" / start');
   });
 
+  it("reports left recursion inside an action", function() {
+    expect(pass).toReportLeftRecursionIn('start = start { }');
+  });
+
   it("reports left recursion inside a sequence", function() {
     expect(pass).toReportLeftRecursionIn('start = start "a" "b"');
   });
@@ -77,10 +81,6 @@ describe("compiler pass |reportLeftRecursion|", function() {
 
   it("reports left recursion inside a one or more", function() {
     expect(pass).toReportLeftRecursionIn('start = start+');
-  });
-
-  it("reports left recursion inside an action", function() {
-    expect(pass).toReportLeftRecursionIn('start = start { }');
   });
 
   it("reports indirect left recursion", function() {

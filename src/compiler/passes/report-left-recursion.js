@@ -24,6 +24,7 @@ PEG.compiler.passes.reportLeftRecursion = function(ast) {
 
     named:       checkExpression,
     choice:      checkSubnodes("alternatives"),
+    action:      checkExpression,
 
     sequence:
       function(node, appliedRules) {
@@ -40,7 +41,6 @@ PEG.compiler.passes.reportLeftRecursion = function(ast) {
     optional:     checkExpression,
     zero_or_more: checkExpression,
     one_or_more:  checkExpression,
-    action:       checkExpression,
 
     rule_ref:
       function(node, appliedRules) {

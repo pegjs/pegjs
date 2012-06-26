@@ -41,6 +41,10 @@ describe("compiler pass |removeProxyRules|", function() {
     );
   });
 
+  it("removes proxy rule from an action", function() {
+    expect(pass).toChangeAST(proxyGrammar('start = proxy { }'), simpleDetails);
+  });
+
   it("removes proxy rule from a sequence", function() {
     expect(pass).toChangeAST(
       proxyGrammar('start = proxy "a" "b"'),
@@ -74,9 +78,5 @@ describe("compiler pass |removeProxyRules|", function() {
 
   it("removes proxy rule from a one or more", function() {
     expect(pass).toChangeAST(proxyGrammar('start = proxy+'), simpleDetails);
-  });
-
-  it("removes proxy rule from an action", function() {
-    expect(pass).toChangeAST(proxyGrammar('start = proxy { }'), simpleDetails);
   });
 });

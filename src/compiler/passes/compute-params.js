@@ -52,6 +52,14 @@ PEG.compiler.passes.computeParams = function(ast) {
         scoped(function() { each(node.alternatives, compute); });
       },
 
+    action:
+      function(node) {
+        scoped(function() {
+          compute(node.expression);
+          computeParams(node);
+        });
+      },
+
     sequence:
       function(node) {
         var env = envs[envs.length - 1], name;
@@ -86,15 +94,6 @@ PEG.compiler.passes.computeParams = function(ast) {
     optional:     computeForScopedExpression,
     zero_or_more: computeForScopedExpression,
     one_or_more:  computeForScopedExpression,
-
-    action:
-      function(node) {
-        scoped(function() {
-          compute(node.expression);
-          computeParams(node);
-        });
-      },
-
     rule_ref:     nop,
     literal:      nop,
     "class":      nop,

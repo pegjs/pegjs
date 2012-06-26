@@ -63,6 +63,12 @@ describe("compiler pass |computeParams|", function() {
       );
     });
 
+    it("computes params for an action", function() {
+      expect(pass).toChangeAST('start = (a:"a" { }) { }', innerExpressionDetails({
+        params: { a: "result0" }
+      }));
+    });
+
     it("computes params for a sequence", function() {
       expect(pass).toChangeAST(
         'start = (a:"a" { }) "b" "c"',
@@ -113,12 +119,6 @@ describe("compiler pass |computeParams|", function() {
         params: { a: "result1" }
       }));
     });
-
-    it("computes params for an action", function() {
-      expect(pass).toChangeAST('start = (a:"a" { }) { }', innerExpressionDetails({
-        params: { a: "result0" }
-      }));
-    });
   });
 
   describe("scoping", function() {
@@ -127,6 +127,12 @@ describe("compiler pass |computeParams|", function() {
         'start = (a:"a" / b:"b" / c:"c") { }',
         expressionDetails({ params: {} })
       );
+    });
+
+    it("creates a new scope for an action", function() {
+      expect(pass).toChangeAST('start = (a:"a" { }) { }', expressionDetails({
+        params: {}
+      }));
     });
 
     it("does not create a new scope for a sequence", function() {
@@ -194,12 +200,6 @@ describe("compiler pass |computeParams|", function() {
 
     it("creates a new scope for a one or more", function() {
       expect(pass).toChangeAST('start = (a:"a")+ { }', expressionDetails({
-        params: {}
-      }));
-    });
-
-    it("creates a new scope for an action", function() {
-      expect(pass).toChangeAST('start = (a:"a" { }) { }', expressionDetails({
         params: {}
       }));
     });

@@ -80,6 +80,8 @@ PEG.compiler.passes.computeVarNames = function(ast) {
         };
       },
 
+    action:       computeFromExpression({ result: 0, pos: 1 }),
+
     sequence:
       function(node, index) {
         var depths = map(node.elements, function(element, i) {
@@ -116,7 +118,6 @@ PEG.compiler.passes.computeVarNames = function(ast) {
     optional:     computeFromExpression({ result: 0, pos: 0 }),
     zero_or_more: computeFromExpression({ result: 1, pos: 0 }),
     one_or_more:  computeFromExpression({ result: 1, pos: 0 }),
-    action:       computeFromExpression({ result: 0, pos: 1 }),
     rule_ref:     computeLeaf,
     literal:      computeLeaf,
     "class":      computeLeaf,

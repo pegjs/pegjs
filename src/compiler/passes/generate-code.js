@@ -593,6 +593,16 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '  #block code',
             '}'
           ],
+          action: [
+            '#{posSave(node)};',
+            '#block emit(node.expression)',
+            'if (#{node.resultVar} !== null) {',
+            '  #{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [node.posVar + ".offset", node.posVar + ".line", node.posVar + ".column"] : [node.posVar]).concat(values(node.params)).join(", ")});',
+            '}',
+            'if (#{node.resultVar} === null) {',
+            '  #{posRestore(node)};',
+            '}'
+          ],
           sequence: [
             '#{posSave(node)};',
             '#block code'
@@ -661,16 +671,6 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '  }',
             '} else {',
             '  #{node.resultVar} = null;',
-            '}'
-          ],
-          action: [
-            '#{posSave(node)};',
-            '#block emit(node.expression)',
-            'if (#{node.resultVar} !== null) {',
-            '  #{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [node.posVar + ".offset", node.posVar + ".line", node.posVar + ".column"] : [node.posVar]).concat(values(node.params)).join(", ")});',
-            '}',
-            'if (#{node.resultVar} === null) {',
-            '  #{posRestore(node)};',
             '}'
           ],
           rule_ref: [
@@ -832,6 +832,8 @@ PEG.compiler.passes.generateCode = function(ast, options) {
       return code;
     },
 
+    action: emitSimple("action"),
+
     sequence: function(node) {
       var code = fill("sequence.inner", { node: node });
 
@@ -855,7 +857,6 @@ PEG.compiler.passes.generateCode = function(ast, options) {
     optional:     emitSimple("optional"),
     zero_or_more: emitSimple("zero_or_more"),
     one_or_more:  emitSimple("one_or_more"),
-    action:       emitSimple("action"),
     rule_ref:     emitSimple("rule_ref"),
     literal:      emitSimple("literal"),
 

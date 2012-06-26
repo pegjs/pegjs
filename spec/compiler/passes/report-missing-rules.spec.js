@@ -51,6 +51,10 @@ describe("compiler pass |reportMissingRules|", function() {
     expect(pass).toReportMissingRuleIn('start = "a" / "b" / missing');
   });
 
+  it("reports missing rule referenced from an action", function() {
+    expect(pass).toReportMissingRuleIn('start = missing { }');
+  });
+
   it("reports missing rule referenced from a sequence", function() {
     expect(pass).toReportMissingRuleIn('start = missing "a" "b"');
     expect(pass).toReportMissingRuleIn('start = "a" "b" missing');
@@ -78,9 +82,5 @@ describe("compiler pass |reportMissingRules|", function() {
 
   it("reports missing rule referenced from a one or more", function() {
     expect(pass).toReportMissingRuleIn('start = missing+');
-  });
-
-  it("reports missing rule referenced from an action", function() {
-    expect(pass).toReportMissingRuleIn('start = missing { }');
   });
 });
