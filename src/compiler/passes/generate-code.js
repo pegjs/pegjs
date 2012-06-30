@@ -558,11 +558,11 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    }',
             '    ',
             '  #end',
-            '  #if node.resultVars.length > 0',
-            '    var #{node.resultVars.join(", ")};',
+            '  #if node.resultIndices.length > 0',
+            '    var #{map(node.resultIndices, resultVar).join(", ")};',
             '  #end',
-            '  #if node.posVars.length > 0',
-            '    var #{node.posVars.join(", ")};',
+            '  #if node.posIndices.length > 0',
+            '    var #{map(node.posIndices, posVar).join(", ")};',
             '  #end',
             '  ',
             '  #block emit(node.expression)',
@@ -570,17 +570,17 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    ',
             '    cache[cacheKey] = {',
             '      nextPos: #{posClone("pos")},',
-            '      result:  #{node.resultVar}',
+            '      result:  #{resultVar(node.resultIndex)}',
             '    };',
             '  #end',
-            '  return #{node.resultVar};',
+            '  return #{resultVar(node.resultIndex)};',
             '}'
           ],
           named: [
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
-            'if (reportFailures === 0 && #{node.resultVar} === null) {',
+            'if (reportFailures === 0 && #{resultVar(node.resultIndex)} === null) {',
             '  matchFailed(#{string(node.name)});',
             '}'
           ],
@@ -589,17 +589,17 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '#block nextAlternativesCode'
           ],
           "choice.next": [
-            'if (#{node.resultVar} === null) {',
+            'if (#{resultVar(node.resultIndex)} === null) {',
             '  #block code',
             '}'
           ],
           action: [
             '#{posSave(node)};',
             '#block emit(node.expression)',
-            'if (#{node.resultVar} !== null) {',
-            '  #{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [node.posVar + ".offset", node.posVar + ".line", node.posVar + ".column"] : [node.posVar]).concat(values(node.params)).join(", ")});',
+            'if (#{resultVar(node.resultIndex)} !== null) {',
+            '  #{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [posVar(node.posIndex) + ".offset", posVar(node.posIndex) + ".line", posVar(node.posIndex) + ".column"] : [posVar(node.posIndex)]).concat(map(values(node.params), param)).join(", ")});',
             '}',
-            'if (#{node.resultVar} === null) {',
+            'if (#{resultVar(node.resultIndex)} === null) {',
             '  #{posRestore(node)};',
             '}'
           ],
@@ -609,26 +609,26 @@ PEG.compiler.passes.generateCode = function(ast, options) {
           ],
           "sequence.iteration": [
             '#block emit(element)',
-            'if (#{element.resultVar} !== null) {',
+            'if (#{resultVar(element.resultIndex)} !== null) {',
             '  #block code',
             '} else {',
-            '  #{node.resultVar} = null;',
+            '  #{resultVar(node.resultIndex)} = null;',
             '  #{posRestore(node)};',
             '}'
           ],
           "sequence.inner": [
-            '#{node.resultVar} = [#{pluck(node.elements, "resultVar").join(", ")}];'
+            '#{resultVar(node.resultIndex)} = [#{map(pluck(node.elements, "resultIndex"), resultVar).join(", ")}];'
           ],
           simple_and: [
             '#{posSave(node)};',
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
-            'if (#{node.resultVar} !== null) {',
-            '  #{node.resultVar} = "";',
+            'if (#{resultVar(node.resultIndex)} !== null) {',
+            '  #{resultVar(node.resultIndex)} = "";',
             '  #{posRestore(node)};',
             '} else {',
-            '  #{node.resultVar} = null;',
+            '  #{resultVar(node.resultIndex)} = null;',
             '}'
           ],
           simple_not: [
@@ -636,49 +636,49 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
-            'if (#{node.resultVar} === null) {',
-            '  #{node.resultVar} = "";',
+            'if (#{resultVar(node.resultIndex)} === null) {',
+            '  #{resultVar(node.resultIndex)} = "";',
             '} else {',
-            '  #{node.resultVar} = null;',
+            '  #{resultVar(node.resultIndex)} = null;',
             '  #{posRestore(node)};',
             '}'
           ],
           semantic_and: [
-            '#{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(values(node.params)).join(", ")}) ? "" : null;'
+            '#{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{node.resultVar} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(values(node.params)).join(", ")}) ? null : "";'
+            '#{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? null : "";'
           ],
           optional: [
             '#block emit(node.expression)',
-            '#{node.resultVar} = #{node.resultVar} !== null ? #{node.resultVar} : "";'
+            '#{resultVar(node.resultIndex)} = #{resultVar(node.resultIndex)} !== null ? #{resultVar(node.resultIndex)} : "";'
           ],
           zero_or_more: [
-            '#{node.resultVar} = [];',
+            '#{resultVar(node.resultIndex)} = [];',
             '#block emit(node.expression)',
-            'while (#{node.expression.resultVar} !== null) {',
-            '  #{node.resultVar}.push(#{node.expression.resultVar});',
+            'while (#{resultVar(node.expression.resultIndex)} !== null) {',
+            '  #{resultVar(node.resultIndex)}.push(#{resultVar(node.expression.resultIndex)});',
             '  #block emit(node.expression)',
             '}'
           ],
           one_or_more: [
             '#block emit(node.expression)',
-            'if (#{node.expression.resultVar} !== null) {',
-            '  #{node.resultVar} = [];',
-            '  while (#{node.expression.resultVar} !== null) {',
-            '    #{node.resultVar}.push(#{node.expression.resultVar});',
+            'if (#{resultVar(node.expression.resultIndex)} !== null) {',
+            '  #{resultVar(node.resultIndex)} = [];',
+            '  while (#{resultVar(node.expression.resultIndex)} !== null) {',
+            '    #{resultVar(node.resultIndex)}.push(#{resultVar(node.expression.resultIndex)});',
             '    #block emit(node.expression)',
             '  }',
             '} else {',
-            '  #{node.resultVar} = null;',
+            '  #{resultVar(node.resultIndex)} = null;',
             '}'
           ],
           rule_ref: [
-            '#{node.resultVar} = parse_#{node.name}();'
+            '#{resultVar(node.resultIndex)} = parse_#{node.name}();'
           ],
           literal: [
             '#if node.value.length === 0',
-            '  #{node.resultVar} = "";',
+            '  #{resultVar(node.resultIndex)} = "";',
             '#else',
             '  #if !node.ignoreCase',
             '    #if node.value.length === 1',
@@ -698,13 +698,13 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    if (input.substr(#{posOffset("pos")}, #{node.value.length}).toLowerCase() === #{string(node.value.toLowerCase())}) {',
             '  #end',
             '    #if !node.ignoreCase',
-            '      #{node.resultVar} = #{string(node.value)};',
+            '      #{resultVar(node.resultIndex)} = #{string(node.value)};',
             '    #else',
-            '      #{node.resultVar} = input.substr(#{posOffset("pos")}, #{node.value.length});',
+            '      #{resultVar(node.resultIndex)} = input.substr(#{posOffset("pos")}, #{node.value.length});',
             '    #end',
             '    #{posAdvance(node.value.length)};',
             '  } else {',
-            '    #{node.resultVar} = null;',
+            '    #{resultVar(node.resultIndex)} = null;',
             '    if (reportFailures === 0) {',
             '      matchFailed(#{string(string(node.value))});',
             '    }',
@@ -713,10 +713,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
           ],
           "class": [
             'if (#{regexp}.test(input.charAt(#{posOffset("pos")}))) {',
-            '  #{node.resultVar} = input.charAt(#{posOffset("pos")});',
+            '  #{resultVar(node.resultIndex)} = input.charAt(#{posOffset("pos")});',
             '  #{posAdvance(1)};',
             '} else {',
-            '  #{node.resultVar} = null;',
+            '  #{resultVar(node.resultIndex)} = null;',
             '  if (reportFailures === 0) {',
             '    matchFailed(#{string(node.rawText)});',
             '  }',
@@ -724,10 +724,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
           ],
           any: [
             'if (input.length > #{posOffset("pos")}) {',
-            '  #{node.resultVar} = input.charAt(#{posOffset("pos")});',
+            '  #{resultVar(node.resultIndex)} = input.charAt(#{posOffset("pos")});',
             '  #{posAdvance(1)};',
             '} else {',
-            '  #{node.resultVar} = null;',
+            '  #{resultVar(node.resultIndex)} = null;',
             '  if (reportFailures === 0) {',
             '    matchFailed("any character");',
             '  }',
@@ -744,11 +744,20 @@ PEG.compiler.passes.generateCode = function(ast, options) {
 
   function fill(name, vars) {
     vars.string  = quote;
+    vars.map     = map;
     vars.pluck   = pluck;
     vars.keys    = keys;
     vars.values  = values;
     vars.emit    = emit;
     vars.options = options;
+
+    vars.resultVar = function(index) { return "result" + index; };
+    vars.posVar    = function(index) { return "pos"    + index; };
+
+    vars.param = function(param) {
+      return vars.resultVar(param.resultIndex)
+           + map(param.subindices, function(i) { return "[" + i + "]"; });
+    };
 
     /* Position-handling macros */
     if (options.trackLineAndColumn) {
@@ -772,10 +781,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
       };
     }
     vars.posSave    = function(node) {
-      return node.posVar + " = " + vars.posClone("pos");
+      return vars.posVar(node.posIndex) + " = " + vars.posClone("pos");
     };
     vars.posRestore = function(node) {
-      return "pos" + " = " + vars.posClone(node.posVar);
+      return "pos" + " = " + vars.posClone(vars.posVar(node.posIndex));
     };
 
     return templates[name](vars);
@@ -802,16 +811,16 @@ PEG.compiler.passes.generateCode = function(ast, options) {
      *
      * * If the code fragment matches the input, it advances |pos| to point to
      *   the first chracter following the matched part of the input and sets
-     *   variable with a name stored in |node.resultVar| to an appropriate
+     *   variable with a name |resultVar(node.resultIndex)| to an appropriate
      *   value. This value is always non-|null|.
      *
      * * If the code fragment does not match the input, it returns with |pos|
-     *   set to the original value and it sets a variable with a name stored in
-     *   |node.resultVar| to |null|.
+     *   set to the original value and it sets a variable with a name
+     *   |resultVar(node.resultIndex)| to |null|.
      *
-     * The code can use variables with names stored in |resultVar| and |posVar|
-     * properties of the current node's subnodes. It can't use any other
-     * variables.
+     * The code can use variables with names |resultVar(node.resultIndex)| and
+     * |posVar(node.posIndex)| where |node| is any of the current node's
+     * subnodes. It can't use any other variables.
      */
 
     named: emitSimple("named"),

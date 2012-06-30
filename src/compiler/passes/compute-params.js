@@ -65,10 +65,12 @@ PEG.compiler.passes.computeParams = function(ast) {
         var env = envs[envs.length - 1], name;
 
         function fixup(name) {
-          each(pluck(node.elements, "resultVar"), function(resultVar, i) {
-            if ((new RegExp("^" + resultVar + "(\\[\\d+\\])*$")).test(env[name])) {
-              env[name] = node.resultVar + "[" + i + "]"
-                        + env[name].substr(resultVar.length);
+          each(pluck(node.elements, "resultIndex"), function(resultIndex, i) {
+            if (env[name].resultIndex === resultIndex) {
+              env[name] = {
+                resultIndex: node.resultIndex,
+                subindices:  [i].concat(env[name].subindices)
+              };
             }
           });
         }
@@ -82,7 +84,10 @@ PEG.compiler.passes.computeParams = function(ast) {
 
     labeled:
       function(node) {
-        envs[envs.length - 1][node.label] = node.resultVar;
+        envs[envs.length - 1][node.label] = {
+          resultIndex: node.resultIndex,
+          subindices:  []
+        };
 
         scoped(function() { compute(node.expression); });
       },

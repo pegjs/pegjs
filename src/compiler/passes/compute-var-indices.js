@@ -1,26 +1,23 @@
 /*
- * Computes names of variables used for storing match results and parse
+ * Computes indices of variables used for storing match results and parse
  * positions in generated code. These variables are organized as two stacks.
  * The following will hold after running this pass:
  *
- *   * All nodes except "grammar" and "rule" nodes will have a |resultVar|
- *     property. It will contain a name of the variable that will store a match
- *     result of the expression represented by the node in generated code.
+ *   * All nodes except "grammar" and "rule" nodes will have a |resultIndex|
+ *     property. It will contain an index of the variable that will store a
+ *     match result of the expression represented by the node in generated code.
  *
- *   * Some nodes will have a |posVar| property. It will contain a name of the
- *     variable that will store a parse position in generated code.
+ *   * Some nodes will have a |posIndex| property. It will contain an index of
+ *     the variable that will store a parse position in generated code.
  *
- *   * All "rule" nodes will contain |resultVars| and |posVars| properties.
- *     They will contain a list of values of |resultVar| and |posVar| properties
- *     used in rule's subnodes. (This is useful to declare variables in
- *     generated code.)
+ *   * All "rule" nodes will contain |resultIndices| and |posIndices|
+ *     properties. They will contain a list of values of |resultIndex| and
+ *     |posIndex| properties used in rule's subnodes. (This is useful to declare
+ *     variables in generated code.)
  */
-PEG.compiler.passes.computeVarNames = function(ast) {
-  function resultVar(index) { return "result" + index; }
-  function posVar(index)    { return "pos"    + index; }
-
+PEG.compiler.passes.computeVarIndices = function(ast) {
   function computeLeaf(node, index) {
-    node.resultVar = resultVar(index.result);
+    node.resultIndex = index.result;
 
     return { result: 0, pos: 0 };
   }
@@ -35,9 +32,9 @@ PEG.compiler.passes.computeVarNames = function(ast) {
             }
           );
 
-      node.resultVar = resultVar(index.result);
+      node.resultIndex = index.result;
       if (delta.pos !== 0) {
-        node.posVar = posVar(index.pos);
+        node.posIndex = index.pos;
       }
 
       return {
@@ -59,9 +56,9 @@ PEG.compiler.passes.computeVarNames = function(ast) {
       function(node, index) {
         var depth = compute(node.expression, index);
 
-        node.resultVar  = resultVar(index.result);
-        node.resultVars = map(range(depth.result + 1), resultVar);
-        node.posVars    = map(range(depth.pos),        posVar);
+        node.resultIndex   = index.result;
+        node.resultIndices = range(depth.result + 1);
+        node.posIndices    = range(depth.pos);
       },
 
     named:        computeFromExpression({ result: 0, pos: 0 }),
@@ -72,7 +69,7 @@ PEG.compiler.passes.computeVarNames = function(ast) {
           return compute(alternative, index);
         });
 
-        node.resultVar = resultVar(index.result);
+        node.resultIndex = index.result;
 
         return {
           result: Math.max.apply(null, pluck(depths, "result")),
@@ -91,8 +88,8 @@ PEG.compiler.passes.computeVarNames = function(ast) {
           );
         });
 
-        node.resultVar = resultVar(index.result);
-        node.posVar    = posVar(index.pos);
+        node.resultIndex = index.result;
+        node.posIndex    = index.pos;
 
         return {
           result:
