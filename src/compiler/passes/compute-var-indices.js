@@ -16,23 +16,22 @@
  *     variables in generated code.)
  */
 PEG.compiler.passes.computeVarIndices = function(ast) {
-  function computeLeaf(node, index) {
-    node.resultIndex = index.result;
-
-    return { result: 0, pos: 0 };
-  }
+  function computeLeaf(node, index) { return { result: 0, pos: 0 }; }
 
   function computeFromExpression(delta) {
     return function(node, index) {
-      var depth = compute(
-            node.expression,
-            {
-              result: index.result + delta.result,
-              pos:    index.pos    + delta.pos
-            }
-          );
+      var depth;
 
-      node.resultIndex = index.result;
+      node.expression.resultIndex = index.result + delta.result;
+
+      depth = compute(
+        node.expression,
+        {
+          result: index.result + delta.result,
+          pos:    index.pos    + delta.pos
+        }
+      );
+
       if (delta.pos !== 0) {
         node.posIndex = index.pos;
       }
@@ -48,15 +47,19 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
     grammar:
       function(node, index) {
         each(node.rules, function(node) {
+          node.resultIndex = index.result;
           compute(node, index);
         });
       },
 
     rule:
       function(node, index) {
-        var depth = compute(node.expression, index);
+        var depth;
 
-        node.resultIndex   = index.result;
+        node.expression.resultIndex = node.resultIndex;
+
+        depth = compute(node.expression, index);
+
         node.resultIndices = range(depth.result + 1);
         node.posIndices    = range(depth.pos);
       },
@@ -66,10 +69,10 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
     choice:
       function(node, index) {
         var depths = map(node.alternatives, function(alternative) {
+          alternative.resultIndex = node.resultIndex;
+
           return compute(alternative, index);
         });
-
-        node.resultIndex = index.result;
 
         return {
           result: Math.max.apply(null, pluck(depths, "result")),
@@ -82,14 +85,15 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
     sequence:
       function(node, index) {
         var depths = map(node.elements, function(element, i) {
+          element.resultIndex = index.result + i;
+
           return compute(
             element,
             { result: index.result + i, pos: index.pos + 1 }
           );
         });
 
-        node.resultIndex = index.result;
-        node.posIndex    = index.pos;
+        node.posIndex = index.pos;
 
         return {
           result:
