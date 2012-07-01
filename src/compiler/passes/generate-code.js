@@ -561,9 +561,6 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '  #if node.resultIndices.length > 0',
             '    var #{map(node.resultIndices, resultVar).join(", ")};',
             '  #end',
-            '  #if node.posIndices.length > 0',
-            '    var #{map(node.posIndices, posVar).join(", ")};',
-            '  #end',
             '  ',
             '  #block emit(node.expression)',
             '  #if options.cache',
@@ -597,7 +594,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '#{posSave(node)};',
             '#block emit(node.expression)',
             'if (#{resultVar(node.resultIndex)} !== null) {',
-            '  #{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [posVar(node.posIndex) + ".offset", posVar(node.posIndex) + ".line", posVar(node.posIndex) + ".column"] : [posVar(node.posIndex)]).concat(map(values(node.params), param)).join(", ")});',
+            '  #{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [resultVar(node.posIndex) + ".offset", resultVar(node.posIndex) + ".line", resultVar(node.posIndex) + ".column"] : [resultVar(node.posIndex)]).concat(map(values(node.params), param)).join(", ")});',
             '}',
             'if (#{resultVar(node.resultIndex)} === null) {',
             '  #{posRestore(node)};',
@@ -752,7 +749,6 @@ PEG.compiler.passes.generateCode = function(ast, options) {
     vars.options = options;
 
     vars.resultVar = function(index) { return "result" + index; };
-    vars.posVar    = function(index) { return "pos"    + index; };
 
     vars.param = function(param) {
       return vars.resultVar(param.resultIndex)
@@ -781,10 +777,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
       };
     }
     vars.posSave    = function(node) {
-      return vars.posVar(node.posIndex) + " = " + vars.posClone("pos");
+      return vars.resultVar(node.posIndex) + " = " + vars.posClone("pos");
     };
     vars.posRestore = function(node) {
-      return "pos" + " = " + vars.posClone(vars.posVar(node.posIndex));
+      return "pos" + " = " + vars.posClone(vars.resultVar(node.posIndex));
     };
 
     return templates[name](vars);
@@ -818,9 +814,9 @@ PEG.compiler.passes.generateCode = function(ast, options) {
      *   set to the original value and it sets a variable with a name
      *   |resultVar(node.resultIndex)| to |null|.
      *
-     * The code can use variables with names |resultVar(node.resultIndex)| and
-     * |posVar(node.posIndex)| where |node| is any of the current node's
-     * subnodes. It can't use any other variables.
+     * The code can use variables with names |resultVar(node.resultIndex)|
+     * where |node| is any of the current node's subnodes. It can't use any
+     * other variables.
      */
 
     named: emitSimple("named"),

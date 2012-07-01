@@ -1,7 +1,7 @@
 /*
  * Computes indices of variables used for storing match results and parse
- * positions in generated code. These variables are organized as two stacks.
- * The following will hold after running this pass:
+ * positions in generated code. These variables are organized as one stack. The
+ * following will hold after running this pass:
  *
  *   * All nodes except "grammar" and "rule" nodes will have a |resultIndex|
  *     property. It will contain an index of the variable that will store a
@@ -10,36 +10,31 @@
  *   * Some nodes will have a |posIndex| property. It will contain an index of
  *     the variable that will store a parse position in generated code.
  *
- *   * All "rule" nodes will contain |resultIndices| and |posIndices|
- *     properties. They will contain a list of values of |resultIndex| and
- *     |posIndex| properties used in rule's subnodes. (This is useful to declare
- *     variables in generated code.)
+ *   * All "rule" nodes will contain |resultIndices| property. It will contain a
+ *     list of values of |resultIndex| and |posIndex| properties used in rule's
+ *     subnodes. (This is useful to declare variables in generated code.)
  */
 PEG.compiler.passes.computeVarIndices = function(ast) {
-  function computeLeaf(node, index) { return { result: 0, pos: 0 }; }
+  function computeLeaf(node, index) { return 0; }
 
   function computeFromExpression(delta) {
     return function(node, index) {
       var depth;
 
-      node.expression.resultIndex = index.result + delta.result;
+      node.expression.resultIndex = delta.result > 0
+        ? index + delta.result + delta.pos
+        : node.resultIndex;
 
       depth = compute(
         node.expression,
-        {
-          result: index.result + delta.result,
-          pos:    index.pos    + delta.pos
-        }
+        index + delta.result + delta.pos
       );
 
       if (delta.pos !== 0) {
-        node.posIndex = index.pos;
+        node.posIndex = index + delta.pos;
       }
 
-      return {
-        result: depth.result + delta.result,
-        pos:    depth.pos    + delta.pos
-      };
+      return depth + delta.result + delta.pos;
     };
   }
 
@@ -47,7 +42,7 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
     grammar:
       function(node, index) {
         each(node.rules, function(node) {
-          node.resultIndex = index.result;
+          node.resultIndex = index;
           compute(node, index);
         });
       },
@@ -60,8 +55,7 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
 
         depth = compute(node.expression, index);
 
-        node.resultIndices = range(depth.result + 1);
-        node.posIndices    = range(depth.pos);
+        node.resultIndices = range(depth + 1);
       },
 
     named:        computeFromExpression({ result: 0, pos: 0 }),
@@ -74,10 +68,7 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
           return compute(alternative, index);
         });
 
-        return {
-          result: Math.max.apply(null, pluck(depths, "result")),
-          pos:    Math.max.apply(null, pluck(depths, "pos"))
-        };
+        return Math.max.apply(null, depths);
       },
 
     action:       computeFromExpression({ result: 0, pos: 1 }),
@@ -85,30 +76,20 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
     sequence:
       function(node, index) {
         var depths = map(node.elements, function(element, i) {
-          element.resultIndex = index.result + i;
+          element.resultIndex = index + i + 2;
 
-          return compute(
-            element,
-            { result: index.result + i, pos: index.pos + 1 }
-          );
+          return compute(element, index + i + 2);
         });
 
-        node.posIndex = index.pos;
+        node.posIndex = index + 1;
 
-        return {
-          result:
-            node.elements.length > 0
-              ? Math.max.apply(
-                  null,
-                  map(depths, function(d, i) { return i + d.result; })
-                )
-              : 0,
-
-          pos:
-            node.elements.length > 0
-              ? 1 + Math.max.apply(null, pluck(depths, "pos"))
-              : 1
-        };
+        return node.elements.length > 0
+          ? Math.max.apply(
+              null,
+              map(depths, function(d, i) { return i + d; })
+            )
+            + 2
+          : 1;
       },
 
     labeled:      computeFromExpression({ result: 0, pos: 0 }),
@@ -125,5 +106,5 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
     any:          computeLeaf
   });
 
-  compute(ast, { result: 0, pos: 0 });
+  compute(ast, 0);
 };

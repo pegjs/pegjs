@@ -13,7 +13,8 @@ describe("compiler pass |computeParams|", function() {
       result0_2   = { resultIndex: 0, subindices: [2]    },
       result1_9   = { resultIndex: 1, subindices: [9]    },
       result1     = { resultIndex: 1, subindices: []     };
-      result2     = { resultIndex: 2, subindices: []     };
+      result2     = { resultIndex: 2, subindices: []     },
+      result4     = { resultIndex: 4, subindices: []     };
 
   function ruleDetails(details) { return { rules: [details] }; }
 
@@ -36,7 +37,7 @@ describe("compiler pass |computeParams|", function() {
       expect(pass).toChangeAST('start = a:"a" &{ }', expressionDetails({
         elements: [
           {},
-          { params: { a: result0 } }
+          { params: { a: result2 } }
         ]
       }));
     });
@@ -45,7 +46,7 @@ describe("compiler pass |computeParams|", function() {
       expect(pass).toChangeAST('start = a:"a" !{ }', expressionDetails({
         elements: [
           {},
-          { params: { a: result0 } }
+          { params: { a: result2 } }
         ]
       }));
     });
@@ -84,13 +85,13 @@ describe("compiler pass |computeParams|", function() {
       expect(pass).toChangeAST(
         'start = (a:"a" { }) "b" "c"',
         expressionDetails({
-          elements: [{ params: { a: result0 } }, {}, {}]
+          elements: [{ params: { a: result2 } }, {}, {}]
         })
       );
       expect(pass).toChangeAST(
         'start = "a" "b" (c:"c" { })',
         expressionDetails({
-          elements: [{}, {}, { params: { c: result2 } }]
+          elements: [{}, {}, { params: { c: result4 } }]
         })
       );
     });
