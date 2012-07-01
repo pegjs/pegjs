@@ -558,8 +558,8 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    }',
             '    ',
             '  #end',
-            '  #if node.resultIndices.length > 0',
-            '    var #{map(node.resultIndices, resultVar).join(", ")};',
+            '  #if node.resultCount > 0',
+            '    var #{map(range(node.resultCount), resultVar).join(", ")};',
             '  #end',
             '  ',
             '  #block emit(node.expression)',
@@ -741,6 +741,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
 
   function fill(name, vars) {
     vars.string  = quote;
+    vars.range   = range;
     vars.map     = map;
     vars.pluck   = pluck;
     vars.keys    = keys;

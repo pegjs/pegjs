@@ -10,9 +10,10 @@
  *   * Some nodes will have a |posIndex| property. It will contain an index of
  *     the variable that will store a parse position in generated code.
  *
- *   * All "rule" nodes will contain |resultIndices| property. It will contain a
- *     list of values of |resultIndex| and |posIndex| properties used in rule's
- *     subnodes. (This is useful to declare variables in generated code.)
+ *   * All "rule" nodes will contain |resultCount| property. It will contain a
+ *     count of distinct values of |resultIndex| and |posIndex| properties used
+ *     in rule's subnodes. (This is useful to declare variables in generated
+ *     code.)
  */
 PEG.compiler.passes.computeVarIndices = function(ast) {
   function computeLeaf(node, index) { return 0; }
@@ -55,7 +56,7 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
 
         depth = compute(node.expression, index);
 
-        node.resultIndices = range(depth + 1);
+        node.resultCount = depth + 1;
       },
 
     named:        computeFromExpression({ result: 0, pos: 0 }),
