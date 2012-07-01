@@ -1,6 +1,6 @@
 describe("compiler pass |computeParams|", function() {
   function pass(ast) {
-    PEG.compiler.passes.computeVarIndices(ast);
+    PEG.compiler.passes.allocateRegisters(ast);
     PEG.compiler.passes.computeParams(ast);
   }
 

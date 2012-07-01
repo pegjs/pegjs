@@ -1,5 +1,5 @@
-describe("compiler pass |computeVarIndices|", function() {
-  var pass = PEG.compiler.passes.computeVarIndices;
+describe("compiler pass |allocateRegisters|", function() {
+  var pass = PEG.compiler.passes.allocateRegisters;
 
   var leafDetails     = { resultIndex: 0 },
       choiceDetails   = {
@@ -22,35 +22,35 @@ describe("compiler pass |computeVarIndices|", function() {
 
   function ruleDetails(details) { return { rules: [details] }; }
 
-  it("computes variable indices for a named", function() {
+  it("allocates registers for a named", function() {
     expect(pass).toChangeAST('start "start" = &"a"', ruleDetails({
-      resultCount: 2,
-      expression:  {
+      registerCount: 2,
+      expression:    {
         resultIndex: 0,
         expression:  { resultIndex: 0, posIndex: 1 }
       }
     }));
   });
 
-  it("computes variable indices for a choice", function() {
+  it("allocates registers for a choice", function() {
     expect(pass).toChangeAST('start = &"a" / &"b" / &"c"', ruleDetails({
-      resultCount: 2,
-      expression:  choiceDetails
+      registerCount: 2,
+      expression:    choiceDetails
     }));
     expect(pass).toChangeAST('start = &"a" / &"b"* / &"c"', ruleDetails({
-      resultCount: 3,
-      expression:  choiceDetails
+      registerCount: 3,
+      expression:    choiceDetails
     }));
     expect(pass).toChangeAST('start = &"a" / &(&"b") / &"c"', ruleDetails({
-      resultCount: 3,
-      expression:  choiceDetails
+      registerCount: 3,
+      expression:    choiceDetails
     }));
   });
 
-  it("computes variable indices for an action", function() {
+  it("allocates registers for an action", function() {
     expect(pass).toChangeAST('start = &"a" { code }', ruleDetails({
-      resultCount: 3,
-      expression:  {
+      registerCount: 3,
+      expression:    {
         resultIndex: 0,
         posIndex:    1,
         expression:  { resultIndex: 0, posIndex: 2 }
@@ -58,59 +58,59 @@ describe("compiler pass |computeVarIndices|", function() {
     }));
   });
 
-  it("computes variable indices for a sequence", function() {
+  it("allocates registers for a sequence", function() {
     expect(pass).toChangeAST('start = ', ruleDetails({
-      resultCount: 2,
-      expression:  { resultIndex: 0, posIndex: 1 }
+      registerCount: 2,
+      expression:    { resultIndex: 0, posIndex: 1 }
     }));
     expect(pass).toChangeAST('start = &"a" &"b" &"c"', ruleDetails({
-      resultCount: 6,
-      expression:  sequenceDetails
+      registerCount: 6,
+      expression:    sequenceDetails
     }));
     expect(pass).toChangeAST('start = &"a" &"b" &"c"*', ruleDetails({
-      resultCount: 7,
-      expression:  sequenceDetails
+      registerCount: 7,
+      expression:    sequenceDetails
     }));
     expect(pass).toChangeAST('start = &"a" &"b"* &"c"', ruleDetails({
-      resultCount: 6,
-      expression:  sequenceDetails
+      registerCount: 6,
+      expression:    sequenceDetails
     }));
     expect(pass).toChangeAST('start = &"a" &("b"*)* &"c"', ruleDetails({
-      resultCount: 7,
-      expression:  sequenceDetails
+      registerCount: 7,
+      expression:    sequenceDetails
     }));
     expect(pass).toChangeAST('start = &"a"* &"b" &"c"', ruleDetails({
-      resultCount: 6,
-      expression:  sequenceDetails
+      registerCount: 6,
+      expression:    sequenceDetails
     }));
     expect(pass).toChangeAST('start = &("a"*)* &"b" &"c"', ruleDetails({
-      resultCount: 6,
-      expression:  sequenceDetails
+      registerCount: 6,
+      expression:    sequenceDetails
     }));
     expect(pass).toChangeAST('start = &(("a"*)*)* &"b" &"c"', ruleDetails({
-      resultCount: 7,
-      expression:  sequenceDetails
+      registerCount: 7,
+      expression:    sequenceDetails
     }));
     expect(pass).toChangeAST('start = &"a" &(&"b") &"c"', ruleDetails({
-      resultCount: 6,
-      expression:  sequenceDetails
+      registerCount: 6,
+      expression:    sequenceDetails
     }));
   });
 
-  it("computes variable indices for a labeled", function() {
+  it("allocates registers for a labeled", function() {
     expect(pass).toChangeAST('start = label:&"a"', ruleDetails({
-      resultCount: 2,
-      expression:  {
+      registerCount: 2,
+      expression:    {
         resultIndex: 0,
         expression:  { resultIndex: 0, posIndex: 1 }
       }
     }));
   });
 
-  it("computes variable indices for a simple and", function() {
+  it("allocates registers for a simple and", function() {
     expect(pass).toChangeAST('start = &(&"a")', ruleDetails({
-      resultCount: 3,
-      expression:  {
+      registerCount: 3,
+      expression:    {
         resultIndex: 0,
         posIndex:    1,
         expression:  { resultIndex: 0, posIndex: 2 }
@@ -118,10 +118,10 @@ describe("compiler pass |computeVarIndices|", function() {
     }));
   });
 
-  it("computes variable indices for a simple not", function() {
+  it("allocates registers for a simple not", function() {
     expect(pass).toChangeAST('start = !(&"a")', ruleDetails({
-      resultCount: 3,
-      expression:  {
+      registerCount: 3,
+      expression:    {
         resultIndex: 0,
         posIndex:    1,
         expression:  { resultIndex: 0, posIndex: 2 }
@@ -129,75 +129,75 @@ describe("compiler pass |computeVarIndices|", function() {
     }));
   });
 
-  it("computes variable indices for a semantic and", function() {
+  it("allocates registers for a semantic and", function() {
     expect(pass).toChangeAST('start = &{ code }', ruleDetails({
-      resultCount: 1,
-      expression:  leafDetails
+      registerCount: 1,
+      expression:    leafDetails
     }));
   });
 
-  it("computes variable indices for a semantic not", function() {
+  it("allocates registers for a semantic not", function() {
     expect(pass).toChangeAST('start = !{ code }', ruleDetails({
-      resultCount: 1,
-      expression:  leafDetails
+      registerCount: 1,
+      expression:    leafDetails
     }));
   });
 
-  it("computes variable indices for an optional", function() {
+  it("allocates registers for an optional", function() {
     expect(pass).toChangeAST('start = (&"a")?', ruleDetails({
-      resultCount: 2,
-      expression:  {
+      registerCount: 2,
+      expression:    {
         resultIndex: 0,
         expression:  { resultIndex: 0, posIndex: 1 }
       }
     }));
   });
 
-  it("computes variable indices for a zero or more", function() {
+  it("allocates registers for a zero or more", function() {
     expect(pass).toChangeAST('start = (&"a")*', ruleDetails({
-      resultCount: 3,
-      expression:  {
+      registerCount: 3,
+      expression:    {
         resultIndex: 0,
         expression:  { resultIndex: 1, posIndex: 2 }
       }
     }));
   });
 
-  it("computes variable indices for a one or more", function() {
+  it("allocates registers for a one or more", function() {
     expect(pass).toChangeAST('start = (&"a")+', ruleDetails({
-      resultCount: 3,
-      expression:  {
+      registerCount: 3,
+      expression:    {
         resultIndex: 0,
         expression:  { resultIndex: 1, posIndex: 2 }
       }
     }));
   });
 
-  it("computes variable indices for a rule reference", function() {
+  it("allocates registers for a rule reference", function() {
     expect(pass).toChangeAST('start = a', ruleDetails({
-      resultCount: 1,
-      expression:  leafDetails
+      registerCount: 1,
+      expression:    leafDetails
     }));
   });
 
-  it("computes variable indices for a literal", function() {
+  it("allocates registers for a literal", function() {
     expect(pass).toChangeAST('start = "a"', ruleDetails({
-      resultCount: 1,
-      expression:  leafDetails
+      registerCount: 1,
+      expression:    leafDetails
     }));
   });
 
-  it("computes variable indices for a class", function() {
+  it("allocates registers for a class", function() {
     expect(pass).toChangeAST('start = [a-z]', ruleDetails({
-      resultCount: 1,
-      expression:  leafDetails
+      registerCount: 1,
+      expression:    leafDetails
     }));
   });
 
-  it("computes variable indices for an any", function() {
+  it("allocates registers for an any", function() {
     expect(pass).toChangeAST('start = .', ruleDetails({
-      resultCount: 1,
-      expression:  leafDetails
+      registerCount: 1,
+      expression:    leafDetails
     }));
   });
 });

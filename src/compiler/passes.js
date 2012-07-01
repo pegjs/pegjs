@@ -10,6 +10,6 @@ PEG.compiler.passes = {};
 // @include "passes/report-missing-rules.js"
 // @include "passes/report-left-recursion.js"
 // @include "passes/remove-proxy-rules.js"
-// @include "passes/compute-var-indices.js"
+// @include "passes/allocate-registers.js"
 // @include "passes/compute-params.js"
 // @include "passes/generate-code.js"

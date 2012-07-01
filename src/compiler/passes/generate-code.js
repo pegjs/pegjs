@@ -558,8 +558,8 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    }',
             '    ',
             '  #end',
-            '  #if node.resultCount > 0',
-            '    var #{map(range(node.resultCount), resultVar).join(", ")};',
+            '  #if node.registerCount > 0',
+            '    var #{map(range(node.registerCount), r).join(", ")};',
             '  #end',
             '  ',
             '  #block emit(node.expression)',
@@ -567,17 +567,17 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    ',
             '    cache[cacheKey] = {',
             '      nextPos: #{posClone("pos")},',
-            '      result:  #{resultVar(node.resultIndex)}',
+            '      result:  #{r(node.resultIndex)}',
             '    };',
             '  #end',
-            '  return #{resultVar(node.resultIndex)};',
+            '  return #{r(node.resultIndex)};',
             '}'
           ],
           named: [
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
-            'if (reportFailures === 0 && #{resultVar(node.resultIndex)} === null) {',
+            'if (reportFailures === 0 && #{r(node.resultIndex)} === null) {',
             '  matchFailed(#{string(node.name)});',
             '}'
           ],
@@ -586,17 +586,17 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '#block nextAlternativesCode'
           ],
           "choice.next": [
-            'if (#{resultVar(node.resultIndex)} === null) {',
+            'if (#{r(node.resultIndex)} === null) {',
             '  #block code',
             '}'
           ],
           action: [
             '#{posSave(node)};',
             '#block emit(node.expression)',
-            'if (#{resultVar(node.resultIndex)} !== null) {',
-            '  #{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [resultVar(node.posIndex) + ".offset", resultVar(node.posIndex) + ".line", resultVar(node.posIndex) + ".column"] : [resultVar(node.posIndex)]).concat(map(values(node.params), param)).join(", ")});',
+            'if (#{r(node.resultIndex)} !== null) {',
+            '  #{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [r(node.posIndex) + ".offset", r(node.posIndex) + ".line", r(node.posIndex) + ".column"] : [r(node.posIndex)]).concat(map(values(node.params), param)).join(", ")});',
             '}',
-            'if (#{resultVar(node.resultIndex)} === null) {',
+            'if (#{r(node.resultIndex)} === null) {',
             '  #{posRestore(node)};',
             '}'
           ],
@@ -606,26 +606,26 @@ PEG.compiler.passes.generateCode = function(ast, options) {
           ],
           "sequence.iteration": [
             '#block emit(element)',
-            'if (#{resultVar(element.resultIndex)} !== null) {',
+            'if (#{r(element.resultIndex)} !== null) {',
             '  #block code',
             '} else {',
-            '  #{resultVar(node.resultIndex)} = null;',
+            '  #{r(node.resultIndex)} = null;',
             '  #{posRestore(node)};',
             '}'
           ],
           "sequence.inner": [
-            '#{resultVar(node.resultIndex)} = [#{map(pluck(node.elements, "resultIndex"), resultVar).join(", ")}];'
+            '#{r(node.resultIndex)} = [#{map(pluck(node.elements, "resultIndex"), r).join(", ")}];'
           ],
           simple_and: [
             '#{posSave(node)};',
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
-            'if (#{resultVar(node.resultIndex)} !== null) {',
-            '  #{resultVar(node.resultIndex)} = "";',
+            'if (#{r(node.resultIndex)} !== null) {',
+            '  #{r(node.resultIndex)} = "";',
             '  #{posRestore(node)};',
             '} else {',
-            '  #{resultVar(node.resultIndex)} = null;',
+            '  #{r(node.resultIndex)} = null;',
             '}'
           ],
           simple_not: [
@@ -633,49 +633,49 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             'reportFailures++;',
             '#block emit(node.expression)',
             'reportFailures--;',
-            'if (#{resultVar(node.resultIndex)} === null) {',
-            '  #{resultVar(node.resultIndex)} = "";',
+            'if (#{r(node.resultIndex)} === null) {',
+            '  #{r(node.resultIndex)} = "";',
             '} else {',
-            '  #{resultVar(node.resultIndex)} = null;',
+            '  #{r(node.resultIndex)} = null;',
             '  #{posRestore(node)};',
             '}'
           ],
           semantic_and: [
-            '#{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? "" : null;'
+            '#{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{resultVar(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? null : "";'
+            '#{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? null : "";'
           ],
           optional: [
             '#block emit(node.expression)',
-            '#{resultVar(node.resultIndex)} = #{resultVar(node.resultIndex)} !== null ? #{resultVar(node.resultIndex)} : "";'
+            '#{r(node.resultIndex)} = #{r(node.resultIndex)} !== null ? #{r(node.resultIndex)} : "";'
           ],
           zero_or_more: [
-            '#{resultVar(node.resultIndex)} = [];',
+            '#{r(node.resultIndex)} = [];',
             '#block emit(node.expression)',
-            'while (#{resultVar(node.expression.resultIndex)} !== null) {',
-            '  #{resultVar(node.resultIndex)}.push(#{resultVar(node.expression.resultIndex)});',
+            'while (#{r(node.expression.resultIndex)} !== null) {',
+            '  #{r(node.resultIndex)}.push(#{r(node.expression.resultIndex)});',
             '  #block emit(node.expression)',
             '}'
           ],
           one_or_more: [
             '#block emit(node.expression)',
-            'if (#{resultVar(node.expression.resultIndex)} !== null) {',
-            '  #{resultVar(node.resultIndex)} = [];',
-            '  while (#{resultVar(node.expression.resultIndex)} !== null) {',
-            '    #{resultVar(node.resultIndex)}.push(#{resultVar(node.expression.resultIndex)});',
+            'if (#{r(node.expression.resultIndex)} !== null) {',
+            '  #{r(node.resultIndex)} = [];',
+            '  while (#{r(node.expression.resultIndex)} !== null) {',
+            '    #{r(node.resultIndex)}.push(#{r(node.expression.resultIndex)});',
             '    #block emit(node.expression)',
             '  }',
             '} else {',
-            '  #{resultVar(node.resultIndex)} = null;',
+            '  #{r(node.resultIndex)} = null;',
             '}'
           ],
           rule_ref: [
-            '#{resultVar(node.resultIndex)} = parse_#{node.name}();'
+            '#{r(node.resultIndex)} = parse_#{node.name}();'
           ],
           literal: [
             '#if node.value.length === 0',
-            '  #{resultVar(node.resultIndex)} = "";',
+            '  #{r(node.resultIndex)} = "";',
             '#else',
             '  #if !node.ignoreCase',
             '    #if node.value.length === 1',
@@ -695,13 +695,13 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    if (input.substr(#{posOffset("pos")}, #{node.value.length}).toLowerCase() === #{string(node.value.toLowerCase())}) {',
             '  #end',
             '    #if !node.ignoreCase',
-            '      #{resultVar(node.resultIndex)} = #{string(node.value)};',
+            '      #{r(node.resultIndex)} = #{string(node.value)};',
             '    #else',
-            '      #{resultVar(node.resultIndex)} = input.substr(#{posOffset("pos")}, #{node.value.length});',
+            '      #{r(node.resultIndex)} = input.substr(#{posOffset("pos")}, #{node.value.length});',
             '    #end',
             '    #{posAdvance(node.value.length)};',
             '  } else {',
-            '    #{resultVar(node.resultIndex)} = null;',
+            '    #{r(node.resultIndex)} = null;',
             '    if (reportFailures === 0) {',
             '      matchFailed(#{string(string(node.value))});',
             '    }',
@@ -710,10 +710,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
           ],
           "class": [
             'if (#{regexp}.test(input.charAt(#{posOffset("pos")}))) {',
-            '  #{resultVar(node.resultIndex)} = input.charAt(#{posOffset("pos")});',
+            '  #{r(node.resultIndex)} = input.charAt(#{posOffset("pos")});',
             '  #{posAdvance(1)};',
             '} else {',
-            '  #{resultVar(node.resultIndex)} = null;',
+            '  #{r(node.resultIndex)} = null;',
             '  if (reportFailures === 0) {',
             '    matchFailed(#{string(node.rawText)});',
             '  }',
@@ -721,10 +721,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
           ],
           any: [
             'if (input.length > #{posOffset("pos")}) {',
-            '  #{resultVar(node.resultIndex)} = input.charAt(#{posOffset("pos")});',
+            '  #{r(node.resultIndex)} = input.charAt(#{posOffset("pos")});',
             '  #{posAdvance(1)};',
             '} else {',
-            '  #{resultVar(node.resultIndex)} = null;',
+            '  #{r(node.resultIndex)} = null;',
             '  if (reportFailures === 0) {',
             '    matchFailed("any character");',
             '  }',
@@ -749,10 +749,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
     vars.emit    = emit;
     vars.options = options;
 
-    vars.resultVar = function(index) { return "result" + index; };
+    vars.r = function(index) { return "r" + index; };
 
     vars.param = function(param) {
-      return vars.resultVar(param.resultIndex)
+      return vars.r(param.resultIndex)
            + map(param.subindices, function(i) { return "[" + i + "]"; });
     };
 
@@ -778,10 +778,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
       };
     }
     vars.posSave    = function(node) {
-      return vars.resultVar(node.posIndex) + " = " + vars.posClone("pos");
+      return vars.r(node.posIndex) + " = " + vars.posClone("pos");
     };
     vars.posRestore = function(node) {
-      return "pos" + " = " + vars.posClone(vars.resultVar(node.posIndex));
+      return "pos" + " = " + vars.posClone(vars.r(node.posIndex));
     };
 
     return templates[name](vars);
@@ -807,17 +807,17 @@ PEG.compiler.passes.generateCode = function(ast, options) {
      * input.
      *
      * * If the code fragment matches the input, it advances |pos| to point to
-     *   the first chracter following the matched part of the input and sets
-     *   variable with a name |resultVar(node.resultIndex)| to an appropriate
+     *   the first chracter following the matched part of the input and sets a
+     *   register with index specified by |node.resultIndex| to an appropriate
      *   value. This value is always non-|null|.
      *
      * * If the code fragment does not match the input, it returns with |pos|
-     *   set to the original value and it sets a variable with a name
-     *   |resultVar(node.resultIndex)| to |null|.
+     *   set to the original value and it sets a register with index specified
+     *   by |node.posIndex| to |null|.
      *
-     * The code can use variables with names |resultVar(node.resultIndex)|
-     * where |node| is any of the current node's subnodes. It can't use any
-     * other variables.
+     * The code uses only registers with indices specified by |node.resultIndex|
+     * and |node.posIndex| where |node| is the processed node or some of its
+     * subnodes. It does not use any other registers.
      */
 
     named: emitSimple("named"),

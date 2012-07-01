@@ -1,21 +1,20 @@
 /*
- * Computes indices of variables used for storing match results and parse
- * positions in generated code. These variables are organized as one stack. The
- * following will hold after running this pass:
+ * Allocates registers that the generated code for each node will use to store
+ * match results and parse positions. The following will hold after running this
+ * pass:
  *
  *   * All nodes except "grammar" and "rule" nodes will have a |resultIndex|
- *     property. It will contain an index of the variable that will store a
- *     match result of the expression represented by the node in generated code.
+ *     property. It will contain an index of a register that will store a match
+ *     result of the expression represented by the node in generated code.
  *
- *   * Some nodes will have a |posIndex| property. It will contain an index of
- *     the variable that will store a parse position in generated code.
+ *   * Some nodes will have a |posIndex| property. It will contain an index of a
+ *     register that will store a saved parse position in generated code.
  *
- *   * All "rule" nodes will contain |resultCount| property. It will contain a
- *     count of distinct values of |resultIndex| and |posIndex| properties used
- *     in rule's subnodes. (This is useful to declare variables in generated
- *     code.)
+ *   * All "rule" nodes will contain a |registerCount| property. It will contain
+ *     the number of registers that will be used by code generated for the
+ *     rule's expression.
  */
-PEG.compiler.passes.computeVarIndices = function(ast) {
+PEG.compiler.passes.allocateRegisters = function(ast) {
   function computeLeaf(node, index) { return 0; }
 
   function computeFromExpression(delta) {
@@ -56,7 +55,7 @@ PEG.compiler.passes.computeVarIndices = function(ast) {
 
         depth = compute(node.expression, index);
 
-        node.resultCount = depth + 1;
+        node.registerCount = depth + 1;
       },
 
     named:        computeFromExpression({ result: 0, pos: 0 }),
