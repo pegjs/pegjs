@@ -567,10 +567,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    ',
             '    cache[cacheKey] = {',
             '      nextPos: #{posClone("pos")},',
-            '      result:  #{r(node.resultIndex)}',
+            '      result:  #{r(node.expression.resultIndex)}',
             '    };',
             '  #end',
-            '  return #{r(node.resultIndex)};',
+            '  return #{r(node.expression.resultIndex)};',
             '}'
           ],
           named: [

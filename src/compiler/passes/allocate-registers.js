@@ -42,7 +42,6 @@ PEG.compiler.passes.allocateRegisters = function(ast) {
     grammar:
       function(node, index) {
         each(node.rules, function(node) {
-          node.resultIndex = index;
           compute(node, index);
         });
       },
@@ -51,7 +50,7 @@ PEG.compiler.passes.allocateRegisters = function(ast) {
       function(node, index) {
         var depth;
 
-        node.expression.resultIndex = node.resultIndex;
+        node.expression.resultIndex = index;
 
         depth = compute(node.expression, index);
 
