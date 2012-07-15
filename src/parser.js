@@ -190,7 +190,7 @@ PEG.parser = (function(){
                 rules:       rules,
                 startRule:   rules[0].name
               };
-            })(r1, r0[1], r0[2]);
+            })(r1, r4, r5);
         }
         if (r0 === null) {
           pos = r1;
@@ -223,7 +223,7 @@ PEG.parser = (function(){
                 type: "initializer",
                 code: code
               };
-            })(r1, r0[0]);
+            })(r1, r3);
         }
         if (r0 === null) {
           pos = r1;
@@ -282,7 +282,7 @@ PEG.parser = (function(){
                     }
                   : expression
               };
-            })(r1, r0[0], r0[1], r0[3]);
+            })(r1, r3, r4, r6);
         }
         if (r0 === null) {
           pos = r1;
@@ -353,7 +353,7 @@ PEG.parser = (function(){
               } else {
                 return head;
               }
-            })(r1, r0[0], r0[1]);
+            })(r1, r3, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -397,7 +397,7 @@ PEG.parser = (function(){
                 expression: expression,
                 code:       code
               };
-            })(r1, r0[0], r0[1]);
+            })(r1, r3, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -458,7 +458,7 @@ PEG.parser = (function(){
                 label:      label,
                 expression: expression
               };
-            })(r1, r0[0], r0[2]);
+            })(r1, r3, r5);
         }
         if (r0 === null) {
           pos = r1;
@@ -493,7 +493,7 @@ PEG.parser = (function(){
                 type: "semantic_and",
                 code: code
               };
-            })(r1, r0[1]);
+            })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -520,7 +520,7 @@ PEG.parser = (function(){
                   type:       "simple_and",
                   expression: expression
                 };
-              })(r1, r0[1]);
+              })(r1, r4);
           }
           if (r0 === null) {
             pos = r1;
@@ -547,7 +547,7 @@ PEG.parser = (function(){
                     type: "semantic_not",
                     code: code
                   };
-                })(r1, r0[1]);
+                })(r1, r4);
             }
             if (r0 === null) {
               pos = r1;
@@ -574,7 +574,7 @@ PEG.parser = (function(){
                       type:       "simple_not",
                       expression: expression
                     };
-                  })(r1, r0[1]);
+                  })(r1, r4);
               }
               if (r0 === null) {
                 pos = r1;
@@ -612,7 +612,7 @@ PEG.parser = (function(){
                 type:       "optional",
                 expression: expression
               };
-            })(r1, r0[0]);
+            })(r1, r3);
         }
         if (r0 === null) {
           pos = r1;
@@ -639,7 +639,7 @@ PEG.parser = (function(){
                   type:       "zero_or_more",
                   expression: expression
                 };
-              })(r1, r0[0]);
+              })(r1, r3);
           }
           if (r0 === null) {
             pos = r1;
@@ -666,7 +666,7 @@ PEG.parser = (function(){
                     type:       "one_or_more",
                     expression: expression
                   };
-                })(r1, r0[0]);
+                })(r1, r3);
             }
             if (r0 === null) {
               pos = r1;
@@ -726,7 +726,7 @@ PEG.parser = (function(){
                 type: "rule_ref",
                 name: name
               };
-            })(r1, r0[0]);
+            })(r1, r3);
         }
         if (r0 === null) {
           pos = r1;
@@ -767,7 +767,7 @@ PEG.parser = (function(){
                   pos = r2;
                 }
                 if (r0 !== null) {
-                  r0 = (function(offset, expression) { return expression; })(r1, r0[1]);
+                  r0 = (function(offset, expression) { return expression; })(r1, r4);
                 }
                 if (r0 === null) {
                   pos = r1;
@@ -799,7 +799,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, braced) { return braced.substr(1, braced.length - 2); })(r1, r0[0]);
+          r0 = (function(offset, braced) { return braced.substr(1, braced.length - 2); })(r1, r3);
         }
         if (r0 === null) {
           pos = r1;
@@ -865,7 +865,7 @@ PEG.parser = (function(){
         if (r0 !== null) {
           r0 = (function(offset, parts) {
               return "{" + parts.join("") + "}";
-            })(r1, r0[1]);
+            })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -1436,7 +1436,7 @@ PEG.parser = (function(){
         if (r0 !== null) {
           r0 = (function(offset, head, tail) {
               return head + tail.join("");
-            })(r1, r0[0], r0[1]);
+            })(r1, r3, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -1492,7 +1492,7 @@ PEG.parser = (function(){
                 value:      value,
                 ignoreCase: flags === "i"
               };
-            })(r1, r0[0], r0[1]);
+            })(r1, r3, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -1527,7 +1527,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, string) { return string; })(r1, r0[0]);
+          r0 = (function(offset, string) { return string; })(r1, r3);
         }
         if (r0 === null) {
           pos = r1;
@@ -1585,7 +1585,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, chars) { return chars.join(""); })(r1, r0[1]);
+          r0 = (function(offset, chars) { return chars.join(""); })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -1673,7 +1673,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, char_) { return char_; })(r1, r0[1]);
+          r0 = (function(offset, char_) { return char_; })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -1727,7 +1727,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, chars) { return chars.join(""); })(r1, r0[1]);
+          r0 = (function(offset, chars) { return chars.join(""); })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -1815,7 +1815,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, char_) { return char_; })(r1, r0[1]);
+          r0 = (function(offset, char_) { return char_; })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -1928,7 +1928,7 @@ PEG.parser = (function(){
                 inverted:   inverted === "^",
                 ignoreCase: flags === "i"
               };
-            })(r1, r0[1], r0[2], r0[4]);
+            })(r1, r4, r5, r7);
         }
         if (r0 === null) {
           pos = r1;
@@ -1985,7 +1985,7 @@ PEG.parser = (function(){
                 // FIXME: Get the raw text from the input directly.
                 rawText: begin.rawText + "-" + end.rawText
               };
-            })(r1, r0[0], r0[2]);
+            })(r1, r3, r5);
         }
         if (r0 === null) {
           pos = r1;
@@ -2093,7 +2093,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, char_) { return char_; })(r1, r0[1]);
+          r0 = (function(offset, char_) { return char_; })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;
@@ -2184,7 +2184,7 @@ PEG.parser = (function(){
                 .replace("r", "\r")
                 .replace("t", "\t")
                 .replace("v", "\x0B"); // IE does not recognize "\v".
-            })(r1, r0[2]);
+            })(r1, r5);
         }
         if (r0 === null) {
           pos = r1;
@@ -2271,7 +2271,7 @@ PEG.parser = (function(){
         if (r0 !== null) {
           r0 = (function(offset, h1, h2) {
               return String.fromCharCode(parseInt(h1 + h2, 16));
-            })(r1, r0[1], r0[2]);
+            })(r1, r4, r5);
         }
         if (r0 === null) {
           pos = r1;
@@ -2326,7 +2326,7 @@ PEG.parser = (function(){
         if (r0 !== null) {
           r0 = (function(offset, h1, h2, h3, h4) {
               return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
-            })(r1, r0[1], r0[2], r0[3], r0[4]);
+            })(r1, r4, r5, r6, r7);
         }
         if (r0 === null) {
           pos = r1;
@@ -2361,7 +2361,7 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, eol) { return eol; })(r1, r0[1]);
+          r0 = (function(offset, eol) { return eol; })(r1, r4);
         }
         if (r0 === null) {
           pos = r1;

@@ -594,7 +594,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '#{posSave(node)};',
             '#block emit(node.expression)',
             'if (#{r(node.resultIndex)} !== null) {',
-            '  #{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [r(node.posIndex) + ".offset", r(node.posIndex) + ".line", r(node.posIndex) + ".column"] : [r(node.posIndex)]).concat(map(values(node.params), param)).join(", ")});',
+            '  #{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? [r(node.posIndex) + ".offset", r(node.posIndex) + ".line", r(node.posIndex) + ".column"] : [r(node.posIndex)]).concat(map(values(node.params), r)).join(", ")});',
             '}',
             'if (#{r(node.resultIndex)} === null) {',
             '  #{posRestore(node)};',
@@ -641,10 +641,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '}'
           ],
           semantic_and: [
-            '#{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? "" : null;'
+            '#{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), r)).join(", ")}) ? "" : null;'
           ],
           semantic_not: [
-            '#{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), param)).join(", ")}) ? null : "";'
+            '#{r(node.resultIndex)} = (function(#{(options.trackLineAndColumn ? ["offset", "line", "column"] : ["offset"]).concat(keys(node.params)).join(", ")}) {#{node.code}})(#{(options.trackLineAndColumn ? ["pos.offset", "pos.line", "pos.column"] : ["pos"]).concat(map(values(node.params), r)).join(", ")}) ? null : "";'
           ],
           optional: [
             '#block emit(node.expression)',
@@ -750,11 +750,6 @@ PEG.compiler.passes.generateCode = function(ast, options) {
     vars.options = options;
 
     vars.r = function(index) { return "r" + index; };
-
-    vars.param = function(param) {
-      return vars.r(param.resultIndex)
-           + map(param.subindices, function(i) { return "[" + i + "]"; });
-    };
 
     /* Position-handling macros */
     if (options.trackLineAndColumn) {

@@ -1,203 +1,288 @@
 describe("compiler pass |allocateRegisters|", function() {
   var pass = PEG.compiler.passes.allocateRegisters;
 
-  var leafDetails     = { resultIndex: 0 },
-      choiceDetails   = {
-        resultIndex:  0,
-        alternatives: [
-          { resultIndex: 0, posIndex: 1 },
-          { resultIndex: 0, posIndex: 1 },
-          { resultIndex: 0, posIndex: 1 }
-        ]
-      },
-      sequenceDetails = {
-        resultIndex: 0,
-        posIndex:    1,
-        elements:    [
-          { resultIndex: 2, posIndex: 3 },
-          { resultIndex: 3, posIndex: 4 },
-          { resultIndex: 4, posIndex: 5 }
-        ]
-      };
-
   function ruleDetails(details) { return { rules: [details] }; }
 
-  it("allocates registers for a named", function() {
-    expect(pass).toChangeAST('start "start" = &"a"', ruleDetails({
-      registerCount: 2,
-      expression:    {
-        resultIndex: 0,
-        expression:  { resultIndex: 0, posIndex: 1 }
-      }
-    }));
+  function expressionDetails(details) {
+    return ruleDetails({ expression: details });
+  }
+
+  function innerExpressionDetails(details) {
+    return expressionDetails({ expression: details });
+  }
+
+  var reuseResultDetails = innerExpressionDetails({ resultIndex: 0 }),
+      allocResultDetails = innerExpressionDetails({ resultIndex: 1 }),
+      savePosDetails     = expressionDetails({ posIndex: 1 }),
+      scopedDetails      = expressionDetails({ params: {} }),
+      blockedDetails     = expressionDetails({
+        elements: [
+          {},
+          {
+            resultIndex: 3,
+            posIndex:    5,
+            elements:    [{ resultIndex: 6 }, { resultIndex: 7 }]
+          }
+        ]
+      }),
+      unblockedDetails   = expressionDetails({
+        elements: [
+          {},
+          {
+            resultIndex: 3,
+            posIndex:    4,
+            elements:    [{ resultIndex: 5 }, { resultIndex: 6 }]
+          }
+        ]
+      });
+
+  describe("for rule", function() {
+    it("allocates a new result register for the expression", function() {
+      expect(pass).toChangeAST('start = "a"', expressionDetails({
+        resultIndex: 0
+      }));
+    });
+
+    it("counts used registers", function() {
+      expect(pass).toChangeAST('start = "a"', ruleDetails({
+        registerCount: 1
+      }));
+      expect(pass).toChangeAST('start = "a"*', ruleDetails({
+        registerCount: 2
+      }));
+      expect(pass).toChangeAST('start = ("a"*)*', ruleDetails({
+        registerCount: 3
+      }));
+    });
+
+    it("resets used registers counter", function() {
+      expect(pass).toChangeAST('a = "a"*; b = "b"', {
+        rules: [ { registerCount: 2 }, { registerCount: 1 }]
+      });
+    });
   });
 
-  it("allocates registers for a choice", function() {
-    expect(pass).toChangeAST('start = &"a" / &"b" / &"c"', ruleDetails({
-      registerCount: 2,
-      expression:    choiceDetails
-    }));
-    expect(pass).toChangeAST('start = &"a" / &"b"* / &"c"', ruleDetails({
-      registerCount: 3,
-      expression:    choiceDetails
-    }));
-    expect(pass).toChangeAST('start = &"a" / &(&"b") / &"c"', ruleDetails({
-      registerCount: 3,
-      expression:    choiceDetails
-    }));
+  describe("for named", function() {
+    it("reuses its own result register for the expression", function() {
+      expect(pass).toChangeAST('start "start" = "a"', reuseResultDetails);
+    });
   });
 
-  it("allocates registers for an action", function() {
-    expect(pass).toChangeAST('start = &"a" { code }', ruleDetails({
-      registerCount: 3,
-      expression:    {
-        resultIndex: 0,
-        posIndex:    1,
-        expression:  { resultIndex: 0, posIndex: 2 }
-      }
-    }));
+  describe("for choice", function() {
+    it("reuses its own result register for the alternatives", function() {
+      expect(pass).toChangeAST('start = "a" / "b" / "c"', expressionDetails({
+        alternatives: [
+          { resultIndex: 0 },
+          { resultIndex: 0 },
+          { resultIndex: 0 }
+        ]
+      }));
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = (a:"a" / "b" / "c") { }', scopedDetails);
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = ((a:"a" / "b" / "c") "d") ("e" "f")',
+        unblockedDetails
+      );
+    });
   });
 
-  it("allocates registers for a sequence", function() {
-    expect(pass).toChangeAST('start = ', ruleDetails({
-      registerCount: 2,
-      expression:    { resultIndex: 0, posIndex: 1 }
-    }));
-    expect(pass).toChangeAST('start = &"a" &"b" &"c"', ruleDetails({
-      registerCount: 6,
-      expression:    sequenceDetails
-    }));
-    expect(pass).toChangeAST('start = &"a" &"b" &"c"*', ruleDetails({
-      registerCount: 7,
-      expression:    sequenceDetails
-    }));
-    expect(pass).toChangeAST('start = &"a" &"b"* &"c"', ruleDetails({
-      registerCount: 6,
-      expression:    sequenceDetails
-    }));
-    expect(pass).toChangeAST('start = &"a" &("b"*)* &"c"', ruleDetails({
-      registerCount: 7,
-      expression:    sequenceDetails
-    }));
-    expect(pass).toChangeAST('start = &"a"* &"b" &"c"', ruleDetails({
-      registerCount: 6,
-      expression:    sequenceDetails
-    }));
-    expect(pass).toChangeAST('start = &("a"*)* &"b" &"c"', ruleDetails({
-      registerCount: 6,
-      expression:    sequenceDetails
-    }));
-    expect(pass).toChangeAST('start = &(("a"*)*)* &"b" &"c"', ruleDetails({
-      registerCount: 7,
-      expression:    sequenceDetails
-    }));
-    expect(pass).toChangeAST('start = &"a" &(&"b") &"c"', ruleDetails({
-      registerCount: 6,
-      expression:    sequenceDetails
-    }));
+  describe("for action", function() {
+    it("allocates a position register", function() {
+      expect(pass).toChangeAST('start = "a" { }', savePosDetails);
+    });
+
+    it("reuses its own result register for the expression", function() {
+      expect(pass).toChangeAST('start = "a" { }', reuseResultDetails);
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = (a:"a" { }) { }', scopedDetails);
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = ((a:"a" { }) "b") ("c" "d")',
+        unblockedDetails
+      );
+    });
+
+    it("computes params", function() {
+      expect(pass).toChangeAST('start = a:"a" b:"b" c:"c" { }', expressionDetails({
+        params: { a: 3, b: 4, c: 5 }
+      }));
+    });
   });
 
-  it("allocates registers for a labeled", function() {
-    expect(pass).toChangeAST('start = label:&"a"', ruleDetails({
-      registerCount: 2,
-      expression:    {
-        resultIndex: 0,
-        expression:  { resultIndex: 0, posIndex: 1 }
-      }
-    }));
+  describe("for sequence", function() {
+    it("allocates a position register", function() {
+      expect(pass).toChangeAST('start = ',            savePosDetails);
+      expect(pass).toChangeAST('start = "a" "b" "c"', savePosDetails);
+    });
+
+    it("allocates new result registers for the elements", function() {
+      expect(pass).toChangeAST('start = "a" "b" "c"', expressionDetails({
+        elements: [{ resultIndex: 2 }, { resultIndex: 3 }, { resultIndex: 4 }]
+      }));
+    });
+
+    it("does not create a new scope", function() {
+      expect(pass).toChangeAST(
+        'start = a:"a" b:"b" c:"c" { }',
+        expressionDetails({ params: { a: 3, b: 4, c: 5 } })
+      );
+    });
+
+    it("does not unblock blocked result registers from children", function() {
+      expect(pass).toChangeAST(
+        'start = (a:"a" "b") ("c" "d")',
+        blockedDetails
+      );
+    });
   });
 
-  it("allocates registers for a simple and", function() {
-    expect(pass).toChangeAST('start = &(&"a")', ruleDetails({
-      registerCount: 3,
-      expression:    {
-        resultIndex: 0,
-        posIndex:    1,
-        expression:  { resultIndex: 0, posIndex: 2 }
-      }
-    }));
+  describe("for labeled", function() {
+    it("reuses its own result register for the expression", function() {
+      expect(pass).toChangeAST('start = a:"a"', reuseResultDetails);
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = a:(b:"b") { }', expressionDetails({
+        params: { a: 0 }
+      }));
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = (a:(b:"b") "c") ("d" "e")',
+        blockedDetails
+      );
+    });
+
+    it("adds label to the environment", function() {
+      expect(pass).toChangeAST('start = a:"a" { }', expressionDetails({
+        params: { a: 0 }
+      }));
+    });
+
+    it("blocks its own result register", function() {
+      expect(pass).toChangeAST(
+        'start = (a:"a" "b") ("c" "d")',
+        blockedDetails
+      );
+    });
   });
 
-  it("allocates registers for a simple not", function() {
-    expect(pass).toChangeAST('start = !(&"a")', ruleDetails({
-      registerCount: 3,
-      expression:    {
-        resultIndex: 0,
-        posIndex:    1,
-        expression:  { resultIndex: 0, posIndex: 2 }
-      }
-    }));
+  describe("for simple and", function() {
+    it("allocates a position register", function() {
+      expect(pass).toChangeAST('start = &"a"', savePosDetails);
+    });
+
+    it("reuses its own result register for the expression", function() {
+      expect(pass).toChangeAST('start = &"a"', reuseResultDetails);
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = &(a:"a") { }', scopedDetails);
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = (&(a:"a") "b") ("c" "d")',
+        unblockedDetails
+      );
+    });
   });
 
-  it("allocates registers for a semantic and", function() {
-    expect(pass).toChangeAST('start = &{ code }', ruleDetails({
-      registerCount: 1,
-      expression:    leafDetails
-    }));
+  describe("for simple not", function() {
+    it("allocates a position register", function() {
+      expect(pass).toChangeAST('start = !"a"', savePosDetails);
+    });
+
+    it("reuses its own result register for the expression", function() {
+      expect(pass).toChangeAST('start = !"a"', reuseResultDetails);
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = !(a:"a") { }', scopedDetails);
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = (!(a:"a") "b") ("c" "d")',
+        unblockedDetails
+      );
+    });
   });
 
-  it("allocates registers for a semantic not", function() {
-    expect(pass).toChangeAST('start = !{ code }', ruleDetails({
-      registerCount: 1,
-      expression:    leafDetails
-    }));
+  describe("for semantic and", function() {
+    it("computes params", function() {
+      expect(pass).toChangeAST('start = a:"a" b:"b" c:"c" &{ }', expressionDetails({
+        elements: [{}, {}, {}, { params: { a: 2, b: 3, c: 4 } }]
+      }));
+    });
   });
 
-  it("allocates registers for an optional", function() {
-    expect(pass).toChangeAST('start = (&"a")?', ruleDetails({
-      registerCount: 2,
-      expression:    {
-        resultIndex: 0,
-        expression:  { resultIndex: 0, posIndex: 1 }
-      }
-    }));
+  describe("for semantic not", function() {
+    it("computes params", function() {
+      expect(pass).toChangeAST('start = a:"a" b:"b" c:"c" !{ }', expressionDetails({
+        elements: [{}, {}, {}, { params: { a: 2, b: 3, c: 4 } }]
+      }));
+    });
   });
 
-  it("allocates registers for a zero or more", function() {
-    expect(pass).toChangeAST('start = (&"a")*', ruleDetails({
-      registerCount: 3,
-      expression:    {
-        resultIndex: 0,
-        expression:  { resultIndex: 1, posIndex: 2 }
-      }
-    }));
+  describe("for optional", function() {
+    it("reuses its own result register for the expression", function() {
+      expect(pass).toChangeAST('start = "a"?', reuseResultDetails);
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = (a:"a")? { }', scopedDetails);
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = ((a:"a")? "b") ("c" "d")',
+        unblockedDetails
+      );
+    });
   });
 
-  it("allocates registers for a one or more", function() {
-    expect(pass).toChangeAST('start = (&"a")+', ruleDetails({
-      registerCount: 3,
-      expression:    {
-        resultIndex: 0,
-        expression:  { resultIndex: 1, posIndex: 2 }
-      }
-    }));
+  describe("for zero or more", function() {
+    it("allocates a new result register for the expression", function() {
+      expect(pass).toChangeAST('start = "a"*', allocResultDetails);
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = (a:"a")* { }', scopedDetails);
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = ((a:"a")* "b") ("c" "d")',
+        unblockedDetails
+      );
+    });
   });
 
-  it("allocates registers for a rule reference", function() {
-    expect(pass).toChangeAST('start = a', ruleDetails({
-      registerCount: 1,
-      expression:    leafDetails
-    }));
-  });
+  describe("for one or more", function() {
+    it("allocates a new result register for the expression", function() {
+      expect(pass).toChangeAST('start = "a"+', allocResultDetails);
+    });
 
-  it("allocates registers for a literal", function() {
-    expect(pass).toChangeAST('start = "a"', ruleDetails({
-      registerCount: 1,
-      expression:    leafDetails
-    }));
-  });
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = (a:"a")+ { }', scopedDetails);
+    });
 
-  it("allocates registers for a class", function() {
-    expect(pass).toChangeAST('start = [a-z]', ruleDetails({
-      registerCount: 1,
-      expression:    leafDetails
-    }));
-  });
-
-  it("allocates registers for an any", function() {
-    expect(pass).toChangeAST('start = .', ruleDetails({
-      registerCount: 1,
-      expression:    leafDetails
-    }));
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = ((a:"a")+ "b") ("c" "d")',
+        unblockedDetails
+      );
+    });
   });
 });
