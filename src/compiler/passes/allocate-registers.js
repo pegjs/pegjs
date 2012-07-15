@@ -131,7 +131,7 @@ PEG.compiler.passes.allocateRegisters = function(ast) {
   function nop() {}
 
   function computeExpressionScoped(node) {
-    scoped(function() { compute(node.expression); })
+    scoped(function() { compute(node.expression); });
   }
 
   function computeExpressionScopedReuseResult(node) {
