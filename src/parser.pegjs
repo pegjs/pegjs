@@ -173,7 +173,7 @@ rparen    = ")" __ { return ")"; }
 dot       = "." __ { return "."; }
 
 /*
- * Modelled after ECMA-262, 5th ed., 7.6, but much simplified:
+ * Modeled after ECMA-262, 5th ed., 7.6, but much simplified:
  *
  * * no Unicode escape sequences
  *
@@ -193,7 +193,7 @@ identifier "identifier"
     }
 
 /*
- * Modelled after ECMA-262, 5th ed., 7.8.4. (syntax & semantics, rules only
+ * Modeled after ECMA-262, 5th ed., 7.8.4. (syntax & semantics, rules only
  * vaguely).
  */
 literal "literal"
@@ -335,7 +335,7 @@ upperCaseLetter
 
 __ = (whitespace / eol / comment)*
 
-/* Modelled after ECMA-262, 5th ed., 7.4. */
+/* Modeled after ECMA-262, 5th ed., 7.4. */
 comment "comment"
   = singleLineComment
   / multiLineComment
@@ -346,7 +346,7 @@ singleLineComment
 multiLineComment
   = "/*" (!"*/" .)* "*/"
 
-/* Modelled after ECMA-262, 5th ed., 7.3. */
+/* Modeled after ECMA-262, 5th ed., 7.3. */
 eol "end of line"
   = "\n"
   / "\r\n"
@@ -357,6 +357,6 @@ eol "end of line"
 eolChar
   = [\n\r\u2028\u2029]
 
-/* Modelled after ECMA-262, 5th ed., 7.2. */
+/* Modeled after ECMA-262, 5th ed., 7.2. */
 whitespace "whitespace"
   = [ \t\v\f\u00A0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]
