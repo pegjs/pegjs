@@ -146,7 +146,16 @@ primary
 /* "Lexical" elements */
 
 action "action"
-  = braced:braced __ { return braced.substr(1, braced.length - 2); }
+  = braced:braced __ { 
+      var code = braced.substr(1, braced.length - 2); 
+      if (options.coffee) {
+        return options.compiler.compile(code, {bare: true});
+      }
+      else {
+        return code;
+      }
+
+}
 
 braced
   = "{" parts:(braced / nonBraceCharacters)* "}" {

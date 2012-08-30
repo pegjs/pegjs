@@ -35,7 +35,8 @@ PEG.parser = (function(){
      * which the parser was generated (see |PEG.buildParser|). If the parsing is
      * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.
      */
-    parse: function(input, startRule) {
+    parse: function(input, options) {
+      var startRule = undefined;
       var parseFunctions = {
         "grammar": parse_grammar,
         "initializer": parse_initializer,
@@ -95,6 +96,16 @@ PEG.parser = (function(){
         "whitespace": parse_whitespace
       };
       
+      if (options !== undefined) {
+        if (typeof options == "string") {
+          startRule = options;
+          options = {};
+        } else {
+          startRule = options.startRule;
+        }
+      } else {
+        options = {};
+      }
       if (startRule !== undefined) {
         if (parseFunctions[startRule] === undefined) {
           throw new Error("Invalid rule name: " + quote(startRule) + ".");
@@ -799,7 +810,16 @@ PEG.parser = (function(){
           pos = r2;
         }
         if (r0 !== null) {
-          r0 = (function(offset, braced) { return braced.substr(1, braced.length - 2); })(r1, r3);
+          r0 = (function(offset, braced) { 
+              var code = braced.substr(1, braced.length - 2); 
+              if (options.coffee) {
+                return options.compiler.compile(code, {bare: true});
+              }
+              else {
+                return code;
+              }
+        
+        })(r1, r3);
         }
         if (r0 === null) {
           pos = r1;

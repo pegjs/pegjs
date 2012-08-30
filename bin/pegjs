@@ -24,6 +24,7 @@ function printHelp() {
   util.puts("  -e, --export-var <variable>  name of the variable where the parser object");
   util.puts("                               will be stored (default: \"module.exports\")");
   util.puts("      --cache                  make generated parser cache results");
+  util.puts("      --coffee                 use coffeescript for the actions");  
   util.puts("      --track-line-and-column  make generated parser track line and column");
   util.puts("  -v, --version                print version information and exit");
   util.puts("  -h, --help                   print help and exit");
@@ -68,7 +69,8 @@ function readStream(inputStream, callback) {
 var exportVar = "module.exports";
 var options = {
   cache:              false,
-  trackLineAndColumn: false
+  trackLineAndColumn: false,
+  coffee:             false
 };
 
 while (args.length > 0 && isOption(args[0])) {
@@ -85,6 +87,10 @@ while (args.length > 0 && isOption(args[0])) {
     case "--cache":
       options.cache = true;
       break;
+      
+    case "--coffee":
+      options.coffee = true;
+      break;      
 
     case "--track-line-and-column":
       options.trackLineAndColumn = true;

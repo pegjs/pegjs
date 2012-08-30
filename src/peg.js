@@ -24,8 +24,27 @@ var PEG = {
    * generated parser and cause its malfunction.
    */
   buildParser: function(grammar, options) {
-    return PEG.compiler.compile(PEG.parser.parse(grammar), options);
+    if (options && options.coffee) {
+      /* We need to test if we are in the browser */
+      if (typeof require == "function" && typeof module !== "undefined") {
+        /* Node.js */
+        if(typeof CoffeeScript == "undefined"){
+          options.compiler = require('coffee-script');
+        }
+        else options.compiler = CoffeeScript;
+      }
+      else {
+        /* Browser */
+        if(window.CoffeeScript == null){
+          throw new Error('This is a browser environment; you must include the CoffeeScript compiler before PEGjs');
+        }
+        else options.compiler = window.CoffeeScript;
+      }
+    }
+    return PEG.compiler.compile(PEG.parser.parse(grammar,options), options);
   }
+  
+
 };
 
 /* Thrown when the grammar contains an error. */
