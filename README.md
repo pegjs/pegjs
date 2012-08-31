@@ -36,6 +36,8 @@ If you need both the `pegjs` command and the JavaScript API, install PEG.js both
 
 [Download](http://pegjs.majda.cz/#download) the PEG.js library (regular or minified version).
 
+If you want to use [CofeeScript](http://coffeescript.org) in your actions you need to include it before PEG.js in your document.
+
 Generating a Parser
 -------------------
 
@@ -215,6 +217,9 @@ Match a sequence of expressions and return their match results in an array.
 Match the expression. If the match is successful, run the action, otherwise consider the match failed.
 
 The action is a piece of JavaScript code that is executed as if it was inside a function. It gets the match results of labeled expressions in preceding expression as its arguments. The action should return some JavaScript value using the `return` statement. This value is considered match result of the preceding expression. The action can return `null` to indicate a match failure.
+
+You can use CoffeeScript in your action if you compile the parser with `option.coffee = true` or from the commandline via the option `--coffee`.
+You still need to explicitly call `return` if you want to return things and you can't mix and match JavaScript and CoffeeScript.
 
 The code inside the action can access all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the action code must be balanced.
 

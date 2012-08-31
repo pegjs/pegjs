@@ -132,6 +132,12 @@ describe("generated parser", function() {
       expect(parser.parse("x", "b")).toBe("b");
     });
 
+    it("uses the specified rule as a start rule when |options.startRule| is specified", function() {
+      expect(parser.parse("x", {startRule: "a"})).toBe("a");
+      expect(parser.parse("x", {startRule: "b"})).toBe("b");
+    });
+
+
     it("throws exception when the specified start rule does not exist", function() {
       expect(function() {
         parser.parse("x", "c");
@@ -200,7 +206,6 @@ describe("generated parser", function() {
     describe("action code", function() {
       it("tranforms the expression result by returnung a non-|null| value", function() {
         var parser = PEG.buildParser('start = "a" { return 42; }', options);
-
         expect(parser).toParse("a", 42);
       });
 
@@ -281,6 +286,101 @@ describe("generated parser", function() {
         var parser = PEG.buildParser(
               'start = "a" { return null; } / "a"',
               options
+            );
+
+        expect(parser).toParse("a", "a");
+      });
+    });
+    
+    describe("action code in coffeescript", function() {
+      var opt = { };
+      beforeEach(function(){
+        var key, val;
+        for (key in options) {
+          opt[key] = options[key];
+        }
+        opt.coffee = true;
+      });
+      it("tranforms the expression result by returnung a non-|null| value", function() {
+
+        var parser = PEG.buildParser('start = "a" { return "#{40 + 2}" }', opt);
+        expect(parser).toParse("a", "42");
+      });
+
+      it("causes match failure by returning |null|", function() {
+        var parser = PEG.buildParser('start = "a" { return null }', opt);
+
+        expect(parser).toFailToParse("a");
+      });
+
+      it("is not called when the expression does not match", function() {
+        var parser = PEG.buildParser(
+              'start = "a" { throw "Boom!" } / "b"',
+              opt
+            );
+
+        expect(parser).toParse("b", "b");
+      });
+
+      it("can use label variables", function() {
+        var parser = PEG.buildParser('start = a:"a" { return a }', opt);
+        expect(parser).toParse("a", "a");
+      });
+
+      it("can use the |offset| variable to get the current parse position", function() {
+        var parser = PEG.buildParser(
+              'start = "a" ("b" { return offset })',
+              opt
+            );
+
+        expect(parser).toParse("ab", ["a", 1]);
+      });
+
+      if (opt.trackLineAndColumn) {
+        it("can use the |line| and |column| variables to get the current line and column", function() {
+          var parser = PEG.buildParser([
+                '{ result }',
+                'start  = line (nl+ line)* { return result }',
+                'line   = thing (" "+ thing)*',
+                'thing  = digit / mark',
+                'digit  = [0-9]',
+                'mark   = "x" { result = [line, column] }',
+                'nl     = ("\\r" / "\\n" / "\\u2028" / "\\u2029")'
+              ].join("\n"), opt);
+
+          expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
+
+          /* Non-Unix newlines */
+          expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
+          expect(parser).toParse("1\r\nx", [2, 1]); // Windows
+          expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+
+          /* Strange newlines */
+          expect(parser).toParse("1\u2028x", [2, 1]); // line separator
+          expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        });
+      }
+
+      it("can use variables defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ v = "#{40 + 2}" }',
+              'start = "a" { return v }'
+            ].join("\n"), opt);
+        expect(parser).toParse("a", "42");
+      });
+
+      it("can use functions defined in the initializer", function() {
+        var parser = PEG.buildParser([
+              '{ f = -> 42 }',
+              'start = "a" { return f() }'
+            ].join("\n"), opt);
+        expect(parser).toParse("a", 42);
+      });
+
+      it("does not advance position when the expression matches but the action returns |null|", function() {
+        var parser = PEG.buildParser(
+              'start = "a" { return null } / "a"',
+              opt
             );
 
         expect(parser).toParse("a", "a");
@@ -839,7 +939,6 @@ describe("generated parser", function() {
         });
       });
     });
-
     /*
      * Following examples are from Wikipedia, see
      * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
@@ -873,7 +972,7 @@ describe("generated parser", function() {
               'Value   = digits:[0-9]+     { return parseInt(digits.join(""), 10); }',
               '        / "(" expr:Expr ")" { return expr; }'
             ].join("\n"), options);
-
+            
         /* The "value" rule */
         expect(parser).toParse("0",       0);
         expect(parser).toParse("123",     123);
