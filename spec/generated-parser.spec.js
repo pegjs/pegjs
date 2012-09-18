@@ -144,7 +144,7 @@ describe("generated parser", function() {
       it("runs before the parsing begins", function() {
         var parser = PEG.buildParser([
               '{ var result = 42; }',
-              'start  = "a" { return result }'
+              'start = "a" { return result; }'
             ].join("\n"), options);
 
         expect(parser).toParse("a", 42);
