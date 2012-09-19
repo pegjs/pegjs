@@ -40,14 +40,17 @@ describe("generated parser", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toParse: function(input, expected) {
-        var result;
+      toParse: function(input) {
+        var options  = arguments.length > 2 ? arguments[1] : {},
+            expected = arguments[arguments.length - 1],
+            result;
 
         try {
-          result = this.actual.parse(input);
+          result = this.actual.parse(input, options);
 
           this.message = function() {
             return "Expected " + jasmine.pp(input) + " "
+                 + "with options " + jasmine.pp(options) + " "
                  + (this.isNot ? "not " : "")
                  + "to parse as " + jasmine.pp(expected) + ", "
                  + "but it parsed as " + jasmine.pp(result) + ".";
@@ -57,6 +60,7 @@ describe("generated parser", function() {
         } catch (e) {
           this.message = function() {
             return "Expected " + jasmine.pp(input) + " "
+                 + "with options " + jasmine.pp(options) + " "
                  + "to parse as " + jasmine.pp(expected) + ", "
                  + "but it failed to parse with message "
                  + jasmine.pp(e.message) + ".";
@@ -66,14 +70,21 @@ describe("generated parser", function() {
         }
       },
 
-      toFailToParse: function(input, details) {
+      toFailToParse: function(input) {
+        var options = arguments.length > 2 ? arguments[1] : {},
+            details = arguments.length > 1
+                        ? arguments[arguments.length - 1]
+                        : undefined;
+
         /*
          * Extracted into a function just to silence JSHint complaining about
          * creating functions in a loop.
          */
         function buildKeyMessage(key, value) {
           return function() {
-            return "Expected " + jasmine.pp(input) + " to fail to parse"
+            return "Expected " + jasmine.pp(input) + " "
+                 + "with options " + jasmine.pp(options) + " "
+                 + "to fail to parse"
                  + (details ? " with details " + jasmine.pp(details) : "") + ", "
                  + "but " + jasmine.pp(key) + " "
                  + "is " + jasmine.pp(value) + ".";
@@ -83,10 +94,12 @@ describe("generated parser", function() {
         var result, key;
 
         try {
-          result = this.actual.parse(input);
+          result = this.actual.parse(input, options);
 
           this.message = function() {
-            return "Expected " + jasmine.pp(input) + " to fail to parse"
+            return "Expected " + jasmine.pp(input) + " "
+                 + "with options " + jasmine.pp(options) + " "
+                 + "to fail to parse"
                  + (details ? " with details " + jasmine.pp(details) : "") + ", "
                  + "but it parsed as " + jasmine.pp(result) + ".";
           };
@@ -95,7 +108,9 @@ describe("generated parser", function() {
         } catch (e) {
           if (this.isNot) {
             this.message = function() {
-              return "Expected " + jasmine.pp(input) + " to parse, "
+              return "Expected " + jasmine.pp(input)
+                   + "with options " + jasmine.pp(options) + " "
+                   + "to parse, "
                    + "but it failed with message "
                    + jasmine.pp(e.message) + ".";
             };
@@ -123,19 +138,27 @@ describe("generated parser", function() {
           'b = "x" { return "b"; }'
         ].join("\n"));
 
-    it("uses the fist rule as a start rule when no |startRule| is specified", function() {
-      expect(parser.parse("x")).toBe("a");
-    });
+    describe("start rule", function() {
+      describe("without the |startRule| option", function() {
+        it("uses the fist rule", function() {
+          expect(parser).toParse("x", "a");
+        });
+      });
 
-    it("uses the specified rule as a start rule when |startRule| is specified", function() {
-      expect(parser.parse("x", "a")).toBe("a");
-      expect(parser.parse("x", "b")).toBe("b");
-    });
+      describe("when the |startRule| option specifies existing rule", function() {
+        it("uses the specified rule", function() {
+          expect(parser).toParse("x", { startRule: "a" }, "a");
+          expect(parser).toParse("x", { startRule: "b" }, "b");
+        });
+      });
 
-    it("throws exception when the specified start rule does not exist", function() {
-      expect(function() {
-        parser.parse("x", "c");
-      }).toThrow("Invalid rule name: \"c\".");
+      describe("when the |startRule| option specifies non-existent rule", function() {
+        it("throws exception", function() {
+          expect(parser).toFailToParse("x", { startRule: "c" }, {
+            message: "Invalid rule name: \"c\"."
+          });
+        });
+      });
     });
   });
 
@@ -148,6 +171,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", 42);
+      });
+
+      it("can use options passed to the parser", function() {
+        var parser = PEG.buildParser([
+              '{ var result = options; }',
+              'start = "a" { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", { a: 42 }, { a: 42 });
       });
     });
 
@@ -275,6 +307,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", 42);
+      });
+
+      it("can use options passed to the parser", function() {
+        var parser = PEG.buildParser(
+              'start = "a" { return options; }',
+              options
+            );
+
+        expect(parser).toParse("a", { a: 42 }, { a: 42 });
       });
 
       it("does not advance position when the expression matches but the action returns |null|", function() {
@@ -431,6 +472,15 @@ describe("generated parser", function() {
 
         expect(parser).toParse("a", ["a", ""]);
       });
+
+      it("can use options passed to the parser", function() {
+        var parser = PEG.buildParser([
+              '{ var result; }',
+              'start = "a" &{ result = options; return true; } { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", { a: 42 }, { a: 42 });
+      });
     });
 
     describe("semantic not code", function() {
@@ -505,6 +555,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", ["a", ""]);
+      });
+
+      it("can use options passed to the parser", function() {
+        var parser = PEG.buildParser([
+              '{ var result; }',
+              'start = "a" !{ result = options; return false; } { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", { a: 42 }, { a: 42 });
       });
     });
 

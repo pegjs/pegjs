@@ -90,7 +90,11 @@ Using the generated parser is simple — just call its `parse` method and pass a
 
     parser.parse("abcd"); // throws an exception
 
-You can also start parsing from a specific rule in the grammar. Just pass the rule name to the `parse` method as a second parameter.
+You can tweak parser behavior by passing a second parameter with an options object to the `parse` method. Only one option is currently supported:
+
+  * `startRule` — name of the rule to start parsing from
+
+Parsers can also support their own custom options.
 
 Grammar Syntax and Semantics
 ----------------------------
@@ -121,7 +125,7 @@ On the top level, the grammar consists of *rules* (in our example, there are fiv
 
 A rule name must be a JavaScript identifier. It is followed by an equality sign (“=”) and a parsing expression. If the rule has a human-readable name, it is written as a JavaScript string between the name and separating equality sign. Rules need to be separated only by whitespace (their beginning is easily recognizable), but a semicolon (“;”) after the parsing expression is allowed.
 
-Rules can be preceded by an *initializer* — a piece of JavaScript code in curly braces (“{” and “}”). This code is executed before the generated parser starts parsing. All variables and functions defined in the initializer are accessible in rule actions and semantic predicates. Curly braces in the initializer code must be balanced.
+Rules can be preceded by an *initializer* — a piece of JavaScript code in curly braces (“{” and “}”). This code is executed before the generated parser starts parsing. All variables and functions defined in the initializer are accessible in rule actions and semantic predicates. The code inside the initializer can access options passed to the parser using the `options` variable. Curly braces in the initializer code must be balanced.
 
 The parsing expressions of the rules are used to match the input text to the grammar. There are various types of expressions — matching characters or character classes, indicating optional parts and repetition, etc. Expressions can also contain references to other rules. See detailed description below.
 
@@ -188,6 +192,8 @@ The code inside the predicate can access all variables and functions defined in 
 
 The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
 
+The code inside the predicate can also access options passed to the parser using the `options` variable.
+
 Note that curly braces in the predicate code must be balanced.
 
 #### ! { *predicate* }
@@ -197,6 +203,8 @@ The predicate is a piece of JavaScript code that is executed as if it was inside
 The code inside the predicate can access all variables and functions defined in the initializer at the beginning of the grammar.
 
 The code inside the predicate can also access the current parse position using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the current line and column using the `line` and `column` variables. Both are one-based indexes.
+
+The code inside the predicate can also access options passed to the parser using the `options` variable.
 
 Note that curly braces in the predicate code must be balanced.
 
@@ -219,6 +227,8 @@ The action is a piece of JavaScript code that is executed as if it was inside a 
 The code inside the action can access all variables and functions defined in the initializer at the beginning of the grammar. Curly braces in the action code must be balanced.
 
 The code inside the action can also access the parse position at the beginning of the action's expression using the `offset` variable. It is a zero-based character index into the input string. If the `trackLineAndColumn` option was set to `true` when the parser was generated (or `--track-line-and-column` was used on the command line), the code can also access the line and column at the beginning of the action's expression using the `line` and `column` variables. Both are one-based indexes.
+
+The code inside the action can also access options passed to the parser using the `options` variable.
 
 Note that curly braces in the action code must be balanced.
 

@@ -35,7 +35,7 @@ PEG.parser = (function(){
      * which the parser was generated (see |PEG.buildParser|). If the parsing is
      * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.
      */
-    parse: function(input, startRule) {
+    parse: function(input) {
       var parseFunctions = {
         "grammar": parse_grammar,
         "initializer": parse_initializer,
@@ -95,7 +95,12 @@ PEG.parser = (function(){
         "whitespace": parse_whitespace
       };
       
-      if (startRule !== undefined) {
+      var options = arguments.length > 1 ? arguments[1] : {},
+          startRule;
+      
+      if (options.startRule !== undefined) {
+        startRule = options.startRule;
+        
         if (parseFunctions[startRule] === undefined) {
           throw new Error("Invalid rule name: " + quote(startRule) + ".");
         }
