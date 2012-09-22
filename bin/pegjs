@@ -25,6 +25,7 @@ function printHelp() {
   util.puts("                               will be stored (default: \"module.exports\")");
   util.puts("      --cache                  make generated parser cache results");
   util.puts("      --track-line-and-column  make generated parser track line and column");
+  util.puts("      --case-insensitive       make generated parser ignore cases");
   util.puts("  -v, --version                print version information and exit");
   util.puts("  -h, --help                   print help and exit");
 }
@@ -88,6 +89,10 @@ while (args.length > 0 && isOption(args[0])) {
 
     case "--track-line-and-column":
       options.trackLineAndColumn = true;
+      break;
+
+    case "--case-insensitive":
+      options.caseInsensitive = true;
       break;
 
     case "-v":

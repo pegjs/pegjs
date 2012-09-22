@@ -7,6 +7,9 @@ PEG.compiler.passes.generateCode = function(ast, options) {
   if (options.trackLineAndColumn === undefined) {
     options.trackLineAndColumn = false;
   }
+  if (options.caseInsensitive === undefined) {
+    options.caseInsensitive = false;
+  }
 
   /*
    * Codie 1.1.0
@@ -682,7 +685,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '#if node.value.length === 0',
             '  #{r(node.resultIndex)} = "";',
             '#else',
-            '  #if !node.ignoreCase',
+            '  #if !options.caseInsensitive && !node.ignoreCase',
             '    #if node.value.length === 1',
             '      if (input.charCodeAt(#{posOffset("pos")}) === #{node.value.charCodeAt(0)}) {',
             '    #else',
@@ -699,7 +702,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
              */
             '    if (input.substr(#{posOffset("pos")}, #{node.value.length}).toLowerCase() === #{string(node.value.toLowerCase())}) {',
             '  #end',
-            '    #if !node.ignoreCase',
+            '    #if !options.caseInsensitive && !node.ignoreCase',
             '      #{r(node.resultIndex)} = #{string(node.value)};',
             '    #else',
             '      #{r(node.resultIndex)} = input.substr(#{posOffset("pos")}, #{node.value.length});',
@@ -879,7 +882,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
                   + quoteForRegexpClass(part[1])
                 : quoteForRegexpClass(part);
             }).join('')
-          + ']/' + (node.ignoreCase ? 'i' : '');
+          + ']/' + (options.caseInsensitive || node.ignoreCase ? 'i' : '');
       } else {
         /*
          * Stupid IE considers regexps /[]/ and /[^]/ syntactically invalid, so
