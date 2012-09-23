@@ -251,7 +251,7 @@ Both the parser generator and generated parsers should run well in the following
 Development
 -----------
 
-  * [Project website](https://pegjs.majda.cz/)
+  * [Project website](http://pegjs.majda.cz/)
   * [Source code](https://github.com/dmajda/pegjs)
   * [Issue tracker](https://github.com/dmajda/pegjs/issues)
   * [Google Group](http://groups.google.com/group/pegjs)
