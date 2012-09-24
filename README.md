@@ -252,6 +252,7 @@ Development
 -----------
 
   * [Project website](http://pegjs.majda.cz/)
+  * [Wiki](https://github.com/dmajda/pegjs/wiki)
   * [Source code](https://github.com/dmajda/pegjs)
   * [Issue tracker](https://github.com/dmajda/pegjs/issues)
   * [Google Group](http://groups.google.com/group/pegjs)
