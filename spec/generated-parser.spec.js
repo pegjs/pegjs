@@ -739,6 +739,15 @@ describe("generated parser", function() {
       });
     });
 
+    describe("case-insensitive matching", function() {
+      it("matches case-insensitively", function() {
+        var parser = PEG.buildParser('start = "a" / [b]', { caseInsensitive: true });
+        
+        expect(parser).toParse("A", "A");
+        expect(parser).toParse("B", "B");
+      })
+    })
+
     describe("error reporting", function() {
       describe("behavior", function() {
         it("reports only the rightmost error", function() {

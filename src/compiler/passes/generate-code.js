@@ -7,6 +7,9 @@ PEG.compiler.passes.generateCode = function(ast, options) {
   if (options.trackLineAndColumn === undefined) {
     options.trackLineAndColumn = false;
   }
+  if (options.caseInsensitive === undefined) {
+    options.caseInsensitive = false;
+  }
 
   /*
    * Codie 1.1.0
@@ -682,7 +685,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '#if node.value.length === 0',
             '  #{r(node.resultIndex)} = "";',
             '#else',
-            '  #if !node.ignoreCase',
+            '  #if !(options.caseInsensitive && /[a-z]/i.test(node.value)) && !node.ignoreCase',
             '    #if node.value.length === 1',
             '      if (input.charCodeAt(#{posOffset("pos")}) === #{node.value.charCodeAt(0)}) {',
             '    #else',
@@ -699,7 +702,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
              */
             '    if (input.substr(#{posOffset("pos")}, #{node.value.length}).toLowerCase() === #{string(node.value.toLowerCase())}) {',
             '  #end',
-            '    #if !node.ignoreCase',
+            '    #if !(options.caseInsensitive && /[a-z]/i.test(node.value)) && !node.ignoreCase',
             '      #{r(node.resultIndex)} = #{string(node.value)};',
             '    #else',
             '      #{r(node.resultIndex)} = input.substr(#{posOffset("pos")}, #{node.value.length});',
@@ -867,19 +870,32 @@ PEG.compiler.passes.generateCode = function(ast, options) {
     literal:      emitSimple("literal"),
 
     "class": function(node) {
-      var regexp;
+      var regexp, alphabet;
 
       if (node.parts.length > 0) {
+        alphabet = false
         regexp = '/^['
           + (node.inverted ? '^' : '')
           + map(node.parts, function(part) {
-              return part instanceof Array
-                ? quoteForRegexpClass(part[0])
+              if (part instanceof Array) {
+                if (/[a-z]/i.test(part[0])) {
+                  alphabet = true;
+                }
+                part = quoteForRegexpClass(part[0])
                   + '-'
-                  + quoteForRegexpClass(part[1])
-                : quoteForRegexpClass(part);
+                  + quoteForRegexpClass(part[1]);
+              } else {
+                if (/[a-z]/i.test(part)) {
+                  alphabet = true;
+                }
+                part = quoteForRegexpClass(part);
+              }
+              return part;
             }).join('')
-          + ']/' + (node.ignoreCase ? 'i' : '');
+          + ']/' + (options.caseInsensitive && alphabet || node.ignoreCase ? 'i' : '');
+        if(options.caseInsensitive && alphabet && !node.ignoreCase) {
+          node.rawText += 'i';
+        }
       } else {
         /*
          * Stupid IE considers regexps /[]/ and /[^]/ syntactically invalid, so

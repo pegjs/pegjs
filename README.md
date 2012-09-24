@@ -59,6 +59,7 @@ You can tweak the generated parser with two options:
 
   * `--cache` — makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower
   * `--track-line-and-column` — makes the parser track line and column (available as `line` and `column` variables in the actions and predicates)
+  * `--case-insensitive` - makes the parser ignore cases, even without appending `i` to parsing expressions
 
 ### JavaScript API
 
