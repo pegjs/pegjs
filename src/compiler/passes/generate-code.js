@@ -306,6 +306,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '     * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.',
             '     */',
             '    parse: function(input) {',
+            '      input = String(input);',
             '      var parseFunctions = {',
             '        #for rule in node.rules',
             '          #{string(rule.name) + ": parse_" + rule.name + (rule !== node.rules[node.rules.length - 1] ? "," : "")}',
