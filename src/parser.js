@@ -37,62 +37,7 @@ PEG.parser = (function(){
      */
     parse: function(input) {
       var parseFunctions = {
-        "grammar": parse_grammar,
-        "initializer": parse_initializer,
-        "rule": parse_rule,
-        "choice": parse_choice,
-        "sequence": parse_sequence,
-        "labeled": parse_labeled,
-        "prefixed": parse_prefixed,
-        "suffixed": parse_suffixed,
-        "primary": parse_primary,
-        "action": parse_action,
-        "braced": parse_braced,
-        "nonBraceCharacters": parse_nonBraceCharacters,
-        "nonBraceCharacter": parse_nonBraceCharacter,
-        "equals": parse_equals,
-        "colon": parse_colon,
-        "semicolon": parse_semicolon,
-        "slash": parse_slash,
-        "and": parse_and,
-        "not": parse_not,
-        "question": parse_question,
-        "star": parse_star,
-        "plus": parse_plus,
-        "lparen": parse_lparen,
-        "rparen": parse_rparen,
-        "dot": parse_dot,
-        "identifier": parse_identifier,
-        "literal": parse_literal,
-        "string": parse_string,
-        "doubleQuotedString": parse_doubleQuotedString,
-        "doubleQuotedCharacter": parse_doubleQuotedCharacter,
-        "simpleDoubleQuotedCharacter": parse_simpleDoubleQuotedCharacter,
-        "singleQuotedString": parse_singleQuotedString,
-        "singleQuotedCharacter": parse_singleQuotedCharacter,
-        "simpleSingleQuotedCharacter": parse_simpleSingleQuotedCharacter,
-        "class": parse_class,
-        "classCharacterRange": parse_classCharacterRange,
-        "classCharacter": parse_classCharacter,
-        "bracketDelimitedCharacter": parse_bracketDelimitedCharacter,
-        "simpleBracketDelimitedCharacter": parse_simpleBracketDelimitedCharacter,
-        "simpleEscapeSequence": parse_simpleEscapeSequence,
-        "zeroEscapeSequence": parse_zeroEscapeSequence,
-        "hexEscapeSequence": parse_hexEscapeSequence,
-        "unicodeEscapeSequence": parse_unicodeEscapeSequence,
-        "eolEscapeSequence": parse_eolEscapeSequence,
-        "digit": parse_digit,
-        "hexDigit": parse_hexDigit,
-        "letter": parse_letter,
-        "lowerCaseLetter": parse_lowerCaseLetter,
-        "upperCaseLetter": parse_upperCaseLetter,
-        "__": parse___,
-        "comment": parse_comment,
-        "singleLineComment": parse_singleLineComment,
-        "multiLineComment": parse_multiLineComment,
-        "eol": parse_eol,
-        "eolChar": parse_eolChar,
-        "whitespace": parse_whitespace
+        "grammar": parse_grammar
       };
       
       var options = arguments.length > 1 ? arguments[1] : {},
@@ -102,7 +47,7 @@ PEG.parser = (function(){
         startRule = options.startRule;
         
         if (parseFunctions[startRule] === undefined) {
-          throw new Error("Invalid rule name: " + quote(startRule) + ".");
+          throw new Error("Can't start parsing from rule " + quote(startRule) + ".");
         }
       } else {
         startRule = "grammar";

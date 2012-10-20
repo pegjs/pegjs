@@ -55,10 +55,11 @@ If you omit both input and ouptut file, standard input and output are used.
 
 By default, the parser object is assigned to `module.exports`, which makes the output a Node.js module. You can assign it to another variable by passing a variable name using the `-e`/`--export-var` option. This may be helpful if you want to use the parser in browser environment.
 
-You can tweak the generated parser with two options:
+You can tweak the generated parser with several options:
 
   * `--cache` — makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower
   * `--track-line-and-column` — makes the parser track line and column (available as `line` and `column` variables in the actions and predicates)
+  * `--allowed-start-rules` — comma-separated list of rules the parser will be allowed to start parsing from (default: the first rule in the grammar)
 
 ### JavaScript API
 
@@ -80,6 +81,7 @@ You can tweak the generated parser by passing a second parameter with an options
 
   * `cache` — if `true`, makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower (default: `false`)
   * `trackLineAndColumn` — if `true`, makes the parser track line and column (available as `line` and `column` variables in the actions and predicates) (default: `false`)
+  * `allowedStartRules` — rules the parser will be allowed to start parsing from (default: the first rule in the grammar)
 
 Using the Parser
 ----------------

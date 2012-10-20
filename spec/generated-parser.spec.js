@@ -135,27 +135,28 @@ describe("generated parser", function() {
   describe("parse", function() {
     var parser = PEG.buildParser([
           'a = "x" { return "a"; }',
-          'b = "x" { return "b"; }'
-        ].join("\n"));
+          'b = "x" { return "b"; }',
+          'c = "x" { return "c"; }'
+        ].join("\n"), { allowedStartRules: ["b", "c"] });
 
     describe("start rule", function() {
       describe("without the |startRule| option", function() {
-        it("uses the first rule", function() {
-          expect(parser).toParse("x", "a");
+        it("uses the first allowed rule", function() {
+          expect(parser).toParse("x", "b");
         });
       });
 
-      describe("when the |startRule| option specifies existing rule", function() {
+      describe("when the |startRule| option specifies allowed rule", function() {
         it("uses the specified rule", function() {
-          expect(parser).toParse("x", { startRule: "a" }, "a");
           expect(parser).toParse("x", { startRule: "b" }, "b");
+          expect(parser).toParse("x", { startRule: "c" }, "c");
         });
       });
 
-      describe("when the |startRule| option specifies non-existent rule", function() {
+      describe("when the |startRule| option specifies disallowed rule", function() {
         it("throws exception", function() {
-          expect(parser).toFailToParse("x", { startRule: "c" }, {
-            message: "Invalid rule name: \"c\"."
+          expect(parser).toFailToParse("x", { startRule: "a" }, {
+            message: "Can't start parsing from rule \"a\"."
           });
         });
       });
@@ -895,6 +896,40 @@ describe("generated parser", function() {
             line:   2,
             column: 1
           });
+        });
+      });
+    });
+
+    describe("allowed start rules", function() {
+      var grammar = [
+            'a = "x"',
+            'b = "x"',
+            'c = "x"'
+          ].join("\n");
+
+      describe("without the |allowedStartRules| option", function() {
+        var parser = PEG.buildParser(grammar);
+
+        it("allows the first rule", function() {
+          expect(parser).toParse("x", { startRule: "a" }, "x");
+        });
+
+        it("does not allow any other rules", function() {
+          expect(parser).toFailToParse("x", { startRule: "b" }, { });
+          expect(parser).toFailToParse("x", { startRule: "c" }, { });
+        });
+      });
+
+      describe("with the |allowedStartRules| option", function() {
+        var parser = PEG.buildParser(grammar, { allowedStartRules: ["b", "c"] });
+
+        it("allows the specified rules", function() {
+          expect(parser).toParse("x", { startRule: "b" }, "x");
+          expect(parser).toParse("x", { startRule: "c" }, "x");
+        });
+
+        it("does not allow any other rules", function() {
+          expect(parser).toFailToParse("x", { startRule: "a" }, { });
         });
       });
     });

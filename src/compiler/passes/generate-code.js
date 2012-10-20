@@ -3,7 +3,8 @@ PEG.compiler.passes.generateCode = function(ast, options) {
   options = clone(options) || {};
   defaults(options, {
     cache:              false,
-    trackLineAndColumn: false
+    trackLineAndColumn: false,
+    allowedStartRules:  [ast.startRule]
   });
 
   /*
@@ -305,8 +306,8 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '     */',
             '    parse: function(input) {',
             '      var parseFunctions = {',
-            '        #for rule in node.rules',
-            '          #{string(rule.name) + ": parse_" + rule.name + (rule !== node.rules[node.rules.length - 1] ? "," : "")}',
+            '        #for rule in options.allowedStartRules',
+            '          #{string(rule) + ": parse_" + rule + (rule !== options.allowedStartRules[options.allowedStartRules.length - 1] ? "," : "")}',
             '        #end',
             '      };',
             '      ',
@@ -317,10 +318,10 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '        startRule = options.startRule;',
             '        ',
             '        if (parseFunctions[startRule] === undefined) {',
-            '          throw new Error("Invalid rule name: " + quote(startRule) + ".");',
+            '          throw new Error("Can\'t start parsing from rule " + quote(startRule) + ".");',
             '        }',
             '      } else {',
-            '        startRule = #{string(node.startRule)};',
+            '        startRule = #{string(options.allowedStartRules[0])};',
             '      }',
             '      ',
             '      #{posInit("pos")};',
