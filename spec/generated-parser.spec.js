@@ -140,7 +140,7 @@ describe("generated parser", function() {
 
     describe("start rule", function() {
       describe("without the |startRule| option", function() {
-        it("uses the fist rule", function() {
+        it("uses the first rule", function() {
           expect(parser).toParse("x", "a");
         });
       });
