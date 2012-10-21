@@ -1,12 +1,10 @@
 /* Generates the parser code. */
 PEG.compiler.passes.generateCode = function(ast, options) {
-  options = options || {};
-  if (options.cache === undefined) {
-    options.cache = false;
-  }
-  if (options.trackLineAndColumn === undefined) {
-    options.trackLineAndColumn = false;
-  }
+  options = clone(options) || {};
+  defaults(options, {
+    cache:              false,
+    trackLineAndColumn: false
+  });
 
   /*
    * Codie 1.1.0

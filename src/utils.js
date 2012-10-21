@@ -71,6 +71,22 @@ function values(object) {
   return result;
 }
 
+function clone(object) {
+  var result = {};
+  for (var key in object) {
+    result[key] = object[key];
+  }
+  return result;
+}
+
+function defaults(object, defaults) {
+  for (var key in defaults) {
+    if (object[key] === undefined) {
+      object[key] = defaults[key];
+    }
+  }
+}
+
 /*
  * Returns a string padded on the left to a desired length with a character.
  *
