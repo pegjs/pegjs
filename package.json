@@ -1,6 +1,6 @@
 {
   "name":        "pegjs",
-  "version":     "@VERSION",
+  "version":     "0.7.0",
   "description": "Parser generator for JavaScript",
   "homepage":    "http://pegjs.majda.cz/",
   "author": {

@@ -18,16 +18,14 @@ PARSER_OUT_FILE = $(SRC_DIR)/parser.js
 PEGJS_SRC_FILE = $(SRC_DIR)/peg.js
 PEGJS_LIB_FILE = $(LIB_DIR)/peg.js
 
-PACKAGE_JSON_SRC_FILE  = package.json
-PACKAGE_JSON_DIST_FILE = $(DIST_NODE_DIR)/package.json
-
 PEGJS_DIST_FILE_DEV = $(DIST_WEB_DIR)/peg-$(PEGJS_VERSION).js
 PEGJS_DIST_FILE_MIN = $(DIST_WEB_DIR)/peg-$(PEGJS_VERSION).min.js
 
-CHANGELOG_FILE = CHANGELOG
-LICENSE_FILE   = LICENSE
-README_FILE    = README.md
-VERSION_FILE   = VERSION
+PACKAGE_JSON_FILE = package.json
+CHANGELOG_FILE    = CHANGELOG
+LICENSE_FILE      = LICENSE
+README_FILE       = README.md
+VERSION_FILE      = VERSION
 
 # ===== Executables =====
 
@@ -108,16 +106,16 @@ dist: build
 
 	# Node.js
 	mkdir -p $(DIST_NODE_DIR)
-	cp -r               \
-	  $(LIB_DIR)        \
-	  $(BIN_DIR)        \
-	  $(EXAMPLES_DIR)   \
-	  $(CHANGELOG_FILE) \
-	  $(LICENSE_FILE)   \
-	  $(README_FILE)    \
-	  $(VERSION_FILE)   \
+	cp -r                  \
+	  $(LIB_DIR)           \
+	  $(BIN_DIR)           \
+	  $(EXAMPLES_DIR)      \
+	  $(PACKAGE_JSON_FILE) \
+	  $(CHANGELOG_FILE)    \
+	  $(LICENSE_FILE)      \
+	  $(README_FILE)       \
+	  $(VERSION_FILE)      \
 	  $(DIST_NODE_DIR)
-	$(PREPROCESS) $(PACKAGE_JSON_SRC_FILE) > $(PACKAGE_JSON_DIST_FILE)
 
 # Remove distribution file (created by "dist")
 distclean:
