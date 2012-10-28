@@ -299,7 +299,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '  ',
             '  var result = {',
             '    /*',
-            '     * Parses the input with a generated parser. If the parsing is successfull,',
+            '     * Parses the input with a generated parser. If the parsing is successful,',
             '     * returns a value explicitly or implicitly specified by the grammar from',
             '     * which the parser was generated (see |PEG.buildParser|). If the parsing is',
             '     * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.',
