@@ -2861,7 +2861,6 @@ PEG.parser = (function(){
       return "Expected " + expectedHumanized + " but " + foundHumanized + " found.";
     }
     
-    this.name = "SyntaxError";
     this.expected = expected;
     this.found = found;
     this.message = buildMessage(expected, found);
@@ -2870,7 +2869,15 @@ PEG.parser = (function(){
     this.column = column;
   };
   
-  result.SyntaxError.prototype = Error.prototype;
+  result.SyntaxError.prototype = (function(){
+    var SyntaxError = result.SyntaxError;
+    var F = function(){
+      this.constructor = SyntaxError;
+      this.name = "SyntaxError";
+    };
+    F.prototype = Error.prototype;
+    return new F;
+  })();
   
   return result;
 })();
