@@ -31,7 +31,7 @@ var PEG = {
 /* Thrown when the grammar contains an error. */
 
 PEG.GrammarError = function(message) {
-  this.name = "PEG.GrammarError";
+  this.name = "GrammarError";
   this.message = message;
 };
 
