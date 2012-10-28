@@ -10,6 +10,9 @@
   },
   "main":        "lib/peg",
   "bin":         "bin/pegjs",
+  "scripts": {
+    "test": "make spec"
+  },
   "repository": {
     "type": "git",
     "url":  "http://github.com/dmajda/pegjs.git"
