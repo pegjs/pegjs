@@ -562,11 +562,11 @@ MemberExpression
   = base:(
         PrimaryExpression
       / FunctionExpression
-      / NewToken __ constructor:MemberExpression __ arguments:Arguments {
+      / NewToken __ constructor:MemberExpression __ args:Arguments {
           return {
             type:        "NewOperator",
             constructor: constructor,
-            arguments:   arguments
+            arguments:   args
           };
         }
     )
@@ -597,19 +597,19 @@ NewExpression
 
 CallExpression
   = base:(
-      name:MemberExpression __ arguments:Arguments {
+      name:MemberExpression __ args:Arguments {
         return {
           type:      "FunctionCall",
           name:      name,
-          arguments: arguments
+          arguments: args
         };
       }
     )
     argumentsOrAccessors:(
-        __ arguments:Arguments {
+        __ args:Arguments {
           return {
             type:      "FunctionCallArguments",
-            arguments: arguments
+            arguments: args
           };
         }
       / __ "[" __ name:Expression __ "]" {
@@ -652,8 +652,8 @@ CallExpression
     }
 
 Arguments
-  = "(" __ arguments:ArgumentList? __ ")" {
-    return arguments !== "" ? arguments : [];
+  = "(" __ args:ArgumentList? __ ")" {
+    return args !== "" ? args : [];
   }
 
 ArgumentList
