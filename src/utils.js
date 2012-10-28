@@ -87,6 +87,12 @@ function defaults(object, defaults) {
   }
 }
 
+function subclass(child, parent) {
+  function ctor() { this.constructor = child; }
+  ctor.prototype = parent.prototype;
+  child.prototype = new ctor();
+}
+
 /*
  * Returns a string padded on the left to a desired length with a character.
  *

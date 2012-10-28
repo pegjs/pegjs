@@ -8,6 +8,8 @@
  */
 var PEG = (function(undefined) {
 
+// @include "utils.js"
+
 var PEG = {
   /* PEG.js version (uses semantic versioning). */
   VERSION: "@VERSION",
@@ -35,9 +37,8 @@ PEG.GrammarError = function(message) {
   this.message = message;
 };
 
-PEG.GrammarError.prototype = Error.prototype;
+subclass(PEG.GrammarError, Error);
 
-// @include "utils.js"
 // @include "parser.js"
 // @include "compiler.js"
 
