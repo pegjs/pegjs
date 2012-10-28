@@ -87,6 +87,10 @@ function defaults(object, defaults) {
   }
 }
 
+/*
+ * The code needs to be in sync with the code template in the compilation
+ * function for "action" nodes.
+ */
 function subclass(child, parent) {
   function ctor() { this.constructor = child; }
   ctor.prototype = parent.prototype;

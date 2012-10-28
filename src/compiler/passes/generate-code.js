@@ -273,6 +273,13 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '   * http://pegjs.majda.cz/',
             '   */',
             '  ',
+            /* This needs to be in sync with |subclass| in utils.js. */
+            '  function subclass(child, parent) {',
+            '    function ctor() { this.constructor = child; }',
+            '    ctor.prototype = parent.prototype;',
+            '    child.prototype = new ctor();',
+            '  }',
+            '  ',
             /* This needs to be in sync with |quote| in utils.js. */
             '  function quote(s) {',
             '    /*',
@@ -546,7 +553,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
             '    this.column = column;',
             '  };',
             '  ',
-            '  result.SyntaxError.prototype = Error.prototype;',
+            '  subclass(result.SyntaxError, Error);',
             '  ',
             '  return result;',
             '})()'
