@@ -5,6 +5,12 @@ PEG.parser = (function(){
    * http://pegjs.majda.cz/
    */
   
+  function subclass(child, parent) {
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor();
+  }
+  
   function quote(s) {
     /*
      * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a
@@ -2870,7 +2876,7 @@ PEG.parser = (function(){
     this.column = column;
   };
   
-  result.SyntaxError.prototype = Error.prototype;
+  subclass(result.SyntaxError, Error);
   
   return result;
 })();
