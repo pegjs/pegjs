@@ -1,2 +1,7 @@
 lib/*
 dist/*
+
+node_modules
+
+examples/*.js
+
