@@ -1,3 +1,7 @@
+# ===== Variables =====
+
+PEGJS_VERSION = `cat $(VERSION_FILE)`
+
 # ===== Directories =====
 
 SRC_DIR       = src
@@ -34,10 +38,6 @@ UGLIFYJS      = uglifyjs
 JASMINE_NODE  = jasmine-node
 PEGJS         = $(BIN_DIR)/pegjs
 BENCHMARK_RUN = $(BENCHMARK_DIR)/run
-
-# ===== Variables =====
-
-PEGJS_VERSION = `cat $(VERSION_FILE)`
 
 # ===== Preprocessor =====
 
