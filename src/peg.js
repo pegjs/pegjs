@@ -1,5 +1,5 @@
 /*
- * PEG.js @VERSION
+ * PEG.js 0.7.0
  *
  * http://pegjs.majda.cz/
  *
@@ -12,7 +12,7 @@ var PEG = (function(undefined) {
 
 var PEG = {
   /* PEG.js version (uses semantic versioning). */
-  VERSION: "@VERSION",
+  VERSION: "0.7.0",
 
   /*
    * Generates a parser from a specified grammar and returns it.

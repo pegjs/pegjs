@@ -54,19 +54,12 @@ PREPROCESS=perl -e '                                                           \
                                                                                \
   use File::Basename;                                                          \
                                                                                \
-  open(my $$f, "$(VERSION_FILE)") or die "Can\x27t open $(VERSION_FILE): $$!"; \
-  my $$PEGJS_VERSION = <$$f>;                                                  \
-  close($$f);                                                                  \
-  chomp($$PEGJS_VERSION);                                                      \
-                                                                               \
   sub preprocess {                                                             \
     my $$file = shift;                                                         \
     my $$output = "";                                                          \
                                                                                \
     open(my $$f, $$file) or die "Can\x27t open $$file: $$!";                   \
     while(<$$f>) {                                                             \
-      s/\@VERSION/$$PEGJS_VERSION/g;                                           \
-                                                                               \
       if (/^\s*\/\/\s*\@include\s*"([^"]*)"\s*$$/) {                           \
         $$output .= preprocess(dirname($$file) . "/" . $$1);                   \
         next;                                                                  \
