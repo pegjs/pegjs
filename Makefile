@@ -2,6 +2,21 @@
 
 PEGJS_VERSION = `cat $(VERSION_FILE)`
 
+# ===== Modules =====
+
+# Order matters -- dependencies must be listed before modules dependent on them.
+MODULES = utils                                 \
+          grammar-error                         \
+          parser                                \
+          compiler/passes/allocate-registers    \
+          compiler/passes/generate-code         \
+          compiler/passes/remove-proxy-rules    \
+          compiler/passes/report-left-recursion \
+          compiler/passes/report-missing-rules  \
+          compiler/passes                       \
+          compiler                              \
+          peg
+
 # ===== Directories =====
 
 SRC_DIR       = src
@@ -39,52 +54,64 @@ JASMINE_NODE  = jasmine-node
 PEGJS         = $(BIN_DIR)/pegjs
 BENCHMARK_RUN = $(BENCHMARK_DIR)/run
 
-# ===== Preprocessor =====
-
-# A simple preprocessor that recognizes two directives:
-#
-#   @VERSION          -- insert PEG.js version
-#   @include "<file>" -- include <file> here
-#
-# This could have been implemented many ways. I chose Perl because everyone will
-# have it.
-PREPROCESS=perl -e '                                                           \
-  use strict;                                                                  \
-  use warnings;                                                                \
-                                                                               \
-  use File::Basename;                                                          \
-                                                                               \
-  sub preprocess {                                                             \
-    my $$file = shift;                                                         \
-    my $$output = "";                                                          \
-                                                                               \
-    open(my $$f, $$file) or die "Can\x27t open $$file: $$!";                   \
-    while(<$$f>) {                                                             \
-      if (/^\s*\/\/\s*\@include\s*"([^"]*)"\s*$$/) {                           \
-        $$output .= preprocess(dirname($$file) . "/" . $$1);                   \
-        next;                                                                  \
-      }                                                                        \
-                                                                               \
-      $$output .= $$_;                                                         \
-    }                                                                          \
-    close($$f);                                                                \
-                                                                               \
-    return $$output;                                                           \
-  }                                                                            \
-                                                                               \
-  print preprocess($$ARGV[0]);                                                 \
-'
-
 # ===== Targets =====
 
 # Generate the grammar parser
 parser:
-	$(PEGJS) --export-var PEG.parser $(PARSER_SRC_FILE) $(PARSER_OUT_FILE)
+	$(PEGJS) $(PARSER_SRC_FILE) $(PARSER_OUT_FILE)
 
 # Build the PEG.js library
 build:
 	mkdir -p $(LIB_DIR)
-	$(PREPROCESS) $(PEGJS_SRC_FILE) > $(PEGJS_LIB_FILE)
+	rm -f $(PEGJS_LIB_FILE)
+
+	# The following code is inspired by CoffeeScript's Cakefile.
+
+	echo '/*'                                                                          >> $(PEGJS_LIB_FILE)
+	echo " * PEG.js $(PEGJS_VERSION)"                                                  >> $(PEGJS_LIB_FILE)
+	echo ' *'                                                                          >> $(PEGJS_LIB_FILE)
+	echo ' * http://pegjs.majda.cz/'                                                   >> $(PEGJS_LIB_FILE)
+	echo ' *'                                                                          >> $(PEGJS_LIB_FILE)
+	echo ' * Copyright (c) 2010-2012 David Majda'                                      >> $(PEGJS_LIB_FILE)
+	echo ' * Licensed under the MIT license'                                           >> $(PEGJS_LIB_FILE)
+	echo ' */'                                                                         >> $(PEGJS_LIB_FILE)
+	echo 'var PEG = (function(undefined) {'                                            >> $(PEGJS_LIB_FILE)
+	echo '  var modules = {'                                                           >> $(PEGJS_LIB_FILE)
+	echo '    define: function(name, factory) {'                                       >> $(PEGJS_LIB_FILE)
+	echo '      var dir    = name.replace(/(^|\/)[^/]+$$/, "$$1"),'                    >> $(PEGJS_LIB_FILE)
+	echo '          module = { exports: {} };'                                         >> $(PEGJS_LIB_FILE)
+	echo ''                                                                            >> $(PEGJS_LIB_FILE)
+	echo '      function require(path) {'                                              >> $(PEGJS_LIB_FILE)
+	echo '        var name   = dir + path,'                                            >> $(PEGJS_LIB_FILE)
+	echo '            regexp = /[^\/]+\/\.\.\/|\.\//;'                                 >> $(PEGJS_LIB_FILE)
+	echo ''                                                                            >> $(PEGJS_LIB_FILE)
+	echo "        /* Can't use /.../g because we can move backwards in the string. */" >> $(PEGJS_LIB_FILE)
+	echo '        while (regexp.test(name)) {'                                         >> $(PEGJS_LIB_FILE)
+	echo '          name = name.replace(regexp, "");'                                  >> $(PEGJS_LIB_FILE)
+	echo '        }'                                                                   >> $(PEGJS_LIB_FILE)
+	echo ''                                                                            >> $(PEGJS_LIB_FILE)
+	echo '        return modules[name];'                                               >> $(PEGJS_LIB_FILE)
+	echo '      }'                                                                     >> $(PEGJS_LIB_FILE)
+	echo ''                                                                            >> $(PEGJS_LIB_FILE)
+	echo '      factory(module, require);'                                             >> $(PEGJS_LIB_FILE)
+	echo '      this[name] = module.exports;'                                          >> $(PEGJS_LIB_FILE)
+	echo '    }'                                                                       >> $(PEGJS_LIB_FILE)
+	echo '  };'                                                                        >> $(PEGJS_LIB_FILE)
+	echo ''                                                                            >> $(PEGJS_LIB_FILE)
+
+	for module in $(MODULES); do                                                              \
+	  echo "  modules.define(\"$$module\", function(module, require) {" >> $(PEGJS_LIB_FILE); \
+	  sed -e 's/^/    /' src/$$module.js                                >> $(PEGJS_LIB_FILE); \
+	  echo '  });'                                                      >> $(PEGJS_LIB_FILE); \
+	  echo ''                                                           >> $(PEGJS_LIB_FILE); \
+	done
+
+	echo '  return modules["peg"]'              >> $(PEGJS_LIB_FILE)
+	echo '})();'                                >> $(PEGJS_LIB_FILE)
+	echo ''                                     >> $(PEGJS_LIB_FILE)
+	echo 'if (typeof module !== "undefined") {' >> $(PEGJS_LIB_FILE)
+	echo '  module.exports = PEG;'              >> $(PEGJS_LIB_FILE)
+	echo '}'                                    >> $(PEGJS_LIB_FILE)
 
 # Remove built PEG.js library (created by "build")
 clean:

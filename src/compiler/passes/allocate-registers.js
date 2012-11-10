@@ -1,3 +1,5 @@
+var utils = require("../../utils");
+
 /*
  * Allocates registers that the generated code for each node will use to store
  * match results and parse positions. For "action", "semantic_and" and
@@ -23,7 +25,7 @@
  *     point of action/predicate code execution to registers that will contain
  *     the labeled values.
  */
-PEG.compiler.passes.allocateRegisters = function(ast) {
+module.exports = function(ast) {
   /*
    * Register allocator that allocates registers from an unlimited
    * integer-indexed pool. It allows allocating and releaseing registers in any
@@ -151,10 +153,10 @@ PEG.compiler.passes.allocateRegisters = function(ast) {
     node.params = vars.buildParams();
   }
 
-  var compute = buildNodeVisitor({
+  var compute = utils.buildNodeVisitor({
     grammar:
       function(node) {
-        each(node.rules, compute);
+        utils.each(node.rules, compute);
       },
 
     rule:
@@ -172,7 +174,7 @@ PEG.compiler.passes.allocateRegisters = function(ast) {
 
     choice:
       function(node) {
-        each(node.alternatives, function(alternative) {
+        utils.each(node.alternatives, function(alternative) {
           reuseResult(node, alternative);
           scoped(function() {
             compute(alternative);
@@ -194,11 +196,11 @@ PEG.compiler.passes.allocateRegisters = function(ast) {
     sequence:
       function(node) {
         savePos(node, function() {
-          each(node.elements, function(element) {
+          utils.each(node.elements, function(element) {
             element.resultIndex = registers.alloc();
             compute(element);
           });
-          each(node.elements, function(element) {
+          utils.each(node.elements, function(element) {
             registers.release(element.resultIndex);
           });
         });

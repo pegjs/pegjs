@@ -1,5 +1,7 @@
+var utils = require("../../utils");
+
 /* Checks that no left recursion is present. */
-PEG.compiler.passes.reportLeftRecursion = function(ast) {
+module.exports = function(ast) {
   function nop() {}
 
   function checkExpression(node, appliedRules) {
@@ -8,13 +10,13 @@ PEG.compiler.passes.reportLeftRecursion = function(ast) {
 
   function checkSubnodes(propertyName) {
     return function(node, appliedRules) {
-      each(node[propertyName], function(subnode) {
+      utils.each(node[propertyName], function(subnode) {
         check(subnode, appliedRules);
       });
     };
   }
 
-  var check = buildNodeVisitor({
+  var check = utils.buildNodeVisitor({
     grammar:     checkSubnodes("rules"),
 
     rule:
@@ -44,12 +46,12 @@ PEG.compiler.passes.reportLeftRecursion = function(ast) {
 
     rule_ref:
       function(node, appliedRules) {
-        if (contains(appliedRules, node.name)) {
+        if (utils.contains(appliedRules, node.name)) {
           throw new PEG.GrammarError(
             "Left recursion detected for rule \"" + node.name + "\"."
           );
         }
-        check(findRuleByName(ast, node.name), appliedRules);
+        check(utils.findRuleByName(ast, node.name), appliedRules);
       },
 
     literal:      nop,

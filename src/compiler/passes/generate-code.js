@@ -1,7 +1,9 @@
+var utils = require("../../utils");
+
 /* Generates the parser code. */
-PEG.compiler.passes.generateCode = function(ast, options) {
-  options = clone(options) || {};
-  defaults(options, {
+module.exports = function(ast, options) {
+  options = utils.clone(options) || {};
+  utils.defaults(options, {
     cache:              false,
     trackLineAndColumn: false,
     allowedStartRules:  [ast.startRule]
@@ -751,12 +753,12 @@ PEG.compiler.passes.generateCode = function(ast, options) {
   })();
 
   function fill(name, vars) {
-    vars.string  = quote;
-    vars.range   = range;
-    vars.map     = map;
-    vars.pluck   = pluck;
-    vars.keys    = keys;
-    vars.values  = values;
+    vars.string  = utils.quote;
+    vars.range   = utils.range;
+    vars.map     = utils.map;
+    vars.pluck   = utils.pluck;
+    vars.keys    = utils.keys;
+    vars.values  = utils.values;
     vars.emit    = emit;
     vars.options = options;
 
@@ -797,7 +799,7 @@ PEG.compiler.passes.generateCode = function(ast, options) {
     return function(node) { return fill(name, { node: node }); };
   }
 
-  var emit = buildNodeVisitor({
+  var emit = utils.buildNodeVisitor({
     grammar: emitSimple("grammar"),
 
     initializer: function(node) { return node.code; },
@@ -878,12 +880,12 @@ PEG.compiler.passes.generateCode = function(ast, options) {
       if (node.parts.length > 0) {
         regexp = '/^['
           + (node.inverted ? '^' : '')
-          + map(node.parts, function(part) {
+          + utils.map(node.parts, function(part) {
               return part instanceof Array
-                ? quoteForRegexpClass(part[0])
+                ? utils.quoteForRegexpClass(part[0])
                   + '-'
-                  + quoteForRegexpClass(part[1])
-                : quoteForRegexpClass(part);
+                  + utils.quoteForRegexpClass(part[1])
+                : utils.quoteForRegexpClass(part);
             }).join('')
           + ']/' + (node.ignoreCase ? 'i' : '');
       } else {

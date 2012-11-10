@@ -1,18 +1,10 @@
-/*
- * PEG.js 0.7.0
- *
- * http://pegjs.majda.cz/
- *
- * Copyright (c) 2010-2012 David Majda
- * Licensed under the MIT license.
- */
-var PEG = (function(undefined) {
-
-// @include "utils.js"
-
-var PEG = {
+module.exports = {
   /* PEG.js version (uses semantic versioning). */
   VERSION: "0.7.0",
+
+  GrammarError: require("./grammar-error"),
+  parser:       require("./parser"),
+  compiler:     require("./compiler"),
 
   /*
    * Generates a parser from a specified grammar and returns it.
@@ -26,26 +18,6 @@ var PEG = {
    * generated parser and cause its malfunction.
    */
   buildParser: function(grammar, options) {
-    return PEG.compiler.compile(PEG.parser.parse(grammar), options);
+    return this.compiler.compile(this.parser.parse(grammar), options);
   }
 };
-
-/* Thrown when the grammar contains an error. */
-
-PEG.GrammarError = function(message) {
-  this.name = "GrammarError";
-  this.message = message;
-};
-
-subclass(PEG.GrammarError, Error);
-
-// @include "parser.js"
-// @include "compiler.js"
-
-return PEG;
-
-})();
-
-if (typeof module !== "undefined") {
-  module.exports = PEG;
-}

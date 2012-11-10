@@ -1,4 +1,8 @@
-PEG.compiler = {
+var utils = require("./utils");
+
+module.exports = {
+  passes: require("./compiler/passes"),
+
   /*
    * Names of passes that will get run during the compilation (in the specified
    * order).
@@ -20,7 +24,7 @@ PEG.compiler = {
   compile: function(ast, options) {
     var that = this;
 
-    each(this.appliedPassNames, function(passName) {
+    utils.each(this.appliedPassNames, function(passName) {
       that.passes[passName](ast, options);
     });
 
@@ -31,5 +35,3 @@ PEG.compiler = {
     return result;
   }
 };
-
-// @include "compiler/passes.js"

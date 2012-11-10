@@ -1,7 +1,9 @@
+var utils = require("../../utils");
+
 /*
  * Removes proxy rules -- that is, rules that only delegate to other rule.
  */
-PEG.compiler.passes.removeProxyRules = function(ast) {
+module.exports = function(ast) {
   function isProxyRule(node) {
     return node.type === "rule" && node.expression.type === "rule_ref";
   }
@@ -15,13 +17,13 @@ PEG.compiler.passes.removeProxyRules = function(ast) {
 
     function replaceInSubnodes(propertyName) {
       return function(node, from, to) {
-        each(node[propertyName], function(subnode) {
+        utils.each(node[propertyName], function(subnode) {
           replace(subnode, from, to);
         });
       };
     }
 
-    var replace = buildNodeVisitor({
+    var replace = utils.buildNodeVisitor({
       grammar:      replaceInSubnodes("rules"),
       rule:         replaceInExpression,
       named:        replaceInExpression,
@@ -54,7 +56,7 @@ PEG.compiler.passes.removeProxyRules = function(ast) {
 
   var indices = [];
 
-  each(ast.rules, function(rule, i) {
+  utils.each(ast.rules, function(rule, i) {
     if (isProxyRule(rule)) {
       replaceRuleRefs(ast, rule.name, rule.expression.name);
       if (rule.name === ast.startRule) {
@@ -66,7 +68,7 @@ PEG.compiler.passes.removeProxyRules = function(ast) {
 
   indices.reverse();
 
-  each(indices, function(index) {
+  utils.each(indices, function(index) {
     ast.rules.splice(index, 1);
   });
 };

@@ -5,10 +5,10 @@
  * or modify it as needed. If the pass encounters a semantic error, it throws
  * |PEG.GrammarError|.
  */
-PEG.compiler.passes = {};
-
-// @include "passes/report-missing-rules.js"
-// @include "passes/report-left-recursion.js"
-// @include "passes/remove-proxy-rules.js"
-// @include "passes/allocate-registers.js"
-// @include "passes/generate-code.js"
+module.exports = {
+  reportMissingRules:  require("./passes/report-missing-rules"),
+  reportLeftRecursion: require("./passes/report-left-recursion"),
+  removeProxyRules:    require("./passes/remove-proxy-rules"),
+  allocateRegisters:   require("./passes/allocate-registers"),
+  generateCode:        require("./passes/generate-code")
+};

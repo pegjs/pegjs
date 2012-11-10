@@ -1,14 +1,16 @@
+var utils = require("../../utils");
+
 /* Checks that all referenced rules exist. */
-PEG.compiler.passes.reportMissingRules = function(ast) {
+module.exports = function(ast) {
   function nop() {}
 
   function checkExpression(node) { check(node.expression); }
 
   function checkSubnodes(propertyName) {
-    return function(node) { each(node[propertyName], check); };
+    return function(node) { utils.each(node[propertyName], check); };
   }
 
-  var check = buildNodeVisitor({
+  var check = utils.buildNodeVisitor({
     grammar:      checkSubnodes("rules"),
     rule:         checkExpression,
     named:        checkExpression,
@@ -26,7 +28,7 @@ PEG.compiler.passes.reportMissingRules = function(ast) {
 
     rule_ref:
       function(node) {
-        if (!findRuleByName(ast, node.name)) {
+        if (!utils.findRuleByName(ast, node.name)) {
           throw new PEG.GrammarError(
             "Referenced rule \"" + node.name + "\" does not exist."
           );
