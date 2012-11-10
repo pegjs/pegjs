@@ -19,12 +19,14 @@ MODULES = utils                                 \
 
 # ===== Directories =====
 
-SRC_DIR       = src
-LIB_DIR       = lib
-BIN_DIR       = bin
-BROWSER_DIR   = browser
-SPEC_DIR      = spec
-BENCHMARK_DIR = benchmark
+SRC_DIR              = src
+LIB_DIR              = lib
+BIN_DIR              = bin
+BROWSER_DIR          = browser
+SPEC_DIR             = spec
+BENCHMARK_DIR        = benchmark
+NODE_MODULES_DIR     = node_modules
+NODE_MODULES_BIN_DIR = $(NODE_MODULES_DIR)/.bin
 
 # ===== Files =====
 
@@ -38,9 +40,9 @@ VERSION_FILE = VERSION
 
 # ===== Executables =====
 
-JSHINT        = jshint
-UGLIFYJS      = uglifyjs
-JASMINE_NODE  = jasmine-node
+JSHINT        = $(NODE_MODULES_BIN_DIR)/jshint
+UGLIFYJS      = $(NODE_MODULES_BIN_DIR)/uglifyjs
+JASMINE_NODE  = $(NODE_MODULES_BIN_DIR)/jasmine-node
 PEGJS         = $(BIN_DIR)/pegjs
 BENCHMARK_RUN = $(BENCHMARK_DIR)/run
 
