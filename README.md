@@ -94,11 +94,10 @@ a parameter:
 
     var parser = PEG.buildParser("start = ('a' / 'b')+");
 
-The method will return generated parser object or throw an exception if the
-grammar is invalid. The exception will contain `message` property with more
-details about the error.
-
-To get parser’s source code, call the `toSource` method on the parser.
+The method will return generated parser object or its source code as a string
+(depending on the value of the `output` option — see below). It will throw an
+exception if the grammar is invalid. The exception will contain `message`
+property with more details about the error.
 
 You can tweak the generated parser by passing a second parameter with an options
 object to `PEG.buildParser`. The following options are supported:
@@ -111,6 +110,9 @@ object to `PEG.buildParser`. The following options are supported:
     (default: `false`)
   * `allowedStartRules` — rules the parser will be allowed to start parsing from
     (default: the first rule in the grammar)
+  * `output` — if set to `"parser"`, the method will return generated parser
+    object; if set to `"source"`, it will return parser source code as a string
+    (default: `"parser"`)
 
 Using the Parser
 ----------------

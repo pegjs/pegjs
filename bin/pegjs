@@ -73,7 +73,8 @@ function readStream(inputStream, callback) {
 var exportVar = "module.exports";
 var options = {
   cache:              false,
-  trackLineAndColumn: false
+  trackLineAndColumn: false,
+  output:             "source"
 };
 
 while (args.length > 0 && isOption(args[0])) {
@@ -158,7 +159,7 @@ switch (args.length) {
 
 readStream(inputStream, function(input) {
   try {
-    var parser = PEG.buildParser(input, options);
+    var source = PEG.buildParser(input, options);
   } catch (e) {
     if (e.line !== undefined && e.column !== undefined) {
       abort(e.line + ":" + e.column + ": " + e.message);
@@ -167,7 +168,7 @@ readStream(inputStream, function(input) {
     }
   }
 
-  outputStream.write(exportVar + " = " + parser.toSource() + ";\n");
+  outputStream.write(exportVar + " = " + source + ";\n");
   if (outputStream !== process.stdout) {
     outputStream.end();
   }

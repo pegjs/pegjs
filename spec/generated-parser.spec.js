@@ -934,6 +934,37 @@ describe("generated parser", function() {
       });
     });
 
+    describe("output", function() {
+      var grammar = 'start = "a"';
+
+      describe("without the |output| option", function() {
+        it("returns a parser object", function() {
+          var parser = PEG.buildParser(grammar);
+
+          expect(typeof parser).toBe("object");
+          expect(parser).toParse("a", "a");
+        });
+      });
+
+      describe("when the |output| option is set to \"parser\"", function() {
+        it("returns a parser object", function() {
+          var parser = PEG.buildParser(grammar, { output: "parser" });
+
+          expect(typeof parser).toBe("object");
+          expect(parser).toParse("a", "a");
+        });
+      });
+
+      describe("when the |output| option is set to \"source\"", function() {
+        it("returns a parser source code", function() {
+          var source = PEG.buildParser(grammar, { output: "source" });
+
+          expect(typeof source).toBe("string");
+          expect(eval(source)).toParse("a", "a");
+        });
+      });
+    });
+
     /*
      * Following examples are from Wikipedia, see
      * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
