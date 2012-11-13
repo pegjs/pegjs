@@ -1173,11 +1173,11 @@ VariableDeclarationListNoIn
     }
 
 VariableDeclaration
-  = name:Identifier __ value:Initialiser? {
+  = name:Identifier value:(__ Initialiser)? {
       return {
         type:  "VariableDeclaration",
         name:  name,
-        value: value !== "" ? value : null
+        value: value !== "" ? value[1] : null
       };
     }
 
