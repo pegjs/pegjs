@@ -88,7 +88,13 @@ labeled
   / prefixed
 
 prefixed
-  = and code:action {
+  = dollar expression:suffixed {
+      return {
+        type:       "text",
+        expression: expression
+      };
+    }
+  / and code:action {
       return {
         type: "semantic_and",
         code: code
@@ -169,6 +175,7 @@ semicolon = ";" __ { return ";"; }
 slash     = "/" __ { return "/"; }
 and       = "&" __ { return "&"; }
 not       = "!" __ { return "!"; }
+dollar    = "$" __ { return "$"; }
 question  = "?" __ { return "?"; }
 star      = "*" __ { return "*"; }
 plus      = "+" __ { return "+"; }

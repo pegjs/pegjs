@@ -272,6 +272,10 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical prefixed is "!\"abcd\"". */
   it("parses prefixed", function() {
+    expect('start = $"abcd"?' ).toParseAs(oneRuleGrammar({
+      type:       "text",
+      expression: optionalLiteral
+    }));
     expect('start = &{ code }').toParseAs(oneRuleGrammar({
       type: "semantic_and",
       code: " code "

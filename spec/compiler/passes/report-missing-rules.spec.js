@@ -64,6 +64,10 @@ describe("compiler pass |reportMissingRules|", function() {
     expect(pass).toReportMissingRuleIn('start = label:missing');
   });
 
+  it("reports missing rule referenced from a text", function() {
+    expect(pass).toReportMissingRuleIn('start = $missing');
+  });
+
   it("reports missing rule referenced from a simple and", function() {
     expect(pass).toReportMissingRuleIn('start = &missing');
   });

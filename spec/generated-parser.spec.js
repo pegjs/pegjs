@@ -353,6 +353,14 @@ describe("generated parser", function() {
       });
     });
 
+    describe("text matching", function() {
+      it("matches correctly", function() {
+        var parser = PEG.buildParser('start = $("a" "b" "c")', options);
+
+        expect(parser).toParse("abc", "abc");
+      });
+    });
+
     describe("simple and matching", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = &"a" "a"', options);

@@ -63,6 +63,10 @@ describe("compiler pass |reportLeftRecursion|", function() {
     expect(pass).toReportLeftRecursionIn('start = label:start');
   });
 
+  it("reports left recursion inside a text", function() {
+    expect(pass).toReportLeftRecursionIn('start = $start');
+  });
+
   it("reports left recursion inside a simple and", function() {
     expect(pass).toReportLeftRecursionIn('start = &start');
   });

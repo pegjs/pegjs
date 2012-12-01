@@ -60,6 +60,10 @@ describe("compiler pass |removeProxyRules|", function() {
     expect(pass).toChangeAST(proxyGrammar('start = label:proxy'), simpleDetails);
   });
 
+  it("removes proxy rule from a text", function() {
+    expect(pass).toChangeAST(proxyGrammar('start = $proxy'), simpleDetails);
+  });
+
   it("removes proxy rule from a simple and", function() {
     expect(pass).toChangeAST(proxyGrammar('start = &proxy'), simpleDetails);
   });

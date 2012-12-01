@@ -177,6 +177,27 @@ describe("compiler pass |allocateRegisters|", function() {
     });
   });
 
+  describe("for text", function() {
+    it("allocates a position register", function() {
+      expect(pass).toChangeAST('start = $"a"', savePosDetails);
+    });
+
+    it("reuses its own result register for the expression", function() {
+      expect(pass).toChangeAST('start = $"a"', reuseResultDetails);
+    });
+
+    it("creates a new scope", function() {
+      expect(pass).toChangeAST('start = $(a:"a") { }', scopedDetails);
+    });
+
+    it("unblocks registers blocked by its children", function() {
+      expect(pass).toChangeAST(
+        'start = ($(a:"a") "b") ("c" "d")',
+        unblockedDetails
+      );
+    });
+  });
+
   describe("for simple and", function() {
     it("allocates a position register", function() {
       expect(pass).toChangeAST('start = &"a"', savePosDetails);

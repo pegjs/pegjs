@@ -314,6 +314,11 @@ the `options` variable.
 
 Note that curly braces in the predicate code must be balanced.
 
+#### $ *expression*
+
+Try to match the expression. If the match succeeds, return the matched string
+instead of the match result.
+
 #### *label* : *expression*
 
 Match the expression and remember its match result under given label. The label
