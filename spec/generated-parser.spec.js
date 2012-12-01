@@ -258,9 +258,9 @@ describe("generated parser", function() {
         expect(parser).toParse("a", "a");
       });
 
-      it("can use the |offset| variable to get the current parse position", function() {
+      it("can use the |offset| function to get the current parse position", function() {
         var parser = PEG.buildParser(
-              'start = "a" ("b" { return offset; })',
+              'start = "a" ("b" { return offset(); })',
               options
             );
 
@@ -268,14 +268,14 @@ describe("generated parser", function() {
       });
 
       if (options.trackLineAndColumn) {
-        it("can use the |line| and |column| variables to get the current line and column", function() {
+        it("can use the |line| and |column| functions to get the current line and column", function() {
           var parser = PEG.buildParser([
                 '{ var result; }',
                 'start  = line (nl+ line)* { return result; }',
                 'line   = thing (" "+ thing)*',
                 'thing  = digit / mark',
                 'digit  = [0-9]',
-                'mark   = "x" { result = [line, column]; }',
+                'mark   = "x" { result = [line(), column()]; }',
                 'nl     = ("\\r" / "\\n" / "\\u2028" / "\\u2029")'
               ].join("\n"), options);
 
@@ -422,9 +422,9 @@ describe("generated parser", function() {
         expect(parser).toParse("a", ["a", ""]);
       });
 
-      it("can use the |offset| variable to get the current parse position", function() {
+      it("can use the |offset| function to get the current parse position", function() {
         var parser = PEG.buildParser(
-              'start = "a" &{ return offset === 1; }',
+              'start = "a" &{ return offset() === 1; }',
               options
             );
 
@@ -432,14 +432,14 @@ describe("generated parser", function() {
       });
 
       if (options.trackLineAndColumn) {
-        it("can use the |line| and |column| variables to get the current line and column", function() {
+        it("can use the |line| and |column| functions to get the current line and column", function() {
           var parser = PEG.buildParser([
                 '{ var result; }',
                 'start  = line (nl+ line)* { return result; }',
                 'line   = thing (" "+ thing)*',
                 'thing  = digit / mark',
                 'digit  = [0-9]',
-                'mark   = &{ result = [line, column]; return true; } "x"',
+                'mark   = &{ result = [line(), column()]; return true; } "x"',
                 'nl     = ("\\r" / "\\n" / "\\u2028" / "\\u2029")'
               ].join("\n"), options);
 
@@ -506,9 +506,9 @@ describe("generated parser", function() {
         expect(parser).toParse("a", ["a", ""]);
       });
 
-      it("can use the |offset| variable to get the current parse position", function() {
+      it("can use the |offset| function to get the current parse position", function() {
         var parser = PEG.buildParser(
-              'start = "a" !{ return offset !== 1; }',
+              'start = "a" !{ return offset() !== 1; }',
               options
             );
 
@@ -516,14 +516,14 @@ describe("generated parser", function() {
       });
 
       if (options.trackLineAndColumn) {
-        it("can use the |line| and |column| variables to get the current line and column", function() {
+        it("can use the |line| and |column| functions to get the current line and column", function() {
           var parser = PEG.buildParser([
                 '{ var result; }',
                 'start  = line (nl+ line)* { return result; }',
                 'line   = thing (" "+ thing)*',
                 'thing  = digit / mark',
                 'digit  = [0-9]',
-                'mark   = !{ result = [line, column]; return false; } "x"',
+                'mark   = !{ result = [line(), column()]; return false; } "x"',
                 'nl     = ("\\r" / "\\n" / "\\u2028" / "\\u2029")'
               ].join("\n"), options);
 

@@ -288,11 +288,11 @@ The code inside the predicate can access all variables and functions defined in
 the initializer at the beginning of the grammar.
 
 The code inside the predicate can also access the current parse position using
-the `offset` variable. It is a zero-based character index into the input string.
-If the `trackLineAndColumn` option was set to `true` when the parser was
+the `offset` function. It returns a zero-based character index into the input
+string. If the `trackLineAndColumn` option was set to `true` when the parser was
 generated (or `--track-line-and-column` was used on the command line), the code
 can also access the current line and column using the `line` and `column`
-variables. Both are one-based indexes.
+functions. Both return one-based indexes.
 
 The code inside the predicate can also access options passed to the parser using
 the `options` variable.
@@ -312,11 +312,11 @@ The code inside the predicate can access all variables and functions defined in
 the initializer at the beginning of the grammar.
 
 The code inside the predicate can also access the current parse position using
-the `offset` variable. It is a zero-based character index into the input string.
-If the `trackLineAndColumn` option was set to `true` when the parser was
+the `offset` function. It returns a zero-based character index into the input
+string. If the `trackLineAndColumn` option was set to `true` when the parser was
 generated (or `--track-line-and-column` was used on the command line), the code
 can also access the current line and column using the `line` and `column`
-variables. Both are one-based indexes.
+functions. Both return one-based indexes.
 
 The code inside the predicate can also access options passed to the parser using
 the `options` variable.
@@ -351,12 +351,12 @@ initializer at the beginning of the grammar. Curly braces in the action code
 must be balanced.
 
 The code inside the action can also access the parse position at the beginning
-of the action's expression using the `offset` variable. It is a zero-based
+of the action's expression using the `offset` function. It returns a zero-based
 character index into the input string. If the `trackLineAndColumn` option was
 set to `true` when the parser was generated (or `--track-line-and-column` was
 used on the command line), the code can also access the line and column at the
-beginning of the action's expression using the `line` and `column` variables.
-Both are one-based indexes.
+beginning of the action's expression using the `line` and `column` functions.
+Both return one-based indexes.
 
 The code inside the action can also access options passed to the parser using
 the `options` variable.
