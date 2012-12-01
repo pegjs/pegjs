@@ -30,5 +30,5 @@ a, a:visited { color: #3d586c; }
   background-color: #f0f0f0;
 }
 #options #run-count { width: 3em; }
-#options #cache, #options #track-line-and-column { margin-left: 2em; }
+#options #cache { margin-left: 2em; }
 #options #run { width: 5em; margin-left: 2em; }

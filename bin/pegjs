@@ -25,7 +25,6 @@ function printHelp() {
   util.puts("                                     object will be stored (default:");
   util.puts("                                     \"module.exports\")");
   util.puts("      --cache                        make generated parser cache results");
-  util.puts("      --track-line-and-column        make generated parser track line and column");
   util.puts("      --allowed-start-rules <rules>  comma-separated list of rules the generated");
   util.puts("                                     parser will be allowed to start parsing");
   util.puts("                                     from (default: the first rule in the");
@@ -73,7 +72,6 @@ function readStream(inputStream, callback) {
 var exportVar = "module.exports";
 var options = {
   cache:              false,
-  trackLineAndColumn: false,
   output:             "source"
 };
 
@@ -90,10 +88,6 @@ while (args.length > 0 && isOption(args[0])) {
 
     case "--cache":
       options.cache = true;
-      break;
-
-    case "--track-line-and-column":
-      options.trackLineAndColumn = true;
       break;
 
     case "--allowed-start-rules":

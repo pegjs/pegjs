@@ -81,7 +81,6 @@ function printHelp() {
   util.puts("Options:");
   util.puts("  -n, --run-count <n>          number of runs (default: 10)");
   util.puts("      --cache                  make tested parsers cache results");
-  util.puts("      --track-line-and-column  make tested parsers track line and column");
 }
 
 function exitSuccess() {
@@ -112,7 +111,7 @@ function nextArg() {
 /* Main */
 
 var runCount = 10;
-var options = { trackLineAndColumn: false };
+var options = { };
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
@@ -130,10 +129,6 @@ while (args.length > 0 && isOption(args[0])) {
 
     case "--cache":
       options.cache = true;
-      break;
-
-    case "--track-line-and-column":
-      options.trackLineAndColumn = true;
       break;
 
     case "-h":

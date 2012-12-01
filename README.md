@@ -75,8 +75,6 @@ You can tweak the generated parser with several options:
 
   * `--cache` — makes the parser cache results, avoiding exponential parsing
     time in pathological cases but making the parser slower
-  * `--track-line-and-column` — makes the parser track line and column
-    (available as `line` and `column` variables in the actions and predicates)
   * `--allowed-start-rules` — comma-separated list of rules the parser will be
     allowed to start parsing from (default: the first rule in the grammar)
 
@@ -105,9 +103,6 @@ object to `PEG.buildParser`. The following options are supported:
   * `cache` — if `true`, makes the parser cache results, avoiding exponential
     parsing time in pathological cases but making the parser slower (default:
     `false`)
-  * `trackLineAndColumn` — if `true`, makes the parser track line and column
-    (available as `line` and `column` variables in the actions and predicates)
-    (default: `false`)
   * `allowedStartRules` — rules the parser will be allowed to start parsing from
     (default: the first rule in the grammar)
   * `output` — if set to `"parser"`, the method will return generated parser
@@ -289,10 +284,8 @@ the initializer at the beginning of the grammar.
 
 The code inside the predicate can also access the current parse position using
 the `offset` function. It returns a zero-based character index into the input
-string. If the `trackLineAndColumn` option was set to `true` when the parser was
-generated (or `--track-line-and-column` was used on the command line), the code
-can also access the current line and column using the `line` and `column`
-functions. Both return one-based indexes.
+string. The code can also access the current line and column using the `line`
+and `column` functions. Both return one-based indexes.
 
 The code inside the predicate can also access options passed to the parser using
 the `options` variable.
@@ -313,10 +306,8 @@ the initializer at the beginning of the grammar.
 
 The code inside the predicate can also access the current parse position using
 the `offset` function. It returns a zero-based character index into the input
-string. If the `trackLineAndColumn` option was set to `true` when the parser was
-generated (or `--track-line-and-column` was used on the command line), the code
-can also access the current line and column using the `line` and `column`
-functions. Both return one-based indexes.
+string. The code can also access the current line and column using the `line`
+and `column` functions. Both return one-based indexes.
 
 The code inside the predicate can also access options passed to the parser using
 the `options` variable.
@@ -352,11 +343,9 @@ must be balanced.
 
 The code inside the action can also access the parse position at the beginning
 of the action's expression using the `offset` function. It returns a zero-based
-character index into the input string. If the `trackLineAndColumn` option was
-set to `true` when the parser was generated (or `--track-line-and-column` was
-used on the command line), the code can also access the line and column at the
-beginning of the action's expression using the `line` and `column` functions.
-Both return one-based indexes.
+character index into the input string. The code can also access the line and
+column at the beginning of the action's expression using the `line` and `column`
+functions. Both return one-based indexes.
 
 The code inside the action can also access options passed to the parser using
 the `options` variable.
