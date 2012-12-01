@@ -65,33 +65,33 @@ char
   / "\\n"  { return "\n"; }
   / "\\r"  { return "\r"; }
   / "\\t"  { return "\t"; }
-  / "\\u" h1:hexDigit h2:hexDigit h3:hexDigit h4:hexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
+  / "\\u" digits:$(hexDigit hexDigit hexDigit hexDigit) {
+      return String.fromCharCode(parseInt("0x" + digits));
     }
 
 number "number"
-  = int_:int frac:frac exp:exp _ { return parseFloat(int_ + frac + exp); }
-  / int_:int frac:frac _         { return parseFloat(int_ + frac);       }
-  / int_:int exp:exp _           { return parseFloat(int_ + exp);        }
-  / int_:int _                   { return parseFloat(int_);              }
+  = parts:$(int frac exp) _ { return parseFloat(parts); }
+  / parts:$(int frac) _     { return parseFloat(parts); }
+  / parts:$(int exp) _      { return parseFloat(parts); }
+  / parts:$(int) _          { return parseFloat(parts); }
 
 int
-  = digit19:digit19 digits:digits     { return digit19 + digits;       }
-  / digit:digit
-  / "-" digit19:digit19 digits:digits { return "-" + digit19 + digits; }
-  / "-" digit:digit                   { return "-" + digit;            }
+  = digit19 digits
+  / digit
+  / "-" digit19 digits
+  / "-" digit
 
 frac
-  = "." digits:digits { return "." + digits; }
+  = "." digits
 
 exp
-  = e:e digits:digits { return e + digits; }
+  = e digits
 
 digits
-  = digits:digit+ { return digits.join(""); }
+  = digit+
 
 e
-  = e:[eE] sign:[+-]? { return e + sign; }
+  = [eE] [+-]?
 
 /*
  * The following rules are not present in the original JSON gramar, but they are
