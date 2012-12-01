@@ -159,12 +159,10 @@ action "action"
   = braced:braced __ { return braced.substr(1, braced.length - 2); }
 
 braced
-  = "{" parts:(braced / nonBraceCharacters)* "}" {
-      return "{" + parts.join("") + "}";
-    }
+  = $("{" (braced / nonBraceCharacters)* "}")
 
 nonBraceCharacters
-  = chars:nonBraceCharacter+ { return chars.join(""); }
+  = nonBraceCharacter+
 
 nonBraceCharacter
   = [^{}]
@@ -202,9 +200,7 @@ dot       = "." __ { return "."; }
  * purpose in the grammar.
  */
 identifier "identifier"
-  = head:(letter / "_") tail:(letter / digit / "_")* __ {
-      return head + tail.join("");
-    }
+  = chars:$((letter / "_") (letter / digit / "_")*) __ { return chars; }
 
 /*
  * Modeled after ECMA-262, 5th ed., 7.8.4. (syntax & semantics, rules only
@@ -319,13 +315,13 @@ zeroEscapeSequence
   = "\\0" !digit { return "\x00"; }
 
 hexEscapeSequence
-  = "\\x" h1:hexDigit h2:hexDigit {
-      return String.fromCharCode(parseInt(h1 + h2, 16));
+  = "\\x" digits:$(hexDigit hexDigit) {
+      return String.fromCharCode(parseInt(digits, 16));
     }
 
 unicodeEscapeSequence
-  = "\\u" h1:hexDigit h2:hexDigit h3:hexDigit h4:hexDigit {
-      return String.fromCharCode(parseInt(h1 + h2 + h3 + h4, 16));
+  = "\\u" digits:$(hexDigit hexDigit hexDigit hexDigit) {
+      return String.fromCharCode(parseInt(digits, 16));
     }
 
 eolEscapeSequence
