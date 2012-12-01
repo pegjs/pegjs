@@ -349,11 +349,9 @@ describe("PEG.js grammar parser", function() {
   it("parses identifier", function() {
     expect('start = a'   ).toParseAs(ruleRefGrammar("a"));
     expect('start = _'   ).toParseAs(ruleRefGrammar("_"));
-    expect('start = $'   ).toParseAs(ruleRefGrammar("$"));
     expect('start = aa'  ).toParseAs(ruleRefGrammar("aa"));
     expect('start = a0'  ).toParseAs(ruleRefGrammar("a0"));
     expect('start = a_'  ).toParseAs(ruleRefGrammar("a_"));
-    expect('start = a$'  ).toParseAs(ruleRefGrammar("a$"));
     expect('start = abcd').toParseAs(ruleRefGrammar("abcd"));
 
     expect('start = a\n').toParseAs(ruleRefGrammar("a"));

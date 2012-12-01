@@ -190,9 +190,12 @@ dot       = "." __ { return "."; }
  *
  * The simplifications were made just to make the implementation little bit
  * easier, there is no "philosophical" reason behind them.
+ *
+ * Contrary to ECMA 262, the "$" character is not valid because it serves other
+ * purpose in the grammar.
  */
 identifier "identifier"
-  = head:(letter / "_" / "$") tail:(letter / digit / "_" / "$")* __ {
+  = head:(letter / "_") tail:(letter / digit / "_")* __ {
       return head + tail.join("");
     }
 
