@@ -292,8 +292,8 @@ nonascii
   = [\x80-\xFF]
 
 unicode
-  = "\\" h1:h h2:h? h3:h? h4:h? h5:h? h6:h? ("\r\n" / [ \t\r\n\f])? {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4 + h5 + h6));
+  = "\\" digits:$(h h? h? h? h? h?) ("\r\n" / [ \t\r\n\f])? {
+      return String.fromCharCode(parseInt("0x" + digits));
     }
 
 escape
@@ -311,12 +311,10 @@ nmchar
   / escape
 
 integer
-  = digits:[0-9]+ { return parseInt(digits.join("")); }
+  = parts:$[0-9]+ { return parseInt(parts); }
 
 float
-  = before:[0-9]* "." after:[0-9]+ {
-      return parseFloat(before.join("") + "." + after.join(""));
-    }
+  = parts:$([0-9]* "." [0-9]+) { return parseFloat(parts); }
 
 string1
   = '"' chars:([^\n\r\f\\"] / "\\" nl:nl { return nl } / escape)* '"' {
@@ -542,7 +540,7 @@ DIMENSION "dimension"
   = comment* num:num unit:ident { return num + unit; }
 
 PERCENTAGE "percentage"
-  = comment* num:num "%" { return num + "%"; }
+  = comment* parts:$(num "%") { return parts; }
 
 NUMBER "number"
   = comment* num:num { return num; }
