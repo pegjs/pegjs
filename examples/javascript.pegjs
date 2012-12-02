@@ -203,24 +203,17 @@ NumericLiteral "number"
     }
 
 DecimalLiteral
-  = before:DecimalIntegerLiteral
-    "."
-    after:DecimalDigits?
-    exponent:ExponentPart? {
-      return parseFloat(before + "." + after + exponent);
+  = parts:$(DecimalIntegerLiteral "." DecimalDigits? ExponentPart?) {
+      return parseFloat(parts);
     }
-  / "." after:DecimalDigits exponent:ExponentPart? {
-      return parseFloat("." + after + exponent);
-    }
-  / before:DecimalIntegerLiteral exponent:ExponentPart? {
-      return parseFloat(before + exponent);
-    }
+  / parts:$("." DecimalDigits ExponentPart?)     { return parseFloat(parts); }
+  / parts:$(DecimalIntegerLiteral ExponentPart?) { return parseFloat(parts); }
 
 DecimalIntegerLiteral
-  = "0" / digit:NonZeroDigit digits:DecimalDigits? { return digit + digits; }
+  = "0" / NonZeroDigit DecimalDigits?
 
 DecimalDigits
-  = digits:DecimalDigit+ { return digits.join(""); }
+  = DecimalDigit+
 
 DecimalDigit
   = [0-9]
@@ -229,18 +222,16 @@ NonZeroDigit
   = [1-9]
 
 ExponentPart
-  = indicator:ExponentIndicator integer:SignedInteger {
-      return indicator + integer;
-    }
+  = ExponentIndicator SignedInteger
 
 ExponentIndicator
   = [eE]
 
 SignedInteger
-  = sign:[-+]? digits:DecimalDigits { return sign + digits; }
+  = [-+]? DecimalDigits
 
 HexIntegerLiteral
-  = "0" [xX] digits:HexDigit+ { return parseInt("0x" + digits.join("")); }
+  = "0" [xX] digits:$HexDigit+ { return parseInt("0x" + digits); }
 
 HexDigit
   = [0-9a-fA-F]
@@ -300,13 +291,13 @@ EscapeCharacter
   / "u"
 
 HexEscapeSequence
-  = "x" h1:HexDigit h2:HexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2));
+  = "x" digits:$(HexDigit HexDigit) {
+      return String.fromCharCode(parseInt("0x" + digits));
     }
 
 UnicodeEscapeSequence
-  = "u" h1:HexDigit h2:HexDigit h3:HexDigit h4:HexDigit {
-      return String.fromCharCode(parseInt("0x" + h1 + h2 + h3 + h4));
+  = "u" digits:$(HexDigit HexDigit HexDigit HexDigit) {
+      return String.fromCharCode(parseInt("0x" + digits));
     }
 
 RegularExpressionLiteral "regular expression"
