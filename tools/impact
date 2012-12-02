@@ -9,7 +9,6 @@ set -e
 
 prepare() {
   git checkout --quiet "$1"
-  make build
 }
 
 run_benchmark() {
