@@ -171,6 +171,24 @@ describe("generated parser", function() {
         expect(parser).toParse("a", 42);
       });
 
+      it("can use the |offset| function to get the current parse position", function() {
+        var parser = PEG.buildParser([
+              '{ var result = offset(); }',
+              'start = "a" { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", 0);
+      });
+
+      it("can use the |line| and |column| functions to get the current line and column", function() {
+        var parser = PEG.buildParser([
+              '{ var result = [line(), column()]; }',
+              'start = "a" { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", [1, 1]);
+      });
+
       it("can use options passed to the parser", function() {
         var parser = PEG.buildParser([
               '{ var result = options; }',
