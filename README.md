@@ -346,6 +346,9 @@ The code inside the action can access all variables and functions defined in the
 initializer at the beginning of the grammar. Curly braces in the action code
 must be balanced.
 
+The code inside the action can also access the string matched by the expression
+using the `text` function.
+
 The code inside the action can also access the parse position at the beginning
 of the action's expression using the `offset` function. It returns a zero-based
 character index into the input string. The code can also access the line and

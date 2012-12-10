@@ -171,6 +171,15 @@ describe("generated parser", function() {
         expect(parser).toParse("a", 42);
       });
 
+      it("can use the |text| function", function() {
+        var parser = PEG.buildParser([
+              '{ var result = text(); }',
+              'start = "a" { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", "");
+      });
+
       it("can use the |offset| function to get the current parse position", function() {
         var parser = PEG.buildParser([
               '{ var result = offset(); }',
@@ -271,6 +280,15 @@ describe("generated parser", function() {
         var parser = PEG.buildParser('start = a:"a" { return a; }', options);
 
         expect(parser).toParse("a", "a");
+      });
+
+      it("can use the |text| function to get the text matched by the expression", function() {
+        var parser = PEG.buildParser(
+              'start = "a" "b" "c" { return text(); }',
+              options
+            );
+
+        expect(parser).toParse("abc", "abc");
       });
 
       it("can use the |offset| function to get the current parse position", function() {
@@ -443,6 +461,15 @@ describe("generated parser", function() {
         expect(parser).toParse("a", ["a", ""]);
       });
 
+      it("can use the |text| function", function() {
+        var parser = PEG.buildParser(
+              'start = "a" &{ return text() === ""; }',
+              options
+            );
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
+
       it("can use the |offset| function to get the current parse position", function() {
         var parser = PEG.buildParser(
               'start = "a" &{ return offset() === 1; }',
@@ -519,6 +546,15 @@ describe("generated parser", function() {
       it("can use label variables", function() {
         var parser = PEG.buildParser(
               'start = a:"a" !{ return a !== "a"; }',
+              options
+            );
+
+        expect(parser).toParse("a", ["a", ""]);
+      });
+
+      it("can use the |text| function", function() {
+        var parser = PEG.buildParser(
+              'start = "a" !{ return text() !== ""; }',
               options
             );
 
