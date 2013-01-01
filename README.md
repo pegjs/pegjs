@@ -108,6 +108,8 @@ object to `PEG.buildParser`. The following options are supported:
   * `output` — if set to `"parser"`, the method will return generated parser
     object; if set to `"source"`, it will return parser source code as a string
     (default: `"parser"`)
+  * `optimize`— selects between optimizing the generated parser for parsing
+    speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
 
 Using the Parser
 ----------------

@@ -1,6 +1,9 @@
 describe("generated parser", function() {
   function vary(names, block) {
-    var values = { cache: [false, true] };
+    var values = {
+          cache:    [false, true],
+          optimize: ["speed", "size"]
+        };
 
     function varyStep(names, options) {
       var clonedOptions = {}, key, name, i;
@@ -32,7 +35,7 @@ describe("generated parser", function() {
   }
 
   function varyAll(block) {
-    vary(["cache"], block);
+    vary(["cache", "optimize"], block);
   }
 
   beforeEach(function() {

@@ -29,6 +29,8 @@ function printHelp() {
   util.puts("                                     parser will be allowed to start parsing");
   util.puts("                                     from (default: the first rule in the");
   util.puts("                                     grammar)");
+  util.puts("  -o, --optimize <goal>              select optimization for speed or size (default:");
+  util.puts("                                     speed)");
   util.puts("  -v, --version                      print version information and exit");
   util.puts("  -h, --help                         print help and exit");
 }
@@ -71,8 +73,9 @@ function readStream(inputStream, callback) {
 /* This makes the generated parser a CommonJS module by default. */
 var exportVar = "module.exports";
 var options = {
-  cache:              false,
-  output:             "source"
+  cache:    false,
+  output:   "source",
+  optimize: "speed"
 };
 
 while (args.length > 0 && isOption(args[0])) {
@@ -98,6 +101,18 @@ while (args.length > 0 && isOption(args[0])) {
       options.allowedStartRules = args[0]
         .split(",")
         .map(function(s) { return s.trim() });
+      break;
+
+    case "-o":
+    case "--optimize":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the -o/--optimize option.");
+      }
+      if (args[0] !== "speed" && args[0] !== "size") {
+        abort("Optimization goal must be either \"speed\" or \"size\".");
+      }
+      options.optimize = args[0];
       break;
 
     case "-v":

@@ -8,8 +8,9 @@ PEGJS_VERSION = `cat $(VERSION_FILE)`
 MODULES = utils                                 \
           grammar-error                         \
           parser                                \
-          compiler/passes/allocate-registers    \
-          compiler/passes/generate-code         \
+          compiler/opcodes                      \
+          compiler/passes/generate-bytecode     \
+          compiler/passes/generate-javascript   \
           compiler/passes/remove-proxy-rules    \
           compiler/passes/report-left-recursion \
           compiler/passes/report-missing-rules  \
