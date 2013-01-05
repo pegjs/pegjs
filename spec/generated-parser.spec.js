@@ -91,7 +91,7 @@ describe("generated parser", function() {
           };
         }
 
-        var result, key;
+        var result;
 
         try {
           result = this.actual.parse(input, options);
@@ -106,6 +106,12 @@ describe("generated parser", function() {
 
           return false;
         } catch (e) {
+          /*
+           * Should be at the top level but then JSHint complains about bad for
+           * in variable.
+           */
+          var key;
+
           if (this.isNot) {
             this.message = function() {
               return "Expected " + jasmine.pp(input)
