@@ -8,18 +8,21 @@ describe("compiler pass |removeProxyRules|", function() {
   function expressionDetails(details) {
     return {
       rules: [
-        { name: "start", expression: details },
-        { name: "proxied" }
+        { type: "rule", name: "start", expression: details },
+        { type: "rule", name: "proxied" }
       ]
     };
   }
 
-  var simpleDetails = expressionDetails({ expression: { name: "proxied" } });
+  var proxiedRefDetails = { type: "rule_ref", name: "proxied" },
+      simpleDetails     = expressionDetails({ expression: proxiedRefDetails });
 
   it("removes proxy rule from a rule", function() {
     expect(pass).toChangeAST(proxyGrammar('start = proxy'), {
       startRule: "proxied",
-      rules:     [{ name: "proxied", expression: { type: "literal" } }]
+      rules:     [
+        { type: "rule", name: "proxied" }
+      ]
     });
   });
 
@@ -33,11 +36,11 @@ describe("compiler pass |removeProxyRules|", function() {
   it("removes proxy rule from a choice", function() {
     expect(pass).toChangeAST(
       proxyGrammar('start = proxy / "a" / "b"'),
-      expressionDetails({ alternatives: [{ name: "proxied" }, {}, {}] })
+      expressionDetails({ alternatives: [proxiedRefDetails, {}, {}] })
     );
     expect(pass).toChangeAST(
       proxyGrammar('start = "a" / "b" / proxy'),
-      expressionDetails({ alternatives: [{}, {}, { name: "proxied" }] })
+      expressionDetails({ alternatives: [{}, {}, proxiedRefDetails] })
     );
   });
 
@@ -48,11 +51,11 @@ describe("compiler pass |removeProxyRules|", function() {
   it("removes proxy rule from a sequence", function() {
     expect(pass).toChangeAST(
       proxyGrammar('start = proxy "a" "b"'),
-      expressionDetails({ elements: [{ name: "proxied" }, {}, {}] })
+      expressionDetails({ elements: [proxiedRefDetails, {}, {}] })
     );
     expect(pass).toChangeAST(
       proxyGrammar('start = "a" "b" proxy'),
-      expressionDetails({ elements: [{}, {}, { name: "proxied" }] })
+      expressionDetails({ elements: [{}, {}, proxiedRefDetails] })
     );
   });
 
