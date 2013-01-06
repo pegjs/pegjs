@@ -180,7 +180,7 @@ readStream(inputStream, function(input) {
   if (exportVar) {
     source = exportVar + " = " + source;
   }
-  source += ";"
+  source += ";";
 
   outputStream.write(source + "\n");
   if (outputStream !== process.stdout) {
