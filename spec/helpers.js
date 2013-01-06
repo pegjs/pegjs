@@ -4,7 +4,7 @@ if (typeof module !== "undefined") {
 
 beforeEach(function() {
   this.addMatchers({
-    toChangeAST: function(grammar, details) {
+    toChangeAST: function(grammar) {
       function matchDetails(value, details) {
         function isArray(value) {
           return Object.prototype.toString.apply(value) === "[object Array]";
@@ -40,12 +40,15 @@ beforeEach(function() {
         }
       }
 
-      var ast = PEG.parser.parse(grammar);
+      var options = arguments.length > 2 ? arguments[1] : {},
+          details = arguments[arguments.length - 1],
+          ast     = PEG.parser.parse(grammar);
 
-      this.actual(ast);
+      this.actual(ast, options);
 
       this.message = function() {
         return "Expected the pass "
+             + "with options " + jasmine.pp(options) + " "
              + (this.isNot ? "not " : "")
              + "to change the AST " + jasmine.pp(ast) + " "
              + "to match " + jasmine.pp(details) + ", "

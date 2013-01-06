@@ -19,8 +19,8 @@ describe("compiler pass |removeProxyRules|", function() {
 
   it("removes proxy rule from a rule", function() {
     expect(pass).toChangeAST(proxyGrammar('start = proxy'), {
-      startRule: "proxied",
-      rules:     [
+      rules: [
+        { type: "rule", name: "start", expression: proxiedRefDetails },
         { type: "rule", name: "proxied" }
       ]
     });
@@ -85,5 +85,18 @@ describe("compiler pass |removeProxyRules|", function() {
 
   it("removes proxy rule from a one or more", function() {
     expect(pass).toChangeAST(proxyGrammar('start = proxy+'), simpleDetails);
+  });
+
+  it("doesn't remove a proxy rule listed in |allowedStartRules|", function() {
+    expect(pass).toChangeAST(
+      proxyGrammar('start = proxy'),
+      { allowedStartRules: ["proxy"] },
+      {
+        rules: [
+          { name: "proxy"   },
+          { name: "proxied" }
+        ]
+      }
+    );
   });
 });
