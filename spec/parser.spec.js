@@ -34,8 +34,7 @@ describe("PEG.js grammar parser", function() {
           name:       "start",
           expression: expression
         }
-      ],
-      startRule:   "start"
+      ]
     };
   }
 
@@ -170,20 +169,17 @@ describe("PEG.js grammar parser", function() {
     expect('a = "abcd"').toParseAs({
       type:        "grammar",
       initializer: null,
-      rules:       [ruleA],
-      startRule:   "a"
+      rules:       [ruleA]
     });
     expect('{ code } a = "abcd"').toParseAs({
       type:        "grammar",
       initializer: { type: "initializer", code: " code " },
-      rules:       [ruleA],
-      startRule:   "a"
+      rules:       [ruleA]
     });
     expect('a = "abcd"; b = "efgh"; c = "ijkl"').toParseAs({
       type:        "grammar",
       initializer: null,
-      rules:       [ruleA, ruleB, ruleC],
-      startRule:   "a"
+      rules:       [ruleA, ruleB, ruleC]
     });
   });
 

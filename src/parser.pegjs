@@ -7,8 +7,7 @@ grammar
       return {
         type:        "grammar",
         initializer: initializer !== "" ? initializer : null,
-        rules:       rules,
-        startRule:   rules[0].name
+        rules:       rules
       };
     }
 
