@@ -20,7 +20,6 @@
     "examples/json.pegjs",
     "lib/compiler.js",
     "lib/compiler/opcodes.js",
-    "lib/compiler/passes.js",
     "lib/compiler/passes/generate-bytecode.js",
     "lib/compiler/passes/generate-javascript.js",
     "lib/compiler/passes/remove-proxy-rules.js",
