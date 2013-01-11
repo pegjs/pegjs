@@ -110,6 +110,7 @@ object to `PEG.buildParser`. The following options are supported:
     (default: `"parser"`)
   * `optimize`— selects between optimizing the generated parser for parsing
     speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
+  * `plugins` — plugins to use
 
 Using the Parser
 ----------------
