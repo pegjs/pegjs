@@ -1,5 +1,5 @@
 describe("compiler pass |reportMissingRules|", function() {
-  var pass = PEG.compiler.passes.reportMissingRules;
+  var pass = PEG.compiler.passes.check.reportMissingRules;
 
   beforeEach(function() {
     this.addMatchers({

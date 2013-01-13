@@ -1,5 +1,5 @@
 describe("compiler pass |generateBytecode|", function() {
-  var pass = PEG.compiler.passes.generateBytecode;
+  var pass = PEG.compiler.passes.generate.generateBytecode;
 
   function bytecodeDetails(bytecode) {
     return {

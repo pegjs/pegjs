@@ -1,5 +1,5 @@
 describe("compiler pass |reportLeftRecursion|", function() {
-  var pass = PEG.compiler.passes.reportLeftRecursion;
+  var pass = PEG.compiler.passes.check.reportLeftRecursion;
 
   beforeEach(function() {
     this.addMatchers({

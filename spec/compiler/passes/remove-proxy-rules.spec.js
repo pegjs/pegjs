@@ -1,5 +1,5 @@
 describe("compiler pass |removeProxyRules|", function() {
-  var pass = PEG.compiler.passes.removeProxyRules;
+  var pass = PEG.compiler.passes.transform.removeProxyRules;
 
   function proxyGrammar(rule) {
     return [rule, 'proxy = proxied', 'proxied = "a"'].join("\n");
