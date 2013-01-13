@@ -77,6 +77,8 @@ You can tweak the generated parser with several options:
     time in pathological cases but making the parser slower
   * `--allowed-start-rules` — comma-separated list of rules the parser will be
     allowed to start parsing from (default: the first rule in the grammar)
+  * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
+    times)
 
 ### JavaScript API
 
