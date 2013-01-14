@@ -197,7 +197,9 @@ readStream(inputStream, function(input) {
     }
   }
 
-  outputStream.write(exportVar + " = " + source + ";\n");
+  outputStream.write(
+    exportVar !== "" ? exportVar + " = " + source + ";\n" : source + "\n"
+  );
   if (outputStream !== process.stdout) {
     outputStream.end();
   }
