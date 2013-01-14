@@ -196,8 +196,13 @@ readStream(inputStream, function(input) {
       abort(e.message);
     }
   }
+  
+  if (exportVar) {
+    source = exportVar + " = " + source;
+  }
+  source += ";";
 
-  outputStream.write(exportVar + " = " + source + ";\n");
+  outputStream.write(source + "\n");
   if (outputStream !== process.stdout) {
     outputStream.end();
   }
