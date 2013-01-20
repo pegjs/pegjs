@@ -79,6 +79,10 @@ You can tweak the generated parser with several options:
     allowed to start parsing from (default: the first rule in the grammar)
   * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
     times)
+  * `--extra-options` — additional options (in JSON format) to pass to
+    `PEG.buildParser`
+  * `--extra-options-file` — file with additional options (in JSON format) to
+    pass to `PEG.buildParser`
 
 ### JavaScript API
 

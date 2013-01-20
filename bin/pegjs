@@ -34,6 +34,10 @@ function printHelp() {
   util.puts("                                     (default: speed)");
   util.puts("      --plugin <plugin>              use a specified plugin (can be specified");
   util.puts("                                     multiple times)");
+  util.puts("      --extra-options <options>      additional options (in JSON format) to pass");
+  util.puts("                                     to PEG.buildParser");
+  util.puts("      --extra-options-file <file>    file with additional options (in JSON");
+  util.puts("                                     format) to pass to PEG.buildParser");
   util.puts("  -v, --version                      print version information and exit");
   util.puts("  -h, --help                         print help and exit");
 }
@@ -49,6 +53,23 @@ function exitFailure() {
 function abort(message) {
   util.error(message);
   exitFailure();
+}
+
+function addExtraOptions(options, json) {
+  try {
+    var extraOptions = JSON.parse(json);
+  } catch (e) {
+    if (!(e instanceof SyntaxError)) { throw e; }
+
+    abort("Error parsing JSON: " + e.message);
+  }
+  if (typeof extraOptions !== "object") {
+    abort("The JSON with extra options has to represent an object.");
+  }
+
+  for (var key in extraOptions) {
+    options[key] = extraOptions[key];
+  }
 }
 
 /* Arguments */
@@ -133,6 +154,27 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Can't load module \"" + id + "\".");
       }
       options.plugins.push(module);
+      break;
+
+    case "--extra-options":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the --extra-options option.");
+      }
+      addExtraOptions(options, args[0]);
+      break;
+
+    case "--extra-options-file":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the --extra-options-file option.");
+      }
+      try {
+        var json = fs.readFileSync(args[0]);
+      } catch(e) {
+        abort("Can't read from file \"" + args[0] + "\".");
+      }
+      addExtraOptions(options, json);
       break;
 
     case "-v":
