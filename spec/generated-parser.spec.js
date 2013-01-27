@@ -833,7 +833,14 @@ describe("generated parser", function() {
         });
 
         it("removes duplicates from expected strings", function() {
-          var parser = PEG.buildParser('start = "a" / "a"', options);
+          /*
+           * There was a bug in the code that manifested only with three
+           * duplicates. This is why the following test uses three choices
+           * instead of seemingly sufficient two.
+           *
+           * See https://github.com/dmajda/pegjs/pull/146.
+           */
+          var parser = PEG.buildParser('start = "a" / "a" / "a"', options);
 
           expect(parser).toFailToParse("b", { expected: ['"a"'] });
         });
