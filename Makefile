@@ -44,6 +44,7 @@ JSHINT        = $(NODE_MODULES_BIN_DIR)/jshint
 UGLIFYJS      = $(NODE_MODULES_BIN_DIR)/uglifyjs
 JASMINE_NODE  = $(NODE_MODULES_BIN_DIR)/jasmine-node
 PEGJS         = $(BIN_DIR)/pegjs
+PEGJS_BOOT    = $(BIN_DIR)/pegjs
 BENCHMARK_RUN = $(BENCHMARK_DIR)/run
 
 # ===== Targets =====
@@ -54,7 +55,13 @@ all: browser
 # Generate the grammar parser
 parser: $(PARSER_OUT_FILE)
 $(PARSER_OUT_FILE): $(PARSER_SRC_FILE)
-	$(PEGJS) $< $@
+	$(PEGJS_BOOT) $< $@1.js
+	cp $@1.js $@
+	$(PEGJS) $< $@2.js
+	cp $@2.js $@
+	$(PEGJS) $< $@3.js
+	cmp $@2.js $@3.js
+	rm $@*.js
 
 # Build the browser version of the library
 browser: $(BROWSER_FILE_MIN)
