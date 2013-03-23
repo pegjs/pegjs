@@ -1,6 +1,6 @@
 # ===== Variables =====
 
-PEGJS_VERSION = `cat $(VERSION_FILE)`
+PEGJS_VERSION = $(shell cat $(VERSION_FILE))
 
 # ===== Modules =====
 
@@ -44,6 +44,7 @@ JSHINT        = $(NODE_MODULES_BIN_DIR)/jshint
 UGLIFYJS      = $(NODE_MODULES_BIN_DIR)/uglifyjs
 JASMINE_NODE  = $(NODE_MODULES_BIN_DIR)/jasmine-node
 PEGJS         = $(BIN_DIR)/pegjs
+PEGJS_BOOT    = $(BIN_DIR)/pegjs
 BENCHMARK_RUN = $(BENCHMARK_DIR)/run
 
 # ===== Targets =====
@@ -52,15 +53,23 @@ BENCHMARK_RUN = $(BENCHMARK_DIR)/run
 all: browser
 
 # Generate the grammar parser
-parser:
-	$(PEGJS) $(PARSER_SRC_FILE) $(PARSER_OUT_FILE)
+parser: $(PARSER_OUT_FILE)
+$(PARSER_OUT_FILE): $(PARSER_SRC_FILE)
+	$(PEGJS_BOOT) $< $@1.js
+	cp $@1.js $@
+	$(PEGJS) $< $@2.js
+	cp $@2.js $@
+	$(PEGJS) $< $@3.js
+	cmp $@2.js $@3.js
+	rm $@*.js
 
 # Build the browser version of the library
-browser:
+browser: $(BROWSER_FILE_MIN)
+
+$(BROWSER_FILE_DEV): $(addsuffix .js,$(addprefix lib/,$(MODULES)))
 	mkdir -p $(BROWSER_DIR)
 
-	rm -f $(BROWSER_FILE_DEV)
-	rm -f $(BROWSER_FILE_MIN)
+	rm -f $@
 
 	# The following code is inspired by CoffeeScript's Cakefile.
 
@@ -106,10 +115,15 @@ browser:
 	echo '  return modules["peg"]' >> $(BROWSER_FILE_DEV)
 	echo '})();'                   >> $(BROWSER_FILE_DEV)
 
-	$(UGLIFYJS) --ascii -o $(BROWSER_FILE_MIN) $(BROWSER_FILE_DEV)
+$(BROWSER_FILE_MIN): $(BROWSER_FILE_DEV)
+	rm -f $@
+	$(UGLIFYJS) --ascii -o $@ $<
 
 # Remove browser version of the library (created by "browser")
 browserclean:
+	rm -rf $(BROWSER_DIR)
+
+clean:
 	rm -rf $(BROWSER_DIR)
 
 # Run the spec suite
@@ -122,12 +136,12 @@ benchmark:
 
 # Run JSHint on the source
 hint:
-	$(JSHINT)                                                                \
-	  `find $(LIB_DIR) -name '*.js'`                                         \
+	$(JSHINT) \
+	  `find $(LIB_DIR) -name '*.js'` \
 	  `find $(SPEC_DIR) -name '*.js' -and -not -path '$(SPEC_DIR)/vendor/*'` \
-	  $(BENCHMARK_DIR)/*.js                                                  \
-	  $(BENCHMARK_RUN)                                                       \
+	  $(BENCHMARK_DIR)/*.js \
+	  $(BENCHMARK_RUN) \
 	  $(PEGJS)
 
-.PHONY:  all parser browser browserclean spec benchmark hint
-.SILENT: all parser browser browserclean spec benchmark hint
+.PHONY:  all parser browser clean browserclean spec benchmark hint
+.SILENT: all parser browser clean browserclean spec benchmark hint
