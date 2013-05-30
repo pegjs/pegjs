@@ -475,26 +475,38 @@ PrimaryExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 ArrayLiteral
-  = "[" __ elements:ElementList? __ (Elision __)? "]" {
+  = "[" elision:ElisionOpt "]" {
       return {
         type:     "ArrayLiteral",
-        elements: elements !== "" ? elements : []
+        elements: new Array(elision)
+      };
+    }
+  / "[" elements:ElementList __ tail:("," ElisionOpt)? "]" {
+      if(tail !== "") elements.length += tail[1];
+      return {
+        type:     "ArrayLiteral",
+        elements: elements
       };
     }
 
 ElementList
-  = (Elision __)?
+  = firstIndex:ElisionOpt
     head:AssignmentExpression
-    tail:(__ "," __ Elision? __ AssignmentExpression)* {
-      var result = [head];
+    tail:(__ "," ElisionOpt AssignmentExpression)* {
+      var result = [];
+      result[firstIndex] = head;
       for (var i = 0; i < tail.length; i++) {
-        result.push(tail[i][5]);
+        result.length += tail[i][2];
+        result.push(tail[i][3]);
       }
       return result;
     }
 
+ElisionOpt
+  = __ elision:Elision? __ { return elision || 0; }
+
 Elision
-  = "," (__ ",")*
+  = "," elision:(__ ",")* { return elision.length + 1; }
 
 ObjectLiteral
   = "{" __ properties:(PropertyNameAndValueList __ ("," __)?)? "}" {
