@@ -102,7 +102,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['[]', 'function() { code }'])
+          constsDetails(['[]', 'function($result) { code }'])
         );
       });
     });
@@ -126,7 +126,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['"a"', '"\\"a\\""', 'function(a) { code }'])
+          constsDetails(['"a"', '"\\"a\\""', 'function(a, $result) { code }'])
         );
       });
     });
@@ -168,7 +168,7 @@ describe("compiler pass |generateBytecode|", function() {
           '"\\"b\\""',
           '"c"',
           '"\\"c\\""',
-          'function(a, b, c) { code }'
+          'function(a, b, c, $result) { code }'
         ]));
       });
     });
@@ -325,7 +325,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }', '""', 'null'])
+          constsDetails(['function($result) { code }', '""', 'null'])
         );
       });
     });
@@ -376,7 +376,7 @@ describe("compiler pass |generateBytecode|", function() {
           '"\\"b\\""',
           '"c"',
           '"\\"c\\""',
-          'function(a, b, c) { code }',
+          'function(a, b, c, $result) { code }',
           '""'
         ]));
       });
@@ -402,7 +402,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }', '""', 'null'])
+          constsDetails(['function($result) { code }', '""', 'null'])
         );
       });
     });
@@ -453,7 +453,7 @@ describe("compiler pass |generateBytecode|", function() {
           '"\\"b\\""',
           '"c"',
           '"\\"c\\""',
-          'function(a, b, c) { code }',
+          'function(a, b, c, $result) { code }',
           '""'
         ]));
       });
