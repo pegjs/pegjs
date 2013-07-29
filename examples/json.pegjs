@@ -43,7 +43,7 @@ value
   / "true" _  { return true;   }
   / "false" _ { return false;  }
   // FIXME: We can't return null here because that would mean parse failure.
-  / "null" _  { return "null"; }
+  / "null" _  { return undefined; }
 
 /* ===== Lexical Elements ===== */
 
