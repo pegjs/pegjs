@@ -1,0 +1,3 @@
+DELETE FROM tab WHERE col = 1;
+
+DELETE FROM tab;

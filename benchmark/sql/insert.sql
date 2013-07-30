@@ -1,0 +1,14 @@
+INSERT INTO tab (col) VALUES (1);
+
+INSERT IGNORE INTO tab VALUES (1);
+
+INSERT INTO tab SET col = 1;
+
+REPLACE tab VALUES (1);
+
+INSERT INTO tab (col)
+SELECT col FROM tab;
+
+INSERT INTO tab (col)
+VALUES (1)
+ON DUPLICATE KEY UPDATE col = col + 1;

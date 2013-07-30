@@ -34,5 +34,15 @@ benchmarks = [
       { file: "960.gs/min/960.css",           title: "960.gs - 960.css (minified)"         },
       { file: "960.gs/min/960_24_col.css",    title: "960.gs - 960_24_col.css (minified)"  }
     ]
+  },
+  {
+    id:          "sql",
+    title:       "SQL",
+    tests: [
+      { file: "delete.sql", title: "DELETE" },
+      { file: "update.sql", title: "UPDATE" },
+      { file: "insert.sql", title: "INSERT" },
+      { file: "select.sql", title: "SELECT" }
+    ]
   }
 ];

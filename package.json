@@ -18,6 +18,7 @@
     "examples/css.pegjs",
     "examples/javascript.pegjs",
     "examples/json.pegjs",
+    "examples/sql.pegjs",
     "lib/compiler.js",
     "lib/compiler/opcodes.js",
     "lib/compiler/passes/generate-bytecode.js",
