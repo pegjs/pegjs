@@ -166,11 +166,11 @@ word
 
 string
   = "'" string:$([^'] / "''")* "'" _ next:string? { return string.replace(/''/, "'") + next; }
-  / &{ return (config.quotes == 'string'); } '"' string:$([^"] / '""')* '"' _ next:string? { return string.replace(/''/, "'") + next; }
+  / &{ return (config.quotes == 'string'); } '"' string:$([^"] / '""')* '"' _ next:string? { return string.replace(/""/, '"') + next; }
   / word _ string:string { return string; }
 
 int
-  = _ int:[0-9]+ wb _ { return { type: 'number', value: +int }; }
+  = _ int:$[0-9]+ wb _ { return { type: 'number', value: +int }; }
 
 number
   = ([0-9]+ ("." [0-9]*)? / "." [0-9]+) ("e"i [+-]? [0-9]+)? wb
