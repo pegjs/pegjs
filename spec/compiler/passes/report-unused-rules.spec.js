@@ -10,7 +10,7 @@ describe("compiler pass |reportUnusedRules|", function() {
           this.actual(ast);
 
           this.message = function() {
-            return "Expected the pass to report a unused rule for grammar "
+            return "Expected the pass to report an unused rule for grammar "
                  + jasmine.pp(grammar) + ", "
                  + "but it didn't.";
           };
@@ -19,13 +19,13 @@ describe("compiler pass |reportUnusedRules|", function() {
         } catch (e) {
           if (this.isNot) {
             this.message = function() {
-              return "Expected the pass not to report a unused rule for grammar "
+              return "Expected the pass not to report an unused rule for grammar "
                    + jasmine.pp(grammar) + ", "
                    + "but it did.";
             };
           } else {
             this.message = function() {
-              return "Expected the pass to report a unused rule for grammar "
+              return "Expected the pass to report an unused rule for grammar "
                    + jasmine.pp(grammar) + ", "
                    + "but it reported an error with message "
                    + jasmine.pp(e.message) + ".";
@@ -46,6 +46,7 @@ describe("compiler pass |reportUnusedRules|", function() {
   });
 
   it("does not report rule referenced somewhere", function() {
+    expect(pass).not.toReportUnusedRuleIn('start = .');
     expect(pass).not.toReportUnusedRuleIn([
       'start = used',
       'used = .'
