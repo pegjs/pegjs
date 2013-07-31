@@ -31,7 +31,7 @@ query
   / delete
 
 other
-  = (space / idf / string / [^;])*
+  = (space / idf / string / [^;])* { return 'other'; }
 
 insert
   = (INSERT / REPLACE) into
@@ -102,7 +102,7 @@ ordercols
   = ordercol ("," ordercols)?
 
 ordercol
-  = ex (ASC / DESC)?
+  = ex (ASC / DESC)? _
 
 limit
   = LIMIT (int / _ ALL _) (("," / OFFSET) int)?
@@ -127,8 +127,8 @@ ex
   / ex1
 
 ex1
-  = _ string _
-  / _ number _
+  = _ string:string { return { type: 'string', value: string }; }
+  / _ number:$number _  { return { type: 'number', value: +number }; }
   / _ (NULL / "\\N" / TRUE / FALSE / UNKNOWN) _
   / _ INTERVAL ex word _
   / _ (ALL / ANY / EXISTS)? _ "(" _ select ")" _
@@ -149,31 +149,32 @@ columns
   = column ("," column)*
 
 column
-  = table:table "." column:id
+  = db:id "." table:id "." column:id
+  / table:id "." column:id
   / column:id
 
 id
-  = _ id:word _ { return id; }
-  / _ id:idf _ { return id; }
+  = _ id:word _ { return { type: 'id', value: id }; }
+  / _ id:idf _ { return { type: 'id', value: id }; }
 
 idf
   = "`" idf:$([^`] / "``")* "`" { return idf.replace(/``/, '`'); }
   / &{ return (config.quotes == 'idf'); } '"' idf:$([^"] / '""')* '"' { return idf.replace(/""/, '"'); }
 
 word
-  = !keyword word:$([a-z$_]i [a-z$_0-9]i*) { return word; }
+  = !keyword [a-z$_]i [a-z$_0-9]i* { return text(); }
 
 string
-  = "'" string:$([^'] / "''")* "'" (__ string)? { return string.replace(/''/, "'"); }
-  / &{ return (config.quotes == 'string'); } '"' string:$([^"] / '""')* '"' (__ string)? { return string.replace(/''/, "'"); }
-  / word _ string
+  = "'" string:$([^'] / "''")* "'" _ next:string? { return string.replace(/''/, "'") + next; }
+  / &{ return (config.quotes == 'string'); } '"' string:$([^"] / '""')* '"' _ next:string? { return string.replace(/''/, "'") + next; }
+  / word _ string:string { return string; }
 
 int
-  = _ [0-9]+ _
+  = _ int:[0-9]+ wb _ { return { type: 'number', value: +int }; }
 
 number
-  = ([0-9]+ ("." [0-9]*)? / "." [0-9]+) ("e"i [+-]? [0-9]+)?
-  / "0x"i [0-9A-F]i+
+  = ([0-9]+ ("." [0-9]*)? / "." [0-9]+) ("e"i [+-]? [0-9]+)? wb
+  / "0x"i [0-9A-F]i+ wb
 
 wb
   = ![a-z$_0-9]i
