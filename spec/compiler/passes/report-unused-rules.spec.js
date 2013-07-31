@@ -3,8 +3,8 @@ describe("compiler pass |reportUnusedRules|", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toReportUnusedRuleIn: function(grammar) {
-        var ast = PEG.parser.parse(grammar);
+      toReportUnusedRuleIn: function(grammar, options) {
+        var ast = PEG.parser.parse(grammar, options || { });
 
         try {
           this.actual(ast);
@@ -51,5 +51,12 @@ describe("compiler pass |reportUnusedRules|", function() {
       'start = used',
       'used = .'
     ].join("\n"));
+  });
+
+  it("does not report allowed start rule", function() {
+    expect(pass).not.toReportUnusedRuleIn([
+      'a = "x"',
+      'b = a'
+    ].join("\n"), { allowedStartRules: [ "b" ] });
   });
 });
