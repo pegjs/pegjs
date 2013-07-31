@@ -135,10 +135,10 @@ ex1
   / _ "@" ([a-z$_]i [a-z$_0-9]i* / idf) _
   / id? ROW? parens
   / column
-  / _ (NOT / BINARY) ex1
+  / _ (NOT / BINARY / [-+~]) ex1
 
 operator "operator"
-  = (!("/*" / "-- ") [^a-z$_0-9 \r\n\t#'"`();]i)+
+  = (!("/*" / "-- ") [-~=:+!%^&*|<>/])+
   / AND / OR / XOR / DIV / MOD / IS / COLLATE / ESCAPE
   / (NOT __)? (IN / BETWEEN / (SOUNDS __)? LIKE / RLIKE / REGEXP)
 
@@ -149,7 +149,7 @@ columns
   = column ("," column)*
 
 column
-  = table:id "." column:id
+  = table:table "." column:id
   / column:id
 
 id
@@ -172,8 +172,8 @@ int
   = _ [0-9]+ _
 
 number
-  = [-+]? _ ([0-9]+ ("." [0-9]*)? / "." [0-9]+) ("e"i [+-]? [0-9]+)?
-  / [-+]? _ "0x"i [0-9A-F]i+
+  = ([0-9]+ ("." [0-9]*)? / "." [0-9]+) ("e"i [+-]? [0-9]+)?
+  / "0x"i [0-9A-F]i+
 
 wb
   = ![a-z$_0-9]i
