@@ -536,9 +536,6 @@ TIME "time"
 FREQ "frequency"
   = comment* num:num unit:(H Z / K H Z) { return num + unit.join(""); }
 
-DIMENSION "dimension"
-  = comment* num:num unit:ident { return num + unit; }
-
 PERCENTAGE "percentage"
   = comment* parts:$(num "%") { return parts; }
 
