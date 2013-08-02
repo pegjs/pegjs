@@ -25,13 +25,13 @@ queries
   = _ query? (";" queries)?
 
 query
-  = select other
+  = select other?
   / insert
   / update
   / delete
 
 other
-  = (space / idf / string / [^;])* { return 'other'; }
+  = word (space / idf / string / [^;])* { return { type: 'other' }; }
 
 insert
   = (INSERT / REPLACE) into
@@ -71,7 +71,7 @@ union
   / UNION __ word __ select
 
 selectcols
-  = selectcol ("," selectcols)?
+  = selectcol ("," selectcols)? (&FROM / &";" / !.)
   / __ word selectcols
 
 selectcol
