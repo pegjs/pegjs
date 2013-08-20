@@ -1,5 +1,19 @@
 /* JSON parser based on the grammar described at http://json.org/. */
 
+{
+  /*
+   * We can't return |null| in the |value| rule because that would mean parse
+   * failure. So we return a special object instead and convert it to |null|
+   * later.
+   */
+
+  var null_ = new Object;
+
+  function fixNull(value) {
+    return value === null_ ? null : value;
+  }
+}
+
 /* ===== Syntactical Elements ===== */
 
 start
@@ -12,9 +26,9 @@ object
 members
   = head:pair tail:("," _ pair)* {
       var result = {};
-      result[head[0]] = head[1];
+      result[head[0]] = fixNull(head[1]);
       for (var i = 0; i < tail.length; i++) {
-        result[tail[i][2][0]] = tail[i][2][1];
+        result[tail[i][2][0]] = fixNull(tail[i][2][1]);
       }
       return result;
     }
@@ -28,9 +42,9 @@ array
 
 elements
   = head:value tail:("," _ value)* {
-      var result = [head];
+      var result = [fixNull(head)];
       for (var i = 0; i < tail.length; i++) {
-        result.push(tail[i][2]);
+        result.push(fixNull(tail[i][2]));
       }
       return result;
     }
@@ -40,10 +54,9 @@ value
   / number
   / object
   / array
-  / "true" _  { return true;   }
-  / "false" _ { return false;  }
-  // FIXME: We can't return null here because that would mean parse failure.
-  / "null" _  { return "null"; }
+  / "true" _  { return true;  }
+  / "false" _ { return false; }
+  / "null" _  { return null_; }
 
 /* ===== Lexical Elements ===== */
 
