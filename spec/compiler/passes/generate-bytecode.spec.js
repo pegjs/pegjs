@@ -102,7 +102,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['[]', 'function() { code }'])
+          constsDetails(['[]', 'function(__result, __ruleName) { code }'])
         );
       });
     });
@@ -126,7 +126,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['"a"', '"\\"a\\""', 'function(a) { code }'])
+          constsDetails(['"a"', '"\\"a\\""', 'function(a, __result, __ruleName) { code }'])
         );
       });
     });
@@ -168,7 +168,7 @@ describe("compiler pass |generateBytecode|", function() {
           '"\\"b\\""',
           '"c"',
           '"\\"c\\""',
-          'function(a, b, c) { code }'
+          'function(a, b, c, __result, __ruleName) { code }'
         ]));
       });
     });
@@ -325,7 +325,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }', '""', 'null'])
+          constsDetails(['function(__result, __ruleName) { code }', '""', 'null'])
         );
       });
     });
@@ -376,7 +376,7 @@ describe("compiler pass |generateBytecode|", function() {
           '"\\"b\\""',
           '"c"',
           '"\\"c\\""',
-          'function(a, b, c) { code }',
+          'function(a, b, c, __result, __ruleName) { code }',
           '""'
         ]));
       });
@@ -402,7 +402,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }', '""', 'null'])
+          constsDetails(['function(__result, __ruleName) { code }', '""', 'null'])
         );
       });
     });
@@ -453,7 +453,7 @@ describe("compiler pass |generateBytecode|", function() {
           '"\\"b\\""',
           '"c"',
           '"\\"c\\""',
-          'function(a, b, c) { code }',
+          'function(a, b, c, __result, __ruleName) { code }',
           '""'
         ]));
       });
