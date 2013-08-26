@@ -40,9 +40,9 @@ VERSION_FILE = VERSION
 
 # ===== Executables =====
 
-JSHINT        = $(NODE_MODULES_BIN_DIR)/jshint
-UGLIFYJS      = $(NODE_MODULES_BIN_DIR)/uglifyjs
-JASMINE_NODE  = $(NODE_MODULES_BIN_DIR)/jasmine-node
+JSHINT        ?= $(NODE_MODULES_BIN_DIR)/jshint
+UGLIFYJS      ?= $(NODE_MODULES_BIN_DIR)/uglifyjs
+JASMINE_NODE  ?= $(NODE_MODULES_BIN_DIR)/jasmine-node
 PEGJS         = $(BIN_DIR)/pegjs
 BENCHMARK_RUN = $(BENCHMARK_DIR)/run
 
