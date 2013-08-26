@@ -2,6 +2,10 @@
 
 PEGJS_VERSION = `cat $(VERSION_FILE)`
 
+DIST_NAME = pegjs
+DIST_VERSION = $(PEGJS_VERSION)
+DIST_BASE = $(DIST_NAME)-$(DIST_VERSION)
+
 # ===== Modules =====
 
 # Order matters -- dependencies must be listed before modules dependent on them.
@@ -128,6 +132,18 @@ hint:
 	  $(BENCHMARK_DIR)/*.js                                                  \
 	  $(BENCHMARK_RUN)                                                       \
 	  $(PEGJS)
+
+# Make a distribution tarball for packaging
+# Note: we don't currently include the benchmark tree in the dist tarball
+# because it contains non-human-readable jQuery artifacts and this can
+# be an impediment to distribution in free software archives such as
+# Debian and Fedora.
+# Run the benchmark from git if required.
+dist:
+	-rm -rf $(DIST_BASE)
+	mkdir $(DIST_BASE)
+	cp -r bin CHANGELOG examples lib LICENSE Makefile package.json README.md spec src tools VERSION $(DIST_BASE)
+	tar czf $(DIST_BASE).tar.gz $(DIST_BASE)
 
 .PHONY:  all parser browser browserclean spec benchmark hint
 .SILENT: all parser browser browserclean spec benchmark hint
