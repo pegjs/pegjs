@@ -31,11 +31,11 @@ describe("compiler pass |generateBytecode|", function() {
         'c = "c"'
       ].join("\n"), constsDetails([
         '"a"',
-        '"\\"a\\""',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }',
         '"b"',
-        '"\\"b\\""',
+        '{ type: "literal", value: "b", description: "\\"b\\"" }',
         '"c"',
-        '"\\"c\\""'
+        '{ type: "literal", value: "c", description: "\\"c\\"" }'
       ]));
     });
   });
@@ -61,10 +61,11 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     it("defines correct constants", function() {
-      expect(pass).toChangeAST(
-        grammar,
-        constsDetails(['"start"', '"a"', '"\\"a\\""'])
-      );
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '{ type: "other", description: "start" }',
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
     });
   });
 
@@ -124,10 +125,11 @@ describe("compiler pass |generateBytecode|", function() {
       });
 
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          grammar,
-          constsDetails(['"a"', '"\\"a\\""', 'function(a) { code }'])
-        );
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
+          'function(a) { code }'
+        ]));
       });
     });
 
@@ -163,11 +165,11 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           'null',
           '"a"',
-          '"\\"a\\""',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
           '"b"',
-          '"\\"b\\""',
+          '{ type: "literal", value: "b", description: "\\"b\\"" }',
           '"c"',
-          '"\\"c\\""',
+          '{ type: "literal", value: "c", description: "\\"c\\"" }',
           'function(a, b, c) { code }'
         ]));
       });
@@ -216,18 +218,15 @@ describe("compiler pass |generateBytecode|", function() {
       });
 
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          grammar,
-          constsDetails([
-            'null',
-            '"a"',
-            '"\\"a\\""',
-            '"b"',
-            '"\\"b\\""',
-            '"c"',
-            '"\\"c\\""'
-          ])
-        );
+        expect(pass).toChangeAST(grammar, constsDetails([
+          'null',
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
+          '"b"',
+          '{ type: "literal", value: "b", description: "\\"b\\"" }',
+          '"c"',
+          '{ type: "literal", value: "c", description: "\\"c\\"" }'
+        ]));
       });
     });
   });
@@ -272,10 +271,12 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     it("defines correct constants", function() {
-      expect(pass).toChangeAST(
-        grammar,
-        constsDetails(['""', 'null', '"a"', '"\\"a\\""'])
-      );
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '""',
+        'null',
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
     });
   });
 
@@ -299,10 +300,12 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     it("defines correct constants", function() {
-      expect(pass).toChangeAST(
-        grammar,
-        constsDetails(['""', 'null', '"a"', '"\\"a\\""'])
-      );
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '""',
+        'null',
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
     });
   });
 
@@ -371,11 +374,11 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           'null',
           '"a"',
-          '"\\"a\\""',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
           '"b"',
-          '"\\"b\\""',
+          '{ type: "literal", value: "b", description: "\\"b\\"" }',
           '"c"',
-          '"\\"c\\""',
+          '{ type: "literal", value: "c", description: "\\"c\\"" }',
           'function(a, b, c) { code }',
           '""'
         ]));
@@ -448,11 +451,11 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           'null',
           '"a"',
-          '"\\"a\\""',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
           '"b"',
-          '"\\"b\\""',
+          '{ type: "literal", value: "b", description: "\\"b\\"" }',
           '"c"',
-          '"\\"c\\""',
+          '{ type: "literal", value: "c", description: "\\"c\\"" }',
           'function(a, b, c) { code }',
           '""'
         ]));
@@ -473,10 +476,11 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     it("defines correct constants", function() {
-      expect(pass).toChangeAST(
-        grammar,
-        constsDetails(['""', '"a"', '"\\"a\\""'])
-      );
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '""',
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
     });
   });
 
@@ -495,10 +499,11 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     it("defines correct constants", function() {
-      expect(pass).toChangeAST(
-        grammar,
-        constsDetails(['[]', '"a"', '"\\"a\\""'])
-      );
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '[]',
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
     });
   });
 
@@ -521,10 +526,12 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     it("defines correct constants", function() {
-      expect(pass).toChangeAST(
-        grammar,
-        constsDetails(['[]', 'null', '"a"', '"\\"a\\""'])
-      );
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '[]',
+        'null',
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
     });
   });
 
@@ -571,7 +578,10 @@ describe("compiler pass |generateBytecode|", function() {
       });
 
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails(['"a"', '"\\"a\\""']));
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
       });
     });
 
@@ -587,7 +597,10 @@ describe("compiler pass |generateBytecode|", function() {
       });
 
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails(['"a"', '"\\"A\\""']));
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "A", description: "\\"A\\"" }'
+        ]));
       });
     });
   });
@@ -603,55 +616,55 @@ describe("compiler pass |generateBytecode|", function() {
 
     describe("non-empty non-inverted case-sensitive", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          'start = [a]',
-          constsDetails(['/^[a]/', '"[a]"'])
-        );
+        expect(pass).toChangeAST('start = [a]', constsDetails([
+          '/^[a]/',
+          '{ type: "class", value: "[a]", description: "[a]" }'
+        ]));
       });
     });
 
     describe("non-empty inverted case-sensitive", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          'start = [^a]',
-          constsDetails(['/^[^a]/', '"[^a]"'])
-        );
+        expect(pass).toChangeAST('start = [^a]', constsDetails([
+          '/^[^a]/',
+          '{ type: "class", value: "[^a]", description: "[^a]" }'
+        ]));
       });
     });
 
     describe("non-empty non-inverted case-insensitive", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          'start = [a]i',
-          constsDetails(['/^[a]/i', '"[a]i"'])
-        );
+        expect(pass).toChangeAST('start = [a]i', constsDetails([
+          '/^[a]/i',
+          '{ type: "class", value: "[a]i", description: "[a]i" }'
+        ]));
       });
     });
 
     describe("non-empty complex", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          'start = [ab-def-hij-l]',
-          constsDetails(['/^[ab-def-hij-l]/', '"[ab-def-hij-l]"'])
-        );
+        expect(pass).toChangeAST('start = [ab-def-hij-l]', constsDetails([
+          '/^[ab-def-hij-l]/',
+          '{ type: "class", value: "[ab-def-hij-l]", description: "[ab-def-hij-l]" }'
+        ]));
       });
     });
 
     describe("empty non-inverted", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          'start = []',
-          constsDetails(['/^(?!)/', '"[]"'])
-        );
+        expect(pass).toChangeAST('start = []', constsDetails([
+          '/^(?!)/',
+          '{ type: "class", value: "[]", description: "[]" }'
+        ]));
       });
     });
 
     describe("empty inverted", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          'start = [^]',
-          constsDetails(['/^[\\S\\s]/', '"[^]"'])
-        );
+        expect(pass).toChangeAST('start = [^]', constsDetails([
+          '/^[\\S\\s]/',
+          '{ type: "class", value: "[^]", description: "[^]" }'
+        ]));
       });
     });
   });
@@ -668,7 +681,10 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     it("defines correct constants", function() {
-      expect(pass).toChangeAST(grammar, constsDetails(['"any character"']));
+      expect(pass).toChangeAST(
+        grammar,
+        constsDetails(['{ type: "any", description: "any character" }'])
+      );
     });
   });
 });

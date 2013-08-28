@@ -248,7 +248,9 @@ describe("generated parser", function() {
       });
 
       it("overwrites expected string on failure", function() {
-        expect(parser).toFailToParse("b", { expected: ["start"] });
+        expect(parser).toFailToParse("b", {
+          expected: [{ type: "other", description: "start" }]
+        });
       });
     });
 
@@ -716,10 +718,12 @@ describe("generated parser", function() {
         expect(parser).toParse("ab", ["a", "b"]);
       });
 
-      it("sets expected string correctly on failure", function() {
+      it("sets expectation correctly on failure", function() {
         var parser = PEG.buildParser('start = "a"', options);
 
-        expect(parser).toFailToParse("b", { expected: ['"a"'] });
+        expect(parser).toFailToParse("b", {
+          expected: [{ type: "literal", value: "a", description: '"a"' }]
+        });
       });
     });
 
@@ -775,10 +779,12 @@ describe("generated parser", function() {
         expect(parser).toParse("ab", ["a", "b"]);
       });
 
-      it("sets expected string correctly on failure", function() {
+      it("sets expectation correctly on failure", function() {
         var parser = PEG.buildParser('start = [a]', options);
 
-        expect(parser).toFailToParse("b", { expected: ["[a]"] });
+        expect(parser).toFailToParse("b", {
+          expected: [{ type: "class", value: "[a]", description: "[a]" }]
+        });
       });
     });
 
@@ -795,10 +801,12 @@ describe("generated parser", function() {
         expect(parser).toParse("ab", ["a", "b"]);
       });
 
-      it("sets expected string correctly on failure", function() {
+      it("sets expectation correctly on failure", function() {
         var parser = PEG.buildParser('start = .', options);
 
-        expect(parser).toFailToParse("", { expected: ['any character'] });
+        expect(parser).toFailToParse("", {
+          expected: [{ type: "any", description: "any character" }]
+        });
       });
     });
 
@@ -807,32 +815,41 @@ describe("generated parser", function() {
         it("reports only the rightmost error", function() {
           var parser = PEG.buildParser('start = "a" "b" / "a" "c" "d"', options);
 
-          expect(parser).toFailToParse("ace", { offset: 2, expected: ['"d"'] });
+          expect(parser).toFailToParse("ace", {
+            offset:   2,
+            expected: [{ type: "literal", value: "d", description: '"d"' }]
+          });
         });
       });
 
-      describe("expected strings reporting", function() {
-        it("reports expected strings correctly with no alternative", function() {
+      describe("expectations reporting", function() {
+        it("reports expectations correctly with no alternative", function() {
           var parser = PEG.buildParser('start = ', options);
 
           expect(parser).toFailToParse("a", { expected: [] });
         });
 
-        it("reports expected strings correctly with one alternative", function() {
+        it("reports expectations correctly with one alternative", function() {
           var parser = PEG.buildParser('start = "a"', options);
 
-          expect(parser).toFailToParse("b", { expected: ['"a"'] });
-        });
-
-        it("reports expected strings correctly with multiple alternatives", function() {
-          var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
-
-          expect(parser).toFailToParse("d", {
-            expected: ['"a"', '"b"', '"c"']
+          expect(parser).toFailToParse("b", {
+            expected: [{ type: "literal", value: "a", description: '"a"' }]
           });
         });
 
-        it("removes duplicates from expected strings", function() {
+        it("reports expectations correctly with multiple alternatives", function() {
+          var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
+
+          expect(parser).toFailToParse("d", {
+            expected: [
+              { type: "literal", value: "a", description: '"a"' },
+              { type: "literal", value: "b", description: '"b"' },
+              { type: "literal", value: "c", description: '"c"' }
+            ]
+          });
+        });
+
+        it("removes duplicates from expectations", function() {
           /*
            * There was a bug in the code that manifested only with three
            * duplicates. This is why the following test uses three choices
@@ -842,14 +859,20 @@ describe("generated parser", function() {
            */
           var parser = PEG.buildParser('start = "a" / "a" / "a"', options);
 
-          expect(parser).toFailToParse("b", { expected: ['"a"'] });
+          expect(parser).toFailToParse("b", {
+            expected: [{ type: "literal", value: "a", description: '"a"' }]
+          });
         });
 
-        it("sorts expected strings", function() {
+        it("sorts expectations", function() {
           var parser = PEG.buildParser('start = "c" / "b" / "a"', options);
 
           expect(parser).toFailToParse("d", {
-            expected: ['"a"', '"b"', '"c"']
+            expected: [
+              { type: "literal", value: "a", description: '"a"' },
+              { type: "literal", value: "b", description: '"b"' },
+              { type: "literal", value: "c", description: '"c"' }
+            ]
           });
         });
       });
