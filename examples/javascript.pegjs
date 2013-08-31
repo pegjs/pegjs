@@ -475,32 +475,45 @@ PrimaryExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 ArrayLiteral
-  = "[" __ (Elision __)? "]" {
+  = "[" __ elision:(Elision __)? "]" {
       return {
         type:     "ArrayLiteral",
-        elements: []
+        elements: elision !== "" ? elision[0] : []
       };
     }
-  / "[" __ elements:ElementList __ ("," __ (Elision __)?)? "]" {
+  / "[" __ elements:ElementList __ elision:("," __ (Elision __)?)? "]" {
       return {
         type:     "ArrayLiteral",
-        elements: elements
+        elements: elements.concat(elision !== "" && elision[2] !== "" ? elision[2][0] : [])
       };
     }
 
 ElementList
-  = (Elision __)?
-    head:AssignmentExpression
-    tail:(__ "," __ (Elision __)? AssignmentExpression)* {
-      var result = [head];
+  = head:(
+      elision:(Elision __)? element:AssignmentExpression {
+        return (elision !== "" ? elision[0] : []).concat(element);
+      }
+    )
+    tail:(
+      __ "," __ elision:(Elision __)? element:AssignmentExpression {
+        return (elision !== "" ? elision[0] : []).concat(element);
+      }
+    )* {
+      var result = head;
       for (var i = 0; i < tail.length; i++) {
-        result.push(tail[i][4]);
+        result = result.concat(tail[i]);
       }
       return result;
     }
 
 Elision
-  = "," (__ ",")*
+  = "," elision:(__ ",")* {
+      var result = [null];
+      for (var i = 0; i < elision.length; i++) {
+        result.push(null);
+      }
+      return result;
+    }
 
 ObjectLiteral
   = "{" __ properties:(PropertyNameAndValueList __ ("," __)?)? "}" {
