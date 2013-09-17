@@ -138,6 +138,38 @@ suffixed
         expression: expression
       };
     }
+  / expression:primary r:range {
+      if (!(r.delimiter !== undefined)) {
+        if (!(r.max !== undefined)) {// unbounded
+          if (r.min === 0) {
+            return {
+              type:       "zero_or_more",
+              expression: expression
+            };
+          } else
+          if (r.min === 1) {
+            return {
+              type:       "one_or_more",
+              expression: expression
+            };
+          }
+        } else
+        if (r.max === 1) {
+          if (r.min === 0) {
+            return {
+              type:       "optional",
+              expression: expression
+            };
+          } else
+          if (r.min === 1) {
+            return expression
+          }
+        }
+      }
+      r.type = "range";
+      r.expression = expression;
+      return r;
+    }
   / primary
 
 primary
@@ -151,6 +183,16 @@ primary
   / class
   / dot { return { type: "any" }; }
   / lparen expression:expression rparen { return expression; }
+
+range
+  = range_open r:range2 delimiter:(comma primary)? range_close {
+    r.delimiter = delimiter !== "" ? delimiter[1] : undefined;
+    return r;
+  }
+range2
+  = min:int? dots max:int? {return {min:min!==""?min:0, max:max!==""?max:undefined};}
+  / val:int {return {min:val, max:val};}
+int = n:digit+ __ {return parseInt(n.join(''),10);}
 
 /* "Lexical" elements */
 
@@ -179,6 +221,10 @@ plus      = "+" __ { return "+"; }
 lparen    = "(" __ { return "("; }
 rparen    = ")" __ { return ")"; }
 dot       = "." __ { return "."; }
+comma     = "," __ { return ","; }
+dots      = ".." __{ return ".."; }
+range_open= "|" __ { return "|"; }
+range_close="|" __ { return "|"; }
 
 /*
  * Modeled after ECMA-262, 5th ed., 7.6, but much simplified:
