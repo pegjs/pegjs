@@ -150,6 +150,38 @@ SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
       return { type: OPS_TO_SUFFIXED_TYPES[operator], expression: expression };
     }
+  / expression:PrimaryExpression __ r:Range {
+      if (!(r.delimiter !== undefined)) {
+        if (!(r.max !== undefined)) {// unbounded
+          if (r.min === 0) {
+            return {
+              type:       "zero_or_more",
+              expression: expression
+            };
+          } else
+          if (r.min === 1) {
+            return {
+              type:       "one_or_more",
+              expression: expression
+            };
+          }
+        } else
+        if (r.max === 1) {
+          if (r.min === 0) {
+            return {
+              type:       "optional",
+              expression: expression
+            };
+          } else
+          if (r.min === 1) {
+            return expression
+          }
+        }
+      }
+      r.type = "range";
+      r.expression = expression;
+      return r;
+    }
   / PrimaryExpression
 
 SuffixedOperator
@@ -178,6 +210,15 @@ SemanticPredicateExpression
 SemanticPredicateOperator
   = "&"
   / "!"
+Range
+  = "|" __ r:Range2 delimiter:("," __ primary)? "|" __ {
+    r.delimiter = delimiter !== "" ? delimiter[2] : undefined;
+    return r;
+  }
+Range2
+  = min:Int? ".." __ max:Int? {return {min:min!==""?min:0, max:max!==""?max:undefined};}
+  / val:Int {return {min:val, max:val};}
+Int = n:$Digit+ __ {return parseInt(n,10);}
 
 /* ---- Lexical Grammar ----- */
 
@@ -202,6 +243,10 @@ LineTerminatorSequence "end of line"
   / "\r"
   / "\u2028"
   / "\u2029"
+comma     = "," __ { return ","; }
+dots      = ".." __{ return ".."; }
+range_open= "|" __ { return "|"; }
+range_close="|" __ { return "|"; }
 
 Comment "comment"
   = MultiLineComment
