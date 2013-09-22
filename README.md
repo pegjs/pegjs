@@ -293,7 +293,7 @@ expression as many times as possible.
 Try to match the expression. If the match succeeds, return its match result,
 otherwise return `null`.
 
-#### *expression* |count|<br> *expression* |min..max|
+#### *expression* |count|<br> *expression* |count,delimiter|<br> *expression* |min..max|<br> *expression* |min..max,delimiter|
 
 Match exact `count` repetitions of `expression`. If the match succeeds, return
 their match results in an array.
@@ -305,6 +305,10 @@ succeeds, return their match results in an array. Both `min` and `max` may
 be omitted. If `min` omitted, then suppose to `0`. If `max` is omitted, then
 suppose to infinity. `expression |..|` equivalently `expression |0..|` and
 `expression *`. `expression |1..|` equivalently `expression +`.
+
+Optionally, you can specify delimiter as rule reference or arbitrary rule
+expression. Delimiter must appear between elements in parsed input. Results
+of delimiter expression will be dropped.
 
 `count`, `min` and `max` must be positive integers.
 
