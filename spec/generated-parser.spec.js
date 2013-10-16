@@ -266,16 +266,10 @@ describe("generated parser", function() {
     });
 
     describe("action code", function() {
-      it("tranforms the expression result by returnung a non-|null| value", function() {
+      it("tranforms the expression result by returnung a value", function() {
         var parser = PEG.buildParser('start = "a" { return 42; }', options);
 
         expect(parser).toParse("a", 42);
-      });
-
-      it("causes match failure by returning |null|", function() {
-        var parser = PEG.buildParser('start = "a" { return null; }', options);
-
-        expect(parser).toFailToParse("a");
       });
 
       it("is not called when the expression does not match", function() {
@@ -359,15 +353,6 @@ describe("generated parser", function() {
             );
 
         expect(parser).toParse("a", { a: 42 }, { a: 42 });
-      });
-
-      it("does not advance position when the expression matches but the action returns |null|", function() {
-        var parser = PEG.buildParser(
-              'start = "a" { return null; } / "a"',
-              options
-            );
-
-        expect(parser).toParse("a", "a");
       });
     });
 

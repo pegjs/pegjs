@@ -163,7 +163,7 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          'null',
+          'peg$FAILED',
           '"a"',
           '{ type: "literal", value: "a", description: "\\"a\\"" }',
           '"b"',
@@ -219,7 +219,7 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          'null',
+          'peg$FAILED',
           '"a"',
           '{ type: "literal", value: "a", description: "\\"a\\"" }',
           '"b"',
@@ -273,7 +273,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '""',
-        'null',
+        'peg$FAILED',
         '"a"',
         '{ type: "literal", value: "a", description: "\\"a\\"" }'
       ]));
@@ -302,7 +302,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '""',
-        'null',
+        'peg$FAILED',
         '"a"',
         '{ type: "literal", value: "a", description: "\\"a\\"" }'
       ]));
@@ -328,7 +328,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }', '""', 'null'])
+          constsDetails(['function() { code }', '""', 'peg$FAILED'])
         );
       });
     });
@@ -372,7 +372,7 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          'null',
+          'peg$FAILED',
           '"a"',
           '{ type: "literal", value: "a", description: "\\"a\\"" }',
           '"b"',
@@ -405,7 +405,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }', '""', 'null'])
+          constsDetails(['function() { code }', '""', 'peg$FAILED'])
         );
       });
     });
@@ -449,7 +449,7 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          'null',
+          'peg$FAILED',
           '"a"',
           '{ type: "literal", value: "a", description: "\\"a\\"" }',
           '"b"',
@@ -528,7 +528,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '[]',
-        'null',
+        'peg$FAILED',
         '"a"',
         '{ type: "literal", value: "a", description: "\\"a\\"" }'
       ]));

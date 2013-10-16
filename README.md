@@ -374,7 +374,7 @@ The action is a piece of JavaScript code that is executed as if it was inside a
 function. It gets the match results of labeled expressions in preceding
 expression as its arguments. The action should return some JavaScript value
 using the `return` statement. This value is considered match result of the
-preceding expression. The action can return `null` to indicate a match failure.
+preceding expression.
 
 The code inside the action can access all variables and functions defined in the
 initializer at the beginning of the grammar. Curly braces in the action code
