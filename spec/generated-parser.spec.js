@@ -397,14 +397,14 @@ describe("generated parser", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = &"a" "a"', options);
 
-        expect(parser).toParse("a", ["", "a"]);
+        expect(parser).toParse("a", [undefined, "a"]);
         expect(parser).toFailToParse("b");
       });
 
       it("does not advance position on success", function() {
         var parser = PEG.buildParser('start = &"a" "a"', options);
 
-        expect(parser).toParse("a", ["", "a"]);
+        expect(parser).toParse("a", [undefined, "a"]);
       });
 
       it("does not influence expected strings on failure", function() {
@@ -418,7 +418,7 @@ describe("generated parser", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = !"a" "b"', options);
 
-        expect(parser).toParse("b", ["", "b"]);
+        expect(parser).toParse("b", [undefined, "b"]);
         expect(parser).toFailToParse("a");
       });
 
@@ -439,7 +439,7 @@ describe("generated parser", function() {
       it("causes successful match by returning |true|", function() {
         var parser = PEG.buildParser('start = &{ return true; }', options);
 
-        expect(parser).toParse("", "");
+        expect(parser).toParse("", undefined);
       });
 
       it("causes match failure by returning |false|", function() {
@@ -454,7 +454,7 @@ describe("generated parser", function() {
               options
             );
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use the |text| function", function() {
@@ -463,7 +463,7 @@ describe("generated parser", function() {
               options
             );
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use the |offset| function to get the current parse position", function() {
@@ -472,7 +472,7 @@ describe("generated parser", function() {
               options
             );
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use the |line| and |column| functions to get the current line and column", function() {
@@ -504,7 +504,7 @@ describe("generated parser", function() {
               'start = "a" &{ return v === 42; }'
             ].join("\n"), options);
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use functions defined in the initializer", function() {
@@ -513,7 +513,7 @@ describe("generated parser", function() {
               'start = "a" &{ return f() === 42; }'
             ].join("\n"), options);
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use options passed to the parser", function() {
@@ -530,7 +530,7 @@ describe("generated parser", function() {
       it("causes successful match by returning |false|", function() {
         var parser = PEG.buildParser('start = !{ return false; }', options);
 
-        expect(parser).toParse("", "");
+        expect(parser).toParse("", undefined);
       });
 
       it("causes match failure by returning |true|", function() {
@@ -545,7 +545,7 @@ describe("generated parser", function() {
               options
             );
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use the |text| function", function() {
@@ -554,7 +554,7 @@ describe("generated parser", function() {
               options
             );
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use the |offset| function to get the current parse position", function() {
@@ -563,7 +563,7 @@ describe("generated parser", function() {
               options
             );
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use the |line| and |column| functions to get the current line and column", function() {
@@ -595,7 +595,7 @@ describe("generated parser", function() {
               'start = "a" !{ return v !== 42; }'
             ].join("\n"), options);
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use functions defined in the initializer", function() {
@@ -604,7 +604,7 @@ describe("generated parser", function() {
               'start = "a" !{ return f() !== 42; }'
             ].join("\n"), options);
 
-        expect(parser).toParse("a", ["a", ""]);
+        expect(parser).toParse("a", ["a", undefined]);
       });
 
       it("can use options passed to the parser", function() {
