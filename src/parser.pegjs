@@ -6,7 +6,7 @@ grammar
   = __ initializer:initializer? rules:rule+ {
       return {
         type:        "grammar",
-        initializer: initializer !== "" ? initializer : null,
+        initializer: initializer,
         rules:       rules
       };
     }
@@ -24,7 +24,7 @@ rule
       return {
         type:        "rule",
         name:        name,
-        expression:  displayName !== ""
+        expression:  displayName !== null
           ? {
               type:       "named",
               name:       displayName,
@@ -249,10 +249,10 @@ class "character class"
   = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" flags:"i"? __ {
       var partsConverted = utils.map(parts, function(part) { return part.data; });
       var rawText = "["
-        + inverted
+        + (inverted !== null ? inverted : "")
         + utils.map(parts, function(part) { return part.rawText; }).join("")
         + "]"
-        + flags;
+        + (flags !== null ? flags : "");
 
       return {
         type:       "class",

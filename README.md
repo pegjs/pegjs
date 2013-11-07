@@ -291,7 +291,7 @@ expression as many times as possible.
 #### *expression* ?
 
 Try to match the expression. If the match succeeds, return its match result,
-otherwise return an empty string.
+otherwise return `null`.
 
 #### & *expression*
 

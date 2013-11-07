@@ -478,25 +478,25 @@ ArrayLiteral
   = "[" __ elision:(Elision __)? "]" {
       return {
         type:     "ArrayLiteral",
-        elements: elision !== "" ? elision[0] : []
+        elements: elision !== null ? elision[0] : []
       };
     }
   / "[" __ elements:ElementList __ elision:("," __ (Elision __)?)? "]" {
       return {
         type:     "ArrayLiteral",
-        elements: elements.concat(elision !== "" && elision[2] !== "" ? elision[2][0] : [])
+        elements: elements.concat(elision !== null && elision[2] !== null ? elision[2][0] : [])
       };
     }
 
 ElementList
   = head:(
       elision:(Elision __)? element:AssignmentExpression {
-        return (elision !== "" ? elision[0] : []).concat(element);
+        return (elision !== null ? elision[0] : []).concat(element);
       }
     )
     tail:(
       __ "," __ elision:(Elision __)? element:AssignmentExpression {
-        return (elision !== "" ? elision[0] : []).concat(element);
+        return (elision !== null ? elision[0] : []).concat(element);
       }
     )* {
       var result = head;
@@ -519,7 +519,7 @@ ObjectLiteral
   = "{" __ properties:(PropertyNameAndValueList __ ("," __)?)? "}" {
       return {
         type:       "ObjectLiteral",
-        properties: properties !== "" ? properties[0] : []
+        properties: properties !== null ? properties[0] : []
       };
     }
 
@@ -663,7 +663,7 @@ CallExpression
 
 Arguments
   = "(" __ args:ArgumentList? __ ")" {
-    return args !== "" ? args : [];
+    return args !== null ? args : [];
   }
 
 ArgumentList
@@ -1143,7 +1143,7 @@ Block
   = "{" __ statements:(StatementList __)? "}" {
       return {
         type:       "Block",
-        statements: statements !== "" ? statements[0] : []
+        statements: statements !== null ? statements[0] : []
       };
     }
 
@@ -1187,7 +1187,7 @@ VariableDeclaration
       return {
         type:  "VariableDeclaration",
         name:  name,
-        value: value !== "" ? value[1] : null
+        value: value !== null ? value[1] : null
       };
     }
 
@@ -1196,7 +1196,7 @@ VariableDeclarationNoIn
       return {
         type:  "VariableDeclaration",
         name:  name,
-        value: value !== "" ? value[1] : null
+        value: value !== null ? value[1] : null
       };
     }
 
@@ -1221,7 +1221,7 @@ IfStatement
         type:          "IfStatement",
         condition:     condition,
         ifStatement:   ifStatement,
-        elseStatement: elseStatement !== "" ? elseStatement[3] : null
+        elseStatement: elseStatement !== null ? elseStatement[3] : null
       };
     }
 
@@ -1272,9 +1272,9 @@ ForStatement
     {
       return {
         type:        "ForStatement",
-        initializer: initializer !== "" ? initializer : null,
-        test:        test !== "" ? test : null,
-        counter:     counter !== "" ? counter : null,
+        initializer: initializer,
+        test:        test,
+        counter:     counter,
         statement:   statement
       };
     }
@@ -1358,10 +1358,10 @@ CaseBlock
     before:CaseClauses?
     defaultAndAfter:(__ DefaultClause __ CaseClauses?)? __
     "}" {
-      var before = before !== "" ? before : [];
-      if (defaultAndAfter !== "") {
+      var before = before !== null ? before : [];
+      if (defaultAndAfter !== null) {
         var defaultClause = defaultAndAfter[1];
-        var clausesAfter = defaultAndAfter[3] !== ""
+        var clausesAfter = defaultAndAfter[3] !== null
           ? defaultAndAfter[3]
           : [];
       } else {
@@ -1386,7 +1386,7 @@ CaseClause
       return {
         type:       "CaseClause",
         selector:   selector,
-        statements: statements !== "" ? statements[1] : []
+        statements: statements !== null ? statements[1] : []
       };
     }
 
@@ -1394,7 +1394,7 @@ DefaultClause
   = DefaultToken __ ":" statements:(__ StatementList)? {
       return {
         type:       "DefaultClause",
-        statements: statements !== "" ? statements[1] : []
+        statements: statements !== null ? statements[1] : []
       };
     }
 
@@ -1470,7 +1470,7 @@ FunctionDeclaration
       return {
         type:     "Function",
         name:     name,
-        params:   params !== "" ? params : [],
+        params:   params !== null ? params : [],
         elements: elements
       };
     }
@@ -1481,8 +1481,8 @@ FunctionExpression
     "{" __ elements:FunctionBody __ "}" {
       return {
         type:     "Function",
-        name:     name !== "" ? name : null,
-        params:   params !== "" ? params : [],
+        name:     name,
+        params:   params !== null ? params : [],
         elements: elements
       };
     }
@@ -1497,13 +1497,13 @@ FormalParameterList
     }
 
 FunctionBody
-  = elements:SourceElements? { return elements !== "" ? elements : []; }
+  = elements:SourceElements? { return elements !== null ? elements : []; }
 
 Program
   = elements:SourceElements? {
       return {
         type:     "Program",
-        elements: elements !== "" ? elements : []
+        elements: elements !== null ? elements : []
       };
     }
 

@@ -33,7 +33,7 @@ stylesheet
 
       return {
         type:    "stylesheet",
-        charset: charset !== "" ? charset[1] : null,
+        charset: charset !== null ? charset[1] : null,
         imports: importsConverted,
         rules:   rulesConverted
       };
@@ -44,7 +44,7 @@ import
       return {
         type:  "import_rule",
         href:  href,
-        media: media !== "" ? media : []
+        media: media !== null ? media : []
       };
     }
 
@@ -75,16 +75,16 @@ page
     declarationsHead:declaration?
     declarationsTail:(";" S* declaration?)*
     "}" S* {
-      var declarations = declarationsHead !== "" ? [declarationsHead] : [];
+      var declarations = declarationsHead !== null ? [declarationsHead] : [];
       for (var i = 0; i < declarationsTail.length; i++) {
-        if (declarationsTail[i][2] !== "") {
+        if (declarationsTail[i][2] !== null) {
           declarations.push(declarationsTail[i][2]);
         }
       }
 
       return {
         type:         "page_rule",
-        qualifier:    qualifier !== "" ? qualifier : null,
+        qualifier:    qualifier,
         declarations: declarations
       };
     }
@@ -119,9 +119,9 @@ ruleset
         selectors.push(selectorsTail[i][2]);
       }
 
-      var declarations = declarationsHead !== "" ? [declarationsHead] : [];
+      var declarations = declarationsHead !== null ? [declarationsHead] : [];
       for (i = 0; i < declarationsTail.length; i++) {
-        if (declarationsTail[i][2] !== "") {
+        if (declarationsTail[i][2] !== null) {
           declarations.push(declarationsTail[i][2]);
         }
       }
@@ -196,8 +196,8 @@ attrib
       return {
         type:      "attribute_selector",
         attribute: attribute,
-        operator:  operatorAndValue !== "" ? operatorAndValue[0] : null,
-        value:     operatorAndValue !== "" ? operatorAndValue[2] : null
+        operator:  operatorAndValue !== null ? operatorAndValue[0] : null,
+        value:     operatorAndValue !== null ? operatorAndValue[2] : null
       };
     }
 
@@ -208,7 +208,7 @@ pseudo
           return {
             type:   "function",
             name:   name,
-            params: params !== "" ? [params[0]] : []
+            params: params !== null ? [params[0]] : []
           };
         }
       / IDENT
@@ -230,7 +230,7 @@ declaration
         type:       "declaration",
         property:   property,
         expression: expression,
-        important:  important !== "" ? true : false
+        important:  important !== null ? true : false
       };
     }
 
@@ -262,7 +262,12 @@ term
       / FREQ S*
       / PERCENTAGE S*
       / NUMBER S*
-    )               { return { type: "value",  value: operator + value[0] }; }
+    ) {
+      return {
+        type: "value",
+        value: (operator !== null ? operator : "") + value[0]
+      };
+    }
   / value:URI S*    { return { type: "uri",    value: value               }; }
   / function
   / hexcolor
@@ -331,7 +336,7 @@ comment
 
 ident
   = dash:"-"? nmstart:nmstart nmchars:nmchar* {
-      return dash + nmstart + nmchars.join("");
+      return (dash !== null ? dash : "") + nmstart + nmchars.join("");
     }
 
 name

@@ -621,7 +621,7 @@ describe("generated parser", function() {
       it("matches correctly", function() {
         var parser = PEG.buildParser('start = "a"?', options);
 
-        expect(parser).toParse("",  "");
+        expect(parser).toParse("",  null);
         expect(parser).toParse("a", "a");
       });
     });
@@ -1112,8 +1112,8 @@ describe("generated parser", function() {
          */
         var parser = PEG.buildParser([
               'S = &(A "c") a:"a"+ B:B !("a" / "b" / "c") { return a.join("") + B; }',
-              'A = a:"a" A:A? b:"b" { return a + A + b; }',
-              'B = b:"b" B:B? c:"c" { return b + B + c; }'
+              'A = a:"a" A:A? b:"b" { return [a, A, b].join(""); }',
+              'B = b:"b" B:B? c:"c" { return [b, B, c].join(""); }'
             ].join("\n"), options);
 
         expect(parser).toParse("abc",       "abc");
