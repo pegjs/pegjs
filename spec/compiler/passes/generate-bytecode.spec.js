@@ -89,14 +89,14 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
-          1,             // PUSH_CURR_POS
-          0, 0,          // PUSH
-          12, 6, 0,      // IF_NOT_ERROR
-          21, 1,         //   * REPORT_SAVED_POS
-          23, 1, 1, 0,   //     CALL
-          11, 1, 1,      // IF_ERROR
-          6,             //   * NIP_CURR_POS
-          5              //   * NIP
+          1,                // PUSH_CURR_POS
+          0, 0,             // PUSH
+          12, 7, 0,         // IF_NOT_ERROR
+          21, 1,            //   * REPORT_SAVED_POS
+          23, 1, 1, 1, 0,   //     CALL
+          11, 1, 1,         // IF_ERROR
+          6,                //   * NIP_CURR_POS
+          5                 //   * NIP
         ]));
       });
 
@@ -115,9 +115,9 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
           15, 0, 2, 2, 19, 0, 20, 1,   // <expression>
-          12, 7, 0,                    // IF_NOT_ERROR
+          12, 8, 0,                    // IF_NOT_ERROR
           21, 1,                       //   * REPORT_SAVED_POS
-          23, 2, 1, 1, 0,              //     CALL
+          23, 2, 1, 1, 1, 0,           //     CALL
           11, 1, 1,                    // IF_ERROR
           6,                           //   * NIP_CURR_POS
           5                            //   * NIP
@@ -139,13 +139,13 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
           15, 1, 2, 2, 19, 1, 20, 2,   // <elements[0]>
-          12, 46, 4,                   // IF_NOT_ERROR
+          12, 47, 4,                   // IF_NOT_ERROR
           15, 3, 2, 2, 19, 3, 20, 4,   //   * <elements[1]>
-          12, 30, 5,                   //     IF_NOT_ERROR
+          12, 31, 5,                   //     IF_NOT_ERROR
           15, 5, 2, 2, 19, 5, 20, 6,   //       * <elements[2]>
-          12, 14, 5,                   //         IF_NOT_ERROR
+          12, 15, 5,                   //         IF_NOT_ERROR
           21, 3,                       //           * REPORT_SAVED_POS
-          23, 7, 3, 3, 2, 1, 0,        //             CALL
+          23, 7, 1, 3, 3, 2, 1, 0,     //             CALL
           11, 1, 1,                    //             IF_ERROR
           6,                           //               * NIP_CURR_POS
           5,                           //               * NIP
@@ -315,13 +315,13 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
-          22,            // REPORT_CURR_POS
-          23, 0, 0, 0,   // CALL
-          10, 3, 3,      // IF
-          2,             //   * POP
-          0, 1,          //     PUSH
-          2,             //   * POP
-          0, 2           //     PUSH
+          22,               // REPORT_CURR_POS
+          23, 0, 0, 0, 0,   // CALL
+          10, 3, 3,         // IF
+          2,                //   * POP
+          0, 1,             //     PUSH
+          2,                //   * POP
+          0, 2              //     PUSH
         ]));
       });
 
@@ -340,13 +340,13 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
           15, 1, 2, 2, 19, 1, 20, 2,   // <elements[0]>
-          12, 60, 4,                   // IF_NOT_ERROR
+          12, 61, 4,                   // IF_NOT_ERROR
           15, 3, 2, 2, 19, 3, 20, 4,   //   * <elements[1]>
-          12, 44, 5,                   //     IF_NOT_ERROR
+          12, 45, 5,                   //     IF_NOT_ERROR
           15, 5, 2, 2, 19, 5, 20, 6,   //       * <elements[2]>
-          12, 28, 5,                   //         IF_NOT_ERROR
+          12, 29, 5,                   //         IF_NOT_ERROR
           22,                          //           * REPORT_CURR_POS
-          23, 7, 0, 3, 2, 1, 0,        //             CALL
+          23, 7, 0, 0, 3, 2, 1, 0,     //             CALL
           10, 3, 3,                    //             IF
           2,                           //               * POP
           0, 8,                        //                 PUSH
@@ -392,13 +392,13 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
-          22,            // REPORT_CURR_POS
-          23, 0, 0, 0,   // CALL_PREDICATE
-          10, 3, 3,      // IF
-          2,             //   * POP
-          0, 2,          //     PUSH
-          2,             //   * POP
-          0, 1           //     PUSH
+          22,               // REPORT_CURR_POS
+          23, 0, 0, 0, 0,   // CALL_PREDICATE
+          10, 3, 3,         // IF
+          2,                //   * POP
+          0, 2,             //     PUSH
+          2,                //   * POP
+          0, 1              //     PUSH
         ]));
       });
 
@@ -417,13 +417,13 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
           15, 1, 2, 2, 19, 1, 20, 2,   // <elements[0]>
-          12, 60, 4,                   // IF_NOT_ERROR
+          12, 61, 4,                   // IF_NOT_ERROR
           15, 3, 2, 2, 19, 3, 20, 4,   //   * <elements[1]>
-          12, 44, 5,                   //     IF_NOT_ERROR
+          12, 45, 5,                   //     IF_NOT_ERROR
           15, 5, 2, 2, 19, 5, 20, 6,   //       * <elements[2]>
-          12, 28, 5,                   //         IF_NOT_ERROR
+          12, 29, 5,                   //         IF_NOT_ERROR
           22,                          //           * REPORT_CURR_POS
-          23, 7, 0, 3, 2, 1, 0,        //             CALL
+          23, 7, 0, 0, 3, 2, 1, 0,     //             CALL
           10, 3, 3,                    //             IF
           2,                           //               * POP
           0, 0,                        //                 PUSH

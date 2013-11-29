@@ -337,6 +337,66 @@ describe("generated parser", function() {
         expect(parser).toParse("a", 42);
       });
 
+      describe("|expected| function", function() {
+        it("generates a regular match failure", function() {
+          var parser = PEG.buildParser(
+                'start = "a" { expected("a"); }',
+                options
+              );
+
+          expect(parser).toFailToParse("a", {
+            offset:   0,
+            line:     1,
+            column:   1,
+            expected: [{ type: "other", description: "a" }],
+            found:    "a",
+            message:  'Expected a but "a" found.'
+          });
+        });
+
+        it("generated failures combine with failures generated before", function() {
+          var parser = PEG.buildParser(
+                'start = "a" / ("b" { expected("b"); })',
+                options
+              );
+
+          expect(parser).toFailToParse("b", {
+            expected: [
+              { type: "literal", value: "a", description: '"a"' },
+              { type: "other", description: "b" }
+            ]
+          });
+        });
+
+        it("generated failures combine with failures generated after", function() {
+          var parser = PEG.buildParser(
+                'start = ("a" { expected("a"); }) / "b"',
+                options
+              );
+
+          expect(parser).toFailToParse("a", {
+            expected: [
+              { type: "literal", value: "b", description: '"b"' },
+              { type: "other", description: "a" }
+            ]
+          });
+        });
+
+        it("multiple invocations generate additional failures", function() {
+          var parser = PEG.buildParser(
+                'start = "a" { expected("a1"); expected("a2"); }',
+                options
+              );
+
+          expect(parser).toFailToParse("a", {
+            expected: [
+              { type: "other", description: "a1" },
+              { type: "other", description: "a2" }
+            ]
+          });
+        });
+      });
+
       it("can use functions defined in the initializer", function() {
         var parser = PEG.buildParser([
               '{ function f() { return 42; } }',
