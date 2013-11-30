@@ -397,6 +397,60 @@ describe("generated parser", function() {
         });
       });
 
+      describe("|error| function", function() {
+        it("generates a custom match failure", function() {
+          var parser = PEG.buildParser(
+                'start = "a" { error("a"); }',
+                options
+              );
+
+          expect(parser).toFailToParse("a", {
+            offset:   0,
+            line:     1,
+            column:   1,
+            expected: null,
+            found:    "a",
+            message:  "a"
+          });
+        });
+
+        it("generated failures overrides failures generated before", function() {
+          var parser = PEG.buildParser(
+                'start = "a" / ("b" { error("b"); })',
+                options
+              );
+
+          expect(parser).toFailToParse("b", {
+            message:  "b",
+            expected: null
+          });
+        });
+
+        it("generated failures override failures generated after", function() {
+          var parser = PEG.buildParser(
+                'start = ("a" { error("a"); }) / "b"',
+                options
+              );
+
+          expect(parser).toFailToParse("a", {
+            message:  "a",
+            expected: null
+          });
+        });
+
+        it("the last invocation wins", function() {
+          var parser = PEG.buildParser(
+                'start = "a" { error("a1"); error("a2"); }',
+                options
+              );
+
+          expect(parser).toFailToParse("a", {
+            message:  "a2",
+            expected: null
+          });
+        });
+      });
+
       it("can use functions defined in the initializer", function() {
         var parser = PEG.buildParser([
               '{ function f() { return 42; } }',
