@@ -267,9 +267,10 @@ class "character class"
 classCharacterRange
   = begin:classCharacter "-" end:classCharacter {
       if (begin.data.charCodeAt(0) > end.data.charCodeAt(0)) {
-        throw new this.SyntaxError(
+        error(
           "Invalid character range: " + begin.rawText + "-" + end.rawText + "."
         );
+        return;
       }
 
       return {
