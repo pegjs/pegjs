@@ -94,9 +94,7 @@ describe("compiler pass |generateBytecode|", function() {
           12, 6, 0,      // IF_NOT_ERROR
           21, 1,         //   * REPORT_SAVED_POS
           23, 1, 1, 0,   //     CALL
-          11, 1, 1,      // IF_ERROR
-          6,             //   * NIP_CURR_POS
-          5              //   * NIP
+          5              // NIP
         ]));
       });
 
@@ -118,9 +116,7 @@ describe("compiler pass |generateBytecode|", function() {
           12, 7, 0,                    // IF_NOT_ERROR
           21, 1,                       //   * REPORT_SAVED_POS
           23, 2, 1, 1, 0,              //     CALL
-          11, 1, 1,                    // IF_ERROR
-          6,                           //   * NIP_CURR_POS
-          5                            //   * NIP
+          5                            // NIP
         ]));
       });
 
@@ -139,16 +135,14 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
           15, 1, 2, 2, 19, 1, 20, 2,   // <elements[0]>
-          12, 46, 4,                   // IF_NOT_ERROR
+          12, 42, 4,                   // IF_NOT_ERROR
           15, 3, 2, 2, 19, 3, 20, 4,   //   * <elements[1]>
-          12, 30, 5,                   //     IF_NOT_ERROR
+          12, 26, 5,                   //     IF_NOT_ERROR
           15, 5, 2, 2, 19, 5, 20, 6,   //       * <elements[2]>
-          12, 14, 5,                   //         IF_NOT_ERROR
+          12, 10, 5,                   //         IF_NOT_ERROR
           21, 3,                       //           * REPORT_SAVED_POS
           23, 7, 3, 3, 2, 1, 0,        //             CALL
-          11, 1, 1,                    //             IF_ERROR
-          6,                           //               * NIP_CURR_POS
-          5,                           //               * NIP
+          5,                           //             NIP
           4, 3,                        //           * POP_N
           3,                           //             POP_CURR_POS
           0, 0,                        //             PUSH
