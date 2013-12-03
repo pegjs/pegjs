@@ -270,7 +270,6 @@ classCharacterRange
         error(
           "Invalid character range: " + begin.rawText + "-" + end.rawText + "."
         );
-        return;
       }
 
       return {

@@ -9,7 +9,6 @@ MODULES = utils                                 \
           grammar-error                         \
           parser                                \
           compiler/opcodes                      \
-          compiler/flags                        \
           compiler/passes/generate-bytecode     \
           compiler/passes/generate-javascript   \
           compiler/passes/remove-proxy-rules    \

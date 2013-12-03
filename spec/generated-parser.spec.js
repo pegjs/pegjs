@@ -337,117 +337,35 @@ describe("generated parser", function() {
         expect(parser).toParse("a", 42);
       });
 
-      describe("|expected| function", function() {
-        it("generates a regular match failure", function() {
-          var parser = PEG.buildParser(
-                'start = "a" { expected("a"); }',
-                options
-              );
+      it("can use the |expected| function to trigger an error", function() {
+        var parser = PEG.buildParser(
+              'start = "a" { expected("a"); }',
+              options
+            );
 
-          expect(parser).toFailToParse("a", {
-            offset:   0,
-            line:     1,
-            column:   1,
-            expected: [{ type: "other", description: "a" }],
-            found:    "a",
-            message:  'Expected a but "a" found.'
-          });
-        });
-
-        it("generated failures combine with failures generated before", function() {
-          var parser = PEG.buildParser(
-                'start = "a" / ("b" { expected("b"); })',
-                options
-              );
-
-          expect(parser).toFailToParse("b", {
-            expected: [
-              { type: "literal", value: "a", description: '"a"' },
-              { type: "other", description: "b" }
-            ]
-          });
-        });
-
-        it("generated failures combine with failures generated after", function() {
-          var parser = PEG.buildParser(
-                'start = ("a" { expected("a"); }) / "b"',
-                options
-              );
-
-          expect(parser).toFailToParse("a", {
-            expected: [
-              { type: "literal", value: "b", description: '"b"' },
-              { type: "other", description: "a" }
-            ]
-          });
-        });
-
-        it("multiple invocations generate additional failures", function() {
-          var parser = PEG.buildParser(
-                'start = "a" { expected("a1"); expected("a2"); }',
-                options
-              );
-
-          expect(parser).toFailToParse("a", {
-            expected: [
-              { type: "other", description: "a1" },
-              { type: "other", description: "a2" }
-            ]
-          });
+        expect(parser).toFailToParse("a", {
+          message:  'Expected a but "a" found.',
+          expected: [{ type: "other", description: "a" }],
+          found:    "a",
+          offset:   0,
+          line:     1,
+          column:   1
         });
       });
 
-      describe("|error| function", function() {
-        it("generates a custom match failure", function() {
-          var parser = PEG.buildParser(
-                'start = "a" { error("a"); }',
-                options
-              );
+      it("can use the |error| function to trigger an error", function() {
+        var parser = PEG.buildParser(
+              'start = "a" { error("a"); }',
+              options
+            );
 
-          expect(parser).toFailToParse("a", {
-            offset:   0,
-            line:     1,
-            column:   1,
-            expected: null,
-            found:    "a",
-            message:  "a"
-          });
-        });
-
-        it("generated failures overrides failures generated before", function() {
-          var parser = PEG.buildParser(
-                'start = "a" / ("b" { error("b"); })',
-                options
-              );
-
-          expect(parser).toFailToParse("b", {
-            message:  "b",
-            expected: null
-          });
-        });
-
-        it("generated failures override failures generated after", function() {
-          var parser = PEG.buildParser(
-                'start = ("a" { error("a"); }) / "b"',
-                options
-              );
-
-          expect(parser).toFailToParse("a", {
-            message:  "a",
-            expected: null
-          });
-        });
-
-        it("the last invocation wins", function() {
-          var parser = PEG.buildParser(
-                'start = "a" { error("a1"); error("a2"); }',
-                options
-              );
-
-          expect(parser).toFailToParse("a", {
-            message:  "a2",
-            expected: null
-          });
+        expect(parser).toFailToParse("a", {
+          message:  "a",
+          expected: null,
+          found:    "a",
+          offset:   0,
+          line:     1,
+          column:   1
         });
       });
 

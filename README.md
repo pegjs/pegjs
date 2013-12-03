@@ -376,14 +376,14 @@ expression as its arguments. The action should return some JavaScript value
 using the `return` statement. This value is considered match result of the
 preceding expression.
 
-To indicate a match failure, the code inside the action can invoke the
-`expected` function. It takes one parameter — a description of what was expected
-at the current position. This description will be used as part of a message of
-the exception thrown if the match failure leads to an parse error.
+To indicate an error, the code inside the action can invoke the `expected`
+function, which makes the parser throw an exception. The function takes one
+parameter — a description of what was expected at the current position. This
+description will be used as part of a message of the thrown exception.
 
-The code inside an action can also invoke the `error` function. It takes one
-parameter — an error message. This message will be used by the exception thrown
-if the match failure leads to an parse error.
+The code inside an action can also invoke the `error` function, which also makes
+the parser throw an exception. The function takes one parameter — an error
+message. This message will be used by the thrown exception.
 
 The code inside the action can access all variables and functions defined in the
 initializer at the beginning of the grammar. Curly braces in the action code
