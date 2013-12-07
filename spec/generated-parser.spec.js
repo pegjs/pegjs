@@ -705,7 +705,7 @@ describe("generated parser", function() {
         expect(parser).toFailToParse("b");
       });
 
-      it("matches multiple-character literal correctly", function() {
+      it("matches multi-character literal correctly", function() {
         var parser = PEG.buildParser('start = "abcd"', options);
 
         expect(parser).toParse("abcd", "abcd");
