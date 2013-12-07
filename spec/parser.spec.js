@@ -188,7 +188,7 @@ describe("PEG.js grammar parser", function() {
     var grammar = oneRuleGrammar(literalAbcd, {
           type: "initializer",
           code: " code "
-        }, null);
+        });
 
     expect('{ code } start = "abcd"' ).toParseAs(grammar);
     expect('{ code }; start = "abcd"').toParseAs(grammar);
