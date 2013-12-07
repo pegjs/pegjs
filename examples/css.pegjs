@@ -316,10 +316,10 @@ nmchar
   / escape
 
 integer
-  = parts:$[0-9]+ { return parseInt(parts); }
+  = parts:$[0-9]+ { return parts; }
 
 float
-  = parts:$([0-9]* "." [0-9]+) { return parseFloat(parts); }
+  = parts:$([0-9]* "." [0-9]+) { return parts; }
 
 string1
   = '"' chars:([^\n\r\f\\"] / "\\" nl:nl { return nl } / escape)* '"' {
