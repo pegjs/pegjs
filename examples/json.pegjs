@@ -65,7 +65,7 @@ char
   / "\\r"  { return "\r"; }
   / "\\t"  { return "\t"; }
   / "\\u" digits:$(hexDigit hexDigit hexDigit hexDigit) {
-      return String.fromCharCode(parseInt("0x" + digits));
+      return String.fromCharCode(parseInt(digits, 16));
     }
 
 number "number"

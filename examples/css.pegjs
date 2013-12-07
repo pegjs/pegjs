@@ -298,7 +298,7 @@ nonascii
 
 unicode
   = "\\" digits:$(h h? h? h? h? h?) ("\r\n" / [ \t\r\n\f])? {
-      return String.fromCharCode(parseInt("0x" + digits));
+      return String.fromCharCode(parseInt(digits, 16));
     }
 
 escape

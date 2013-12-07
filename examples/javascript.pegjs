@@ -231,7 +231,7 @@ SignedInteger
   = [-+]? DecimalDigits
 
 HexIntegerLiteral
-  = "0" [xX] digits:$HexDigit+ { return parseInt("0x" + digits); }
+  = "0" [xX] digits:$HexDigit+ { return parseInt(digits, 16); }
 
 HexDigit
   = [0-9a-fA-F]
@@ -292,12 +292,12 @@ EscapeCharacter
 
 HexEscapeSequence
   = "x" digits:$(HexDigit HexDigit) {
-      return String.fromCharCode(parseInt("0x" + digits));
+      return String.fromCharCode(parseInt(digits, 16));
     }
 
 UnicodeEscapeSequence
   = "u" digits:$(HexDigit HexDigit HexDigit HexDigit) {
-      return String.fromCharCode(parseInt("0x" + digits));
+      return String.fromCharCode(parseInt(digits, 16));
     }
 
 RegularExpressionLiteral "regular expression"
