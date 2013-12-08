@@ -843,7 +843,9 @@ describe("generated parser", function() {
         it("reports expectations correctly with no alternative", function() {
           var parser = PEG.buildParser('start = ', options);
 
-          expect(parser).toFailToParse("a", { expected: [] });
+          expect(parser).toFailToParse("a", {
+            expected: [{ type: "end", description: "end of input" }]
+          });
         });
 
         it("reports expectations correctly with one alternative", function() {
