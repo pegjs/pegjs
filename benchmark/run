@@ -103,7 +103,7 @@ function abort(message) {
 var args = process.argv.slice(2); // Trim "node" and the script path.
 
 function isOption(arg) {
-  return /^-/.test(arg);
+  return (/^-/).test(arg);
 }
 
 function nextArg() {
