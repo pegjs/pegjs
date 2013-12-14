@@ -4,6 +4,7 @@
   "evil":     true,
   "forin":    true,
   "freeze":   true,
+  "immed":    true,
   "laxbreak": true,
   "noempty":  true,
   "nonew":    true,
