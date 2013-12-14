@@ -70,7 +70,9 @@ function addExtraOptions(options, json) {
   }
 
   for (var key in extraOptions) {
-    options[key] = extraOptions[key];
+    if (extraOptions.hasOwnProperty(key)) {
+      options[key] = extraOptions[key];
+    }
   }
 }
 

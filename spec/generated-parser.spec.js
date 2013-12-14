@@ -15,7 +15,9 @@ describe("generated parser", function() {
          * changed later.
          */
         for (key in options) {
-          clonedOptions[key] = options[key];
+          if (options.hasOwnProperty(key)) {
+            clonedOptions[key] = options[key];
+          }
         }
 
         describe(
@@ -123,10 +125,12 @@ describe("generated parser", function() {
           } else {
             if (details) {
               for (key in details) {
-                if (!this.env.equals_(e[key], details[key])) {
-                  this.message = buildKeyMessage(key, e[key]);
+                if (details.hasOwnProperty(key)) {
+                  if (!this.env.equals_(e[key], details[key])) {
+                    this.message = buildKeyMessage(key, e[key]);
 
-                  return false;
+                    return false;
+                  }
                 }
               }
             }

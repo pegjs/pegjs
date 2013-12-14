@@ -29,9 +29,11 @@ beforeEach(function() {
           if (!isObject(value)) { return false; }
 
           for (key in details) {
-            if (!(key in value)) { return false; }
+            if (details.hasOwnProperty(key)) {
+              if (!(key in value)) { return false; }
 
-            if (!matchDetails(value[key], details[key])) { return false; }
+              if (!matchDetails(value[key], details[key])) { return false; }
+            }
           }
 
           return true;

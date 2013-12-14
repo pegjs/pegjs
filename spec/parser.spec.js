@@ -145,10 +145,12 @@ describe("PEG.js grammar parser", function() {
           } else {
             if (details) {
               for (key in details) {
-                if (!this.env.equals_(e[key], details[key])) {
-                  this.message = buildKeyMessage(key, e[key]);
+                if (details.hasOwnProperty(key)) {
+                  if (!this.env.equals_(e[key], details[key])) {
+                    this.message = buildKeyMessage(key, e[key]);
 
-                  return false;
+                    return false;
+                  }
                 }
               }
             }
