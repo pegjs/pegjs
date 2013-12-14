@@ -5,6 +5,7 @@
   "forin":    true,
   "freeze":   true,
   "immed":    true,
+  "latedef":  "nofunc",
   "laxbreak": true,
   "noempty":  true,
   "nonew":    true,
