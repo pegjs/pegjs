@@ -56,8 +56,10 @@ function abort(message) {
 }
 
 function addExtraOptions(options, json) {
+  var extraOptions;
+
   try {
-    var extraOptions = JSON.parse(json);
+    extraOptions = JSON.parse(json);
   } catch (e) {
     if (!(e instanceof SyntaxError)) { throw e; }
 
@@ -72,12 +74,20 @@ function addExtraOptions(options, json) {
   }
 }
 
+/*
+ * Extracted into a function just to silence JSHint complaining about creating
+ * functions in a loop.
+ */
+function trim(s) {
+  return s.trim();
+}
+
 /* Arguments */
 
 var args = process.argv.slice(2); // Trim "node" and the script path.
 
 function isOption(arg) {
-  return /^-/.test(arg);
+  return (/^-/).test(arg);
 }
 
 function nextArg() {
@@ -125,7 +135,7 @@ while (args.length > 0 && isOption(args[0])) {
       }
       options.allowedStartRules = args[0]
         .split(",")
-        .map(function(s) { return s.trim() });
+        .map(trim);
       break;
 
     case "-o":
@@ -146,14 +156,15 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the --plugin option.");
       }
       var id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
+      var mod;
       try {
-        var module = require(id);
+        mod = require(id);
       } catch (e) {
         if (e.code !== "MODULE_NOT_FOUND") { throw e; }
 
         abort("Can't load module \"" + id + "\".");
       }
-      options.plugins.push(module);
+      options.plugins.push(mod);
       break;
 
     case "--extra-options":
@@ -214,7 +225,7 @@ switch (args.length) {
       abort("Can't read from file \"" + inputFile + "\".");
     });
 
-    var outputFile = args.length == 1
+    var outputFile = args.length === 1
       ? args[0].replace(/\.[^.]*$/, ".js")
       : args[1];
     var outputStream = fs.createWriteStream(outputFile);
@@ -229,8 +240,10 @@ switch (args.length) {
 }
 
 readStream(inputStream, function(input) {
+  var source;
+
   try {
-    var source = PEG.buildParser(input, options);
+    source = PEG.buildParser(input, options);
   } catch (e) {
     if (e.line !== undefined && e.column !== undefined) {
       abort(e.line + ":" + e.column + ": " + e.message);
