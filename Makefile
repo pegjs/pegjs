@@ -106,7 +106,12 @@ browser:
 	echo '  return modules["peg"]' >> $(BROWSER_FILE_DEV)
 	echo '})();'                   >> $(BROWSER_FILE_DEV)
 
-	$(UGLIFYJS) --ascii -o $(BROWSER_FILE_MIN) $(BROWSER_FILE_DEV)
+	$(UGLIFYJS)                 \
+	  --mangle                  \
+	  --compress warnings=false \
+	  --comments /Copyright/    \
+	  -o $(BROWSER_FILE_MIN)    \
+	  $(BROWSER_FILE_DEV)
 
 # Remove browser version of the library (created by "browser")
 browserclean:
