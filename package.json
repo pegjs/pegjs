@@ -43,7 +43,7 @@
   "devDependencies": {
     "jasmine-node": "= 1.11.0",
     "uglify-js":    "= 2.4.7",
-    "jshint":       "= 0.9.1"
+    "jshint":       "= 2.3.0"
   },
   "engines":         {
     "node": ">= 0.6.6"
