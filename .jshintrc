@@ -3,6 +3,7 @@
   "eqeqeq":   true,
   "evil":     true,
   "forin":    true,
+  "freeze":   true,
   "laxbreak": true,
   "noempty":  true,
   "nonew":    true,
