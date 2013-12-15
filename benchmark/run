@@ -126,7 +126,7 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the -n/--run-count option.");
       }
-      var runCount = parseInt(args[0]);
+      var runCount = parseInt(args[0], 10);
       if (isNaN(runCount) || runCount <= 0) {
         abort("Number of runs must be a positive integer.");
       }
