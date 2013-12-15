@@ -10,5 +10,6 @@
   "noarg":    true,
   "noempty":  true,
   "nonew":    true,
-  "sub":      true
+  "sub":      true,
+  "trailing": true
 }
