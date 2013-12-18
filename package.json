@@ -9,7 +9,7 @@
     "url":   "http://majda.cz/"
   },
   "files": [
-    "CHANGELOG",
+    "CHANGELOG.md",
     "LICENSE",
     "README.md",
     "VERSION",
