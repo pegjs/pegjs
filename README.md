@@ -415,7 +415,7 @@ Compatibility
 Both the parser generator and generated parsers should run well in the following
 environments:
 
-  * Node.js 0.6.6+
+  * Node.js 0.8.0+
   * IE 8+
   * Firefox
   * Chrome
