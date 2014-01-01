@@ -174,7 +174,7 @@ SuffixedExpression
             };
           } else
           if (r.min === 1) {
-            return expression
+            return expression;
           }
         }
       }
@@ -212,11 +212,11 @@ SemanticPredicateOperator
   / "!"
 Range
   = "|" __ r:Range2 delimiter:("," __ primary)? "|" __ {
-    r.delimiter = delimiter !== "" ? delimiter[2] : undefined;
+    r.delimiter = delimiter !== null ? delimiter[2] : undefined;
     return r;
   }
 Range2
-  = min:Int? ".." __ max:Int? {return {min:min!==""?min:0, max:max!==""?max:undefined};}
+  = min:Int? ".." __ max:Int? {return {min:min!==null?min:0, max:max!==null?max:undefined};}
   / val:Int {return {min:val, max:val};}
 Int = n:$Digit+ __ {return parseInt(n,10);}
 
@@ -243,10 +243,6 @@ LineTerminatorSequence "end of line"
   / "\r"
   / "\u2028"
   / "\u2029"
-comma     = "," __ { return ","; }
-dots      = ".." __{ return ".."; }
-range_open= "|" __ { return "|"; }
-range_close="|" __ { return "|"; }
 
 Comment "comment"
   = MultiLineComment
