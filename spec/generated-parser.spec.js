@@ -676,6 +676,33 @@ describe("generated parser", function() {
       });
     });
 
+    describe("range matching", function() {
+      describe("without delimiter", function() {
+        it("matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2..3|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).toFailToParse("aaaa");
+        });
+      });
+
+      describe("with delimiter", function() {
+        it("matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2..3, ","|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("a,a",   ["a", "a"]);
+          expect(parser).toParse("a,a,a", ["a", "a", "a"]);
+          expect(parser).toFailToParse("a,a,a,a");
+          expect(parser).toFailToParse("a,a,");
+        });
+      });
+    });
+
     describe("rule reference matching", function() {
       it("follows rule references", function() {
         var parser = PEG.buildParser([

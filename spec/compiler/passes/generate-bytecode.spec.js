@@ -514,6 +514,151 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
+  describe("for range", function() {
+    describe("|..1| (reduced to optional)", function() {
+      var grammar = 'start = "a"|..1|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          16, 1, 2, 2, 20, 1, 21, 2,   // <expression>
+          10, 3, 0,                    // IF_ERROR
+          2,                           //   * POP
+          0, 0                         //     PUSH
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          'null',
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|0..| (reduced to zero or more)", function() {
+      var grammar = 'start = "a"|0..|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          0, 0,                        // PUSH
+          16, 1, 2, 2, 20, 1, 21, 2,   // <expression>
+          14, 9,                       // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          16, 1, 2, 2, 20, 1, 21, 2,   //     <expression>
+          2                            // POP
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '[]',
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|1..| (reduced to one or more)", function() {
+      var grammar = 'start = "a"|1..|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          0, 0,                        // PUSH
+          16, 2, 2, 2, 20, 2, 21, 3,   // <expression>
+          11, 12, 4,                   // IF_NOT_ERROR
+          14, 9,                       //   * WHILE_NOT_ERROR
+          6,                           //       * APPEND
+          16, 2, 2, 2, 20, 2, 21, 3,   //         <expression>
+          2,                           //     POP
+          2,                           //   * POP
+          2,                           //     POP
+          0, 1                         //     PUSH
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '[]',
+          'peg$FAILED',
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|2..3|", function() {
+      var grammar = 'start = "a"|2..3|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          0, 0,                        // PUSH
+          16, 2, 2, 2, 20, 2, 21, 3,   // <expression>
+          14, 16,                      // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          0, 5,                        //     PUSH
+          13, 2, 8,                    //     IF_ARRLEN_MAX
+          0, 1,                        //       * PUSH
+          16, 2, 2, 2, 20, 2, 21, 3,   //       * <expression>
+          2,                           // POP
+          0, 4,                        // PUSH
+          12, 3, 0,                    // IF_ARRLEN_MIN
+          2,                           //   * POP
+          0, 1                         //     PUSH
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '[]',
+          'peg$FAILED',
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
+          2,
+          3
+        ]));
+      });
+    });
+
+    describe("|2..3, ','|", function() {
+      var grammar = 'start = "a"|2..3, ","|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          0, 0,                        // PUSH
+          16, 2, 2, 2, 20, 2, 21, 3,   // <expression>
+          14, 28,                      // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          0, 7,                        //     PUSH
+          13, 2, 20,                   //     IF_ARRLEN_MAX
+          0, 1,                        //       * PUSH
+          16, 4, 2, 2, 20, 4, 21, 5,   //       * <delimiter>
+          11, 9, 0,                    //         IF_NOT_ERROR
+          2,                           //           * POP
+          16, 2, 2, 2, 20, 2, 21, 3,   //             <expression>
+          2,                           // POP
+          0, 6,                        // PUSH
+          12, 3, 0,                    // IF_ARRLEN_MIN
+          2,                           //   * POP
+          0, 1                         //     PUSH
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '[]',
+          'peg$FAILED',
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
+          '","',
+          '{ type: "literal", value: ",", description: "\\",\\"" }',
+          2,
+          3
+        ]));
+      });
+    });
+  });
+
   describe("for rule reference", function() {
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST([

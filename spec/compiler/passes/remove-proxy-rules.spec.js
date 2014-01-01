@@ -19,12 +19,11 @@ describe("compiler pass |removeProxyRules|", function() {
       simpleDetails     = expressionDetails({ expression: proxiedRefDetails });
 
   it("removes proxy rule from a rule", function() {
-    expect(pass).toChangeAST(proxyGrammar('start = proxy'), defaultOptions, {
-      rules: [
-        { type: "rule", name: "start", expression: proxiedRefDetails },
-        { type: "rule", name: "proxied" }
-      ]
-    });
+    expect(pass).toChangeAST(
+      proxyGrammar('start = proxy'),
+      defaultOptions,
+      expressionDetails(proxiedRefDetails)
+    );
   });
 
   it("removes proxy rule from a named", function() {
@@ -123,6 +122,26 @@ describe("compiler pass |removeProxyRules|", function() {
       defaultOptions,
       simpleDetails
     );
+  });
+
+  describe("removes proxy rule from a range", function() {
+    it("expression", function() {
+      expect(pass).toChangeAST(
+        proxyGrammar('start = proxy|2..3|'),
+        defaultOptions,
+        simpleDetails
+      );
+    });
+    it("delimiter", function() {
+      expect(pass).toChangeAST(
+        proxyGrammar('start = "a"|2..3, proxy|'),
+        defaultOptions,
+        expressionDetails({
+          expression: {},
+          delimiter: proxiedRefDetails,
+        })
+      );
+    });
   });
 
   it("doesn't remove a proxy rule listed in |allowedStartRules|", function() {
