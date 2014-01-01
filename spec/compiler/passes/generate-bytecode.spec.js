@@ -630,12 +630,19 @@ describe("compiler pass |generateBytecode|", function() {
           14, 28,                      // WHILE_NOT_ERROR
           6,                           //   * APPEND
           0, 7,                        //     PUSH
-          13, 2, 20,                   //     IF_ARRLEN_MAX
+          13, 2, 30,                   //     IF_ARRLEN_MAX
           0, 1,                        //       * PUSH
-          16, 4, 2, 2, 20, 4, 21, 5,   //       * <delimiter>
-          11, 9, 0,                    //         IF_NOT_ERROR
+          1,                           //       * PUSH_CURR_POS
+          16, 4, 2, 2, 20, 4, 21, 5,   //         <delimiter>
+          11, 17, 1,                   //         IF_NOT_ERROR
           2,                           //           * POP
           16, 2, 2, 2, 20, 2, 21, 3,   //             <expression>
+          10, 4, 1,                    //             IF_ERROR
+          2,                           //               * POP
+          3,                           //                 POP_CURR_POS
+          0, 1,                        //                 PUSH
+          5,                           //               * NIP
+          5,                           //           * NIP
           2,                           // POP
           0, 6,                        // PUSH
           12, 3, 0,                    // IF_ARRLEN_MIN
