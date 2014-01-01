@@ -290,6 +290,48 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd"?').toParseAs(oneRuleGrammar(optional));
     expect('start = "abcd"*').toParseAs(oneRuleGrammar(zeroOrMore));
     expect('start = "abcd"+').toParseAs(oneRuleGrammar(oneOrMore));
+    expect('start = "abcd"| ..3|').toParseAs(oneRuleGrammar({
+      type:       "range",
+      min:        0,
+      max:        3,
+      expression: literalAbcd,
+      delimiter:  undefined
+    }));
+    expect('start = "abcd"|2.. |').toParseAs(oneRuleGrammar({
+      type:       "range",
+      min:        2,
+      max:        undefined,
+      expression: literalAbcd,
+      delimiter:  undefined
+    }));
+    expect('start = "abcd"|2..3|').toParseAs(oneRuleGrammar({
+      type:       "range",
+      min:        2,
+      max:        3,
+      expression: literalAbcd,
+      delimiter:  undefined
+    }));
+    expect('start = "abcd"| ..3, "efgh"|').toParseAs(oneRuleGrammar({
+      type:       "range",
+      min:        0,
+      max:        3,
+      expression: literalAbcd,
+      delimiter:  literalEfgh
+    }));
+    expect('start = "abcd"|2.. , "efgh"|').toParseAs(oneRuleGrammar({
+      type:       "range",
+      min:        2,
+      max:        undefined,
+      expression: literalAbcd,
+      delimiter:  literalEfgh
+    }));
+    expect('start = "abcd"|2..3, "efgh"|').toParseAs(oneRuleGrammar({
+      type:       "range",
+      min:        2,
+      max:        3,
+      expression: literalAbcd,
+      delimiter:  literalEfgh
+    }));
   });
 
   /* Canonical PrimaryExpression is "\"abcd\"". */

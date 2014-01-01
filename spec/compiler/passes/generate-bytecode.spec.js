@@ -627,7 +627,7 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           0, 0,                        // PUSH
           16, 2, 2, 2, 20, 2, 21, 3,   // <expression>
-          14, 28,                      // WHILE_NOT_ERROR
+          14, 38,                      // WHILE_NOT_ERROR
           6,                           //   * APPEND
           0, 7,                        //     PUSH
           13, 2, 30,                   //     IF_ARRLEN_MAX
