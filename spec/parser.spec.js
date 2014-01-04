@@ -103,8 +103,64 @@ describe("PEG.js grammar parser", function() {
       toParseAs:     function(expected) {
         var result;
 
+        function buildNodeVisitor(functions) {
+          return function(node) {
+            return functions[node.type].apply(null, arguments);
+          };
+        }
+        function rm(node) {delete node.region;}
+        function doInExpression(node) {
+          rm(node);
+          removeRegionKey(node.expression);
+        }
+        function doInSubnodes(propertyName) {
+          return function(node) {
+            rm(node);
+            var arr = node[propertyName];
+            for (var i = 0; i < arr.length; ++i) {
+              removeRegionKey(arr[i]);
+            };
+          };
+        }
+        var removeRegionKey = buildNodeVisitor({
+          grammar:      function(node) {
+            doInSubnodes("rules")(node);
+            if (node.initializer) {
+              removeRegionKey(node.initializer);
+            }
+          },
+          initializer:  rm,
+          rule:         doInExpression,
+          named:        doInExpression,
+          choice:       doInSubnodes("alternatives"),
+          action:       doInExpression,
+          sequence:     doInSubnodes("elements"),
+          labeled:      doInExpression,
+          text:         doInExpression,
+          simple_and:   doInExpression,
+          simple_not:   doInExpression,
+          semantic_and: rm,
+          semantic_not: rm,
+          optional:     doInExpression,
+          zero_or_more: doInExpression,
+          one_or_more:  doInExpression,
+          range:        function(node) {
+            rm(node);
+            removeRegionKey(node.expression);
+            if (node.delimiter) {
+              removeRegionKey(node.delimiter);
+            }
+          },
+          rule_ref:     rm,
+          literal:      rm,
+          "class":      rm,
+          any:          rm
+        });
+
         try {
           result = PEG.parser.parse(this.actual);
+          // Remove |node.region| from each node, becouse we don't check it there.
+          removeRegionKey(result);
 
           this.message = function() {
             return "Expected " + jasmine.pp(this.actual) + " "

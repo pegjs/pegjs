@@ -3,7 +3,7 @@ describe("compiler pass |reportMissingRules|", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toReportMissingRuleIn: function(grammar) {
+      toReportMissingRuleIn: function(grammar, line, column) {
         var ast = PEG.parser.parse(grammar);
 
         try {
@@ -32,59 +32,59 @@ describe("compiler pass |reportMissingRules|", function() {
             };
           }
 
-          return e.message === 'Referenced rule "missing" does not exist.';
+          return e.message === 'Line '+line+', column '+column+': Referenced rule "missing" does not exist.';
         }
       }
     });
   });
 
   it("reports missing rule referenced from a rule", function() {
-    expect(pass).toReportMissingRuleIn('start = missing');
+    expect(pass).toReportMissingRuleIn('start = missing', 1, 9);
   });
 
   it("reports missing rule referenced from a named", function() {
-    expect(pass).toReportMissingRuleIn('start "start" = missing');
+    expect(pass).toReportMissingRuleIn('start "start" = missing', 1, 17);
   });
 
   it("reports missing rule referenced from a choice", function() {
-    expect(pass).toReportMissingRuleIn('start = missing / "a" / "b"');
-    expect(pass).toReportMissingRuleIn('start = "a" / "b" / missing');
+    expect(pass).toReportMissingRuleIn('start = missing / "a" / "b"', 1, 9);
+    expect(pass).toReportMissingRuleIn('start = "a" / "b" / missing', 1, 21);
   });
 
   it("reports missing rule referenced from an action", function() {
-    expect(pass).toReportMissingRuleIn('start = missing { }');
+    expect(pass).toReportMissingRuleIn('start = missing { }', 1, 9);
   });
 
   it("reports missing rule referenced from a sequence", function() {
-    expect(pass).toReportMissingRuleIn('start = missing "a" "b"');
-    expect(pass).toReportMissingRuleIn('start = "a" "b" missing');
+    expect(pass).toReportMissingRuleIn('start = missing "a" "b"', 1, 9);
+    expect(pass).toReportMissingRuleIn('start = "a" "b" missing', 1, 17);
   });
 
   it("reports missing rule referenced from a labeled", function() {
-    expect(pass).toReportMissingRuleIn('start = label:missing');
+    expect(pass).toReportMissingRuleIn('start = label:missing', 1, 15);
   });
 
   it("reports missing rule referenced from a text", function() {
-    expect(pass).toReportMissingRuleIn('start = $missing');
+    expect(pass).toReportMissingRuleIn('start = $missing', 1, 10);
   });
 
   it("reports missing rule referenced from a simple and", function() {
-    expect(pass).toReportMissingRuleIn('start = &missing');
+    expect(pass).toReportMissingRuleIn('start = &missing', 1, 10);
   });
 
   it("reports missing rule referenced from a simple not", function() {
-    expect(pass).toReportMissingRuleIn('start = &missing');
+    expect(pass).toReportMissingRuleIn('start = !missing', 1, 10);
   });
 
   it("reports missing rule referenced from an optional", function() {
-    expect(pass).toReportMissingRuleIn('start = missing?');
+    expect(pass).toReportMissingRuleIn('start = missing?', 1, 9);
   });
 
   it("reports missing rule referenced from a zero or more", function() {
-    expect(pass).toReportMissingRuleIn('start = missing*');
+    expect(pass).toReportMissingRuleIn('start = missing*', 1, 9);
   });
 
   it("reports missing rule referenced from a one or more", function() {
-    expect(pass).toReportMissingRuleIn('start = missing+');
+    expect(pass).toReportMissingRuleIn('start = missing+', 1, 9);
   });
 });
