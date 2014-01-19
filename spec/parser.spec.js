@@ -57,7 +57,7 @@ describe("PEG.js grammar parser", function() {
     return {
       type:        "grammar",
       initializer: null,
-      rules:       [{ type: "rule", name: "start", expression: expression }]
+      rules:       [{ type: "rule", name: "start", annotations: [], expression: expression }]
     };
   }
 
