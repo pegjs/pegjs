@@ -113,7 +113,7 @@ Annotation
   = "@" __ name:Identifier __ params:Params? {
     return {
       name: name,
-      params: params
+      params: params===null?[]:params
     };
   };
 Params
