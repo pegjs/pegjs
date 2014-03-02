@@ -249,7 +249,7 @@ function rwFile(input, output, cb) {
     abort("Can't write to file \"" + outputFile + "\".");
   });
 
-  cb(inputStream, outputStream)
+  cb(inputStream, outputStream);
 
 }
 
@@ -287,9 +287,9 @@ function stream(inputStream, outputStream) {
 
 function watchFile(input, output) {
   fs.watchFile(input, function() {
-    console.log(input + 'has been modified, rebuild pegjs ' + output)
+    console.log(input + 'has been modified, rebuild pegjs ' + output);
     rwFile(input, output, function(inputStream, outputStream) {
-      stream(inputStream, outputStream)
+      stream(inputStream, outputStream);
     })
   })
 }
