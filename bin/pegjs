@@ -22,6 +22,7 @@ function printHelp() {
   util.puts("omitted, standard input and output are used.");
   util.puts("");
   util.puts("Options:");
+  util.puts("  -w, --watch                        watching a file, rebuild while modified.");
   util.puts("  -e, --export-var <variable>        name of the variable where the parser");
   util.puts("                                     object will be stored (default:");
   util.puts("                                     \"module.exports\")");
@@ -96,13 +97,6 @@ function nextArg() {
   args.shift();
 }
 
-/* Files */
-
-function readStream(inputStream, callback) {
-  var input = "";
-  inputStream.on("data", function(data) { input += data; });
-  inputStream.on("end", function() { callback(input); });
-}
 
 /* Main */
 
@@ -117,6 +111,15 @@ var options = {
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
+    case "-w":
+    case "--watch":
+      if (args.length < 3 || args.length > 3) {
+        abort("Argument should be 2, input and output file.");
+      }
+      console.log('watching file...' + args[1])
+      watchFile(args[1], args[2]);
+      break;
+
     case "-e":
     case "--export-var":
       nextArg();
@@ -217,47 +220,78 @@ switch (args.length) {
     process.stdin.resume();
     var inputStream = process.stdin;
     var outputStream = process.stdout;
+    stream(inputStream, outputStream)
     break;
 
   case 1:
   case 2:
-    var inputFile = args[0];
-    var inputStream = fs.createReadStream(inputFile);
-    inputStream.on("error", function() {
-      abort("Can't read from file \"" + inputFile + "\".");
+    rwFile(args[0], args[1], function(inputStream, outputStream) {
+      stream(inputStream, outputStream)
     });
-
-    var outputFile = args.length === 1
-      ? args[0].replace(/\.[^.]*$/, ".js")
-      : args[1];
-    var outputStream = fs.createWriteStream(outputFile);
-    outputStream.on("error", function() {
-      abort("Can't write to file \"" + outputFile + "\".");
-    });
-
     break;
 
   default:
     abort("Too many arguments.");
 }
 
-readStream(inputStream, function(input) {
-  var source;
+function rwFile(input, output, cb) {
+  var inputFile = input;
+  var inputStream = fs.createReadStream(inputFile);
+  inputStream.on("error", function() {
+    abort("Can't read from file \"" + inputFile + "\".");
+  });
 
-  try {
-    source = PEG.buildParser(input, options);
-  } catch (e) {
-    if (e.line !== undefined && e.column !== undefined) {
-      abort(e.line + ":" + e.column + ": " + e.message);
-    } else {
-      abort(e.message);
+  var outputFile = args.length === 1
+    ? input.replace(/\.[^.]*$/, ".js")
+    : output;
+  var outputStream = fs.createWriteStream(outputFile);
+  outputStream.on("error", function() {
+    abort("Can't write to file \"" + outputFile + "\".");
+  });
+
+  cb(inputStream, outputStream)
+
+}
+
+/* Files */
+
+function stream(inputStream, outputStream) {
+
+  function readStream(inputStream, callback) {
+    var input = "";
+    inputStream.on("data", function(data) { input += data; });
+    inputStream.on("end", function() { callback(input); });
+  }
+
+  readStream(inputStream, function(input) {
+    var source;
+
+    try {
+      source = PEG.buildParser(input, options);
+    } catch (e) {
+      if (e.line !== undefined && e.column !== undefined) {
+        abort(e.line + ":" + e.column + ": " + e.message);
+      } else {
+        abort(e.message);
+      }
     }
-  }
 
-  outputStream.write(
-    exportVar !== "" ? exportVar + " = " + source + ";\n" : source + "\n"
-  );
-  if (outputStream !== process.stdout) {
-    outputStream.end();
-  }
-});
+    outputStream.write(
+      exportVar !== "" ? exportVar + " = " + source + ";\n" : source + "\n"
+    );
+    if (outputStream !== process.stdout) {
+      outputStream.end();
+    }
+  });
+}
+
+function watchFile(input, output) {
+  fs.watchFile(input, function() {
+    console.log(input + 'has been modified, rebuild pegjs ' + output)
+    rwFile(input, output, function(inputStream, outputStream) {
+      stream(inputStream, outputStream)
+    })
+  })
+}
+
+
