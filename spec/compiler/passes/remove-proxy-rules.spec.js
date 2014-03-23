@@ -1,5 +1,8 @@
 describe("compiler pass |removeProxyRules|", function() {
   var pass = PEG.compiler.passes.transform.removeProxyRules;
+  var collector = {
+    emitInfo: function() {},
+  };
 
   function proxyGrammar(rule) {
     return [rule, 'proxy = proxied', 'proxied = "a"'].join("\n");
@@ -14,7 +17,7 @@ describe("compiler pass |removeProxyRules|", function() {
     };
   }
 
-  var defaultOptions    = { allowedStartRules: ["start"] },
+  var defaultOptions    = { allowedStartRules: ["start"], collector: collector },
       proxiedRefDetails = { type: "rule_ref", name: "proxied" },
       simpleDetails     = expressionDetails({ expression: proxiedRefDetails });
 
@@ -128,7 +131,7 @@ describe("compiler pass |removeProxyRules|", function() {
   it("doesn't remove a proxy rule listed in |allowedStartRules|", function() {
     expect(pass).toChangeAST(
       proxyGrammar('start = proxy'),
-      { allowedStartRules: ["proxy"] },
+      { allowedStartRules: ["proxy"], collector: collector },
       {
         rules: [
           { name: "proxy"   },
