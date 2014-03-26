@@ -392,7 +392,7 @@ describe("PEG.js grammar parser", function() {
     expect('start = "\\0"'    ).toParseAs(literalGrammar("\x00"));
     expect('start = "\\xFF"'  ).toParseAs(literalGrammar("\xFF"));
     expect('start = "\\uFFFF"').toParseAs(literalGrammar("\uFFFF"));
-    expect('start = "\\\n"'   ).toParseAs(literalGrammar("\n"));
+    expect('start = "\\\n"'   ).toParseAs(literalGrammar(""));
   });
 
   /* Canonical simpleDoubleQuotedCharacter is "a". */
@@ -418,7 +418,7 @@ describe("PEG.js grammar parser", function() {
     expect("start = '\\0'"    ).toParseAs(literalGrammar("\x00"));
     expect("start = '\\xFF'"  ).toParseAs(literalGrammar("\xFF"));
     expect("start = '\\uFFFF'").toParseAs(literalGrammar("\uFFFF"));
-    expect("start = '\\\n'"   ).toParseAs(literalGrammar("\n"));
+    expect("start = '\\\n'"   ).toParseAs(literalGrammar(""));
   });
 
   /* Canonical simpleSingleQuotedCharacter is "a". */
@@ -471,7 +471,7 @@ describe("PEG.js grammar parser", function() {
     expect('start = [\\0]'    ).toParseAs(classGrammar(["\x00"],   "[\\0]"));
     expect('start = [\\xFF]'  ).toParseAs(classGrammar(["\xFF"],   "[\\xFF]"));
     expect('start = [\\uFFFF]').toParseAs(classGrammar(["\uFFFF"], "[\\uFFFF]"));
-    expect('start = [\\\n]'   ).toParseAs(classGrammar(["\n"],     "[\\\n]"));
+    expect('start = [\\\n]'   ).toParseAs(classGrammar([""],       "[\\\n]"));
   });
 
   /* Canonical simpleBracketDelimiedCharacter is "a". */
@@ -518,11 +518,7 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical eolEscapeSequence is "\\\n". */
   it("parses eolEscapeSequence", function() {
-    expect('start = "\\\n"'    ).toParseAs(literalGrammar("\n"));
-    expect('start = "\\\r\n"'  ).toParseAs(literalGrammar("\r\n"));
-    expect('start = "\\\r"'    ).toParseAs(literalGrammar("\r"));
-    expect('start = "\\\u2028"').toParseAs(literalGrammar("\u2028"));
-    expect('start = "\\\u2029"').toParseAs(literalGrammar("\u2029"));
+    expect('start = "\\\n"'    ).toParseAs(literalGrammar(""));
   });
 
   /* Trivial character class rules are not tested. */

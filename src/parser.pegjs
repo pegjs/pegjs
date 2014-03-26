@@ -308,7 +308,7 @@ unicodeEscapeSequence
     }
 
 eolEscapeSequence
-  = "\\" eol:eol { return eol; }
+  = "\\" eol:eol { return ""; }
 
 digit
   = [0-9]
