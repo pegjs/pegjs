@@ -446,10 +446,6 @@ describe("PEG.js grammar parser", function() {
       classGrammar([["a", "d"]], "[a-d]i", false, true)
     );
 
-    expect('start = [\u0080\u0081\u0082]').toParseAs(
-      classGrammar(["\u0080", "\u0081", "\u0082"], "[\\x80\\x81\\x82]")
-    );
-
     expect('start = [a-d]\n').toParseAs(classGrammar([["a", "d"]], "[a-d]"));
   });
 
@@ -461,17 +457,11 @@ describe("PEG.js grammar parser", function() {
     expect('start = [b-a]').toFailToParse({
       message: "Invalid character range: b-a."
     });
-    expect('start = [\u0081-\u0080]').toFailToParse({
-      message: "Invalid character range: \\x81-\\x80."
-    });
   });
 
   /* Canonical classCharacter is "a". */
   it("parses classCharacter", function() {
     expect('start = [a]').toParseAs(classGrammar(["a"], "[a]"));
-
-    /* This test demonstrates that |rawText| is not really "raw". */
-    expect('start = [\u0080]').toParseAs(classGrammar(["\x80"], "[\\x80]"));
   });
 
   /* Canonical bracketDelimitedCharacter is "a". */
@@ -481,7 +471,7 @@ describe("PEG.js grammar parser", function() {
     expect('start = [\\0]'    ).toParseAs(classGrammar(["\x00"],   "[\\0]"));
     expect('start = [\\xFF]'  ).toParseAs(classGrammar(["\xFF"],   "[\\xFF]"));
     expect('start = [\\uFFFF]').toParseAs(classGrammar(["\uFFFF"], "[\\uFFFF]"));
-    expect('start = [\\\n]'   ).toParseAs(classGrammar(["\n"],     "[\\n]"));
+    expect('start = [\\\n]'   ).toParseAs(classGrammar(["\n"],     "[\\\n]"));
   });
 
   /* Canonical simpleBracketDelimiedCharacter is "a". */

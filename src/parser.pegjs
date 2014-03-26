@@ -246,47 +246,31 @@ simpleSingleQuotedCharacter
   = !("'" / "\\" / eolChar) char_:. { return char_; }
 
 class "character class"
-  = "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" flags:"i"? __ {
-      var partsConverted = utils.map(parts, function(part) { return part.data; });
-      var rawText = "["
-        + (inverted !== null ? inverted : "")
-        + utils.map(parts, function(part) { return part.rawText; }).join("")
-        + "]"
-        + (flags !== null ? flags : "");
-
-      return {
-        type:       "class",
-        parts:      partsConverted,
-        // FIXME: Get the raw text from the input directly.
-        rawText:    rawText,
-        inverted:   inverted === "^",
-        ignoreCase: flags === "i"
-      };
-    }
+  = class_:(
+      "[" inverted:"^"? parts:(classCharacterRange / classCharacter)* "]" flags:"i"? {
+        return {
+          type:       "class",
+          parts:      parts,
+          rawText:    text().replace(/\s+$/, ""),
+          inverted:   inverted === "^",
+          ignoreCase: flags === "i"
+        };
+      }
+    )
+    __
+    { return class_; }
 
 classCharacterRange
   = begin:classCharacter "-" end:classCharacter {
-      if (begin.data.charCodeAt(0) > end.data.charCodeAt(0)) {
-        error(
-          "Invalid character range: " + begin.rawText + "-" + end.rawText + "."
-        );
+      if (begin.charCodeAt(0) > end.charCodeAt(0)) {
+        error("Invalid character range: " + text() + ".");
       }
 
-      return {
-        data:    [begin.data, end.data],
-        // FIXME: Get the raw text from the input directly.
-        rawText: begin.rawText + "-" + end.rawText
-      };
+      return [begin, end];
     }
 
 classCharacter
-  = char_:bracketDelimitedCharacter {
-      return {
-        data:    char_,
-        // FIXME: Get the raw text from the input directly.
-        rawText: utils.quoteForRegexpClass(char_)
-      };
-    }
+  = bracketDelimitedCharacter
 
 bracketDelimitedCharacter
   = simpleBracketDelimitedCharacter
