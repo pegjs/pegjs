@@ -54,7 +54,7 @@ choice
     }
 
 sequence
-  = elements:labeled* code:action {
+  = elements:labeled+ code:action {
       var expression = elements.length !== 1
         ? {
             type:     "sequence",
@@ -67,7 +67,7 @@ sequence
         code:       code
       };
     }
-  / elements:labeled* {
+  / elements:labeled+ {
       return elements.length !== 1
         ? {
             type:     "sequence",

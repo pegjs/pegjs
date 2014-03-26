@@ -393,13 +393,7 @@ describe("generated parser", function() {
     });
 
     describe("sequence matching", function() {
-      it("matches empty sequence correctly", function() {
-        var parser = PEG.buildParser('start = ', options);
-
-        expect(parser).toParse("", []);
-      });
-
-      it("matches non-empty sequence correctly", function() {
+      it("matches correctly", function() {
         var parser = PEG.buildParser('start = "a" "b" "c"', options);
 
         expect(parser).toParse("abc", ["a", "b", "c"]);
@@ -845,9 +839,9 @@ describe("generated parser", function() {
 
       describe("expectations reporting", function() {
         it("reports expectations correctly with no alternative", function() {
-          var parser = PEG.buildParser('start = ', options);
+          var parser = PEG.buildParser('start = "a"', options);
 
-          expect(parser).toFailToParse("a", {
+          expect(parser).toFailToParse("ab", {
             expected: [{ type: "end", description: "end of input" }]
           });
         });
@@ -916,10 +910,10 @@ describe("generated parser", function() {
 
       describe("message building", function() {
         it("builds message correctly with no alternative", function() {
-          var parser = PEG.buildParser('start = ', options);
+          var parser = PEG.buildParser('start = "a"', options);
 
-          expect(parser).toFailToParse("a", {
-            message: 'Expected end of input but "a" found.'
+          expect(parser).toFailToParse("ab", {
+            message: 'Expected end of input but "b" found.'
           });
         });
 

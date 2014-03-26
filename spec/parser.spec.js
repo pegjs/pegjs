@@ -8,7 +8,6 @@ describe("PEG.js grammar parser", function() {
       labeledAbcd        = { type: "labeled", label: "a", expression: literalAbcd },
       labeledEfgh        = { type: "labeled", label: "b", expression: literalEfgh },
       labeledIjkl        = { type: "labeled", label: "c", expression: literalIjkl },
-      sequenceEmpty      = { type: "sequence", elements: [] },
       sequenceOfLiterals = {
         type:     "sequence",
         elements: [literalAbcd, literalEfgh, literalIjkl]
@@ -235,13 +234,6 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
   it("parses sequence", function() {
-    expect('start = { code }').toParseAs(
-      oneRuleGrammar({
-        type:       "action",
-        expression: sequenceEmpty,
-        code:       " code "
-      })
-    );
     expect('start = a:"abcd" { code }').toParseAs(
       oneRuleGrammar({ type: "action", expression: labeledAbcd, code: " code " })
     );
@@ -253,9 +245,6 @@ describe("PEG.js grammar parser", function() {
       })
     );
 
-    expect('start = ').toParseAs(
-      oneRuleGrammar(sequenceEmpty)
-    );
     expect('start = a:"abcd"').toParseAs(
       oneRuleGrammar(labeledAbcd)
     );
