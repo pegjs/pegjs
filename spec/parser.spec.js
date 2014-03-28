@@ -161,8 +161,8 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
-  /* Canonical grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
-  it("parses grammar", function() {
+  /* Canonical Grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
+  it("parses Grammar", function() {
     var ruleA = { type: "rule", name: "a", expression: literalAbcd },
         ruleB = { type: "rule", name: "b", expression: literalEfgh },
         ruleC = { type: "rule", name: "c", expression: literalIjkl };
@@ -184,8 +184,8 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
-  /* Canonical initializer is "{ code }". */
-  it("parses initializer", function() {
+  /* Canonical Initializer is "{ code }". */
+  it("parses Initializer", function() {
     var grammar = oneRuleGrammar(literalAbcd, {
           type: "initializer",
           code: " code "
@@ -195,8 +195,8 @@ describe("PEG.js grammar parser", function() {
     expect('{ code }; start = "abcd"').toParseAs(grammar);
   });
 
-  /* Canonical rule is "a: \"abcd\"". */
-  it("parses rule", function() {
+  /* Canonical Rule is "a: \"abcd\"". */
+  it("parses Rule", function() {
     expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
       oneRuleGrammar(choiceOfLiterals)
     );
@@ -212,15 +212,15 @@ describe("PEG.js grammar parser", function() {
     );
   });
 
-  /* Canonical expression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
-  it("parses expression", function() {
+  /* Canonical Expression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
+  it("parses Expression", function() {
     expect('start = "abcd" / "efgh" / "ijkl"').toParseAs(
       oneRuleGrammar(choiceOfLiterals)
     );
   });
 
-  /* Canonical choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
-  it("parses choice", function() {
+  /* Canonical Choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
+  it("parses Choice", function() {
     expect('start = "abcd" "efgh" "ijkl"').toParseAs(
       oneRuleGrammar(sequenceOfLiterals)
     );
@@ -232,8 +232,8 @@ describe("PEG.js grammar parser", function() {
     }));
   });
 
-  /* Canonical sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
-  it("parses sequence", function() {
+  /* Canonical Sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
+  it("parses Sequence", function() {
     expect('start = a:"abcd" { code }').toParseAs(
       oneRuleGrammar({ type: "action", expression: labeledAbcd, code: " code " })
     );
@@ -253,8 +253,8 @@ describe("PEG.js grammar parser", function() {
     );
   });
 
-  /* Canonical labeled is "label:\"abcd\"". */
-  it("parses labeled", function() {
+  /* Canonical Labeled is "label:\"abcd\"". */
+  it("parses Labeled", function() {
     expect('start = label:!"abcd"').toParseAs(oneRuleGrammar({
       type:       "labeled",
       label:      "label",
@@ -263,8 +263,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = !"abcd"'      ).toParseAs(oneRuleGrammar(simpleNotLiteral));
   });
 
-  /* Canonical prefixed is "!\"abcd\"". */
-  it("parses prefixed", function() {
+  /* Canonical Prefixed is "!\"abcd\"". */
+  it("parses Prefixed", function() {
     expect('start = $"abcd"?' ).toParseAs(oneRuleGrammar({
       type:       "text",
       expression: optionalLiteral
@@ -288,8 +288,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd"?'  ).toParseAs(oneRuleGrammar(optionalLiteral));
   });
 
-  /* Canonical suffixed is "\"abcd\"?". */
-  it("parses suffixed", function() {
+  /* Canonical Suffixed is "\"abcd\"?". */
+  it("parses Suffixed", function() {
     expect('start = "abcd"?').toParseAs(oneRuleGrammar(optionalLiteral));
     expect('start = "abcd"*').toParseAs(oneRuleGrammar({
       type:       "zero_or_more",
@@ -302,8 +302,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd"' ).toParseAs(literalGrammar("abcd"));
   });
 
-  /* Canonical primary is "\"abcd\"". */
-  it("parses primary", function() {
+  /* Canonical Primary is "\"abcd\"". */
+  it("parses Primary", function() {
     expect('start = a'       ).toParseAs(ruleRefGrammar("a"));
     expect('start = "abcd"'  ).toParseAs(literalGrammar("abcd"));
     expect('start = [a-d]'   ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
@@ -311,29 +311,29 @@ describe("PEG.js grammar parser", function() {
     expect('start = ("abcd")').toParseAs(literalGrammar("abcd"));
   });
 
-  /* Canonical action is "{ code }". */
-  it("parses action", function() {
+  /* Canonical Action is "{ code }". */
+  it("parses Action", function() {
     expect('start = "abcd" { code }').toParseAs(actionGrammar(" code "));
 
     expect('start = "abcd" { code }\n').toParseAs(actionGrammar(" code "));
   });
 
-  /* Canonical braced is "{ code }". */
-  it("parses braced", function() {
+  /* Canonical Braced is "{ code }". */
+  it("parses Braced", function() {
     expect('start = "abcd" {}'         ).toParseAs(actionGrammar(""));
     expect('start = "abcd" {{a}}'      ).toParseAs(actionGrammar("{a}"));
     expect('start = "abcd" {abcd}'     ).toParseAs(actionGrammar("abcd"));
     expect('start = "abcd" {{a}{b}{c}}').toParseAs(actionGrammar("{a}{b}{c}"));
   });
 
-  /* Canonical nonBraceCharacters is "abcd". */
-  it("parses nonBraceCharacters", function() {
+  /* Canonical NonBraceCharacters is "abcd". */
+  it("parses NonBraceCharacters", function() {
     expect('start = "abcd" {a}'  ).toParseAs(actionGrammar("a"));
     expect('start = "abcd" {abc}').toParseAs(actionGrammar("abc"));
   });
 
-  /* Canonical nonBraceCharacter is "a". */
-  it("parses nonBraceCharacter", function() {
+  /* Canonical NonBraceCharacter is "a". */
+  it("parses NonBraceCharacter", function() {
     expect('start = "abcd" {a}').toParseAs(actionGrammar("a"));
 
     expect('start = "abcd" {{}').toFailToParse();
@@ -342,8 +342,8 @@ describe("PEG.js grammar parser", function() {
 
   /* Trivial character rules are not tested. */
 
-  /* Canonical identifier is "a". */
-  it("parses identifier", function() {
+  /* Canonical Identifier is "a". */
+  it("parses Identifier", function() {
     expect('start = a'   ).toParseAs(ruleRefGrammar("a"));
     expect('start = _'   ).toParseAs(ruleRefGrammar("_"));
     expect('start = aa'  ).toParseAs(ruleRefGrammar("aa"));
@@ -354,8 +354,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = a\n').toParseAs(ruleRefGrammar("a"));
   });
 
-  /* Canonical literal is "\"abcd\"". */
-  it("parses literal", function() {
+  /* Canonical Literal is "\"abcd\"". */
+  it("parses Literal", function() {
     expect('start = "abcd"' ).toParseAs(literalGrammar("abcd"));
     expect("start = 'abcd'" ).toParseAs(literalGrammar("abcd"));
 
@@ -364,8 +364,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd"\n').toParseAs(literalGrammar("abcd"));
   });
 
-  /* Canonical string is "\"abcd\"". */
-  it("parses string", function() {
+  /* Canonical String is "\"abcd\"". */
+  it("parses String", function() {
     var grammar = oneRuleGrammar({
       type:       "named",
       name:       "abcd",
@@ -378,15 +378,15 @@ describe("PEG.js grammar parser", function() {
     expect('start "abcd"\n= "abcd"').toParseAs(grammar);
   });
 
-  /* Canonical doubleQuotedString is "\"abcd\"". */
-  it("parses doubleQuotedString", function() {
+  /* Canonical DoubleQuotedString is "\"abcd\"". */
+  it("parses DoubleQuotedString", function() {
     expect('start = ""'   ).toParseAs(literalGrammar(""));
     expect('start = "a"'  ).toParseAs(literalGrammar("a"));
     expect('start = "abc"').toParseAs(literalGrammar("abc"));
   });
 
-  /* Canonical doubleQuotedCharacter is "a". */
-  it("parses doubleQuotedCharacter", function() {
+  /* Canonical DoubleQuotedCharacter is "a". */
+  it("parses DoubleQuotedCharacter", function() {
     expect('start = "a"'      ).toParseAs(literalGrammar("a"));
     expect('start = "\\n"'    ).toParseAs(literalGrammar("\n"));
     expect('start = "\\0"'    ).toParseAs(literalGrammar("\x00"));
@@ -395,8 +395,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = "\\\n"'   ).toParseAs(literalGrammar(""));
   });
 
-  /* Canonical simpleDoubleQuotedCharacter is "a". */
-  it("parses simpleDoubleQuotedCharacter", function() {
+  /* Canonical SimpleDoubleQuotedCharacter is "a". */
+  it("parses SimpleDoubleQuotedCharacter", function() {
     expect('start = "a"').toParseAs(literalGrammar("a"));
 
     expect('start = """' ).toFailToParse();
@@ -404,15 +404,15 @@ describe("PEG.js grammar parser", function() {
     expect('start = "\n"').toFailToParse();
   });
 
-  /* Canonical singleQuotedString is "'abcd'". */
-  it("parses singleQuotedString", function() {
+  /* Canonical SingleQuotedString is "'abcd'". */
+  it("parses SingleQuotedString", function() {
     expect("start = ''"   ).toParseAs(literalGrammar(""));
     expect("start = 'a'"  ).toParseAs(literalGrammar("a"));
     expect("start = 'abc'").toParseAs(literalGrammar("abc"));
   });
 
-  /* Canonical singleQuotedCharacter is "a". */
-  it("parses singleQuotedCharacter", function() {
+  /* Canonical SingleQuotedCharacter is "a". */
+  it("parses SingleQuotedCharacter", function() {
     expect("start = 'a'"      ).toParseAs(literalGrammar("a"));
     expect("start = '\\n'"    ).toParseAs(literalGrammar("\n"));
     expect("start = '\\0'"    ).toParseAs(literalGrammar("\x00"));
@@ -421,8 +421,8 @@ describe("PEG.js grammar parser", function() {
     expect("start = '\\\n'"   ).toParseAs(literalGrammar(""));
   });
 
-  /* Canonical simpleSingleQuotedCharacter is "a". */
-  it("parses simpleSingleQuotedCharacter", function() {
+  /* Canonical SimpleSingleQuotedCharacter is "a". */
+  it("parses SimpleSingleQuotedCharacter", function() {
     expect("start = 'a'").toParseAs(literalGrammar("a"));
 
     expect("start = '''" ).toFailToParse();
@@ -430,8 +430,8 @@ describe("PEG.js grammar parser", function() {
     expect("start = '\n'").toFailToParse();
   });
 
-  /* Canonical class is "[a-d]". */
-  it("parses class", function() {
+  /* Canonical Class is "[a-d]". */
+  it("parses Class", function() {
     expect('start = []'         ).toParseAs(classGrammar([],           "[]"));
     expect('start = [a-d]'      ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
     expect('start = [a]'        ).toParseAs(classGrammar(["a"],        "[a]"));
@@ -449,8 +449,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = [a-d]\n').toParseAs(classGrammar([["a", "d"]], "[a-d]"));
   });
 
-  /* Canonical classCharacterRange is "a-d". */
-  it("parses classCharacterRange", function() {
+  /* Canonical ClassCharacterRange is "a-d". */
+  it("parses ClassCharacterRange", function() {
     expect('start = [a-d]').toParseAs(classGrammar([["a", "d"]], "[a-d]"));
     expect('start = [a-a]').toParseAs(classGrammar([["a", "a"]], "[a-a]"));
 
@@ -459,13 +459,13 @@ describe("PEG.js grammar parser", function() {
     });
   });
 
-  /* Canonical classCharacter is "a". */
-  it("parses classCharacter", function() {
+  /* Canonical ClassCharacter is "a". */
+  it("parses ClassCharacter", function() {
     expect('start = [a]').toParseAs(classGrammar(["a"], "[a]"));
   });
 
-  /* Canonical bracketDelimitedCharacter is "a". */
-  it("parses bracketDelimitedCharacter", function() {
+  /* Canonical BracketDelimitedCharacter is "a". */
+  it("parses BracketDelimitedCharacter", function() {
     expect('start = [a]'      ).toParseAs(classGrammar(["a"],      "[a]"));
     expect('start = [\\n]'    ).toParseAs(classGrammar(["\n"],     "[\\n]"));
     expect('start = [\\0]'    ).toParseAs(classGrammar(["\x00"],   "[\\0]"));
@@ -474,8 +474,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = [\\\n]'   ).toParseAs(classGrammar([""],       "[\\\n]"));
   });
 
-  /* Canonical simpleBracketDelimiedCharacter is "a". */
-  it("parses simpleBracketDelimitedCharacter", function() {
+  /* Canonical SimpleBracketDelimiedCharacter is "a". */
+  it("parses SimpleBracketDelimitedCharacter", function() {
     expect('start = [a]').toParseAs(classGrammar(["a"], "[a]"));
 
     expect('start = []]' ).toFailToParse();
@@ -483,8 +483,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = [\n]').toFailToParse();
   });
 
-  /* Canonical simpleEscapeSequence is "\\n". */
-  it("parses simpleEscapeSequence", function() {
+  /* Canonical SimpleEscapeSequence is "\\n". */
+  it("parses SimpleEscapeSequence", function() {
     expect('start = "\\b"').toParseAs(literalGrammar("\b"));
     expect('start = "\\f"').toParseAs(literalGrammar("\f"));
     expect('start = "\\n"').toParseAs(literalGrammar("\n"));
@@ -498,26 +498,26 @@ describe("PEG.js grammar parser", function() {
     expect('start = "\\u"').toFailToParse();
   });
 
-  /* Canonical zeroEscapeSequence is "\\0". */
-  it("parses zeroEscapeSequence", function() {
+  /* Canonical ZeroEscapeSequence is "\\0". */
+  it("parses ZeroEscapeSequence", function() {
     expect('start = "\\0"').toParseAs(literalGrammar("\x00"));
 
     expect('start = "\\00"').toFailToParse();
     expect('start = "\\09"').toFailToParse();
   });
 
-  /* Canonical hexEscapeSequence is "\\xFF". */
-  it("parses hexEscapeSequence", function() {
+  /* Canonical HexEscapeSequence is "\\xFF". */
+  it("parses HexEscapeSequence", function() {
     expect('start = "\\xFF"').toParseAs(literalGrammar("\xFF"));
   });
 
-  /* Canonical unicodeEscapeSequence is "\\uFFFF". */
-  it("parses unicodeEscapeSequence", function() {
+  /* Canonical UnicodeEscapeSequence is "\\uFFFF". */
+  it("parses UnicodeEscapeSequence", function() {
     expect('start = "\\uFFFF"').toParseAs(literalGrammar("\uFFFF"));
   });
 
-  /* Canonical eolEscapeSequence is "\\\n". */
-  it("parses eolEscapeSequence", function() {
+  /* Canonical EOLEscapeSequence is "\\\n". */
+  it("parses EOLEscapeSequence", function() {
     expect('start = "\\\n"'    ).toParseAs(literalGrammar(""));
   });
 
@@ -532,21 +532,21 @@ describe("PEG.js grammar parser", function() {
     expect('start =   "abcd"'          ).toParseAs(trivialGrammar);
   });
 
-  // Canonical comment is "/* comment */".
-  it("parses comment", function() {
+  // Canonical Comment is "/* comment */".
+  it("parses Comment", function() {
     expect('start =// comment\n"abcd"' ).toParseAs(trivialGrammar);
     expect('start =/* comment */"abcd"').toParseAs(trivialGrammar);
   });
 
-  /* Canonical singleLineComment is "// comment". */
-  it("parses singleLineComment", function() {
+  /* Canonical SingleLineComment is "// comment". */
+  it("parses SingleLineComment", function() {
     expect('start =//\n"abcd"'   ).toParseAs(trivialGrammar);
     expect('start =//a\n"abcd"'  ).toParseAs(trivialGrammar);
     expect('start =//aaa\n"abcd"').toParseAs(trivialGrammar);
   });
 
-  // Canonical multiLineComment is "/* comment */".
-  it("parses multiLineComment", function() {
+  // Canonical MultiLineComment is "/* comment */".
+  it("parses MultiLineComment", function() {
     expect('start =/**/"abcd"'   ).toParseAs(trivialGrammar);
     expect('start =/*a*/"abcd"'  ).toParseAs(trivialGrammar);
     expect('start =/*aaa*/"abcd"').toParseAs(trivialGrammar);
@@ -555,8 +555,8 @@ describe("PEG.js grammar parser", function() {
     expect('start =/**/*/"abcd"').toFailToParse();
   });
 
-  /* Canonical eol is "\n". */
-  it("parses eol", function() {
+  /* Canonical EOL is "\n". */
+  it("parses EOL", function() {
     expect('start =\n"abcd"'    ).toParseAs(trivialGrammar);
     expect('start =\r\n"abcd"'  ).toParseAs(trivialGrammar);
     expect('start =\r"abcd"'    ).toParseAs(trivialGrammar);
@@ -564,16 +564,16 @@ describe("PEG.js grammar parser", function() {
     expect('start =\u2029"abcd"').toParseAs(trivialGrammar);
   });
 
-  /* Canonical eolChar is "\n". */
-  it("parses eolChar", function() {
+  /* Canonical EOLChar is "\n". */
+  it("parses EOLChar", function() {
     expect('start =\n"abcd"'    ).toParseAs(trivialGrammar);
     expect('start =\r"abcd"'    ).toParseAs(trivialGrammar);
     expect('start =\u2028"abcd"').toParseAs(trivialGrammar);
     expect('start =\u2029"abcd"').toParseAs(trivialGrammar);
   });
 
-  /* Canonical whitespace is " ". */
-  it("parses whitespace", function() {
+  /* Canonical Whitespace is " ". */
+  it("parses Whitespace", function() {
     expect('start =\t"abcd"'    ).toParseAs(trivialGrammar);
     expect('start =\x0B"abcd"'  ).toParseAs(trivialGrammar); // no "\v" in IE
     expect('start =\f"abcd"'    ).toParseAs(trivialGrammar);
