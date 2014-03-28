@@ -366,8 +366,6 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd" {}}').toFailToParse();
   });
 
-  /* Trivial character rules are not tested. */
-
   /* Canonical Identifier is "a". */
   it("parses Identifier", function() {
     expect('start = a'   ).toParseAs(ruleRefGrammar("a"));

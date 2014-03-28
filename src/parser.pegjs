@@ -28,7 +28,7 @@ Grammar
     }
 
 Initializer
-  = code:Action (__ Semicolon)? {
+  = code:Action (__ ";")? {
       return {
         type: "initializer",
         code: code
@@ -38,8 +38,8 @@ Initializer
 Rule
   = name:Identifier __
     displayName:(String __)?
-    Equals __
-    expression:Expression (__ Semicolon)? {
+    "=" __
+    expression:Expression (__ ";")? {
       return {
         type:        "rule",
         name:        name,
@@ -57,7 +57,7 @@ Expression
   = Choice
 
 Choice
-  = first:Sequence rest:(__ Slash __ Sequence)* {
+  = first:Sequence rest:(__ "/" __ Sequence)* {
       return rest.length > 0
         ? { type: "choice", alternatives: buildList(first, rest, 3) }
         : first;
@@ -81,7 +81,7 @@ Sequence
     }
 
 Labeled
-  = label:Identifier __ Colon __ expression:Prefixed {
+  = label:Identifier __ ":" __ expression:Prefixed {
       return {
         type:       "labeled",
         label:      label,
@@ -91,31 +91,31 @@ Labeled
   / Prefixed
 
 Prefixed
-  = Dollar __ expression:Suffixed {
+  = "$" __ expression:Suffixed {
       return {
         type:       "text",
         expression: expression
       };
     }
-  / And __ code:Action {
+  / "&" __ code:Action {
       return {
         type: "semantic_and",
         code: code
       };
     }
-  / And __ expression:Suffixed {
+  / "&" __ expression:Suffixed {
       return {
         type:       "simple_and",
         expression: expression
       };
     }
-  / Not __ code:Action {
+  / "!" __ code:Action {
       return {
         type: "semantic_not",
         code: code
       };
     }
-  / Not __ expression:Suffixed {
+  / "!" __ expression:Suffixed {
       return {
         type:       "simple_not",
         expression: expression
@@ -124,19 +124,19 @@ Prefixed
   / Suffixed
 
 Suffixed
-  = expression:Primary __ Question {
+  = expression:Primary __ "?" {
       return {
         type:       "optional",
         expression: expression
       };
     }
-  / expression:Primary __ Star {
+  / expression:Primary __ "*" {
       return {
         type:       "zero_or_more",
         expression: expression
       };
     }
-  / expression:Primary __ Plus {
+  / expression:Primary __ "+" {
       return {
         type:       "one_or_more",
         expression: expression
@@ -145,7 +145,7 @@ Suffixed
   / Primary
 
 Primary
-  = name:Identifier !(__ (String __)? Equals) {
+  = name:Identifier !(__ (String __)? "=") {
       return {
         type: "rule_ref",
         name: name
@@ -153,8 +153,8 @@ Primary
     }
   / Literal
   / Class
-  / Dot { return { type: "any" }; }
-  / Lparen __ expression:Expression __ Rparen { return expression; }
+  / "." { return { type: "any" }; }
+  / "(" __ expression:Expression __ ")" { return expression; }
 
 /* "Lexical" elements */
 
@@ -169,20 +169,6 @@ NonBraceCharacters
 
 NonBraceCharacter
   = [^{}]
-
-Equals    = "="
-Colon     = ":"
-Semicolon = ";"
-Slash     = "/"
-And       = "&"
-Not       = "!"
-Dollar    = "$"
-Question  = "?"
-Star      = "*"
-Plus      = "+"
-Lparen    = "("
-Rparen    = ")"
-Dot       = "."
 
 /*
  * Modeled after ECMA-262, 5th ed., 7.6, but much simplified:
