@@ -171,6 +171,38 @@ Primary
 
 /* "Lexical" elements */
 
+SourceCharacter
+  = .
+
+WhiteSpace "whitespace"
+  = "\t"
+  / "\v"
+  / "\f"
+  / " "
+  / "\u00A0"
+  / "\uFEFF"
+  / Zs
+
+LineTerminator
+  = [\n\r\u2028\u2029]
+
+LineTerminatorSequence "end of line"
+  = "\n"
+  / "\r\n"
+  / "\r"
+  / "\u2028"
+  / "\u2029"
+
+Comment "comment"
+  = MultiLineComment
+  / SingleLineComment
+
+MultiLineComment
+  = "/*" (!"*/" SourceCharacter)* "*/"
+
+SingleLineComment
+  = "//" (!LineTerminator SourceCharacter)*
+
 Action "action"
   = braced:Braced __ { return braced.substr(1, braced.length - 2); }
 
@@ -210,7 +242,7 @@ DoubleQuotedCharacter
   / EOLEscapeSequence
 
 SimpleDoubleQuotedCharacter
-  = !('"' / "\\" / EOLChar) char_:. { return char_; }
+  = !('"' / "\\" / LineTerminator) char_:. { return char_; }
 
 SingleQuotedString
   = "'" chars:SingleQuotedCharacter* "'" { return chars.join(""); }
@@ -224,7 +256,7 @@ SingleQuotedCharacter
   / EOLEscapeSequence
 
 SimpleSingleQuotedCharacter
-  = !("'" / "\\" / EOLChar) char_:. { return char_; }
+  = !("'" / "\\" / LineTerminator) char_:. { return char_; }
 
 Class "character class"
   = "[" inverted:"^"? parts:(ClassCharacterRange / ClassCharacter)* "]" flags:"i"? {
@@ -258,10 +290,10 @@ BracketDelimitedCharacter
   / EOLEscapeSequence
 
 SimpleBracketDelimitedCharacter
-  = !("]" / "\\" / EOLChar) char_:. { return char_; }
+  = !("]" / "\\" / LineTerminator) char_:. { return char_; }
 
 SimpleEscapeSequence
-  = "\\" !(Digit / "x" / "u" / EOLChar) char_:. {
+  = "\\" !(Digit / "x" / "u" / LineTerminator) char_:. {
       return char_
         .replace("b", "\b")
         .replace("f", "\f")
@@ -285,7 +317,7 @@ UnicodeEscapeSequence
     }
 
 EOLEscapeSequence
-  = "\\" eol:EOL { return ""; }
+  = "\\" eol:LineTerminatorSequence { return ""; }
 
 Digit
   = [0-9]
@@ -303,27 +335,35 @@ LowerCaseLetter
 UpperCaseLetter
   = [A-Z]
 
-__ = (Whitespace / EOL / Comment)*
+/*
+ * Unicode Character Categories
+ *
+ * Extracted from the following Unicode Character Database file:
+ *
+ *   http://www.unicode.org/Public/6.3.0/ucd/extracted/DerivedGeneralCategory.txt
+ *
+ * Unix magic used:
+ *
+ *   grep "; $CATEGORY" DerivedGeneralCategory.txt |   # Filter characters
+ *     cut -f1 -d " " |                                # Extract code points
+ *     grep -v '[0-9a-fA-F]\{5\}' |                    # Exclude non-BMP characters
+ *     sed -e 's/\.\./-/' |                            # Adjust formatting
+ *     sed -e 's/\([0-9a-fA-F]\{4\}\)/\\u\1/g' |       # Adjust formatting
+ *     tr -d '\n'                                      # Join lines
+ *
+ * ECMA-262 allows using Unicode 3.0 or later, version 6.3.0 was the latest one
+ * at the time of writing.
+ *
+ * Non-BMP characters are completely ignored to avoid surrogate pair handling
+ * (detecting surrogate pairs isn't possible with a simple character class and
+ * other methods would degrade performance). I don't consider it a big deal as
+ * even parsers in JavaScript engines of common browsers seem to ignore them.
+ */
 
-Comment "comment"
-  = SingleLineComment
-  / MultiLineComment
+// Separator, Space
+Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]
 
-SingleLineComment
-  = "//" (!EOLChar .)*
+/* Skipped */
 
-MultiLineComment
-  = "/*" (!"*/" .)* "*/"
-
-EOL "end of line"
-  = "\n"
-  / "\r\n"
-  / "\r"
-  / "\u2028"
-  / "\u2029"
-
-EOLChar
-  = [\n\r\u2028\u2029]
-
-Whitespace "whitespace"
-  = [ \t\v\f\u00A0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]
+__
+  = (WhiteSpace / LineTerminatorSequence / Comment)*

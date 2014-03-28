@@ -337,6 +337,58 @@ describe("PEG.js grammar parser", function() {
     expect('start = ("abcd"\n)').toParseAs(literalGrammar("abcd"));
   });
 
+  /* The SourceCharacter rule is not tested. */
+
+  /* Canonical WhiteSpace is " ". */
+  it("parses WhiteSpace", function() {
+    expect('start =\t"abcd"'    ).toParseAs(trivialGrammar);
+    expect('start =\x0B"abcd"'  ).toParseAs(trivialGrammar);   // no "\v" in IE
+    expect('start =\f"abcd"'    ).toParseAs(trivialGrammar);
+    expect('start = "abcd"'     ).toParseAs(trivialGrammar);
+    expect('start =\u00A0"abcd"').toParseAs(trivialGrammar);
+    expect('start =\uFEFF"abcd"').toParseAs(trivialGrammar);
+    expect('start =\u1680"abcd"').toParseAs(trivialGrammar);
+  });
+
+  /* Canonical LineTerminator is "\n". */
+  it("parses LineTerminator", function() {
+    expect('start = "\n"'    ).toFailToParse();
+    expect('start = "\r"'    ).toFailToParse();
+    expect('start = "\u2028"').toFailToParse();
+    expect('start = "\u2029"').toFailToParse();
+  });
+
+  /* Canonical LineTerminatorSequence is "\r\n". */
+  it("parses LineTerminatorSequence", function() {
+    expect('start =\n"abcd"'    ).toParseAs(trivialGrammar);
+    expect('start =\r\n"abcd"'  ).toParseAs(trivialGrammar);
+    expect('start =\r"abcd"'    ).toParseAs(trivialGrammar);
+    expect('start =\u2028"abcd"').toParseAs(trivialGrammar);
+    expect('start =\u2029"abcd"').toParseAs(trivialGrammar);
+  });
+
+  // Canonical Comment is "/* comment */".
+  it("parses Comment", function() {
+    expect('start =// comment\n"abcd"' ).toParseAs(trivialGrammar);
+    expect('start =/* comment */"abcd"').toParseAs(trivialGrammar);
+  });
+
+  // Canonical MultiLineComment is "/* comment */".
+  it("parses MultiLineComment", function() {
+    expect('start =/**/"abcd"'   ).toParseAs(trivialGrammar);
+    expect('start =/*a*/"abcd"'  ).toParseAs(trivialGrammar);
+    expect('start =/*aaa*/"abcd"').toParseAs(trivialGrammar);
+
+    expect('start =/**/*/"abcd"').toFailToParse();
+  });
+
+  /* Canonical SingleLineComment is "// comment". */
+  it("parses SingleLineComment", function() {
+    expect('start =//\n"abcd"'   ).toParseAs(trivialGrammar);
+    expect('start =//a\n"abcd"'  ).toParseAs(trivialGrammar);
+    expect('start =//aaa\n"abcd"').toParseAs(trivialGrammar);
+  });
+
   /* Canonical Action is "{ code }". */
   it("parses Action", function() {
     expect('start = "abcd" { code }').toParseAs(actionGrammar(" code "));
@@ -534,83 +586,19 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical EOLEscapeSequence is "\\\n". */
   it("parses EOLEscapeSequence", function() {
-    expect('start = "\\\n"'    ).toParseAs(literalGrammar(""));
+    expect('start = "\\\r\n"').toParseAs(literalGrammar(""));
   });
 
   /* Trivial character class rules are not tested. */
+
+  /* Unicode character category rules are not tested. */
 
   /* Canonical __ is "\n". */
   it("parses __", function() {
     expect('start ="abcd"'             ).toParseAs(trivialGrammar);
     expect('start = "abcd"'            ).toParseAs(trivialGrammar);
-    expect('start =\n"abcd"'           ).toParseAs(trivialGrammar);
+    expect('start =\r\n"abcd"'         ).toParseAs(trivialGrammar);
     expect('start =/* comment */"abcd"').toParseAs(trivialGrammar);
     expect('start =   "abcd"'          ).toParseAs(trivialGrammar);
-  });
-
-  // Canonical Comment is "/* comment */".
-  it("parses Comment", function() {
-    expect('start =// comment\n"abcd"' ).toParseAs(trivialGrammar);
-    expect('start =/* comment */"abcd"').toParseAs(trivialGrammar);
-  });
-
-  /* Canonical SingleLineComment is "// comment". */
-  it("parses SingleLineComment", function() {
-    expect('start =//\n"abcd"'   ).toParseAs(trivialGrammar);
-    expect('start =//a\n"abcd"'  ).toParseAs(trivialGrammar);
-    expect('start =//aaa\n"abcd"').toParseAs(trivialGrammar);
-  });
-
-  // Canonical MultiLineComment is "/* comment */".
-  it("parses MultiLineComment", function() {
-    expect('start =/**/"abcd"'   ).toParseAs(trivialGrammar);
-    expect('start =/*a*/"abcd"'  ).toParseAs(trivialGrammar);
-    expect('start =/*aaa*/"abcd"').toParseAs(trivialGrammar);
-    expect('start =/***/"abcd"'  ).toParseAs(trivialGrammar);
-
-    expect('start =/**/*/"abcd"').toFailToParse();
-  });
-
-  /* Canonical EOL is "\n". */
-  it("parses EOL", function() {
-    expect('start =\n"abcd"'    ).toParseAs(trivialGrammar);
-    expect('start =\r\n"abcd"'  ).toParseAs(trivialGrammar);
-    expect('start =\r"abcd"'    ).toParseAs(trivialGrammar);
-    expect('start =\u2028"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2029"abcd"').toParseAs(trivialGrammar);
-  });
-
-  /* Canonical EOLChar is "\n". */
-  it("parses EOLChar", function() {
-    expect('start =\n"abcd"'    ).toParseAs(trivialGrammar);
-    expect('start =\r"abcd"'    ).toParseAs(trivialGrammar);
-    expect('start =\u2028"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2029"abcd"').toParseAs(trivialGrammar);
-  });
-
-  /* Canonical Whitespace is " ". */
-  it("parses Whitespace", function() {
-    expect('start =\t"abcd"'    ).toParseAs(trivialGrammar);
-    expect('start =\x0B"abcd"'  ).toParseAs(trivialGrammar); // no "\v" in IE
-    expect('start =\f"abcd"'    ).toParseAs(trivialGrammar);
-    expect('start = "abcd"'     ).toParseAs(trivialGrammar);
-    expect('start =\u00A0"abcd"').toParseAs(trivialGrammar);
-    expect('start =\uFEFF"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u1680"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u180E"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2000"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2001"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2002"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2003"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2004"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2005"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2006"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2007"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2008"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u2009"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u200A"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u202F"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u205F"abcd"').toParseAs(trivialGrammar);
-    expect('start =\u3000"abcd"').toParseAs(trivialGrammar);
   });
 });
