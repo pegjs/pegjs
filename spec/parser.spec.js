@@ -420,15 +420,39 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical Identifier is "a". */
   it("parses Identifier", function() {
+    expect('start = a:"abcd"').toParseAs(oneRuleGrammar(labeledAbcd));
+
+    expect('start = return:"abcd"').toFailToParse({
+      message: "Reserved word \"return\" can't be used as an identifier."
+    });
+  });
+
+  /* Canonical IdentifierName is "a". */
+  it("parses IdentifierName", function() {
     expect('start = a'   ).toParseAs(ruleRefGrammar("a"));
-    expect('start = _'   ).toParseAs(ruleRefGrammar("_"));
-    expect('start = aa'  ).toParseAs(ruleRefGrammar("aa"));
-    expect('start = a0'  ).toParseAs(ruleRefGrammar("a0"));
-    expect('start = a_'  ).toParseAs(ruleRefGrammar("a_"));
+    expect('start = ab'  ).toParseAs(ruleRefGrammar("ab"));
     expect('start = abcd').toParseAs(ruleRefGrammar("abcd"));
   });
 
-  /* Trivial character class rules are not tested. */
+  /* Canonical IdentifierStart is "a". */
+  it("parses IdentifierStart", function() {
+    expect('start = a'      ).toParseAs(ruleRefGrammar("a"));
+    expect('start = $'      ).toParseAs(ruleRefGrammar("$"));
+    expect('start = _'      ).toParseAs(ruleRefGrammar("_"));
+    expect('start = \\u0061').toParseAs(ruleRefGrammar("a"));
+  });
+
+  /* Canonical IdentifierPart is "a". */
+  it("parses IdentifierPart", function() {
+    expect('start = aa'      ).toParseAs(ruleRefGrammar("aa"));
+    expect('start = a\u0300' ).toParseAs(ruleRefGrammar("a\u0300"));
+    expect('start = a0' ).toParseAs(ruleRefGrammar("a0"));
+    expect('start = a\u203F' ).toParseAs(ruleRefGrammar("a\u203F"));
+    expect('start = a\u200C' ).toParseAs(ruleRefGrammar("a\u200C"));
+    expect('start = a\u200D' ).toParseAs(ruleRefGrammar("a\u200D"));
+  });
+
+  /* Unicode and reserved word rules are not tested. */
 
   /* Canonical LiteralMatcher is "\"abcd\"". */
   it("parses LiteralMatcher", function() {
@@ -567,6 +591,8 @@ describe("PEG.js grammar parser", function() {
   /* Digit rules are not tested. */
 
   /* Unicode character category rules are not tested. */
+
+  /* Token rules are not tested. */
 
   /* Canonical __ is "\n". */
   it("parses __", function() {
