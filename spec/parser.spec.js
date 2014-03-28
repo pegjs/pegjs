@@ -389,35 +389,6 @@ describe("PEG.js grammar parser", function() {
     expect('start =//aaa\n"abcd"').toParseAs(trivialGrammar);
   });
 
-  /* Canonical Action is "{ code }". */
-  it("parses Action", function() {
-    expect('start = "abcd" { code }').toParseAs(actionGrammar(" code "));
-
-    expect('start = "abcd" { code }\n').toParseAs(actionGrammar(" code "));
-  });
-
-  /* Canonical Braced is "{ code }". */
-  it("parses Braced", function() {
-    expect('start = "abcd" {}'         ).toParseAs(actionGrammar(""));
-    expect('start = "abcd" {{a}}'      ).toParseAs(actionGrammar("{a}"));
-    expect('start = "abcd" {abcd}'     ).toParseAs(actionGrammar("abcd"));
-    expect('start = "abcd" {{a}{b}{c}}').toParseAs(actionGrammar("{a}{b}{c}"));
-  });
-
-  /* Canonical NonBraceCharacters is "abcd". */
-  it("parses NonBraceCharacters", function() {
-    expect('start = "abcd" {a}'  ).toParseAs(actionGrammar("a"));
-    expect('start = "abcd" {abc}').toParseAs(actionGrammar("abc"));
-  });
-
-  /* Canonical NonBraceCharacter is "a". */
-  it("parses NonBraceCharacter", function() {
-    expect('start = "abcd" {a}').toParseAs(actionGrammar("a"));
-
-    expect('start = "abcd" {{}').toFailToParse();
-    expect('start = "abcd" {}}').toFailToParse();
-  });
-
   /* Canonical Identifier is "a". */
   it("parses Identifier", function() {
     expect('start = a:"abcd"').toParseAs(oneRuleGrammar(labeledAbcd));
@@ -589,6 +560,21 @@ describe("PEG.js grammar parser", function() {
   });
 
   /* Digit rules are not tested. */
+
+  /* Canonical CodeBlock is "{ code }". */
+  it("parses CodeBlock", function() {
+    expect('start = "abcd" { code }').toParseAs(actionGrammar(" code "));
+  });
+
+  /* Canonical Code is "code". */
+  it("parses Code", function() {
+    expect('start = "abcd" {a}'  ).toParseAs(actionGrammar("a"));
+    expect('start = "abcd" {{a}}').toParseAs(actionGrammar("{a}"));
+    expect('start = "abcd" {aaa}').toParseAs(actionGrammar("aaa"));
+
+    expect('start = "abcd" {{}').toFailToParse();
+    expect('start = "abcd" {}}').toFailToParse();
+  });
 
   /* Unicode character category rules are not tested. */
 

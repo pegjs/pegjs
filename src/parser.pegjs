@@ -41,7 +41,7 @@ Grammar
     }
 
 Initializer
-  = code:Action (__ ";")? {
+  = code:CodeBlock (__ ";")? {
       return {
         type: "initializer",
         code: code
@@ -77,7 +77,7 @@ Choice
     }
 
 Sequence
-  = first:Labeled rest:(__ Labeled)* __ code:Action {
+  = first:Labeled rest:(__ Labeled)* __ code:CodeBlock {
       var expression = rest.length > 0
         ? { type: "sequence", elements: buildList(first, rest, 1) }
         : first;
@@ -110,7 +110,7 @@ Prefixed
         expression: expression
       };
     }
-  / "&" __ code:Action {
+  / "&" __ code:CodeBlock {
       return {
         type: "semantic_and",
         code: code
@@ -122,7 +122,7 @@ Prefixed
         expression: expression
       };
     }
-  / "!" __ code:Action {
+  / "!" __ code:CodeBlock {
       return {
         type: "semantic_not",
         code: code
@@ -202,18 +202,6 @@ MultiLineComment
 
 SingleLineComment
   = "//" (!LineTerminator SourceCharacter)*
-
-Action "action"
-  = braced:Braced __ { return braced.substr(1, braced.length - 2); }
-
-Braced
-  = $("{" (Braced / NonBraceCharacters)* "}")
-
-NonBraceCharacters
-  = NonBraceCharacter+
-
-NonBraceCharacter
-  = [^{}]
 
 Identifier
   = !ReservedWord name:IdentifierName { return name; }
@@ -405,6 +393,12 @@ DecimalDigit
 
 HexDigit
   = [0-9a-f]i
+
+CodeBlock "code block"
+  = "{" code:Code "}" { return code; }
+
+Code
+  = $([^{}] / "{" Code "}")*
 
 /*
  * Unicode Character Categories
