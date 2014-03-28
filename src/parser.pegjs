@@ -1,3 +1,16 @@
+/*
+ * PEG.js Grammar
+ * ==============
+ *
+ * PEG.js grammar syntax is designed to be simple, expressive, and similar to
+ * JavaScript where possible. This means that many rules, especially in the
+ * lexical part, are based on the grammar from ECMA-262, 5.1 Edition [1]. Some
+ * are directly taken or adapted from the JavaScript example grammar (see
+ * examples/javascript.pegjs).
+ *
+ * [1] http://www.ecma-international.org/publications/standards/Ecma-262.htm
+ */
+
 {
   function extractOptional(optional, index) {
     return optional ? optional[index] : null;
@@ -170,31 +183,9 @@ NonBraceCharacters
 NonBraceCharacter
   = [^{}]
 
-/*
- * Modeled after ECMA-262, 5th ed., 7.6, but much simplified:
- *
- * * no Unicode escape sequences
- *
- * * "Unicode combining marks" and "Unicode connection punctuation" can't be
- *   part of the identifier
- *
- * * only [a-zA-Z] is considered a "Unicode letter"
- *
- * * only [0-9] is considered a "Unicode digit"
- *
- * The simplifications were made just to make the implementation little bit
- * easier, there is no "philosophical" reason behind them.
- *
- * Contrary to ECMA 262, the "$" character is not valid because it serves other
- * purpose in the grammar.
- */
 Identifier "identifier"
   = $((Letter / "_") (Letter / Digit / "_")*)
 
-/*
- * Modeled after ECMA-262, 5th ed., 7.8.4. (syntax & semantics, rules only
- * vaguely).
- */
 Literal "literal"
   = value:(DoubleQuotedString / SingleQuotedString) flags:"i"? {
       return {
@@ -314,7 +305,6 @@ UpperCaseLetter
 
 __ = (Whitespace / EOL / Comment)*
 
-/* Modeled after ECMA-262, 5th ed., 7.4. */
 Comment "comment"
   = SingleLineComment
   / MultiLineComment
@@ -325,7 +315,6 @@ SingleLineComment
 MultiLineComment
   = "/*" (!"*/" .)* "*/"
 
-/* Modeled after ECMA-262, 5th ed., 7.3. */
 EOL "end of line"
   = "\n"
   / "\r\n"
@@ -336,6 +325,5 @@ EOL "end of line"
 EOLChar
   = [\n\r\u2028\u2029]
 
-/* Modeled after ECMA-262, 5th ed., 7.2. */
 Whitespace "whitespace"
   = [ \t\v\f\u00A0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]
