@@ -50,7 +50,7 @@ Initializer
 
 Rule
   = name:Identifier __
-    displayName:(String __)?
+    displayName:(StringLiteral __)?
     "=" __
     expression:Expression (__ ";")? {
       return {
@@ -158,14 +158,14 @@ Suffixed
   / Primary
 
 Primary
-  = name:Identifier !(__ (String __)? "=") {
+  = name:Identifier !(__ (StringLiteral __)? "=") {
       return {
         type: "rule_ref",
         name: name
       };
     }
-  / Literal
-  / Class
+  / LiteralMatcher
+  / CharacterClassMatcher
   / "." { return { type: "any" }; }
   / "(" __ expression:Expression __ ")" { return expression; }
 
@@ -216,114 +216,7 @@ NonBraceCharacter
   = [^{}]
 
 Identifier "identifier"
-  = $((Letter / "_") (Letter / Digit / "_")*)
-
-Literal "literal"
-  = value:(DoubleQuotedString / SingleQuotedString) flags:"i"? {
-      return {
-        type:       "literal",
-        value:      value,
-        ignoreCase: flags === "i"
-      };
-    }
-
-String "string"
-  = string:(DoubleQuotedString / SingleQuotedString) { return string; }
-
-DoubleQuotedString
-  = '"' chars:DoubleQuotedCharacter* '"' { return chars.join(""); }
-
-DoubleQuotedCharacter
-  = SimpleDoubleQuotedCharacter
-  / SimpleEscapeSequence
-  / ZeroEscapeSequence
-  / HexEscapeSequence
-  / UnicodeEscapeSequence
-  / EOLEscapeSequence
-
-SimpleDoubleQuotedCharacter
-  = !('"' / "\\" / LineTerminator) char_:. { return char_; }
-
-SingleQuotedString
-  = "'" chars:SingleQuotedCharacter* "'" { return chars.join(""); }
-
-SingleQuotedCharacter
-  = SimpleSingleQuotedCharacter
-  / SimpleEscapeSequence
-  / ZeroEscapeSequence
-  / HexEscapeSequence
-  / UnicodeEscapeSequence
-  / EOLEscapeSequence
-
-SimpleSingleQuotedCharacter
-  = !("'" / "\\" / LineTerminator) char_:. { return char_; }
-
-Class "character class"
-  = "[" inverted:"^"? parts:(ClassCharacterRange / ClassCharacter)* "]" flags:"i"? {
-      return {
-        type:       "class",
-        parts:      parts,
-        rawText:    text().replace(/\s+$/, ""),
-        inverted:   inverted === "^",
-        ignoreCase: flags === "i"
-      };
-    }
-
-ClassCharacterRange
-  = begin:ClassCharacter "-" end:ClassCharacter {
-      if (begin.charCodeAt(0) > end.charCodeAt(0)) {
-        error("Invalid character range: " + text() + ".");
-      }
-
-      return [begin, end];
-    }
-
-ClassCharacter
-  = BracketDelimitedCharacter
-
-BracketDelimitedCharacter
-  = SimpleBracketDelimitedCharacter
-  / SimpleEscapeSequence
-  / ZeroEscapeSequence
-  / HexEscapeSequence
-  / UnicodeEscapeSequence
-  / EOLEscapeSequence
-
-SimpleBracketDelimitedCharacter
-  = !("]" / "\\" / LineTerminator) char_:. { return char_; }
-
-SimpleEscapeSequence
-  = "\\" !(Digit / "x" / "u" / LineTerminator) char_:. {
-      return char_
-        .replace("b", "\b")
-        .replace("f", "\f")
-        .replace("n", "\n")
-        .replace("r", "\r")
-        .replace("t", "\t")
-        .replace("v", "\x0B"); // IE does not recognize "\v".
-    }
-
-ZeroEscapeSequence
-  = "\\0" !Digit { return "\x00"; }
-
-HexEscapeSequence
-  = "\\x" digits:$(HexDigit HexDigit) {
-      return String.fromCharCode(parseInt(digits, 16));
-    }
-
-UnicodeEscapeSequence
-  = "\\u" digits:$(HexDigit HexDigit HexDigit HexDigit) {
-      return String.fromCharCode(parseInt(digits, 16));
-    }
-
-EOLEscapeSequence
-  = "\\" eol:LineTerminatorSequence { return ""; }
-
-Digit
-  = [0-9]
-
-HexDigit
-  = [0-9a-fA-F]
+  = $((Letter / "_") (Letter / DecimalDigit / "_")*)
 
 Letter
   = LowerCaseLetter
@@ -334,6 +227,106 @@ LowerCaseLetter
 
 UpperCaseLetter
   = [A-Z]
+
+LiteralMatcher "literal"
+  = value:StringLiteral ignoreCase:"i"? {
+      return { type: "literal", value: value, ignoreCase: ignoreCase !== null };
+    }
+
+StringLiteral "string"
+  = '"' chars:DoubleStringCharacter* '"' { return chars.join(""); }
+  / "'" chars:SingleStringCharacter* "'" { return chars.join(""); }
+
+DoubleStringCharacter
+  = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
+  / "\\" sequence:EscapeSequence { return sequence; }
+  / LineContinuation
+
+SingleStringCharacter
+  = !("'" / "\\" / LineTerminator) SourceCharacter { return text(); }
+  / "\\" sequence:EscapeSequence { return sequence; }
+  / LineContinuation
+
+CharacterClassMatcher "character class"
+  = "["
+    inverted:"^"?
+    parts:(ClassCharacterRange / ClassCharacter)*
+    "]"
+    ignoreCase:"i"?
+    {
+      return {
+        type:       "class",
+        parts:      parts,
+        inverted:   inverted !== null,
+        ignoreCase: ignoreCase !== null,
+        rawText:    text()
+      };
+    }
+
+ClassCharacterRange
+  = begin:ClassCharacter "-" end:ClassCharacter {
+      if (begin.charCodeAt(0) > end.charCodeAt(0)) {
+        error(
+          "Invalid character range: " + text() + "."
+        );
+      }
+
+      return [begin, end];
+    }
+
+ClassCharacter
+  = !("]" / "\\" / LineTerminator) SourceCharacter { return text(); }
+  / "\\" sequence:EscapeSequence { return sequence; }
+  / LineContinuation
+
+LineContinuation
+  = "\\" LineTerminatorSequence { return ""; }
+
+EscapeSequence
+  = CharacterEscapeSequence
+  / "0" !DecimalDigit { return "\0"; }
+  / HexEscapeSequence
+  / UnicodeEscapeSequence
+
+CharacterEscapeSequence
+  = SingleEscapeCharacter
+  / NonEscapeCharacter
+
+SingleEscapeCharacter
+  = "'"
+  / '"'
+  / "\\"
+  / "b"  { return "\b";   }
+  / "f"  { return "\f";   }
+  / "n"  { return "\n";   }
+  / "r"  { return "\r";   }
+  / "t"  { return "\t";   }
+  / "v"  { return "\x0B"; }   // IE does not recognize "\v".
+
+NonEscapeCharacter
+  = !(EscapeCharacter / LineTerminator) SourceCharacter { return text(); }
+
+EscapeCharacter
+  = SingleEscapeCharacter
+  / DecimalDigit
+  / "x"
+  / "u"
+
+HexEscapeSequence
+  = "x" digits:$(HexDigit HexDigit) {
+      return String.fromCharCode(parseInt(digits, 16));
+    }
+
+UnicodeEscapeSequence
+  = "u" digits:$(HexDigit HexDigit HexDigit HexDigit) {
+      return String.fromCharCode(parseInt(digits, 16));
+    }
+
+DecimalDigit
+  = [0-9]
+
+HexDigit
+  = [0-9a-f]i
 
 /*
  * Unicode Character Categories
