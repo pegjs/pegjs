@@ -1,18 +1,34 @@
 {
-  var utils = require("./utils");
+  function extractOptional(optional, index) {
+    return optional ? optional[index] : null;
+  }
+
+  function extractList(list, index) {
+    var result = new Array(list.length), i;
+
+    for (i = 0; i < list.length; i++) {
+      result[i] = list[i][index];
+    }
+
+    return result;
+  }
+
+  function buildList(first, rest, index) {
+    return [first].concat(extractList(rest, index));
+  }
 }
 
 Grammar
-  = __ initializer:Initializer? rules:Rule+ {
+  = __ initializer:(Initializer __)? rules:(Rule __)+ {
       return {
         type:        "grammar",
-        initializer: initializer,
-        rules:       rules
+        initializer: extractOptional(initializer, 0),
+        rules:       extractList(rules, 0)
       };
     }
 
 Initializer
-  = code:Action Semicolon? {
+  = code:Action (__ Semicolon)? {
       return {
         type: "initializer",
         code: code
@@ -20,14 +36,17 @@ Initializer
     }
 
 Rule
-  = name:Identifier displayName:String? Equals expression:Expression Semicolon? {
+  = name:Identifier __
+    displayName:(String __)?
+    Equals __
+    expression:Expression (__ Semicolon)? {
       return {
         type:        "rule",
         name:        name,
         expression:  displayName !== null
           ? {
               type:       "named",
-              name:       displayName,
+              name:       displayName[0],
               expression: expression
             }
           : expression
@@ -38,46 +57,31 @@ Expression
   = Choice
 
 Choice
-  = head:Sequence tail:(Slash Sequence)* {
-      if (tail.length > 0) {
-        var alternatives = [head].concat(utils.map(
-            tail,
-            function(element) { return element[1]; }
-        ));
-        return {
-          type:         "choice",
-          alternatives: alternatives
-        };
-      } else {
-        return head;
-      }
+  = first:Sequence rest:(__ Slash __ Sequence)* {
+      return rest.length > 0
+        ? { type: "choice", alternatives: buildList(first, rest, 3) }
+        : first;
     }
 
 Sequence
-  = elements:Labeled+ code:Action {
-      var expression = elements.length !== 1
-        ? {
-            type:     "sequence",
-            elements: elements
-          }
-        : elements[0];
+  = first:Labeled rest:(__ Labeled)* __ code:Action {
+      var expression = rest.length > 0
+        ? { type: "sequence", elements: buildList(first, rest, 1) }
+        : first;
       return {
         type:       "action",
         expression: expression,
         code:       code
       };
     }
-  / elements:Labeled+ {
-      return elements.length !== 1
-        ? {
-            type:     "sequence",
-            elements: elements
-          }
-        : elements[0];
+  / first:Labeled rest:(__ Labeled)* {
+      return rest.length > 0
+        ? { type: "sequence", elements: buildList(first, rest, 1) }
+        : first;
     }
 
 Labeled
-  = label:Identifier Colon expression:Prefixed {
+  = label:Identifier __ Colon __ expression:Prefixed {
       return {
         type:       "labeled",
         label:      label,
@@ -87,31 +91,31 @@ Labeled
   / Prefixed
 
 Prefixed
-  = Dollar expression:Suffixed {
+  = Dollar __ expression:Suffixed {
       return {
         type:       "text",
         expression: expression
       };
     }
-  / And code:Action {
+  / And __ code:Action {
       return {
         type: "semantic_and",
         code: code
       };
     }
-  / And expression:Suffixed {
+  / And __ expression:Suffixed {
       return {
         type:       "simple_and",
         expression: expression
       };
     }
-  / Not code:Action {
+  / Not __ code:Action {
       return {
         type: "semantic_not",
         code: code
       };
     }
-  / Not expression:Suffixed {
+  / Not __ expression:Suffixed {
       return {
         type:       "simple_not",
         expression: expression
@@ -120,19 +124,19 @@ Prefixed
   / Suffixed
 
 Suffixed
-  = expression:Primary Question {
+  = expression:Primary __ Question {
       return {
         type:       "optional",
         expression: expression
       };
     }
-  / expression:Primary Star {
+  / expression:Primary __ Star {
       return {
         type:       "zero_or_more",
         expression: expression
       };
     }
-  / expression:Primary Plus {
+  / expression:Primary __ Plus {
       return {
         type:       "one_or_more",
         expression: expression
@@ -141,7 +145,7 @@ Suffixed
   / Primary
 
 Primary
-  = name:Identifier !(String? Equals) {
+  = name:Identifier !(__ (String __)? Equals) {
       return {
         type: "rule_ref",
         name: name
@@ -150,7 +154,7 @@ Primary
   / Literal
   / Class
   / Dot { return { type: "any" }; }
-  / Lparen expression:Expression Rparen { return expression; }
+  / Lparen __ expression:Expression __ Rparen { return expression; }
 
 /* "Lexical" elements */
 
@@ -166,19 +170,19 @@ NonBraceCharacters
 NonBraceCharacter
   = [^{}]
 
-Equals    = "=" __ { return "="; }
-Colon     = ":" __ { return ":"; }
-Semicolon = ";" __ { return ";"; }
-Slash     = "/" __ { return "/"; }
-And       = "&" __ { return "&"; }
-Not       = "!" __ { return "!"; }
-Dollar    = "$" __ { return "$"; }
-Question  = "?" __ { return "?"; }
-Star      = "*" __ { return "*"; }
-Plus      = "+" __ { return "+"; }
-Lparen    = "(" __ { return "("; }
-Rparen    = ")" __ { return ")"; }
-Dot       = "." __ { return "."; }
+Equals    = "="
+Colon     = ":"
+Semicolon = ";"
+Slash     = "/"
+And       = "&"
+Not       = "!"
+Dollar    = "$"
+Question  = "?"
+Star      = "*"
+Plus      = "+"
+Lparen    = "("
+Rparen    = ")"
+Dot       = "."
 
 /*
  * Modeled after ECMA-262, 5th ed., 7.6, but much simplified:
@@ -199,14 +203,14 @@ Dot       = "." __ { return "."; }
  * purpose in the grammar.
  */
 Identifier "identifier"
-  = chars:$((Letter / "_") (Letter / Digit / "_")*) __ { return chars; }
+  = $((Letter / "_") (Letter / Digit / "_")*)
 
 /*
  * Modeled after ECMA-262, 5th ed., 7.8.4. (syntax & semantics, rules only
  * vaguely).
  */
 Literal "literal"
-  = value:(DoubleQuotedString / SingleQuotedString) flags:"i"? __ {
+  = value:(DoubleQuotedString / SingleQuotedString) flags:"i"? {
       return {
         type:       "literal",
         value:      value,
@@ -215,7 +219,7 @@ Literal "literal"
     }
 
 String "string"
-  = string:(DoubleQuotedString / SingleQuotedString) __ { return string; }
+  = string:(DoubleQuotedString / SingleQuotedString) { return string; }
 
 DoubleQuotedString
   = '"' chars:DoubleQuotedCharacter* '"' { return chars.join(""); }
@@ -246,19 +250,15 @@ SimpleSingleQuotedCharacter
   = !("'" / "\\" / EOLChar) char_:. { return char_; }
 
 Class "character class"
-  = class_:(
-      "[" inverted:"^"? parts:(ClassCharacterRange / ClassCharacter)* "]" flags:"i"? {
-        return {
-          type:       "class",
-          parts:      parts,
-          rawText:    text().replace(/\s+$/, ""),
-          inverted:   inverted === "^",
-          ignoreCase: flags === "i"
-        };
-      }
-    )
-    __
-    { return class_; }
+  = "[" inverted:"^"? parts:(ClassCharacterRange / ClassCharacter)* "]" flags:"i"? {
+      return {
+        type:       "class",
+        parts:      parts,
+        rawText:    text().replace(/\s+$/, ""),
+        inverted:   inverted === "^",
+        ignoreCase: flags === "i"
+      };
+    }
 
 ClassCharacterRange
   = begin:ClassCharacter "-" end:ClassCharacter {
