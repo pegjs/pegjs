@@ -561,6 +561,11 @@ describe("PEG.js grammar parser", function() {
 
   /* Digit rules are not tested. */
 
+  /* Canonical AnyMatcher is ".". */
+  it("parses CodeAnymatcher", function() {
+    expect('start = .').toParseAs(oneRuleGrammar({ type: "any" }));
+  });
+
   /* Canonical CodeBlock is "{ code }". */
   it("parses CodeBlock", function() {
     expect('start = "abcd" { code }').toParseAs(actionGrammar(" code "));

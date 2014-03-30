@@ -166,7 +166,7 @@ Primary
     }
   / LiteralMatcher
   / CharacterClassMatcher
-  / "." { return { type: "any" }; }
+  / AnyMatcher
   / "(" __ expression:Expression __ ")" { return expression; }
 
 /* "Lexical" elements */
@@ -393,6 +393,9 @@ DecimalDigit
 
 HexDigit
   = [0-9a-f]i
+
+AnyMatcher
+  = "." { return { type: "any" }; }
 
 CodeBlock "code block"
   = "{" code:Code "}" { return code; }
