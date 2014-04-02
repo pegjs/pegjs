@@ -232,8 +232,8 @@ describe("PEG.js grammar parser", function() {
     );
   });
 
-  /* Canonical Choice is "\"abcd\" / \"efgh\" / \"ijkl\"". */
-  it("parses Choice", function() {
+  /* Canonical ChoiceExpression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
+  it("parses ChoiceExpression", function() {
     expect('start = "abcd" "efgh" "ijkl"').toParseAs(
       oneRuleGrammar(sequenceOfLiterals)
     );
@@ -257,8 +257,8 @@ describe("PEG.js grammar parser", function() {
     }));
   });
 
-  /* Canonical Sequence is "\"abcd\" \"efgh\" \"ijkl\"". */
-  it("parses Sequence", function() {
+  /* Canonical SequenceExpression is "\"abcd\" \"efgh\" \"ijkl\"". */
+  it("parses SequenceExpression", function() {
     expect('start = a:"abcd" { code }').toParseAs(
       oneRuleGrammar({ type: "action", expression: labeledAbcd, code: " code " })
     );
@@ -291,16 +291,16 @@ describe("PEG.js grammar parser", function() {
     );
   });
 
-  /* Canonical Labeled is "label:\"abcd\"". */
-  it("parses Labeled", function() {
+  /* Canonical LabeledExpression is "label:\"abcd\"". */
+  it("parses LabeledExpression", function() {
     expect('start = label:!"abcd"'  ).toParseAs(oneRuleGrammar(labeledSimpleNotLiteral));
     expect('start = label\n:!"abcd"').toParseAs(oneRuleGrammar(labeledSimpleNotLiteral));
     expect('start = label:\n!"abcd"').toParseAs(oneRuleGrammar(labeledSimpleNotLiteral));
     expect('start = !"abcd"'        ).toParseAs(oneRuleGrammar(simpleNotLiteral));
   });
 
-  /* Canonical Prefixed is "!\"abcd\"". */
-  it("parses Prefixed", function() {
+  /* Canonical PrefixedExpression is "!\"abcd\"". */
+  it("parses PrefixedExpression", function() {
     expect('start = $"abcd"?'   ).toParseAs(oneRuleGrammar(textOptionalLiteral));
     expect('start = $\n"abcd"?' ).toParseAs(oneRuleGrammar(textOptionalLiteral));
     expect('start = &{ code }'  ).toParseAs(oneRuleGrammar(semanticAnd));
@@ -314,8 +314,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd"?'    ).toParseAs(oneRuleGrammar(optionalLiteral));
   });
 
-  /* Canonical Suffixed is "\"abcd\"?". */
-  it("parses Suffixed", function() {
+  /* Canonical SuffixedExpression is "\"abcd\"?". */
+  it("parses SuffixedExpression", function() {
     expect('start = "abcd"?'  ).toParseAs(oneRuleGrammar(optionalLiteral));
     expect('start = "abcd"\n?').toParseAs(oneRuleGrammar(optionalLiteral));
     expect('start = "abcd"*'  ).toParseAs(oneRuleGrammar(zeroOrMoreLiteral));
@@ -325,8 +325,8 @@ describe("PEG.js grammar parser", function() {
     expect('start = "abcd"'   ).toParseAs(literalGrammar("abcd"));
   });
 
-  /* Canonical Primary is "\"abcd\"". */
-  it("parses Primary", function() {
+  /* Canonical PrimaryExpression is "\"abcd\"". */
+  it("parses PrimaryExpression", function() {
     expect('start = a'         ).toParseAs(ruleRefGrammar("a"));
     expect('start = "abcd"'    ).toParseAs(literalGrammar("abcd"));
     expect('start = [a-d]'     ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));

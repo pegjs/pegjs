@@ -67,17 +67,17 @@ Rule
     }
 
 Expression
-  = Choice
+  = ChoiceExpression
 
-Choice
-  = first:Sequence rest:(__ "/" __ Sequence)* {
+ChoiceExpression
+  = first:SequenceExpression rest:(__ "/" __ SequenceExpression)* {
       return rest.length > 0
         ? { type: "choice", alternatives: buildList(first, rest, 3) }
         : first;
     }
 
-Sequence
-  = first:Labeled rest:(__ Labeled)* __ code:CodeBlock {
+SequenceExpression
+  = first:LabeledExpression rest:(__ LabeledExpression)* __ code:CodeBlock {
       var expression = rest.length > 0
         ? { type: "sequence", elements: buildList(first, rest, 1) }
         : first;
@@ -87,24 +87,24 @@ Sequence
         code:       code
       };
     }
-  / first:Labeled rest:(__ Labeled)* {
+  / first:LabeledExpression rest:(__ LabeledExpression)* {
       return rest.length > 0
         ? { type: "sequence", elements: buildList(first, rest, 1) }
         : first;
     }
 
-Labeled
-  = label:Identifier __ ":" __ expression:Prefixed {
+LabeledExpression
+  = label:Identifier __ ":" __ expression:PrefixedExpression {
       return {
         type:       "labeled",
         label:      label,
         expression: expression
       };
     }
-  / Prefixed
+  / PrefixedExpression
 
-Prefixed
-  = "$" __ expression:Suffixed {
+PrefixedExpression
+  = "$" __ expression:SuffixedExpression {
       return {
         type:       "text",
         expression: expression
@@ -116,7 +116,7 @@ Prefixed
         code: code
       };
     }
-  / "&" __ expression:Suffixed {
+  / "&" __ expression:SuffixedExpression {
       return {
         type:       "simple_and",
         expression: expression
@@ -128,36 +128,36 @@ Prefixed
         code: code
       };
     }
-  / "!" __ expression:Suffixed {
+  / "!" __ expression:SuffixedExpression {
       return {
         type:       "simple_not",
         expression: expression
       };
     }
-  / Suffixed
+  / SuffixedExpression
 
-Suffixed
-  = expression:Primary __ "?" {
+SuffixedExpression
+  = expression:PrimaryExpression __ "?" {
       return {
         type:       "optional",
         expression: expression
       };
     }
-  / expression:Primary __ "*" {
+  / expression:PrimaryExpression __ "*" {
       return {
         type:       "zero_or_more",
         expression: expression
       };
     }
-  / expression:Primary __ "+" {
+  / expression:PrimaryExpression __ "+" {
       return {
         type:       "one_or_more",
         expression: expression
       };
     }
-  / Primary
+  / PrimaryExpression
 
-Primary
+PrimaryExpression
   = name:IdentifierName !(__ (StringLiteral __)? "=") {
       return {
         type: "rule_ref",
