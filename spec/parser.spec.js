@@ -181,7 +181,7 @@ describe("PEG.js grammar parser", function() {
       initializer: null,
       rules:       [ruleA]
     });
-    expect('{ code } a = "abcd"').toParseAs({
+    expect('{ code }; a = "abcd"').toParseAs({
       type:        "grammar",
       initializer: { type: "initializer", code: " code " },
       rules:       [ruleA]
@@ -200,8 +200,7 @@ describe("PEG.js grammar parser", function() {
           code: " code "
         });
 
-    expect('{ code } start = "abcd"' ).toParseAs(grammar);
-    expect('{ code }\n; start = "abcd"').toParseAs(grammar);
+    expect('{ code }; start = "abcd"' ).toParseAs(grammar);
   });
 
   /* Canonical Rule is "a: \"abcd\"". */
@@ -380,6 +379,16 @@ describe("PEG.js grammar parser", function() {
     expect('start =/*aaa*/"abcd"').toParseAs(trivialGrammar);
 
     expect('start =/**/*/"abcd"').toFailToParse();
+  });
+
+  // Canonical MultiLineCommentNoLineTerminator is "/* comment */".
+  it("parses MultiLineCommentNoLineTerminator", function() {
+    expect('start = "abcd"/**/\r\n'   ).toParseAs(trivialGrammar);
+    expect('start = "abcd"/*a*/\r\n'  ).toParseAs(trivialGrammar);
+    expect('start = "abcd"/*aaa*/\r\n').toParseAs(trivialGrammar);
+
+    expect('{ code }/**/*/\r\nstart = "abcd"').toFailToParse();
+    expect('{ code }/*\n*/\r\nstart = "abcd"').toFailToParse();
   });
 
   /* Canonical SingleLineComment is "// comment". */
@@ -592,5 +601,26 @@ describe("PEG.js grammar parser", function() {
     expect('start =\r\n"abcd"'         ).toParseAs(trivialGrammar);
     expect('start =/* comment */"abcd"').toParseAs(trivialGrammar);
     expect('start =   "abcd"'          ).toParseAs(trivialGrammar);
+  });
+
+  /* Canonical _ is " ". */
+  it("parses _", function() {
+    expect('start = "abcd"\r\n'             ).toParseAs(trivialGrammar);
+    expect('start = "abcd" \r\n'            ).toParseAs(trivialGrammar);
+    expect('start = "abcd"/* comment */\r\n').toParseAs(trivialGrammar);
+    expect('start = "abcd"   \r\n'          ).toParseAs(trivialGrammar);
+  });
+
+  /* Canonical EOS is ";". */
+  it("parses EOS", function() {
+    expect('start = "abcd"\n;'            ).toParseAs(trivialGrammar);
+    expect('start = "abcd" \r\n'          ).toParseAs(trivialGrammar);
+    expect('start = "abcd" // comment\r\n').toParseAs(trivialGrammar);
+    expect('start = "abcd"\n'             ).toParseAs(trivialGrammar);
+  });
+
+  /* Canonical EOF is the end of input. */
+  it("parses EOS", function() {
+    expect('start = "abcd"\n').toParseAs(trivialGrammar);
   });
 });

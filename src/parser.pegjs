@@ -41,7 +41,7 @@ Grammar
     }
 
 Initializer
-  = code:CodeBlock (__ ";")? {
+  = code:CodeBlock EOS {
       return {
         type: "initializer",
         code: code
@@ -52,7 +52,7 @@ Rule
   = name:IdentifierName __
     displayName:(StringLiteral __)?
     "=" __
-    expression:Expression (__ ";")? {
+    expression:Expression EOS {
       return {
         type:        "rule",
         name:        name,
@@ -199,6 +199,9 @@ Comment "comment"
 
 MultiLineComment
   = "/*" (!"*/" SourceCharacter)* "*/"
+
+MultiLineCommentNoLineTerminator
+  = "/*" (!("*/" / LineTerminator) SourceCharacter)* "*/"
 
 SingleLineComment
   = "//" (!LineTerminator SourceCharacter)*
@@ -504,3 +507,16 @@ WithToken       = "with"       !IdentifierPart
 
 __
   = (WhiteSpace / LineTerminatorSequence / Comment)*
+
+_
+  = (WhiteSpace / MultiLineCommentNoLineTerminator)*
+
+/* Automatic Semicolon Insertion */
+
+EOS
+  = __ ";"
+  / _ SingleLineComment? LineTerminatorSequence
+  / __ EOF
+
+EOF
+  = !.
