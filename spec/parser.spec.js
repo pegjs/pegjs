@@ -294,12 +294,8 @@ describe("PEG.js grammar parser", function() {
   it("parses PrefixedExpression", function() {
     expect('start = $"abcd"?'   ).toParseAs(oneRuleGrammar(textOptionalLiteral));
     expect('start = $\n"abcd"?' ).toParseAs(oneRuleGrammar(textOptionalLiteral));
-    expect('start = &{ code }'  ).toParseAs(oneRuleGrammar(semanticAnd));
-    expect('start = &\n{ code }').toParseAs(oneRuleGrammar(semanticAnd));
     expect('start = &"abcd"?'   ).toParseAs(oneRuleGrammar(simpleAndOptionalLiteral));
     expect('start = &\n"abcd"?' ).toParseAs(oneRuleGrammar(simpleAndOptionalLiteral));
-    expect('start = !{ code }'  ).toParseAs(oneRuleGrammar(semanticNot));
-    expect('start = !\n{ code }').toParseAs(oneRuleGrammar(semanticNot));
     expect('start = !"abcd"?'   ).toParseAs(oneRuleGrammar(simpleNotOptionalLiteral));
     expect('start = !\n"abcd"?' ).toParseAs(oneRuleGrammar(simpleNotOptionalLiteral));
     expect('start = "abcd"?'    ).toParseAs(oneRuleGrammar(optionalLiteral));
@@ -322,6 +318,7 @@ describe("PEG.js grammar parser", function() {
     expect('start = [a-d]'     ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
     expect('start = .'         ).toParseAs(oneRuleGrammar({ type: "any" }));
     expect('start = a'         ).toParseAs(ruleRefGrammar("a"));
+    expect('start = &{ code }' ).toParseAs(oneRuleGrammar(semanticAnd));
     expect('start = ("abcd")'  ).toParseAs(literalGrammar("abcd"));
     expect('start = (\n"abcd")').toParseAs(literalGrammar("abcd"));
     expect('start = ("abcd"\n)').toParseAs(literalGrammar("abcd"));
@@ -330,6 +327,14 @@ describe("PEG.js grammar parser", function() {
   /* Canonical RuleReferenceExpression is "\"abcd\"". */
   it("parses RuleReferenceExpression", function() {
     expect('start = a').toParseAs(ruleRefGrammar("a"));
+  });
+
+  /* Canonical SemanticPredicateExpression is "\"abcd\"". */
+  it("parses SemanticPredicateExpression", function() {
+    expect('start = &{ code }'  ).toParseAs(oneRuleGrammar(semanticAnd));
+    expect('start = &\n{ code }').toParseAs(oneRuleGrammar(semanticAnd));
+    expect('start = !{ code }'  ).toParseAs(oneRuleGrammar(semanticNot));
+    expect('start = !\n{ code }').toParseAs(oneRuleGrammar(semanticNot));
   });
 
   /* The SourceCharacter rule is not tested. */

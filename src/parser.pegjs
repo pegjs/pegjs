@@ -107,22 +107,10 @@ PrefixedExpression
         expression: expression
       };
     }
-  / "&" __ code:CodeBlock {
-      return {
-        type: "semantic_and",
-        code: code
-      };
-    }
   / "&" __ expression:SuffixedExpression {
       return {
         type:       "simple_and",
         expression: expression
-      };
-    }
-  / "!" __ code:CodeBlock {
-      return {
-        type: "semantic_not",
-        code: code
       };
     }
   / "!" __ expression:SuffixedExpression {
@@ -159,12 +147,17 @@ PrimaryExpression
   / CharacterClassMatcher
   / AnyMatcher
   / RuleReferenceExpression
+  / SemanticPredicateExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 RuleReferenceExpression
   = name:IdentifierName !(__ (StringLiteral __)? "=") {
       return { type: "rule_ref", name: name }
     }
+
+SemanticPredicateExpression
+  = "&" __ code:CodeBlock { return { type: "semantic_and", code: code }; }
+  / "!" __ code:CodeBlock { return { type: "semantic_not", code: code }; }
 
 /* "Lexical" elements */
 
