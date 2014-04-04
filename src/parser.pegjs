@@ -48,6 +48,8 @@
   }
 }
 
+/* ---- Syntactic Grammar ----- */
+
 Grammar
   = __ initializer:(Initializer __)? rules:(Rule __)+ {
       return {
@@ -58,18 +60,14 @@ Grammar
     }
 
 Initializer
-  = code:CodeBlock EOS {
-      return {
-        type: "initializer",
-        code: code
-      };
-    }
+  = code:CodeBlock EOS { return { type: "initializer", code: code }; }
 
 Rule
   = name:IdentifierName __
     displayName:(StringLiteral __)?
     "=" __
-    expression:Expression EOS {
+    expression:Expression EOS
+    {
       return {
         type:        "rule",
         name:        name,
@@ -109,11 +107,7 @@ SequenceExpression
 
 LabeledExpression
   = label:Identifier __ ":" __ expression:PrefixedExpression {
-      return {
-        type:       "labeled",
-        label:      label,
-        expression: expression
-      };
+      return { type: "labeled", label: label, expression: expression };
     }
   / PrefixedExpression
 
@@ -161,7 +155,7 @@ SemanticPredicateOperator
   = "&"
   / "!"
 
-/* "Lexical" elements */
+/* ---- Lexical Grammar ----- */
 
 SourceCharacter
   = .
