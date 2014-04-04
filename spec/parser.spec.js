@@ -318,13 +318,18 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical PrimaryExpression is "\"abcd\"". */
   it("parses PrimaryExpression", function() {
-    expect('start = a'         ).toParseAs(ruleRefGrammar("a"));
     expect('start = "abcd"'    ).toParseAs(literalGrammar("abcd"));
     expect('start = [a-d]'     ).toParseAs(classGrammar([["a", "d"]], "[a-d]"));
     expect('start = .'         ).toParseAs(oneRuleGrammar({ type: "any" }));
+    expect('start = a'         ).toParseAs(ruleRefGrammar("a"));
     expect('start = ("abcd")'  ).toParseAs(literalGrammar("abcd"));
     expect('start = (\n"abcd")').toParseAs(literalGrammar("abcd"));
     expect('start = ("abcd"\n)').toParseAs(literalGrammar("abcd"));
+  });
+
+  /* Canonical RuleReferenceExpression is "\"abcd\"". */
+  it("parses RuleReferenceExpression", function() {
+    expect('start = a').toParseAs(ruleRefGrammar("a"));
   });
 
   /* The SourceCharacter rule is not tested. */

@@ -155,16 +155,16 @@ SuffixedExpression
   / PrimaryExpression
 
 PrimaryExpression
-  = name:IdentifierName !(__ (StringLiteral __)? "=") {
-      return {
-        type: "rule_ref",
-        name: name
-      };
-    }
-  / LiteralMatcher
+  = LiteralMatcher
   / CharacterClassMatcher
   / AnyMatcher
+  / RuleReferenceExpression
   / "(" __ expression:Expression __ ")" { return expression; }
+
+RuleReferenceExpression
+  = name:IdentifierName !(__ (StringLiteral __)? "=") {
+      return { type: "rule_ref", name: name }
+    }
 
 /* "Lexical" elements */
 
