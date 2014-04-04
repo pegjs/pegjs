@@ -12,6 +12,23 @@
  */
 
 {
+  var OPS_TO_PREFIXED_TYPES = {
+    "$": "text",
+    "&": "simple_and",
+    "!": "simple_not"
+  };
+
+  var OPS_TO_SUFFIXED_TYPES = {
+    "?": "optional",
+    "*": "zero_or_more",
+    "+": "one_or_more"
+  };
+
+  var OPS_TO_SEMANTIC_PREDICATE_TYPES = {
+    "&": "semantic_and",
+    "!": "semantic_not"
+  };
+
   function extractOptional(optional, index) {
     return optional ? optional[index] : null;
   }
@@ -101,46 +118,26 @@ LabeledExpression
   / PrefixedExpression
 
 PrefixedExpression
-  = "$" __ expression:SuffixedExpression {
-      return {
-        type:       "text",
-        expression: expression
-      };
-    }
-  / "&" __ expression:SuffixedExpression {
-      return {
-        type:       "simple_and",
-        expression: expression
-      };
-    }
-  / "!" __ expression:SuffixedExpression {
-      return {
-        type:       "simple_not",
-        expression: expression
-      };
+  = operator:PrefixedOperator __ expression:SuffixedExpression {
+      return { type: OPS_TO_PREFIXED_TYPES[operator], expression: expression };
     }
   / SuffixedExpression
 
+PrefixedOperator
+  = "$"
+  / "&"
+  / "!"
+
 SuffixedExpression
-  = expression:PrimaryExpression __ "?" {
-      return {
-        type:       "optional",
-        expression: expression
-      };
-    }
-  / expression:PrimaryExpression __ "*" {
-      return {
-        type:       "zero_or_more",
-        expression: expression
-      };
-    }
-  / expression:PrimaryExpression __ "+" {
-      return {
-        type:       "one_or_more",
-        expression: expression
-      };
+  = expression:PrimaryExpression __ operator:SuffixedOperator {
+      return { type: OPS_TO_SUFFIXED_TYPES[operator], expression: expression };
     }
   / PrimaryExpression
+
+SuffixedOperator
+  = "?"
+  / "*"
+  / "+"
 
 PrimaryExpression
   = LiteralMatcher
@@ -156,8 +153,13 @@ RuleReferenceExpression
     }
 
 SemanticPredicateExpression
-  = "&" __ code:CodeBlock { return { type: "semantic_and", code: code }; }
-  / "!" __ code:CodeBlock { return { type: "semantic_not", code: code }; }
+  = operator:SemanticPredicateOperator __ code:CodeBlock {
+      return { type: OPS_TO_SEMANTIC_PREDICATE_TYPES[operator], code: code };
+    }
+
+SemanticPredicateOperator
+  = "&"
+  / "!"
 
 /* "Lexical" elements */
 

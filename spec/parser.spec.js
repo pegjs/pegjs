@@ -292,24 +292,30 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical PrefixedExpression is "!\"abcd\"". */
   it("parses PrefixedExpression", function() {
-    expect('start = $"abcd"?'   ).toParseAs(oneRuleGrammar(textOptionalLiteral));
-    expect('start = $\n"abcd"?' ).toParseAs(oneRuleGrammar(textOptionalLiteral));
-    expect('start = &"abcd"?'   ).toParseAs(oneRuleGrammar(simpleAndOptionalLiteral));
-    expect('start = &\n"abcd"?' ).toParseAs(oneRuleGrammar(simpleAndOptionalLiteral));
     expect('start = !"abcd"?'   ).toParseAs(oneRuleGrammar(simpleNotOptionalLiteral));
     expect('start = !\n"abcd"?' ).toParseAs(oneRuleGrammar(simpleNotOptionalLiteral));
     expect('start = "abcd"?'    ).toParseAs(oneRuleGrammar(optionalLiteral));
+  });
+
+  /* Canonical PrefixedOperator is "!". */
+  it("parses PrefixedOperator", function() {
+    expect('start = $"abcd"?'   ).toParseAs(oneRuleGrammar(textOptionalLiteral));
+    expect('start = &"abcd"?'   ).toParseAs(oneRuleGrammar(simpleAndOptionalLiteral));
+    expect('start = !"abcd"?'   ).toParseAs(oneRuleGrammar(simpleNotOptionalLiteral));
   });
 
   /* Canonical SuffixedExpression is "\"abcd\"?". */
   it("parses SuffixedExpression", function() {
     expect('start = "abcd"?'  ).toParseAs(oneRuleGrammar(optionalLiteral));
     expect('start = "abcd"\n?').toParseAs(oneRuleGrammar(optionalLiteral));
-    expect('start = "abcd"*'  ).toParseAs(oneRuleGrammar(zeroOrMoreLiteral));
-    expect('start = "abcd"\n*').toParseAs(oneRuleGrammar(zeroOrMoreLiteral));
-    expect('start = "abcd"+'  ).toParseAs(oneRuleGrammar(oneOrMoreLiteral));
-    expect('start = "abcd"\n+').toParseAs(oneRuleGrammar(oneOrMoreLiteral));
     expect('start = "abcd"'   ).toParseAs(literalGrammar("abcd"));
+  });
+
+  /* Canonical SuffixedOperator is "?". */
+  it("parses SuffixedExpression", function() {
+    expect('start = "abcd"?'  ).toParseAs(oneRuleGrammar(optionalLiteral));
+    expect('start = "abcd"*'  ).toParseAs(oneRuleGrammar(zeroOrMoreLiteral));
+    expect('start = "abcd"+'  ).toParseAs(oneRuleGrammar(oneOrMoreLiteral));
   });
 
   /* Canonical PrimaryExpression is "\"abcd\"". */
@@ -331,10 +337,14 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical SemanticPredicateExpression is "\"abcd\"". */
   it("parses SemanticPredicateExpression", function() {
-    expect('start = &{ code }'  ).toParseAs(oneRuleGrammar(semanticAnd));
-    expect('start = &\n{ code }').toParseAs(oneRuleGrammar(semanticAnd));
     expect('start = !{ code }'  ).toParseAs(oneRuleGrammar(semanticNot));
     expect('start = !\n{ code }').toParseAs(oneRuleGrammar(semanticNot));
+  });
+
+  /* Canonical SemanticPredicateOperator is "!". */
+  it("parses SemanticPredicateExpression", function() {
+    expect('start = &{ code }').toParseAs(oneRuleGrammar(semanticAnd));
+    expect('start = !{ code }').toParseAs(oneRuleGrammar(semanticNot));
   });
 
   /* The SourceCharacter rule is not tested. */
