@@ -8,6 +8,18 @@
  * are directly taken or adapted from the JavaScript example grammar (see
  * examples/javascript.pegjs).
  *
+ * Limitations:
+ *
+ *   * Non-BMP characters are completely ignored to avoid surrogate pair
+ *     handling.
+ *
+ *   * One can create identifiers containing illegal characters using Unicode
+ *     escape sequences. For example, "abcd\u0020efgh" is not a valid
+ *     identifier, but it is accepted by the parser.
+ *
+ * Both limitations could be resolved, but the costs would likely outweigh
+ * the benefits.
+ *
  * [1] http://www.ecma-international.org/publications/standards/Ecma-262.htm
  */
 
