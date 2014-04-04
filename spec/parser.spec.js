@@ -24,6 +24,8 @@ describe("PEG.js grammar parser", function() {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl]
       },
+      actionOnAbcd             = { type: "action", expression: literalAbcd,        code: " code " },
+      actionOnSequence         = { type: "action", expression: sequenceOfLiterals, code: " code " },
       choiceOfLiterals         = {
         type:         "choice",
         alternatives: [literalAbcd, literalEfgh, literalIjkl]
@@ -234,52 +236,41 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical ChoiceExpression is "\"abcd\" / \"efgh\" / \"ijkl\"". */
   it("parses ChoiceExpression", function() {
-    expect('start = "abcd" "efgh" "ijkl"').toParseAs(
-      oneRuleGrammar(sequenceOfLiterals)
+    expect('start = "abcd" { code }').toParseAs(
+      oneRuleGrammar(actionOnAbcd)
     );
     expect(
-      'start = "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl" / "abcd" "efgh" "ijkl"'
+      'start = "abcd" { code } / "abcd" { code } / "abcd" { code }'
     ).toParseAs(oneRuleGrammar({
       type:         "choice",
-      alternatives: [sequenceOfLiterals, sequenceOfLiterals, sequenceOfLiterals]
+      alternatives: [actionOnAbcd, actionOnAbcd, actionOnAbcd]
     }));
     expect(
-      'start = "abcd" "efgh" "ijkl"\n/ "abcd" "efgh" "ijkl"\n/ "abcd" "efgh" "ijkl"'
+      'start = "abcd" { code }\n/ "abcd" { code }\n/ "abcd" { code }'
     ).toParseAs(oneRuleGrammar({
       type:         "choice",
-      alternatives: [sequenceOfLiterals, sequenceOfLiterals, sequenceOfLiterals]
+      alternatives: [actionOnAbcd, actionOnAbcd, actionOnAbcd]
     }));
     expect(
-      'start = "abcd" "efgh" "ijkl" /\n"abcd" "efgh" "ijkl" /\n"abcd" "efgh" "ijkl"'
+      'start = "abcd" { code } /\n"abcd" { code } /\n"abcd" { code }'
     ).toParseAs(oneRuleGrammar({
       type:         "choice",
-      alternatives: [sequenceOfLiterals, sequenceOfLiterals, sequenceOfLiterals]
+      alternatives: [actionOnAbcd, actionOnAbcd, actionOnAbcd]
     }));
+  });
+
+  /* Canonical ActionExpression is "\"abcd\" { code }". */
+  it("parses ActionExpression", function() {
+    expect('start = "abcd" "efgh" "ijkl" { code }').toParseAs(
+      oneRuleGrammar(actionOnSequence)
+    );
+    expect('start = "abcd" "efgh" "ijkl"\n{ code }').toParseAs(
+      oneRuleGrammar(actionOnSequence)
+    );
   });
 
   /* Canonical SequenceExpression is "\"abcd\" \"efgh\" \"ijkl\"". */
   it("parses SequenceExpression", function() {
-    expect('start = a:"abcd" { code }').toParseAs(
-      oneRuleGrammar({ type: "action", expression: labeledAbcd, code: " code " })
-    );
-    expect('start = a:"abcd"\n{ code }').toParseAs(
-      oneRuleGrammar({ type: "action", expression: labeledAbcd, code: " code " })
-    );
-    expect('start = a:"abcd" b:"efgh" c:"ijkl" { code }').toParseAs(
-      oneRuleGrammar({
-        type:       "action",
-        expression: sequenceOfLabeleds,
-        code:       " code "
-      })
-    );
-    expect('start = a:"abcd"\nb:"efgh"\nc:"ijkl" { code }').toParseAs(
-      oneRuleGrammar({
-        type:       "action",
-        expression: sequenceOfLabeleds,
-        code:       " code "
-      })
-    );
-
     expect('start = a:"abcd"').toParseAs(
       oneRuleGrammar(labeledAbcd)
     );

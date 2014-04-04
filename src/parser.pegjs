@@ -70,24 +70,21 @@ Expression
   = ChoiceExpression
 
 ChoiceExpression
-  = first:SequenceExpression rest:(__ "/" __ SequenceExpression)* {
+  = first:ActionExpression rest:(__ "/" __ ActionExpression)* {
       return rest.length > 0
         ? { type: "choice", alternatives: buildList(first, rest, 3) }
         : first;
     }
 
-SequenceExpression
-  = first:LabeledExpression rest:(__ LabeledExpression)* __ code:CodeBlock {
-      var expression = rest.length > 0
-        ? { type: "sequence", elements: buildList(first, rest, 1) }
-        : first;
-      return {
-        type:       "action",
-        expression: expression,
-        code:       code
-      };
+ActionExpression
+  = expression:SequenceExpression code:(__ CodeBlock)? {
+      return code !== null
+        ? { type: "action", expression: expression, code: code[1] }
+        : expression;
     }
-  / first:LabeledExpression rest:(__ LabeledExpression)* {
+
+SequenceExpression
+  = first:LabeledExpression rest:(__ LabeledExpression)* {
       return rest.length > 0
         ? { type: "sequence", elements: buildList(first, rest, 1) }
         : first;
