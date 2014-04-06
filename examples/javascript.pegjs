@@ -513,7 +513,7 @@ _
 
 EOS
   = __ ";"
-  / _ LineTerminatorSequence
+  / _ SingleLineComment? LineTerminatorSequence
   / _ &"}"
   / __ EOF
 
