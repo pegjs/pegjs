@@ -90,10 +90,10 @@ describe("compiler pass |generateBytecode|", function() {
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
-          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          16, 0, 2, 2, 20, 0, 21, 1,   // <expression>
           11, 6, 0,                    // IF_NOT_ERROR
-          20, 1,                       //   * REPORT_SAVED_POS
-          22, 2, 1, 0,                 //     CALL
+          22, 1,                       //   * REPORT_SAVED_POS
+          24, 2, 1, 0,                 //     CALL
           5                            // NIP
         ]));
       });
@@ -177,11 +177,11 @@ describe("compiler pass |generateBytecode|", function() {
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
         1,                           // PUSH_CURR_POS
-        14, 1, 2, 2, 18, 1, 19, 2,   // <elements[0]>
+        16, 1, 2, 2, 20, 1, 21, 2,   // <elements[0]>
         11, 35, 4,                   // IF_NOT_ERROR
-        14, 3, 2, 2, 18, 3, 19, 4,   //   * <elements[1]>
+        16, 3, 2, 2, 20, 3, 21, 4,   //   * <elements[1]>
         11, 19, 5,                   //     IF_NOT_ERROR
-        14, 5, 2, 2, 18, 5, 19, 6,   //       * <elements[2]>
+        16, 5, 2, 2, 20, 5, 21, 6,   //       * <elements[2]>
         11, 3, 5,                    //         IF_NOT_ERROR
         7, 3,                        //           * WRAP
         5,                           //             NIP
@@ -515,78 +515,6 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for range", function() {
-    describe("|..1| (reduced to optional)", function() {
-      var grammar = 'start = "a"|..1|';
-
-      it("generates correct bytecode", function() {
-        expect(pass).toChangeAST(grammar, bytecodeDetails([
-          16, 1, 2, 2, 20, 1, 21, 2,   // <expression>
-          10, 3, 0,                    // IF_ERROR
-          2,                           //   * POP
-          0, 0                         //     PUSH
-        ]));
-      });
-
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails([
-          'null',
-          '"a"',
-          '{ type: "literal", value: "a", description: "\\"a\\"" }'
-        ]));
-      });
-    });
-
-    describe("|0..| (reduced to zero or more)", function() {
-      var grammar = 'start = "a"|0..|';
-
-      it("generates correct bytecode", function() {
-        expect(pass).toChangeAST(grammar, bytecodeDetails([
-          0, 0,                        // PUSH
-          16, 1, 2, 2, 20, 1, 21, 2,   // <expression>
-          14, 9,                       // WHILE_NOT_ERROR
-          6,                           //   * APPEND
-          16, 1, 2, 2, 20, 1, 21, 2,   //     <expression>
-          2                            // POP
-        ]));
-      });
-
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails([
-          '[]',
-          '"a"',
-          '{ type: "literal", value: "a", description: "\\"a\\"" }'
-        ]));
-      });
-    });
-
-    describe("|1..| (reduced to one or more)", function() {
-      var grammar = 'start = "a"|1..|';
-
-      it("generates correct bytecode", function() {
-        expect(pass).toChangeAST(grammar, bytecodeDetails([
-          0, 0,                        // PUSH
-          16, 2, 2, 2, 20, 2, 21, 3,   // <expression>
-          11, 12, 4,                   // IF_NOT_ERROR
-          14, 9,                       //   * WHILE_NOT_ERROR
-          6,                           //       * APPEND
-          16, 2, 2, 2, 20, 2, 21, 3,   //         <expression>
-          2,                           //     POP
-          2,                           //   * POP
-          2,                           //     POP
-          0, 1                         //     PUSH
-        ]));
-      });
-
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails([
-          '[]',
-          'peg$FAILED',
-          '"a"',
-          '{ type: "literal", value: "a", description: "\\"a\\"" }'
-        ]));
-      });
-    });
-
     describe("|2..3|", function() {
       var grammar = 'start = "a"|2..3|';
 

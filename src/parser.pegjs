@@ -151,36 +151,13 @@ SuffixedExpression
       return { type: OPS_TO_SUFFIXED_TYPES[operator], expression: expression };
     }
   / expression:PrimaryExpression __ r:Range {
-      if (!(r.delimiter !== undefined)) {
-        if (!(r.max !== undefined)) {// unbounded
-          if (r.min === 0) {
-            return {
-              type:       "zero_or_more",
-              expression: expression
-            };
-          } else
-          if (r.min === 1) {
-            return {
-              type:       "one_or_more",
-              expression: expression
-            };
-          }
-        } else
-        if (r.max === 1) {
-          if (r.min === 0) {
-            return {
-              type:       "optional",
-              expression: expression
-            };
-          } else
-          if (r.min === 1) {
-            return expression;
-          }
-        }
-      }
-      r.type = "range";
-      r.expression = expression;
-      return r;
+      return {
+        type:       "range",
+        min:        r.min,
+        max:        r.max,
+        expression: expression,
+        delimiter:  r.delimiter
+      };
     }
   / PrimaryExpression
 
@@ -211,14 +188,14 @@ SemanticPredicateOperator
   = "&"
   / "!"
 Range
-  = "|" __ r:Range2 delimiter:("," __ primary)? "|" __ {
-    r.delimiter = delimiter !== null ? delimiter[2] : undefined;
+  = "|" __ r:Range2 __ delimiter:("," __ PrimaryExpression __)? "|" {
+    r.delimiter = extractOptional(delimiter, 2);
     return r;
-  }
+  };
 Range2
-  = min:Int? ".." __ max:Int? {return {min:min!==null?min:0, max:max!==null?max:undefined};}
-  / val:Int {return {min:val, max:val};}
-Int = n:$Digit+ __ {return parseInt(n,10);}
+  = min:Int? __ ".." __ max:Int? {return {min: min!==null?min:0, max: max};}
+  / val:Int {return {min:val, max:val};};
+Int = n:$DecimalDigit+ {return parseInt(n,10);};
 
 /* ---- Lexical Grammar ----- */
 
