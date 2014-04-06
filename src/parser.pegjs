@@ -155,7 +155,7 @@ PrimaryExpression
 
 RuleReferenceExpression
   = name:IdentifierName !(__ (StringLiteral __)? "=") {
-      return { type: "rule_ref", name: name }
+      return { type: "rule_ref", name: name };
     }
 
 SemanticPredicateExpression
