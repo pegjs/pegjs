@@ -41,6 +41,18 @@
     "!": "semantic_not"
   };
 
+  function filterEmptyStrings(array) {
+    var result = [], i;
+
+    for (i = 0; i < array.length; i++) {
+      if (array[i] !== "") {
+        result.push(array[i]);
+      }
+    }
+
+    return result;
+  }
+
   function extractOptional(optional, index) {
     return optional ? optional[index] : null;
   }
@@ -323,7 +335,7 @@ CharacterClassMatcher "character class"
     {
       return {
         type:       "class",
-        parts:      parts,
+        parts:      filterEmptyStrings(parts),
         inverted:   inverted !== null,
         ignoreCase: ignoreCase !== null,
         rawText:    text()

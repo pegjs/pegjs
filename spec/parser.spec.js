@@ -485,6 +485,10 @@ describe("PEG.js grammar parser", function() {
     expect('start = [a-d]i').toParseAs(
       classGrammar([["a", "d"]], false, true, "[a-d]i")
     );
+
+    expect('start = [\\\n]').toParseAs(
+      classGrammar([], false, false, "[\\\n]")
+    );
   });
 
   /* Canonical ClassCharacterRange is "a-d". */
@@ -510,7 +514,7 @@ describe("PEG.js grammar parser", function() {
       classGrammar(["\n"], false, false, "[\\n]")
     );
     expect('start = [\\\n]').toParseAs(
-      classGrammar([''], false, false, "[\\\n]")
+      classGrammar([], false, false, "[\\\n]")
     );
 
     expect('start = []]' ).toFailToParse();
