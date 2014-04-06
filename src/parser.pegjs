@@ -414,7 +414,7 @@ CodeBlock "code block"
   = "{" code:Code "}" { return code; }
 
 Code
-  = $([^{}] / "{" Code "}")*
+  = $((![{}] SourceCharacter)+ / "{" Code "}")*
 
 /*
  * Unicode Character Categories

@@ -595,9 +595,10 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical Code is " code ". */
   it("parses Code", function() {
-    expect('start = "abcd" {a}'  ).toParseAs(actionGrammar("a"));
-    expect('start = "abcd" {{a}}').toParseAs(actionGrammar("{a}"));
-    expect('start = "abcd" {abc}').toParseAs(actionGrammar("abc"));
+    expect('start = "abcd" {a}'        ).toParseAs(actionGrammar("a"));
+    expect('start = "abcd" {abc}'      ).toParseAs(actionGrammar("abc"));
+    expect('start = "abcd" {{a}}'      ).toParseAs(actionGrammar("{a}"));
+    expect('start = "abcd" {{a}{b}{c}}').toParseAs(actionGrammar("{a}{b}{c}"));
 
     expect('start = "abcd" {{}').toFailToParse();
     expect('start = "abcd" {}}').toFailToParse();
