@@ -150,6 +150,15 @@ SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
       return { type: OPS_TO_SUFFIXED_TYPES[operator], expression: expression };
     }
+  / expression:PrimaryExpression __ r:Range {
+      return {
+        type:       "range",
+        min:        r.min,
+        max:        r.max,
+        expression: expression,
+        delimiter:  r.delimiter
+      };
+    }
   / PrimaryExpression
 
 SuffixedOperator
@@ -178,6 +187,15 @@ SemanticPredicateExpression
 SemanticPredicateOperator
   = "&"
   / "!"
+Range
+  = "|" __ r:Range2 __ delimiter:("," __ PrimaryExpression __)? "|" {
+    r.delimiter = extractOptional(delimiter, 2);
+    return r;
+  };
+Range2
+  = min:Int? __ ".." __ max:Int? {return {min: min!==null?min:0, max: max};}
+  / val:Int {return {min:val, max:val};};
+Int = n:$DecimalDigit+ {return parseInt(n,10);};
 
 /* ---- Lexical Grammar ----- */
 
