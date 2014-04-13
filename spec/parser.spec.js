@@ -388,10 +388,6 @@ describe("PEG.js grammar parser", function() {
   /* Canonical Identifier is "a". */
   it("parses Identifier", function() {
     expect('start = a:"abcd"').toParseAs(oneRuleGrammar(labeledAbcd));
-
-    expect('start = return:"abcd"').toFailToParse({
-      message: "Reserved word \"return\" can't be used as an identifier."
-    });
   });
 
   /* Canonical IdentifierName is "a". */
