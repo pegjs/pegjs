@@ -146,11 +146,6 @@ SingleLineComment
 
 Identifier
   = !ReservedWord name:IdentifierName { return name; }
-  / name:IdentifierName {
-      error(
-       "Reserved word \"" + name.name + "\" can't be used as an identifier."
-      );
-    }
 
 IdentifierName "identifier"
   = first:IdentifierStart rest:IdentifierPart* {
@@ -993,23 +988,18 @@ Statement
   = Block
   / VariableStatement
   / EmptyStatement
+  / ExpressionStatement
   / IfStatement
   / IterationStatement
   / ContinueStatement
   / BreakStatement
   / ReturnStatement
   / WithStatement
+  / LabelledStatement
   / SwitchStatement
   / ThrowStatement
   / TryStatement
   / DebuggerStatement
-  /*
-   * The following two statements begin with identifiers. They must be at the
-   * very end of the list to prevent triggering reserved word detection in the
-   * |Identifier| rule by keywords the statemets above begin with (e.g. |if|).
-   */
-  / ExpressionStatement
-  / LabelledStatement
 
 Block
   = "{" __ body:(StatementList __)? "}" {
