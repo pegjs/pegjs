@@ -56,6 +56,7 @@ describe("PEG.js grammar parser", function() {
   function oneRuleGrammar(expression) {
     return {
       type:        "grammar",
+      options:     {},
       initializer: null,
       rules:       [{ type: "rule", name: "start", expression: expression }]
     };
@@ -94,6 +95,7 @@ describe("PEG.js grammar parser", function() {
   var trivialGrammar = literalGrammar("abcd", false),
       twoRuleGrammar = {
         type:        "grammar",
+        options:     {},
         initializer: null,
         rules:       [ruleA, ruleB]
       };
@@ -188,20 +190,20 @@ describe("PEG.js grammar parser", function() {
   /* Canonical Grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
   it("parses Grammar", function() {
     expect('\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA] }
+      { type:  "grammar", options: {},  initializer: null, rules: [ruleA] }
     );
     expect('\na = "abcd";\nb = "efgh";\nc = "ijkl";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA, ruleB, ruleC] }
+      { type:  "grammar", options: {},  initializer: null, rules: [ruleA, ruleB, ruleC] }
     );
     expect('\n{ code };\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleA] }
+      { type:  "grammar", options: {},  initializer: initializer, rules: [ruleA] }
     );
   });
 
   /* Canonical Initializer is "{ code }". */
   it("parses Initializer", function() {
     expect('{ code };start = "abcd"').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleStart] }
+      { type:  "grammar", options: {},  initializer: initializer, rules: [ruleStart] }
     );
   });
 
