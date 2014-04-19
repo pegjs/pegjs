@@ -41,6 +41,8 @@
     "!": "semantic_not"
   };
 
+  var options = {};
+
   function filterEmptyStrings(array) {
     var result = [], i;
 
@@ -78,6 +80,7 @@ Grammar
   = __ initializer:(Initializer __)? rules:(Rule __)+ {
       return {
         type:        "grammar",
+        options:     options,
         initializer: extractOptional(initializer, 0),
         rules:       extractList(rules, 0)
       };
@@ -205,6 +208,7 @@ LineTerminatorSequence "end of line"
 
 Comment "comment"
   = MultiLineComment
+  / OptionComment
   / SingleLineComment
 
 MultiLineComment
@@ -212,6 +216,11 @@ MultiLineComment
 
 MultiLineCommentNoLineTerminator
   = "/*" (!("*/" / LineTerminator) SourceCharacter)* "*/"
+
+OptionComment
+  = "//" _ "-*-" _ key:$(!(_ ":") SourceCharacter)+ _ ":" _ value:$(!(_ ";") SourceCharacter)+ ";" _ "-*-" _ {
+    options[key] = JSON.parse(value);
+  }
 
 SingleLineComment
   = "//" (!LineTerminator SourceCharacter)*
