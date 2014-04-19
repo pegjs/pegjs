@@ -211,6 +211,15 @@ describe("generated parser", function() {
         expect(parser).toParse("a", [1, 1]);
       });
 
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser([
+              '{ var result = parser; }',
+              'start = "a" { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", parser);
+      });
+
       it("can use options passed to the parser", function() {
         var parser = PEG.buildParser([
               '{ var result = options; }',
@@ -382,6 +391,15 @@ describe("generated parser", function() {
         expect(parser).toParse("a", 42);
       });
 
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser(
+              'start = "a" { return parser; }',
+              options
+            );
+
+        expect(parser).toParse("a", parser);
+      });
+
       it("can use options passed to the parser", function() {
         var parser = PEG.buildParser(
               'start = "a" { return options; }',
@@ -546,6 +564,15 @@ describe("generated parser", function() {
         expect(parser).toParse("a", ["a", undefined]);
       });
 
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser([
+              '{ var result; }',
+              'start = "a" &{ result = parser; return true; } { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", parser);
+      });
+
       it("can use options passed to the parser", function() {
         var parser = PEG.buildParser([
               '{ var result; }',
@@ -635,6 +662,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", ["a", undefined]);
+      });
+
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser([
+              '{ var result; }',
+              'start = "a" !{ result = parser; return false; } { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", parser);
       });
 
       it("can use options passed to the parser", function() {
