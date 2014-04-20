@@ -51,7 +51,16 @@ describe("PEG.js grammar parser", function() {
       ruleB             = { type: "rule",        name: "b",          expression: literalEfgh },
       ruleC             = { type: "rule",        name: "c",          expression: literalIjkl },
       ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd },
-      initializer       = { type: "initializer", code: " code " };
+      initializer       = { type: "initializer", code: " code " },
+      options           = {
+        nil: null,
+        string: "string",
+        integer: -1,
+        float: -1.1,
+        boolean: true,
+        object: { key: "value" },
+        array: [0, "string", -1, -1.1, true, { key: "value" }]
+      };
 
   function oneRuleGrammar(expression) {
     return {
@@ -197,6 +206,24 @@ describe("PEG.js grammar parser", function() {
     );
     expect('\n{ code };\na = "abcd";\n').toParseAs(
       { type:  "grammar", options: {},  initializer: initializer, rules: [ruleA] }
+    );
+  });
+
+  /* Canonical Options is "{\"nil":null,"string":"string","integer":-1,"float":-1.1,"boolean":true,"object":{"key":"value"},"array":[0,"string",-1,-1.1,true,{"key":"value"}]}". */
+  it("parses Initializer", function() {
+    var optionsString1 = [
+      "// -*- nil: null; -*-",
+      "// -*- string: \"string\"; -*-",
+      "// -*- integer: -1; -*-",
+      "// -*- float: -1.1; -*-",
+      "// -*- boolean: true; -*-"
+    ].join("\n"),
+      optionsString2 = [
+      "// -*- object: {\"key\": \"value\" }; -*-",
+      "// -*- array: [0, \"string\", -1, -1.1, true, { \"key\": \"value\" }]; -*-"
+    ].join("\n");
+    expect(optionsString1 + '\nstart = "abcd"\n' + optionsString2).toParseAs(
+      { type:  "grammar", options: options,  initializer: null, rules: [ruleStart] }
     );
   });
 
