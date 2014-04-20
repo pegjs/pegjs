@@ -512,6 +512,12 @@ describe("PEG.js grammar parser", function() {
     expect('start = [\\\n]').toParseAs(
       classGrammar([], false, false, "[\\\n]")
     );
+    expect('start = [\\d]' ).toParseAs(
+      classGrammar(["\\d"], false, false, "[\\d]")
+    );
+    expect('start = [\\\\d]').toParseAs(
+      classGrammar(["\\", "d"], false, false, "[\\\\d]")
+    );
 
     expect('start = []]' ).toFailToParse();
     expect('start = [\\]').toFailToParse();
