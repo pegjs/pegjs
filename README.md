@@ -182,14 +182,14 @@ written as a JavaScript string between the name and separating equality sign.
 Rules need to be separated only by whitespace (their beginning is easily
 recognizable), but a semicolon (“;”) after the parsing expression is allowed.
 
-Rules can be preceded by an *initializer* — a piece of JavaScript code in curly
-braces (“{” and “}”). This code is executed before the generated parser starts
-parsing. All variables and functions defined in the initializer are accessible
-in rule actions and semantic predicates. The code inside the initializer can
-access the parser object using the `parser` variable and options passed to the
-parser using the `options` variable. Curly braces in the initializer code must
-be balanced. Let's look at the example grammar from above using a simple
-initializer.
+The first rule can be preceded by an *initializer* — a piece of JavaScript code
+in curly braces (“{” and “}”). This code is executed before the generated parser
+starts parsing. All variables and functions defined in the initializer are
+accessible in rule actions and semantic predicates. The code inside the
+initializer can access the parser object using the `parser` variable and options
+passed to the parser using the `options` variable. Curly braces in the
+initializer code must be balanced. Let's look at the example grammar from above
+using a simple initializer.
 
     {
       function makeInteger(o) {
