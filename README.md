@@ -76,7 +76,8 @@ You can tweak the generated parser with several options:
   * `--cache` — makes the parser cache results, avoiding exponential parsing
     time in pathological cases but making the parser slower
   * `--allowed-start-rules` — comma-separated list of rules the parser will be
-    allowed to start parsing from (default: the first rule in the grammar)
+    allowed to start parsing from, or * to allow all rules (default: the
+    first rule in the grammar)
   * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
     times)
   * `--extra-options` — additional options (in JSON format) to pass to
@@ -110,7 +111,7 @@ object to `PEG.buildParser`. The following options are supported:
     parsing time in pathological cases but making the parser slower (default:
     `false`)
   * `allowedStartRules` — rules the parser will be allowed to start parsing from
-    (default: the first rule in the grammar)
+    or * to allow all (default: the first rule in the grammar)
   * `output` — if set to `"parser"`, the method will return generated parser
     object; if set to `"source"`, it will return parser source code as a string
     (default: `"parser"`)

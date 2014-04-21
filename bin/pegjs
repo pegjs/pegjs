@@ -138,6 +138,9 @@ while (args.length > 0 && isOption(args[0])) {
       options.allowedStartRules = args[0]
         .split(",")
         .map(trim);
+      if (args[0] === "*") {
+        options.allowedStartRules = options.allowedStartRules[0];
+      }
       break;
 
     case "-o":
