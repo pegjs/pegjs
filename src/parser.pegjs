@@ -359,10 +359,19 @@ LineContinuation
   = "\\" LineTerminatorSequence { return ""; }
 
 EscapeSequence
-  = CharacterEscapeSequence
+  = CharacterClassEscapeSequence
+  / CharacterEscapeSequence
   / "0" !DecimalDigit { return "\0"; }
   / HexEscapeSequence
   / UnicodeEscapeSequence
+
+CharacterClassEscapeSequence
+  = "d" { return "\\d"; }
+  / "D" { return "\\D"; }
+  / "s" { return "\\s"; }
+  / "S" { return "\\S"; }
+  / "w" { return "\\w"; }
+  / "W" { return "\\W"; }
 
 CharacterEscapeSequence
   = SingleEscapeCharacter
