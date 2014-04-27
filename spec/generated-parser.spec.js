@@ -323,13 +323,13 @@ describe("generated parser", function() {
         expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
 
         /* Non-Unix newlines */
-        expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
-        expect(parser).toParse("1\r\nx", [2, 1]); // Windows
-        expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+        expect(parser).toParse("1\rx",   [2, 1]);   // Old Mac
+        expect(parser).toParse("1\r\nx", [2, 1]);   // Windows
+        expect(parser).toParse("1\n\rx", [3, 1]);   // mismatched
 
         /* Strange newlines */
-        expect(parser).toParse("1\u2028x", [2, 1]); // line separator
-        expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        expect(parser).toParse("1\u2028x", [2, 1]);   // line separator
+        expect(parser).toParse("1\u2029x", [2, 1]);   // paragraph separator
       });
 
       it("can use variables defined in the initializer", function() {
@@ -528,13 +528,13 @@ describe("generated parser", function() {
         expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
 
         /* Non-Unix newlines */
-        expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
-        expect(parser).toParse("1\r\nx", [2, 1]); // Windows
-        expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+        expect(parser).toParse("1\rx",   [2, 1]);   // Old Mac
+        expect(parser).toParse("1\r\nx", [2, 1]);   // Windows
+        expect(parser).toParse("1\n\rx", [3, 1]);   // mismatched
 
         /* Strange newlines */
-        expect(parser).toParse("1\u2028x", [2, 1]); // line separator
-        expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        expect(parser).toParse("1\u2028x", [2, 1]);   // line separator
+        expect(parser).toParse("1\u2029x", [2, 1]);   // paragraph separator
       });
 
       it("can use variables defined in the initializer", function() {
@@ -628,13 +628,13 @@ describe("generated parser", function() {
         expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
 
         /* Non-Unix newlines */
-        expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
-        expect(parser).toParse("1\r\nx", [2, 1]); // Windows
-        expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+        expect(parser).toParse("1\rx",   [2, 1]);   // Old Mac
+        expect(parser).toParse("1\r\nx", [2, 1]);   // Windows
+        expect(parser).toParse("1\n\rx", [3, 1]);   // mismatched
 
         /* Strange newlines */
-        expect(parser).toParse("1\u2028x", [2, 1]); // line separator
-        expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        expect(parser).toParse("1\u2028x", [2, 1]);   // line separator
+        expect(parser).toParse("1\u2029x", [2, 1]);   // paragraph separator
       });
 
       it("can use variables defined in the initializer", function() {
