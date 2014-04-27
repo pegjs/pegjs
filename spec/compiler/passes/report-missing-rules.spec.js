@@ -1,5 +1,17 @@
 describe("compiler pass |reportMissingRules|", function() {
   var pass = PEG.compiler.passes.check.reportMissingRules;
+  function construct(constructor, args) {
+    function F() {
+      return constructor.apply(this, args);
+    }
+    F.prototype = constructor.prototype;
+    return new F();
+  };
+  var collector = {
+    emitError: function() {
+      throw construct(PEG.GrammarError, arguments);
+    },
+  };
 
   beforeEach(function() {
     this.addMatchers({
@@ -7,7 +19,7 @@ describe("compiler pass |reportMissingRules|", function() {
         var ast = PEG.parser.parse(grammar);
 
         try {
-          this.actual(ast);
+          this.actual(ast, {collector: collector});
 
           this.message = function() {
             return "Expected the pass to report a missing rule for grammar "
