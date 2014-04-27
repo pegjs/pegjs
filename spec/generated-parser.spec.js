@@ -76,24 +76,8 @@ describe("generated parser", function() {
         var options = arguments.length > 2 ? arguments[1] : {},
             details = arguments.length > 1
                         ? arguments[arguments.length - 1]
-                        : undefined;
-
-        /*
-         * Extracted into a function just to silence JSHint complaining about
-         * creating functions in a loop.
-         */
-        function buildKeyMessage(key, value) {
-          return function() {
-            return "Expected " + jasmine.pp(input) + " "
-                 + "with options " + jasmine.pp(options) + " "
-                 + "to fail to parse"
-                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                 + "but " + jasmine.pp(key) + " "
-                 + "is " + jasmine.pp(value) + ".";
-          };
-        }
-
-        var result;
+                        : undefined,
+            result;
 
         try {
           result = this.actual.parse(input, options);
@@ -127,7 +111,14 @@ describe("generated parser", function() {
               for (key in details) {
                 if (details.hasOwnProperty(key)) {
                   if (!this.env.equals_(e[key], details[key])) {
-                    this.message = buildKeyMessage(key, e[key]);
+                    this.message = function() {
+                      return "Expected " + jasmine.pp(input) + " "
+                           + "with options " + jasmine.pp(options) + " "
+                           + "to fail to parse"
+                           + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                           + "but " + jasmine.pp(key) + " "
+                           + "is " + jasmine.pp(e[key]) + ".";
+                    };
 
                     return false;
                   }
