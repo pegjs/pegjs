@@ -107,7 +107,6 @@ function readStream(inputStream, callback) {
 /* Main */
 
 /* This makes the generated parser a CommonJS module by default. */
-var exportVar = "module.exports";
 var options = {
   cache:    false,
   output:   "source",
@@ -123,7 +122,7 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the -e/--export-var option.");
       }
-      exportVar = args[0];
+      options.exportVar = args[0];
       break;
 
     case "--cache":
@@ -255,7 +254,7 @@ readStream(inputStream, function(input) {
   }
 
   outputStream.write(
-    exportVar !== "" ? exportVar + " = " + source + ";\n" : source + "\n"
+    source + "\n"
   );
   if (outputStream !== process.stdout) {
     outputStream.end();
