@@ -134,11 +134,13 @@ describe("generated parser", function() {
   });
 
   describe("parse", function() {
-    var parser = PEG.buildParser([
-          'a = "x" { return "a"; }',
-          'b = "x" { return "b"; }',
-          'c = "x" { return "c"; }'
-        ].join("\n"), { allowedStartRules: ["b", "c"] });
+    var grammar = [
+      'a = "x" { return "a"; }',
+      'b = "x" { return "b"; }',
+      'c = "x" { return "c"; }'
+    ].join("\n"),
+        parser = PEG.buildParser(grammar, { allowedStartRules: ["b", "c"] }),
+        parserAll = PEG.buildParser(grammar, { allowedStartRules: "*" });
 
     describe("start rule", function() {
       describe("without the |startRule| option", function() {
@@ -160,6 +162,14 @@ describe("generated parser", function() {
             message: "Can't start parsing from rule \"a\"."
           });
         });
+      });
+    });
+
+    describe("wildcard start rule", function() {
+      it("uses any rule", function() {
+        expect(parserAll).toParse("x", { startRule: "a" }, "a");
+        expect(parserAll).toParse("x", { startRule: "b" }, "b");
+        expect(parserAll).toParse("x", { startRule: "c" }, "c");
       });
     });
   });
