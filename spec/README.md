@@ -8,35 +8,37 @@ Running in a browser
 --------------------
 
   1. Make sure you have Node.js and all the development dependencies specified
-     in package.json installed.
+     in `package.json` installed.
 
   2. Run the following command in the PEG.js root directory (one level up from
      this one):
 
-       make browser
+        make browser
 
   3. Start a web server and make it serve the PEG.js root directory.
 
-  4. Point your browser to an URL corresponding to the index.html file.
+  4. Point your browser to an URL corresponding to the `index.html` file.
 
   5. Watch the specs pass (or fail).
 
 If you have Python installed, you can fulfill steps 3 and 4 by running the
 following command in the PEG.js root directory
 
-  python -m SimpleHTTPServer
+    python -m SimpleHTTPServer
 
-and loading http://localhost:8000/spec/index.html in your browser.
+and loading
+[http://localhost:8000/spec/index.html](http://localhost:8000/spec/index.html)
+in your browser.
 
 Running from a command-line
 ---------------------------
 
   1. Make sure you have Node.js and all the development dependencies specified
-     in package.json installed.
+     in `package.json` installed.
 
   2. Run the following command in the PEG.js root directory (one level up from
      this one):
 
-       make spec
+        make spec
 
   3. Watch the specs pass (or fail).
