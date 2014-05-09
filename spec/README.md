@@ -4,41 +4,42 @@ PEG.js Spec Suite
 This is the PEG.js spec suite. It ensures PEG.js works correctly. All specs
 should always pass on all supported platforms.
 
-Running in a browser
---------------------
+Running in Node.js
+------------------
 
-  1. Make sure you have Node.js and all the development dependencies specified
-     in `package.json` installed.
+All commands in the following steps need to be executed in PEG.js root directory
+(one level up from this one).
 
-  2. Run the following command in the PEG.js root directory (one level up from
-     this one):
+  1. Install all PEG.js dependencies, including development ones:
 
-        make browser
+        $ npm install
 
-  3. Start a web server and make it serve the PEG.js root directory.
+  2. Execute the spec suite:
 
-  4. Point your browser to an URL corresponding to the `index.html` file.
-
-  5. Watch the specs pass (or fail).
-
-If you have Python installed, you can fulfill steps 3 and 4 by running the
-following command in the PEG.js root directory
-
-    python -m SimpleHTTPServer
-
-and loading
-[http://localhost:8000/spec/index.html](http://localhost:8000/spec/index.html)
-in your browser.
-
-Running from a command-line
----------------------------
-
-  1. Make sure you have Node.js and all the development dependencies specified
-     in `package.json` installed.
-
-  2. Run the following command in the PEG.js root directory (one level up from
-     this one):
-
-        make spec
+        $ make spec
 
   3. Watch the specs pass (or fail).
+
+Running in the browser
+----------------------
+
+All commands in the following steps need to be executed in PEG.js root directory
+(one level up from this one).
+
+  1. Make sure you have Node.js and Python installed.
+
+  2. Install all PEG.js dependencies, including development ones:
+
+        $ npm install
+
+  3. Build browser version of PEG.js:
+
+        $ make browser
+
+  4. Serve PEG.js root directory using a web server:
+
+        $ python -m SimpleHTTPServer
+
+  5. Point your browser to the [spec suite](http://localhost:8000/spec/index.html).
+
+  6. Watch the specs pass (or fail).
