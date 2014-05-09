@@ -3,43 +3,44 @@ PEG.js Benchmark Suite
 
 This is the PEG.js benchmark suite. It measures speed of the parsers generated
 by PEG.js on various inputs. Its main goal is to provide data for code generator
-optimization.
+optimizations.
 
-Running in a browser
---------------------
+Running in Node.js
+------------------
 
-  1. Make sure you have Node.js and all the development dependencies specified
-     in `package.json` installed.
+All commands in the following steps need to be executed in PEG.js root directory
+(one level up from this one).
 
-  2. Run the following command in the PEG.js root directory (one level up from
-     this one):
+  1. Install all PEG.js dependencies, including development ones:
 
-        make browser
+        $ npm install
 
-  3. Start a web server and make it serve the PEG.js root directory.
+  2. Execute the benchmark suite:
 
-  4. Point your browser to an URL corresponding to the `index.html` file.
+        $ make spec
 
-  5. Click the "Run" button and wait for the table to fill.
+  3. Wait for results.
 
-If you have Python installed, you can fulfill steps 3 and 4 by running the
-following command in the PEG.js root directory
+Running in the browser
+----------------------
 
-    python -m SimpleHTTPServer
+All commands in the following steps need to be executed in PEG.js root directory
+(one level up from this one).
 
-and load
-[http://localhost:8000/benchmark/index.html](http://localhost:8000/benchmark/index.html)
-in your browser.
+  1. Make sure you have Node.js and Python installed.
 
-Running from a command-line
----------------------------
+  2. Install all PEG.js dependencies, including development ones:
 
-  1. Make sure you have Node.js and all the development dependencies specified
-     in `package.json` installed.
+        $ npm install
 
-  2. Run the following command in the PEG.js root directory (one level up from
-     this one):
+  3. Build browser version of PEG.js:
 
-        make benchmark
+        $ make browser
 
-  3. Wait for the table to fill.
+  4. Serve PEG.js root directory using a web server:
+
+        $ python -m SimpleHTTPServer
+
+  5. Point your browser to the [benchmark suite](http://localhost:8000/benchmark/index.html).
+
+  6. Click the **Run** button and wait for results.
