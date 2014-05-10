@@ -4,24 +4,24 @@ Runner = {
     /* Queue */
 
     var Q = {
-      functions: [],
+          functions: [],
 
-      add: function(f) {
-        this.functions.push(f);
-      },
+          add: function(f) {
+            this.functions.push(f);
+          },
 
-      run: function() {
-        if (this.functions.length > 0) {
-          this.functions.shift()();
+          run: function() {
+            if (this.functions.length > 0) {
+              this.functions.shift()();
 
-          /*
-           * We can't use |arguments.callee| here because |this| would get
-           * messed-up in that case.
-           */
-          setTimeout(function() { Q.run(); }, 0);
-        }
-      }
-    };
+              /*
+               * We can't use |arguments.callee| here because |this| would get
+               * messed-up in that case.
+               */
+              setTimeout(function() { Q.run(); }, 0);
+            }
+          }
+        };
 
     /*
      * The benchmark itself is factored out into several functions (some of them
@@ -38,7 +38,7 @@ Runner = {
      * of the |state| object.
      */
 
-    var state = {};
+    var state = {}, i, j;
 
     function initialize() {
       callbacks.start();
@@ -62,20 +62,21 @@ Runner = {
 
     function testRunner(i, j) {
       return function() {
-        var benchmark = benchmarks[i];
-        var test = benchmark.tests[j];
+        var benchmark = benchmarks[i],
+            test      = benchmark.tests[j],
+            input, parseTime, averageParseTime, k, t;
 
         callbacks.testStart(benchmark, test);
 
-        var input = callbacks.readFile(benchmark.id + "/" + test.file);
+        input = callbacks.readFile(benchmark.id + "/" + test.file);
 
-        var parseTime = 0;
-        for (var k = 0; k < runCount; k++) {
-          var t = (new Date()).getTime();
+        parseTime = 0;
+        for (k = 0; k < runCount; k++) {
+          t = (new Date()).getTime();
           state.parser.parse(input);
           parseTime += (new Date()).getTime() - t;
         }
-        var averageParseTime = parseTime / runCount;
+        averageParseTime = parseTime / runCount;
 
         callbacks.testFinish(benchmark, test, input.length, averageParseTime);
 
@@ -104,9 +105,9 @@ Runner = {
     /* Main */
 
     Q.add(initialize);
-    for (var i = 0; i < benchmarks.length; i++) {
+    for (i = 0; i < benchmarks.length; i++) {
       Q.add(benchmarkInitializer(i));
-      for (var j = 0; j < benchmarks[i].tests.length; j++) {
+      for (j = 0; j < benchmarks[i].tests.length; j++) {
         Q.add(testRunner(i, j));
       }
       Q.add(benchmarkFinalizer(i));
