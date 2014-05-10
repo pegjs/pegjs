@@ -20,7 +20,7 @@ All commands in the following steps need to be executed in PEG.js root directory
 
   3. Watch the specs pass (or fail).
 
-Running in the browser
+Running in the Browser
 ----------------------
 
 All commands in the following steps need to be executed in PEG.js root directory

@@ -21,7 +21,7 @@ All commands in the following steps need to be executed in PEG.js root directory
 
   3. Wait for results.
 
-Running in the browser
+Running in the Browser
 ----------------------
 
 All commands in the following steps need to be executed in PEG.js root directory
