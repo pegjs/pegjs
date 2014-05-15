@@ -221,9 +221,10 @@ describe("compiler pass |generateBytecode|", function() {
       expect(pass).toChangeAST('start = $"a"', bytecodeDetails([
         1,                           // PUSH_CURR_POS
         14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
-        11, 1, 0,                    // IF_NOT_ERROR
-        8,                           //   * TEXT
-        5                            // NIP
+        11, 2, 1,                    // IF_NOT_ERROR
+        2,                           //   * POP
+        8,                           //     TEXT
+        5                            //   * NIP
       ]));
     });
   });
