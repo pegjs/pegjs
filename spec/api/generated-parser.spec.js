@@ -1,43 +1,31 @@
 describe("generated parser", function() {
-  function vary(names, block) {
-    var values = {
-          cache:    [false, true],
-          optimize: ["speed", "size"]
-        };
+  function varyOptimizationOptions(block) {
+    function clone(object) {
+      var result = {}, key;
 
-    function varyStep(names, options) {
-      var clonedOptions = {}, key, name, i;
-
-      if (names.length === 0) {
-        /*
-         * We have to clone the options so that the block can save them safely
-         * (e.g. by capturing in a closure) without the risk that they will be
-         * changed later.
-         */
-        for (key in options) {
-          if (options.hasOwnProperty(key)) {
-            clonedOptions[key] = options[key];
-          }
-        }
-
-        describe(
-          "with options " + jasmine.pp(clonedOptions),
-          function() { block(clonedOptions); }
-        );
-      } else {
-        name = names[0];
-        for (i = 0; i < values[name].length; i++) {
-          options[name] = values[name][i];
-          varyStep(names.slice(1), options);
+      for (key in object) {
+        if (object.hasOwnProperty(key)) {
+          result[key] = object[key];
         }
       }
+
+      return result;
     }
 
-    varyStep(names, {});
-  }
+    var optionsVariants = [
+          { cache: false, optimize: "speed" },
+          { cache: false, optimize: "size"  },
+          { cache: true,  optimize: "speed" },
+          { cache: true,  optimize: "size"  },
+        ],
+        i;
 
-  function varyAll(block) {
-    vary(["cache", "optimize"], block);
+    for (i = 0; i < optionsVariants.length; i++) {
+      describe(
+        "with options " + jasmine.pp(optionsVariants[i]),
+        function() { block(clone(optionsVariants[i])); }
+      );
+    }
   }
 
   beforeEach(function() {
@@ -164,7 +152,7 @@ describe("generated parser", function() {
     });
   });
 
-  varyAll(function(options) {
+  varyOptimizationOptions(function(options) {
     describe("initializer code", function() {
       it("runs before the parsing begins", function() {
         var parser = PEG.buildParser([
