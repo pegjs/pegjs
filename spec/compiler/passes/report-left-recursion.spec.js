@@ -87,8 +87,16 @@ describe("compiler pass |reportLeftRecursion|", function() {
     expect(pass).toReportLeftRecursionIn('start = start+');
   });
 
-  it("reports left recursion inside a range", function() {
+  it("reports left recursion inside a range expression", function() {
     expect(pass).toReportLeftRecursionIn('start = start|2..3|');
+    expect(pass).toReportLeftRecursionIn('start = start|2..3, "a"|');
+    expect(pass).toReportLeftRecursionIn('start = start|2|');
+    expect(pass).toReportLeftRecursionIn('start = start|2, "a"|');
+  });
+
+  it("not reports left recursion inside a range delimiter", function() {
+    expect(pass).not.toReportLeftRecursionIn('start = "a"|2..3, start|');
+    expect(pass).not.toReportLeftRecursionIn('start = "a"|2, start|');
   });
 
   it("reports indirect left recursion", function() {

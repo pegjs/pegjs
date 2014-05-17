@@ -125,14 +125,44 @@ describe("compiler pass |removeProxyRules|", function() {
     );
   });
 
-  it("removes proxy rule from a range", function() {
-    expect(pass).toChangeAST(
-      proxyGrammar('start = proxy|2..3|'),
-      defaultOptions,
-      simpleDetails
-    );
-  });
+  describe("removes proxy rule from a range", function() {
+    it("expression", function() {
+      expect(pass).toChangeAST(
+        proxyGrammar('start = proxy|2..3|'),
+        defaultOptions,
+        simpleDetails
+      );
+      expect(pass).toChangeAST(
+        proxyGrammar('start = proxy|2..3, "a"|'),
+        defaultOptions,
+        simpleDetails
+      );
+      expect(pass).toChangeAST(
+        proxyGrammar('start = proxy|2|'),
+        defaultOptions,
+        simpleDetails
+      );
+      expect(pass).toChangeAST(
+        proxyGrammar('start = proxy|2, "a"|'),
+        defaultOptions,
+        simpleDetails
+      );
+    });
 
+    it("delimiter", function() {
+      var details = expressionDetails({ delimiter:  proxiedRefDetails });
+      expect(pass).toChangeAST(
+        proxyGrammar('start = "a"|2..3, proxy|'),
+        defaultOptions,
+        details
+      );
+      expect(pass).toChangeAST(
+        proxyGrammar('start = "a"|2, proxy|'),
+        defaultOptions,
+        details
+      );
+    });
+  });
 
   it("doesn't remove a proxy rule listed in |allowedStartRules|", function() {
     expect(pass).toChangeAST(
