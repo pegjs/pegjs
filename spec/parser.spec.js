@@ -91,6 +91,15 @@ describe("PEG.js grammar parser", function() {
     return oneRuleGrammar({ type: "rule_ref", name: name });
   }
 
+  function rangeGrammar(min, max) {
+    return oneRuleGrammar({
+      type:       "range",
+      min:        min,
+      max:        max,
+      expression: literalAbcd
+    });
+  }
+
   var trivialGrammar = literalGrammar("abcd", false),
       twoRuleGrammar = {
         type:        "grammar",
@@ -292,6 +301,41 @@ describe("PEG.js grammar parser", function() {
     expect('start = a'           ).toParseAs(ruleRefGrammar("a"));
     expect('start = &{ code }'   ).toParseAs(oneRuleGrammar(semanticAnd));
     expect('start = (\n"abcd"\n)').toParseAs(trivialGrammar);
+  });
+
+  /* Canonical RangeExpression is "\"abcd\"|2..3|". */
+  it("parses RangeExpression", function() {
+    var grammar = rangeGrammar(2, 3);
+    expect('start = "abcd"|2..3|'  ).toParseAs(grammar);
+    expect('start = "abcd"\n|2..3|').toParseAs(grammar);
+    expect('start = "abcd"|\n2..3|').toParseAs(grammar);
+    expect('start = "abcd"|2\n..3|').toParseAs(grammar);
+    expect('start = "abcd"|2..\n3|').toParseAs(grammar);
+    expect('start = "abcd"|2..3\n|').toParseAs(grammar);
+
+    grammar = rangeGrammar(3, 3);
+    expect('start = "abcd"\n|3|').toParseAs(grammar);
+    expect('start = "abcd"|\n3|').toParseAs(grammar);
+    expect('start = "abcd"|3\n|').toParseAs(grammar);
+  });
+
+  /* Canonical RangeOperator is "|2..3|". */
+  it("parses RangeOperator", function() {
+    expect('start = "abcd"| .. |').toParseAs(rangeGrammar(0, null));
+    expect('start = "abcd"|0.. |').toParseAs(rangeGrammar(0, null));
+    expect('start = "abcd"|1.. |').toParseAs(rangeGrammar(1, null));
+    expect('start = "abcd"|2.. |').toParseAs(rangeGrammar(2, null));
+
+    expect('start = "abcd"| ..1|').toParseAs(rangeGrammar(0, 1));
+    expect('start = "abcd"| ..2|').toParseAs(rangeGrammar(0, 2));
+
+    expect('start = "abcd"|2..2|').toParseAs(rangeGrammar(2, 2));
+    expect('start = "abcd"|2..3|').toParseAs(rangeGrammar(2, 3));
+    expect('start = "abcd"|3|').toParseAs(rangeGrammar(3, 3));
+
+    expect('start = "abcd"| ..0|').toFailToParse();
+    expect('start = "abcd"|0..0|').toFailToParse();
+    expect('start = "abcd"|0|').toFailToParse();
   });
 
   /* Canonical RuleReferenceExpression is "a". */
