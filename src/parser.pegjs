@@ -150,12 +150,27 @@ SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
       return { type: OPS_TO_SUFFIXED_TYPES[operator], expression: expression };
     }
+  / RangeExpression
   / PrimaryExpression
 
 SuffixedOperator
   = "?"
   / "*"
   / "+"
+
+RangeExpression
+  = expression:PrimaryExpression __ operator:RangeOperator {
+      var min = operator[0];
+      var max = operator[1];
+      if (max === 0) {
+        error("The maximum count of repetitions of the rule cann't be 0.");
+      }
+      return { type: "range", min: min, max: max, expression: expression };
+    }
+
+RangeOperator
+  = "|" __ exact:Int __ "|" { return [exact, exact]; }
+  / "|" __ min:Int? __ ".." __ max:Int? __ "|" { return [min !== null ? min : 0 , max]; }
 
 PrimaryExpression
   = LiteralMatcher
@@ -412,6 +427,9 @@ CodeBlock "code block"
 
 Code
   = $((![{}] SourceCharacter)+ / "{" Code "}")*
+
+Int
+  = digits:$DecimalDigit+ { return parseInt(digits); }
 
 /*
  * Unicode Character Categories

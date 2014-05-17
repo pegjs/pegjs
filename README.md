@@ -294,6 +294,22 @@ expression as many times as possible.
 Try to match the expression. If the match succeeds, return its match result,
 otherwise return `null`.
 
+#### *expression* |count|<br> *expression* |min..max|
+
+Match exact `count` repetitions of `expression`. If the match succeeds, return
+their match results in an array.
+
+-or-
+
+Match expression at least `min` but not more then `max` times. If the match
+succeeds, return their match results in an array. Both `min` and `max` may
+be omitted. If `min` is omitted, then it is assumed to be `0`. If `max` is
+omitted, then it is assumed to be infinity. Hence `expression |..|` is an
+equivalent of `expression |0..|` and `expression *`. `expression |1..|` is
+equivalent of `expression +`.
+
+`count`, `min` and `max` must be positive integers.
+
 #### & *expression*
 
 Try to match the expression. If the match succeeds, just return `undefined` and
