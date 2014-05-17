@@ -87,4 +87,8 @@ describe("compiler pass |reportMissingRules|", function() {
   it("reports missing rule referenced from a one or more", function() {
     expect(pass).toReportMissingRuleIn('start = missing+');
   });
+
+  it("reports missing rule referenced from a range", function() {
+    expect(pass).toReportMissingRuleIn('start = missing|2..3|');
+  });
 });

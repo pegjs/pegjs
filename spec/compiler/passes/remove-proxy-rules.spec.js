@@ -125,6 +125,15 @@ describe("compiler pass |removeProxyRules|", function() {
     );
   });
 
+  it("removes proxy rule from a range", function() {
+    expect(pass).toChangeAST(
+      proxyGrammar('start = proxy|2..3|'),
+      defaultOptions,
+      simpleDetails
+    );
+  });
+
+
   it("doesn't remove a proxy rule listed in |allowedStartRules|", function() {
     expect(pass).toChangeAST(
       proxyGrammar('start = proxy'),
