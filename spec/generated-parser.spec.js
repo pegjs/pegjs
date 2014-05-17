@@ -704,95 +704,204 @@ describe("generated parser", function() {
     });
 
     describe("range matching", function() {
-      it("| .. | matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|..|', options);
+      describe("without delimiter", function() {
+        it("| .. | matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|..|', options);
 
-        expect(parser).toParse("",   []);
-        expect(parser).toParse("a",   ["a"]);
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).toParse("",   []);
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+        });
+
+        it("|0.. | matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|0..|', options);
+
+          expect(parser).toParse("",   []);
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+        });
+
+        it("|1.. | matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|1..|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+        });
+
+        it("|2.. | matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2..|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+        });
+
+        it("| ..1| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|..1|', options);
+
+          expect(parser).toParse("",    []);
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toFailToParse("aa");
+          expect(parser).toFailToParse("aaa");
+        });
+
+        it("| ..2| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|..2|', options);
+
+          expect(parser).toParse("",    []);
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toFailToParse("aaa");
+        });
+
+        it("|2..3| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2..3|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).toFailToParse("aaaa");
+        });
+
+        it("|2..2| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2..2|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toFailToParse("aaa");
+        });
+
+        it("|2   | matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("aa",  ["a", "a"]);
+          expect(parser).toFailToParse("aaa");
+        });
+
+        it("|3..2| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|3..2|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toFailToParse("aa");
+          expect(parser).toFailToParse("aaa");
+        });
       });
 
-      it("|0.. | matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|0..|', options);
+      describe("with delimiter", function() {
+        it("| .. , delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|.., "~"|', options);
 
-        expect(parser).toParse("",   []);
-        expect(parser).toParse("a",   ["a"]);
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).toParse("",      []);
+          expect(parser).toParse("a",     ["a"]);
+          expect(parser).toParse("a~a",   ["a", "a"]);
+          expect(parser).toParse("a~a~a", ["a", "a", "a"]);
+        });
+
+        it("|0.. , delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|0.., "~"|', options);
+
+          expect(parser).toParse("",      []);
+          expect(parser).toParse("a",     ["a"]);
+          expect(parser).toParse("a~a",   ["a", "a"]);
+          expect(parser).toParse("a~a~a", ["a", "a", "a"]);
+        });
+
+        it("|1.. , delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|1.., "~"|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toParse("a",     ["a"]);
+          expect(parser).toParse("a~a",   ["a", "a"]);
+          expect(parser).toParse("a~a~a", ["a", "a", "a"]);
+        });
+
+        it("|2.. , delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2.., "~"|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("a~a",   ["a", "a"]);
+          expect(parser).toParse("a~a~a", ["a", "a", "a"]);
+        });
+
+        it("| ..1, delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|..1, "~"|', options);
+
+          expect(parser).toParse("",    []);
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toFailToParse("a~a");
+          expect(parser).toFailToParse("a~a~a");
+        });
+
+        it("| ..2, delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|..2, "~"|', options);
+
+          expect(parser).toParse("",     []);
+          expect(parser).toParse("a",    ["a"]);
+          expect(parser).toParse("a~a",  ["a", "a"]);
+          expect(parser).toFailToParse("a~a~a");
+        });
+
+        it("|2..3, delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2..3, "~"|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("a~a",   ["a", "a"]);
+          expect(parser).toParse("a~a~a", ["a", "a", "a"]);
+          expect(parser).toFailToParse("a~a~a~a");
+        });
+
+        it("|2..2, delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2..2, "~"|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("a~a",  ["a", "a"]);
+          expect(parser).toFailToParse("a~a~a");
+        });
+
+        it("|2   , delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|2, "~"|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("a~a",  ["a", "a"]);
+          expect(parser).toFailToParse("a~a~a");
+        });
+
+        it("|3..2, delimiter| matches correctly", function() {
+          var parser = PEG.buildParser('start = "a"|3..2, "~"|', options);
+
+          expect(parser).toFailToParse("");
+          expect(parser).toFailToParse("a");
+          expect(parser).toFailToParse("a~a");
+          expect(parser).toFailToParse("a~a~a");
+        });
       });
 
-      it("|1.. | matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|1..|', options);
-
-        expect(parser).toFailToParse("");
-        expect(parser).toParse("a",   ["a"]);
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toParse("aaa", ["a", "a", "a"]);
-      });
-
-      it("|2.. | matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|2..|', options);
+      it("handle delimiter correctly", function() {
+        var parser = PEG.buildParser('start = "a"|2..3, "~"|', options);
 
         expect(parser).toFailToParse("");
         expect(parser).toFailToParse("a");
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toParse("aaa", ["a", "a", "a"]);
-      });
-
-      it("| ..1| matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|..1|', options);
-
-        expect(parser).toParse("",    []);
-        expect(parser).toParse("a",   ["a"]);
         expect(parser).toFailToParse("aa");
-        expect(parser).toFailToParse("aaa");
-      });
-
-      it("| ..2| matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|..2|', options);
-
-        expect(parser).toParse("",    []);
-        expect(parser).toParse("a",   ["a"]);
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toFailToParse("aaa");
-      });
-
-      it("|2..3| matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|2..3|', options);
-
-        expect(parser).toFailToParse("");
-        expect(parser).toFailToParse("a");
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toParse("aaa", ["a", "a", "a"]);
-        expect(parser).toFailToParse("aaaa");
-      });
-
-      it("|2..2| matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|2..2|', options);
-
-        expect(parser).toFailToParse("");
-        expect(parser).toFailToParse("a");
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toFailToParse("aaa");
-      });
-
-      it("|2| matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|2|', options);
-
-        expect(parser).toFailToParse("");
-        expect(parser).toFailToParse("a");
-        expect(parser).toParse("aa",  ["a", "a"]);
-        expect(parser).toFailToParse("aaa");
-      });
-
-      it("|3..2| matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"|3..2|', options);
-
-        expect(parser).toFailToParse("");
-        expect(parser).toFailToParse("a");
-        expect(parser).toFailToParse("aa");
-        expect(parser).toFailToParse("aaa");
+        expect(parser).toFailToParse("a~");
+        expect(parser).toParse("a~a",   ["a", "a"]);
+        expect(parser).toFailToParse("a~a~");
+        expect(parser).toParse("a~a~a", ["a", "a", "a"]);
+        expect(parser).toFailToParse("a~a~a~");
+        expect(parser).toFailToParse("a~a~a~a");
       });
     });
 
