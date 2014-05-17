@@ -501,6 +501,204 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
+  describe("for range", function() {
+    describe("| .. | (edge case -- no boundaries)", function() {
+      var grammar = 'start = "a"| .. |';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 9,                       // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
+          2                            // POP
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("| ..3| (edge case -- no min boundary)", function() {
+      var grammar = 'start = "a"| ..3|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 14,                      // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          31, 3, 1, 8,                 //     IF_ARRLEN_MAX
+          28,                          //       * PUSH_FAILED
+          14, 0, 2, 2, 18, 0, 19, 1,   //       * <expression>
+          2                            // POP
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("| ..1| (edge case -- no min boundary -- same as |optional|)", function() {
+      var grammar = 'start = "a"| ..1|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 14,                      // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          31, 1, 1, 8,                 //     IF_ARRLEN_MAX
+          28,                          //       * PUSH_FAILED
+          14, 0, 2, 2, 18, 0, 19, 1,   //       * <expression>
+          2                            // POP
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|2.. | (edge case -- no max boundary)", function() {
+      var grammar = 'start = "a"|2.. |';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 9,                       // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
+          2,                           // POP
+          30, 2, 2, 0,                 // IF_ARRLEN_MIN
+          2,                           //   * POP
+          28                           //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|0.. | (edge case -- no max boundary -- same as |zero or more|)", function() {
+      var grammar = 'start = "a"|0.. |';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 9,                       // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
+          2,                           // POP
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|1.. | (edge case -- no max boundary -- same as |one or more|)", function() {
+      var grammar = 'start = "a"|1.. |';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 9,                       // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
+          2,                           // POP
+          30, 1, 2, 0,                 // IF_ARRLEN_MIN
+          2,                           //   * POP
+          28                           //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|2..3|", function() {
+      var grammar = 'start = "a"|2..3|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 14,                      // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          31, 3, 1, 8,                 //     IF_ARRLEN_MAX
+          28,                          //       * PUSH_FAILED
+          14, 0, 2, 2, 18, 0, 19, 1,   //       * <expression>
+          2,                           // POP
+          30, 2, 2, 0,                 // IF_ARRLEN_MIN
+          2,                           //   * POP
+          28                           //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+
+    describe("|42| (edge case -- exact repetitions)", function() {
+      var grammar = 'start = "a"|42|';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29,                          // PUSH_EMPTY_ARRAY
+          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          12, 14,                      // WHILE_NOT_ERROR
+          6,                           //   * APPEND
+          31, 42, 1, 8,                //     IF_ARRLEN_MAX
+          28,                          //       * PUSH_FAILED
+          14, 0, 2, 2, 18, 0, 19, 1,   //       * <expression>
+          2,                           // POP
+          30, 42, 2, 0,                // IF_ARRLEN_MIN
+          2,                           //   * POP
+          28                           //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }'
+        ]));
+      });
+    });
+  });
+
   describe("for rule reference", function() {
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST([

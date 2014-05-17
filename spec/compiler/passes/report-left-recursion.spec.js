@@ -87,6 +87,10 @@ describe("compiler pass |reportLeftRecursion|", function() {
     expect(pass).toReportLeftRecursionIn('start = start+');
   });
 
+  it("reports left recursion inside a range", function() {
+    expect(pass).toReportLeftRecursionIn('start = start|2..3|');
+  });
+
   it("reports indirect left recursion", function() {
     expect(pass).toReportLeftRecursionIn([
       'start = stop',
