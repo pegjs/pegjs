@@ -623,11 +623,11 @@ PropertySetParameterList
 
 MemberExpression
   = first:(
-        PrimaryExpression
-      / FunctionExpression
-      / NewToken __ callee:MemberExpression __ args:Arguments {
+        NewToken __ callee:NewExpression __ args:Arguments {
           return { type: "NewExpression", callee: callee, arguments: args };
         }
+      / PrimaryExpression
+      / FunctionExpression
     )
     rest:(
         __ "[" __ property:Expression __ "]" {
@@ -702,15 +702,23 @@ LeftHandSideExpression
   / NewExpression
 
 PostfixExpression
-  = argument:LeftHandSideExpression _ operator:PostfixOperator {
+  = argument:LeftHandSideExpression rest: (_ operator:PostfixOperator {
+      return {
+        operator: operator
+      };
+    })?
+    {
+      if (!rest){
+        return argument;
+      };
       return {
         type:     "UpdateExpression",
-        operator: operator,
+        operator: rest.operator,
         argument: argument,
         prefix:   false
       };
     }
-  / LeftHandSideExpression
+  
 
 PostfixOperator
   = "++"
@@ -876,81 +884,125 @@ LogicalORExpressionNoIn
 
 LogicalOROperator
   = "||"
+  
+  
+Operator
+  = LogicalOROperator
+  / LogicalANDOperator
+  / BitwiseOROperator
+  / BitwiseXOROperator
+  / BitwiseANDOperator
+  / EqualityOperator
+  / RelationalOperator
+  / ShiftOperator
+  / AdditiveOperator
+  / MultiplicativeOperator
+  
+OperatorNoIn
+  = LogicalOROperator
+  / LogicalANDOperator
+  / BitwiseOROperator
+  / BitwiseXOROperator
+  / BitwiseANDOperator
+  / EqualityOperator
+  / RelationalOperatorNoIn
+  / ShiftOperator
+  / AdditiveOperator
+  / MultiplicativeOperator
+
 
 ConditionalExpression
   = test:LogicalORExpression __
-    "?" __ consequent:AssignmentExpression __
-    ":" __ alternate:AssignmentExpression
+    rest:( "?" __ consequent:AssignmentExpression __
+      ":" __ alternate:AssignmentExpression
+      {
+        return {
+          consequent: consequent,
+          alternate:  alternate
+        }
+      })?
     {
-      return {
-        type:       "ConditionalExpression",
-        test:       test,
-        consequent: consequent,
-        alternate:  alternate
+      if (rest){
+        return {
+          type:       "ConditionalExpression",
+          test:       test,
+          consequent: rest.consequent,
+          alternate:  rest.alternate
+        };
       };
+      return test;
     }
-  / LogicalORExpression
 
 ConditionalExpressionNoIn
   = test:LogicalORExpressionNoIn __
-    "?" __ consequent:AssignmentExpression __
-    ":" __ alternate:AssignmentExpressionNoIn
+    rest:( "?" __ consequent:AssignmentExpression __
+      ":" __ alternate:AssignmentExpressionNoIn
+      {
+        return {
+          consequent: consequent,
+          alternate:  alternate
+        }
+      })?
     {
-      return {
-        type:       "ConditionalExpression",
-        test:       test,
-        consequent: consequent,
-        alternate:  alternate
+      if (rest){
+        return {
+          type:       "ConditionalExpression",
+          test:       test,
+          consequent: rest.consequent,
+          alternate:  rest.alternate
+        };
       };
+      return test;
     }
-  / LogicalORExpressionNoIn
 
 AssignmentExpression
-  = left:LeftHandSideExpression __
-    "=" !"=" __
-    right:AssignmentExpression
+  = left:(exp:LeftHandSideExpression !( __ Operator) !( __ UnaryOperator){
+      return exp;
+    })
+    rest: ( __ operator:AssignmentOperator __
+      right:AssignmentExpression
+      {
+        return {
+          operator: operator,
+          right:    right
+        }
+      }
+    )?
     {
-      return {
-        type:     "AssignmentExpression",
-        operator: "=",
-        left:     left,
-        right:    right
+      if (!rest){
+        return left;
       };
-    }
-  / left:LeftHandSideExpression __
-    operator:AssignmentOperator __
-    right:AssignmentExpression
-    {
       return {
         type:     "AssignmentExpression",
-        operator: operator,
+        operator: rest.operator,
         left:     left,
-        right:    right
+        right:    rest.right
       };
     }
   / ConditionalExpression
 
 AssignmentExpressionNoIn
-  = left:LeftHandSideExpression __
-    "=" !"=" __
-    right:AssignmentExpressionNoIn
+  = left:(exp:LeftHandSideExpression !( __ Operator) !( __ UnaryOperator){
+      return exp;
+    })
+    rest: ( __ operator:AssignmentOperator __
+      right:AssignmentExpressionNoIn
+      {
+        return {
+          operator: operator,
+          right:    right
+        }
+      }
+    )?
     {
-      return {
-        type:     "AssignmentExpression",
-        operator: "=",
-        left:     left,
-        right:    right
+      if (!rest){
+        return left;
       };
-    }
-  / left:LeftHandSideExpression __
-    operator:AssignmentOperator __
-    right:AssignmentExpressionNoIn
-    {
       return {
         type:     "AssignmentExpression",
-        operator: operator,
+        operator: rest.operator,
         left:     left,
-        right:    right
+        right:    rest.right
       };
     }
   / ConditionalExpressionNoIn
@@ -967,6 +1019,7 @@ AssignmentOperator
   / "&="
   / "^="
   / "|="
+  / "=" !"="
 
 Expression
   = first:AssignmentExpression rest:(__ "," __ AssignmentExpression)* {
