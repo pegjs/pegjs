@@ -1,4 +1,4 @@
-describe("generated parser", function() {
+describe("generated parser behavior", function() {
   function varyOptimizationOptions(block) {
     function clone(object) {
       var result = {}, key;
@@ -118,37 +118,6 @@ describe("generated parser", function() {
           return true;
         }
       }
-    });
-  });
-
-  describe("parse", function() {
-    var parser = PEG.buildParser([
-          'a = "x" { return "a"; }',
-          'b = "x" { return "b"; }',
-          'c = "x" { return "c"; }'
-        ].join("\n"), { allowedStartRules: ["b", "c"] });
-
-    describe("start rule", function() {
-      describe("without the |startRule| option", function() {
-        it("uses the first allowed rule", function() {
-          expect(parser).toParse("x", "b");
-        });
-      });
-
-      describe("when the |startRule| option specifies allowed rule", function() {
-        it("uses the specified rule", function() {
-          expect(parser).toParse("x", { startRule: "b" }, "b");
-          expect(parser).toParse("x", { startRule: "c" }, "c");
-        });
-      });
-
-      describe("when the |startRule| option specifies disallowed rule", function() {
-        it("throws exception", function() {
-          expect(parser).toFailToParse("x", { startRule: "a" }, {
-            message: "Can't start parsing from rule \"a\"."
-          });
-        });
-      });
     });
   });
 
