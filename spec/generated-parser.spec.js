@@ -1101,6 +1101,38 @@ describe("generated parser", function() {
       });
     });
 
+    describe("exportVar", function() {
+      var grammar = 'start = "a"';
+
+      describe("without the |exportVar| option", function() {
+        it("get a parser object", function() {
+          var source = PEG.buildParser(grammar, { output: "source" });
+
+          var root = {};
+          (function() {
+            eval(source);
+          }).call(root);
+
+          expect(typeof root.PEG).toBe("object");
+          expect(root.PEG).toParse("a", "a");
+        });
+      });
+
+      describe("when the |exportVar| option is set to \"parser\"", function() {
+        it("returns a parser object", function() {
+          var source = PEG.buildParser(grammar, { output: "source", exportVar: "parser" });
+
+          var root = {};
+          (function() {
+            eval(source);
+          }).call(root);
+
+          expect(typeof root.parser).toBe("object");
+          expect(root.parser).toParse("a", "a");
+        });
+      });
+    });
+
     /*
      * Following examples are from Wikipedia, see
      * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
@@ -1209,6 +1241,78 @@ describe("generated parser", function() {
           "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)",
           "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)"
         );
+      });
+    });
+  });
+
+  var exports = false; // typeof exports !== "object" in eval context.
+  describe("publish module", function() {
+    var grammar = 'start = "a"';
+
+    describe("AMD style", function() {
+      it("get a parser object", function() {
+        var source = PEG.buildParser(grammar, { output: "source" });
+
+        var factory;
+        function define (func) {
+          factory = func;
+        }
+        define.amd = true;
+
+        var root = {
+          define: define
+        };
+        (function() {
+          eval(source);
+        }).call(root);
+
+        var parser = factory();
+        expect(typeof parser).toBe("object");
+        expect(parser).toParse("a", "a");
+      });
+    });
+
+    describe("CommonJS style", function() {
+      it("get a parser object", function() {
+        var source = PEG.buildParser(grammar, { output: "source" });
+
+        var module = { exports: {} };
+        var exports = {};
+        eval(source);
+
+        var parser = module.exports;
+        expect(typeof parser).toBe("object");
+        expect(parser).toParse("a", "a");
+      });
+    });
+
+    describe("PEG.js style", function() {
+      it("get a parser object", function() {
+        var source = PEG.buildParser(grammar, { output: "source" });
+
+        var modules = { define: function() {} };
+        var module = {};
+        eval(source);
+
+        var parser = module.exports;
+        expect(typeof parser).toBe("object");
+        expect(parser).toParse("a", "a");
+      });
+    });
+
+    describe("Web Browser style", function() {
+      it("get a parser object", function() {
+        var source = PEG.buildParser(grammar, { output: "source" });
+
+        var root = {
+        };
+        (function() {
+          eval(source);
+        }).call(root);
+
+        var parser = root.PEG;
+        expect(typeof parser).toBe("object");
+        expect(parser).toParse("a", "a");
       });
     });
   });
