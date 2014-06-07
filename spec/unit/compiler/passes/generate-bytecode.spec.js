@@ -229,7 +229,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for simple and", function() {
+  describe("for simple_and", function() {
     var grammar = 'start = &"a"';
 
     it("generates correct bytecode", function() {
@@ -256,7 +256,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for simple not", function() {
+  describe("for simple_not", function() {
     var grammar = 'start = !"a"';
 
     it("generates correct bytecode", function() {
@@ -303,7 +303,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for zero or more", function() {
+  describe("for zero_or_more", function() {
     var grammar = 'start = "a"*';
 
     it("generates correct bytecode", function() {
@@ -325,7 +325,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for one or more", function() {
+  describe("for one_or_more", function() {
     var grammar = 'start = "a"+';
 
     it("generates correct bytecode", function() {
@@ -351,7 +351,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for semantic and", function() {
+  describe("for semantic_and", function() {
     describe("without labels", function() {
       var grammar = 'start = &{ code }';
 
@@ -426,7 +426,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for semantic not", function() {
+  describe("for semantic_not", function() {
     describe("without labels", function() {
       var grammar = 'start = !{ code }';
 
@@ -501,7 +501,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for rule reference", function() {
+  describe("for rule_ref", function() {
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST([
         'start = other',
