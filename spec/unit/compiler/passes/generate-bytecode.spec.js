@@ -50,6 +50,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for named", function() {
     var grammar = 'start "start" = "a"';
+
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
         24,                          // SILENT_FAILS_ON
@@ -132,6 +133,7 @@ describe("compiler pass |generateBytecode|", function() {
 
     describe("with multiple labels", function() {
       var grammar = 'start = a:"a" b:"b" c:"c" { code }';
+
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
