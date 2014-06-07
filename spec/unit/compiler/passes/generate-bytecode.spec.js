@@ -283,6 +283,74 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
+  describe("for optional", function() {
+    var grammar = 'start = "a"?';
+
+    it("generates correct bytecode", function() {
+      expect(pass).toChangeAST(grammar, bytecodeDetails([
+        14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+        10, 2, 0,                    // IF_ERROR
+        2,                           //   * POP
+        27                           //     PUSH_NULL
+      ]));
+    });
+
+    it("defines correct constants", function() {
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
+    });
+  });
+
+  describe("for zero or more", function() {
+    var grammar = 'start = "a"*';
+
+    it("generates correct bytecode", function() {
+      expect(pass).toChangeAST(grammar, bytecodeDetails([
+        29,                          // PUSH_EMPTY_ARRAY
+        14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+        12, 9,                       // WHILE_NOT_ERROR
+        6,                           //   * APPEND
+        14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
+        2                            // POP
+      ]));
+    });
+
+    it("defines correct constants", function() {
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
+    });
+  });
+
+  describe("for one or more", function() {
+    var grammar = 'start = "a"+';
+
+    it("generates correct bytecode", function() {
+      expect(pass).toChangeAST(grammar, bytecodeDetails([
+        29,                          // PUSH_EMPTY_ARRAY
+        14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+        11, 12, 3,                   // IF_NOT_ERROR
+        12, 9,                       //   * WHILE_NOT_ERROR
+        6,                           //       * APPEND
+        14, 0, 2, 2, 18, 0, 19, 1,   //         <expression>
+        2,                           //     POP
+        2,                           //   * POP
+        2,                           //     POP
+        28                           //     PUSH_FAILED
+      ]));
+    });
+
+    it("defines correct constants", function() {
+      expect(pass).toChangeAST(grammar, constsDetails([
+        '"a"',
+        '{ type: "literal", value: "a", description: "\\"a\\"" }'
+      ]));
+    });
+  });
+
   describe("for semantic and", function() {
     describe("without labels", function() {
       var grammar = 'start = &{ code }';
@@ -430,74 +498,6 @@ describe("compiler pass |generateBytecode|", function() {
           'function(a, b, c) { code }'
         ]));
       });
-    });
-  });
-
-  describe("for optional", function() {
-    var grammar = 'start = "a"?';
-
-    it("generates correct bytecode", function() {
-      expect(pass).toChangeAST(grammar, bytecodeDetails([
-        14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
-        10, 2, 0,                    // IF_ERROR
-        2,                           //   * POP
-        27                           //     PUSH_NULL
-      ]));
-    });
-
-    it("defines correct constants", function() {
-      expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        '{ type: "literal", value: "a", description: "\\"a\\"" }'
-      ]));
-    });
-  });
-
-  describe("for zero or more", function() {
-    var grammar = 'start = "a"*';
-
-    it("generates correct bytecode", function() {
-      expect(pass).toChangeAST(grammar, bytecodeDetails([
-        29,                          // PUSH_EMPTY_ARRAY
-        14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
-        12, 9,                       // WHILE_NOT_ERROR
-        6,                           //   * APPEND
-        14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
-        2                            // POP
-      ]));
-    });
-
-    it("defines correct constants", function() {
-      expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        '{ type: "literal", value: "a", description: "\\"a\\"" }'
-      ]));
-    });
-  });
-
-  describe("for one or more", function() {
-    var grammar = 'start = "a"+';
-
-    it("generates correct bytecode", function() {
-      expect(pass).toChangeAST(grammar, bytecodeDetails([
-        29,                          // PUSH_EMPTY_ARRAY
-        14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
-        11, 12, 3,                   // IF_NOT_ERROR
-        12, 9,                       //   * WHILE_NOT_ERROR
-        6,                           //       * APPEND
-        14, 0, 2, 2, 18, 0, 19, 1,   //         <expression>
-        2,                           //     POP
-        2,                           //   * POP
-        2,                           //     POP
-        28                           //     PUSH_FAILED
-      ]));
-    });
-
-    it("defines correct constants", function() {
-      expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        '{ type: "literal", value: "a", description: "\\"a\\"" }'
-      ]));
     });
   });
 
