@@ -173,6 +173,27 @@ describe("generated parser", function() {
     });
   });
 
+  describe("parse", function() {
+    var parser = PEG.buildParser([
+          'a = "ab" { return "ab"; }',
+          '  / "b" { return "b"; }'
+        ].join("\n"));
+
+    describe("start offset", function() {
+      describe("without the |startOffset| option", function() {
+        it("starts at the beginning", function() {
+          expect(parser).toParse("ab", "ab");
+        });
+      });
+
+      describe("when the |startOffset| option specifies a position", function() {
+        it("starts at the offset", function() {
+          expect(parser).toParse("ab", { startOffset: 1 }, "b");
+        });
+      });
+    });
+  });
+
   varyAll(function(options) {
     describe("initializer code", function() {
       it("runs before the parsing begins", function() {

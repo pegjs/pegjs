@@ -132,9 +132,10 @@ the input is invalid. The exception will contain `offset`, `line`, `column`,
     parser.parse("abcd"); // throws an exception
 
 You can tweak parser behavior by passing a second parameter with an options
-object to the `parse` method. Only one option is currently supported:
+object to the `parse` method. Two options are currently supported:
 
   * `startRule` — name of the rule to start parsing from
+  * `startOffset` — start parsing the input at this position
 
 Parsers can also support their own custom options.
 
