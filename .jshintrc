@@ -8,7 +8,9 @@
   "latedef":  "nofunc",
   "laxbreak": true,
   "noarg":    true,
+  "node":     true,
   "noempty":  true,
   "nonew":    true,
-  "trailing": true
+  "trailing": true,
+  "undef":    true
 }
