@@ -80,7 +80,7 @@ browser:
 	echo 'var PEG = (function(undefined) {'                                            >> $(BROWSER_FILE_DEV)
 	echo '  var modules = {'                                                           >> $(BROWSER_FILE_DEV)
 	echo '    define: function(name, factory) {'                                       >> $(BROWSER_FILE_DEV)
-	echo '      var dir    = name.replace(/(^|\/)[^/]+$$/, "$$1"),'                    >> $(BROWSER_FILE_DEV)
+	echo '      var dir    = name.replace(/(^|\/)[^\/]+$$/, "$$1"),'                   >> $(BROWSER_FILE_DEV)
 	echo '          module = { exports: {} };'                                         >> $(BROWSER_FILE_DEV)
 	echo ''                                                                            >> $(BROWSER_FILE_DEV)
 	echo '      function require(path) {'                                              >> $(BROWSER_FILE_DEV)
