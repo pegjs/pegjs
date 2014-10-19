@@ -50,6 +50,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for named", function() {
     var grammar = 'start "start" = "a"';
+
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
         24,                          // SILENT_FAILS_ON
@@ -132,6 +133,7 @@ describe("compiler pass |generateBytecode|", function() {
 
     describe("with multiple labels", function() {
       var grammar = 'start = a:"a" b:"b" c:"c" { code }';
+
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
@@ -229,7 +231,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for simple and", function() {
+  describe("for simple_and", function() {
     var grammar = 'start = &"a"';
 
     it("generates correct bytecode", function() {
@@ -256,7 +258,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for simple not", function() {
+  describe("for simple_not", function() {
     var grammar = 'start = !"a"';
 
     it("generates correct bytecode", function() {
@@ -283,156 +285,6 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for semantic and", function() {
-    describe("without labels", function() {
-      var grammar = 'start = &{ code }';
-
-      it("generates correct bytecode", function() {
-        expect(pass).toChangeAST(grammar, bytecodeDetails([
-          21,            // REPORT_CURR_POS
-          22, 0, 0, 0,   // CALL
-          9, 2, 2,       // IF
-          2,             //   * POP
-          26,            //     PUSH_UNDEFINED
-          2,             //   * POP
-          28             //     PUSH_FAILED
-        ]));
-      });
-
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          grammar,
-          constsDetails(['function() { code }'])
-        );
-      });
-    });
-
-    describe("with labels", function() {
-      var grammar = 'start = a:"a" b:"b" c:"c" &{ code }';
-
-      it("generates correct bytecode", function() {
-        expect(pass).toChangeAST(grammar, bytecodeDetails([
-          1,                           // PUSH_CURR_POS
-          14, 0, 2, 2, 18, 0, 19, 1,   // <elements[0]>
-          11, 55, 3,                   // IF_NOT_ERROR
-          14, 2, 2, 2, 18, 2, 19, 3,   //   * <elements[1]>
-          11, 40, 4,                   //     IF_NOT_ERROR
-          14, 4, 2, 2, 18, 4, 19, 5,   //       * <elements[2]>
-          11, 25, 4,                   //         IF_NOT_ERROR
-          21,                          //           * REPORT_CURR_POS
-          22, 6, 0, 3, 2, 1, 0,        //             CALL
-          9, 2, 2,                     //             IF
-          2,                           //               * POP
-          26,                          //                 PUSH_UNDEFINED
-          2,                           //               * POP
-          28,                          //                 PUSH_FAILED
-          11, 3, 4,                    //             IF_NOT_ERROR
-          7, 4,                        //               * WRAP
-          5,                           //                 NIP
-          4, 4,                        //               * POP_N
-          3,                           //                 POP_CURR_POS
-          28,                          //                 PUSH_FAILED
-          4, 3,                        //           * POP_N
-          3,                           //             POP_CURR_POS
-          28,                          //             PUSH_FAILED
-          4, 2,                        //       * POP_N
-          3,                           //         POP_CURR_POS
-          28,                          //         PUSH_FAILED
-          2,                           //   * POP
-          3,                           //     POP_CURR_POS
-          28                           //     PUSH_FAILED
-        ]));
-      });
-
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          '{ type: "literal", value: "a", description: "\\"a\\"" }',
-          '"b"',
-          '{ type: "literal", value: "b", description: "\\"b\\"" }',
-          '"c"',
-          '{ type: "literal", value: "c", description: "\\"c\\"" }',
-          'function(a, b, c) { code }'
-        ]));
-      });
-    });
-  });
-
-  describe("for semantic not", function() {
-    describe("without labels", function() {
-      var grammar = 'start = !{ code }';
-
-      it("generates correct bytecode", function() {
-        expect(pass).toChangeAST(grammar, bytecodeDetails([
-          21,            // REPORT_CURR_POS
-          22, 0, 0, 0,   // CALL
-          9, 2, 2,       // IF
-          2,             //   * POP
-          28,            //     PUSH_FAILED
-          2,             //   * POP
-          26             //     PUSH_UNDEFINED
-        ]));
-      });
-
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST(
-          grammar,
-          constsDetails(['function() { code }'])
-        );
-      });
-    });
-
-    describe("with labels", function() {
-      var grammar = 'start = a:"a" b:"b" c:"c" !{ code }';
-
-      it("generates correct bytecode", function() {
-        expect(pass).toChangeAST(grammar, bytecodeDetails([
-          1,                           // PUSH_CURR_POS
-          14, 0, 2, 2, 18, 0, 19, 1,   // <elements[0]>
-          11, 55, 3,                   // IF_NOT_ERROR
-          14, 2, 2, 2, 18, 2, 19, 3,   //   * <elements[1]>
-          11, 40, 4,                   //     IF_NOT_ERROR
-          14, 4, 2, 2, 18, 4, 19, 5,   //       * <elements[2]>
-          11, 25, 4,                   //         IF_NOT_ERROR
-          21,                          //           * REPORT_CURR_POS
-          22, 6, 0, 3, 2, 1, 0,        //             CALL
-          9, 2, 2,                     //             IF
-          2,                           //               * POP
-          28,                          //                 PUSH_FAILED
-          2,                           //               * POP
-          26,                          //                 PUSH_UNDEFINED
-          11, 3, 4,                    //             IF_NOT_ERROR
-          7, 4,                        //               * WRAP
-          5,                           //                 NIP
-          4, 4,                        //               * POP_N
-          3,                           //                 POP_CURR_POS
-          28,                          //                 PUSH_FAILED
-          4, 3,                        //           * POP_N
-          3,                           //             POP_CURR_POS
-          28,                          //             PUSH_FAILED
-          4, 2,                        //       * POP_N
-          3,                           //         POP_CURR_POS
-          28,                          //         PUSH_FAILED
-          2,                           //   * POP
-          3,                           //     POP_CURR_POS
-          28                           //     PUSH_FAILED
-        ]));
-      });
-
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          '{ type: "literal", value: "a", description: "\\"a\\"" }',
-          '"b"',
-          '{ type: "literal", value: "b", description: "\\"b\\"" }',
-          '"c"',
-          '{ type: "literal", value: "c", description: "\\"c\\"" }',
-          'function(a, b, c) { code }'
-        ]));
-      });
-    });
-  });
-
   describe("for optional", function() {
     var grammar = 'start = "a"?';
 
@@ -453,7 +305,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for zero or more", function() {
+  describe("for zero_or_more", function() {
     var grammar = 'start = "a"*';
 
     it("generates correct bytecode", function() {
@@ -475,7 +327,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for one or more", function() {
+  describe("for one_or_more", function() {
     var grammar = 'start = "a"+';
 
     it("generates correct bytecode", function() {
@@ -699,8 +551,159 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
-  describe("for rule reference", function() {
+  describe("for semantic_and", function() {
+    describe("without labels", function() {
+      var grammar = 'start = &{ code }';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          21,            // REPORT_CURR_POS
+          22, 0, 0, 0,   // CALL
+          9, 2, 2,       // IF
+          2,             //   * POP
+          26,            //     PUSH_UNDEFINED
+          2,             //   * POP
+          28             //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(
+          grammar,
+          constsDetails(['function() { code }'])
+        );
+      });
+    });
+
+    describe("with labels", function() {
+      var grammar = 'start = a:"a" b:"b" c:"c" &{ code }';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          1,                           // PUSH_CURR_POS
+          14, 0, 2, 2, 18, 0, 19, 1,   // <elements[0]>
+          11, 55, 3,                   // IF_NOT_ERROR
+          14, 2, 2, 2, 18, 2, 19, 3,   //   * <elements[1]>
+          11, 40, 4,                   //     IF_NOT_ERROR
+          14, 4, 2, 2, 18, 4, 19, 5,   //       * <elements[2]>
+          11, 25, 4,                   //         IF_NOT_ERROR
+          21,                          //           * REPORT_CURR_POS
+          22, 6, 0, 3, 2, 1, 0,        //             CALL
+          9, 2, 2,                     //             IF
+          2,                           //               * POP
+          26,                          //                 PUSH_UNDEFINED
+          2,                           //               * POP
+          28,                          //                 PUSH_FAILED
+          11, 3, 4,                    //             IF_NOT_ERROR
+          7, 4,                        //               * WRAP
+          5,                           //                 NIP
+          4, 4,                        //               * POP_N
+          3,                           //                 POP_CURR_POS
+          28,                          //                 PUSH_FAILED
+          4, 3,                        //           * POP_N
+          3,                           //             POP_CURR_POS
+          28,                          //             PUSH_FAILED
+          4, 2,                        //       * POP_N
+          3,                           //         POP_CURR_POS
+          28,                          //         PUSH_FAILED
+          2,                           //   * POP
+          3,                           //     POP_CURR_POS
+          28                           //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
+          '"b"',
+          '{ type: "literal", value: "b", description: "\\"b\\"" }',
+          '"c"',
+          '{ type: "literal", value: "c", description: "\\"c\\"" }',
+          'function(a, b, c) { code }'
+        ]));
+      });
+    });
+  });
+
+  describe("for semantic_not", function() {
+    describe("without labels", function() {
+      var grammar = 'start = !{ code }';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          21,            // REPORT_CURR_POS
+          22, 0, 0, 0,   // CALL
+          9, 2, 2,       // IF
+          2,             //   * POP
+          28,            //     PUSH_FAILED
+          2,             //   * POP
+          26             //     PUSH_UNDEFINED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(
+          grammar,
+          constsDetails(['function() { code }'])
+        );
+      });
+    });
+
+    describe("with labels", function() {
+      var grammar = 'start = a:"a" b:"b" c:"c" !{ code }';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          1,                           // PUSH_CURR_POS
+          14, 0, 2, 2, 18, 0, 19, 1,   // <elements[0]>
+          11, 55, 3,                   // IF_NOT_ERROR
+          14, 2, 2, 2, 18, 2, 19, 3,   //   * <elements[1]>
+          11, 40, 4,                   //     IF_NOT_ERROR
+          14, 4, 2, 2, 18, 4, 19, 5,   //       * <elements[2]>
+          11, 25, 4,                   //         IF_NOT_ERROR
+          21,                          //           * REPORT_CURR_POS
+          22, 6, 0, 3, 2, 1, 0,        //             CALL
+          9, 2, 2,                     //             IF
+          2,                           //               * POP
+          28,                          //                 PUSH_FAILED
+          2,                           //               * POP
+          26,                          //                 PUSH_UNDEFINED
+          11, 3, 4,                    //             IF_NOT_ERROR
+          7, 4,                        //               * WRAP
+          5,                           //                 NIP
+          4, 4,                        //               * POP_N
+          3,                           //                 POP_CURR_POS
+          28,                          //                 PUSH_FAILED
+          4, 3,                        //           * POP_N
+          3,                           //             POP_CURR_POS
+          28,                          //             PUSH_FAILED
+          4, 2,                        //       * POP_N
+          3,                           //         POP_CURR_POS
+          28,                          //         PUSH_FAILED
+          2,                           //   * POP
+          3,                           //     POP_CURR_POS
+          28                           //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
+          '"b"',
+          '{ type: "literal", value: "b", description: "\\"b\\"" }',
+          '"c"',
+          '{ type: "literal", value: "c", description: "\\"c\\"" }',
+          'function(a, b, c) { code }'
+        ]));
+      });
+    });
+  });
+
+  describe("for rule_ref", function() {
     it("generates correct bytecode", function() {
+
       expect(pass).toChangeAST([
         'start = other',
         'other = "other"'
