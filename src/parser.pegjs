@@ -221,9 +221,6 @@ SingleLineComment
 
 Identifier
   = !ReservedWord name:IdentifierName { return name; }
-  / name:IdentifierName {
-      error("Reserved word \"" + name + "\" can't be used as an identifier.");
-    }
 
 IdentifierName "identifier"
   = first:IdentifierStart rest:IdentifierPart* { return first + rest.join(""); }
@@ -312,7 +309,7 @@ BooleanLiteral
 
 LiteralMatcher "literal"
   = value:StringLiteral ignoreCase:"i"? {
-      return { type: "literal", value: value, ignoreCase: ignoreCase !== null };
+      return { type: "literal", region: region(), value: value, ignoreCase: ignoreCase !== null };
     }
 
 StringLiteral "string"
@@ -412,7 +409,7 @@ HexDigit
   = [0-9a-f]i
 
 AnyMatcher
-  = "." { return { type: "any" }; }
+  = "." { return { type: "any", region: region() }; }
 
 CodeBlock "code block"
   = "{" code:Code "}" { return code; }

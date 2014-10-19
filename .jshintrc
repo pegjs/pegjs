@@ -7,8 +7,10 @@
   "immed":    true,
   "latedef":  "nofunc",
   "laxbreak": true,
+  "loopfunc": true,
   "noarg":    true,
   "noempty":  true,
   "nonew":    true,
-  "trailing": true
+  "trailing": true,
+  "-W082":    false
 }

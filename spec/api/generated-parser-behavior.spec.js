@@ -1,43 +1,31 @@
-describe("generated parser", function() {
-  function vary(names, block) {
-    var values = {
-          cache:    [false, true],
-          optimize: ["speed", "size"]
-        };
+describe("generated parser behavior", function() {
+  function varyOptimizationOptions(block) {
+    function clone(object) {
+      var result = {}, key;
 
-    function varyStep(names, options) {
-      var clonedOptions = {}, key, name, i;
-
-      if (names.length === 0) {
-        /*
-         * We have to clone the options so that the block can save them safely
-         * (e.g. by capturing in a closure) without the risk that they will be
-         * changed later.
-         */
-        for (key in options) {
-          if (options.hasOwnProperty(key)) {
-            clonedOptions[key] = options[key];
-          }
-        }
-
-        describe(
-          "with options " + jasmine.pp(clonedOptions),
-          function() { block(clonedOptions); }
-        );
-      } else {
-        name = names[0];
-        for (i = 0; i < values[name].length; i++) {
-          options[name] = values[name][i];
-          varyStep(names.slice(1), options);
+      for (key in object) {
+        if (object.hasOwnProperty(key)) {
+          result[key] = object[key];
         }
       }
+
+      return result;
     }
 
-    varyStep(names, {});
-  }
+    var optionsVariants = [
+          { cache: false, optimize: "speed" },
+          { cache: false, optimize: "size"  },
+          { cache: true,  optimize: "speed" },
+          { cache: true,  optimize: "size"  },
+        ],
+        i;
 
-  function varyAll(block) {
-    vary(["cache", "optimize"], block);
+    for (i = 0; i < optionsVariants.length; i++) {
+      describe(
+        "with options " + jasmine.pp(optionsVariants[i]),
+        function() { block(clone(optionsVariants[i])); }
+      );
+    }
   }
 
   beforeEach(function() {
@@ -76,24 +64,8 @@ describe("generated parser", function() {
         var options = arguments.length > 2 ? arguments[1] : {},
             details = arguments.length > 1
                         ? arguments[arguments.length - 1]
-                        : undefined;
-
-        /*
-         * Extracted into a function just to silence JSHint complaining about
-         * creating functions in a loop.
-         */
-        function buildKeyMessage(key, value) {
-          return function() {
-            return "Expected " + jasmine.pp(input) + " "
-                 + "with options " + jasmine.pp(options) + " "
-                 + "to fail to parse"
-                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                 + "but " + jasmine.pp(key) + " "
-                 + "is " + jasmine.pp(value) + ".";
-          };
-        }
-
-        var result;
+                        : undefined,
+            result;
 
         try {
           result = this.actual.parse(input, options);
@@ -127,7 +99,14 @@ describe("generated parser", function() {
               for (key in details) {
                 if (details.hasOwnProperty(key)) {
                   if (!this.env.equals_(e[key], details[key])) {
-                    this.message = buildKeyMessage(key, e[key]);
+                    this.message = function() {
+                      return "Expected " + jasmine.pp(input) + " "
+                           + "with options " + jasmine.pp(options) + " "
+                           + "to fail to parse"
+                           + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                           + "but " + jasmine.pp(key) + " "
+                           + "is " + jasmine.pp(e[key]) + ".";
+                    };
 
                     return false;
                   }
@@ -142,38 +121,7 @@ describe("generated parser", function() {
     });
   });
 
-  describe("parse", function() {
-    var parser = PEG.buildParser([
-          'a = "x" { return "a"; }',
-          'b = "x" { return "b"; }',
-          'c = "x" { return "c"; }'
-        ].join("\n"), { allowedStartRules: ["b", "c"] });
-
-    describe("start rule", function() {
-      describe("without the |startRule| option", function() {
-        it("uses the first allowed rule", function() {
-          expect(parser).toParse("x", "b");
-        });
-      });
-
-      describe("when the |startRule| option specifies allowed rule", function() {
-        it("uses the specified rule", function() {
-          expect(parser).toParse("x", { startRule: "b" }, "b");
-          expect(parser).toParse("x", { startRule: "c" }, "c");
-        });
-      });
-
-      describe("when the |startRule| option specifies disallowed rule", function() {
-        it("throws exception", function() {
-          expect(parser).toFailToParse("x", { startRule: "a" }, {
-            message: "Can't start parsing from rule \"a\"."
-          });
-        });
-      });
-    });
-  });
-
-  varyAll(function(options) {
+  varyOptimizationOptions(function(options) {
     describe("initializer code", function() {
       it("runs before the parsing begins", function() {
         var parser = PEG.buildParser([
@@ -209,6 +157,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", [1, 1]);
+      });
+
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser([
+              '{ var result = parser; }',
+              'start = "a" { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", parser);
       });
 
       it("can use options passed to the parser", function() {
@@ -323,13 +280,13 @@ describe("generated parser", function() {
         expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
 
         /* Non-Unix newlines */
-        expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
-        expect(parser).toParse("1\r\nx", [2, 1]); // Windows
-        expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+        expect(parser).toParse("1\rx",   [2, 1]);   // Old Mac
+        expect(parser).toParse("1\r\nx", [2, 1]);   // Windows
+        expect(parser).toParse("1\n\rx", [3, 1]);   // mismatched
 
         /* Strange newlines */
-        expect(parser).toParse("1\u2028x", [2, 1]); // line separator
-        expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        expect(parser).toParse("1\u2028x", [2, 1]);   // line separator
+        expect(parser).toParse("1\u2029x", [2, 1]);   // paragraph separator
       });
 
       it("can use variables defined in the initializer", function() {
@@ -380,6 +337,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", 42);
+      });
+
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser(
+              'start = "a" { return parser; }',
+              options
+            );
+
+        expect(parser).toParse("a", parser);
       });
 
       it("can use options passed to the parser", function() {
@@ -519,13 +485,13 @@ describe("generated parser", function() {
         expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
 
         /* Non-Unix newlines */
-        expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
-        expect(parser).toParse("1\r\nx", [2, 1]); // Windows
-        expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+        expect(parser).toParse("1\rx",   [2, 1]);   // Old Mac
+        expect(parser).toParse("1\r\nx", [2, 1]);   // Windows
+        expect(parser).toParse("1\n\rx", [3, 1]);   // mismatched
 
         /* Strange newlines */
-        expect(parser).toParse("1\u2028x", [2, 1]); // line separator
-        expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        expect(parser).toParse("1\u2028x", [2, 1]);   // line separator
+        expect(parser).toParse("1\u2029x", [2, 1]);   // paragraph separator
       });
 
       it("can use variables defined in the initializer", function() {
@@ -544,6 +510,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", ["a", undefined]);
+      });
+
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser([
+              '{ var result; }',
+              'start = "a" &{ result = parser; return true; } { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", parser);
       });
 
       it("can use options passed to the parser", function() {
@@ -610,13 +585,13 @@ describe("generated parser", function() {
         expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", [7, 5]);
 
         /* Non-Unix newlines */
-        expect(parser).toParse("1\rx",   [2, 1]); // Old Mac
-        expect(parser).toParse("1\r\nx", [2, 1]); // Windows
-        expect(parser).toParse("1\n\rx", [3, 1]); // mismatched
+        expect(parser).toParse("1\rx",   [2, 1]);   // Old Mac
+        expect(parser).toParse("1\r\nx", [2, 1]);   // Windows
+        expect(parser).toParse("1\n\rx", [3, 1]);   // mismatched
 
         /* Strange newlines */
-        expect(parser).toParse("1\u2028x", [2, 1]); // line separator
-        expect(parser).toParse("1\u2029x", [2, 1]); // paragraph separator
+        expect(parser).toParse("1\u2028x", [2, 1]);   // line separator
+        expect(parser).toParse("1\u2029x", [2, 1]);   // paragraph separator
       });
 
       it("can use variables defined in the initializer", function() {
@@ -635,6 +610,15 @@ describe("generated parser", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", ["a", undefined]);
+      });
+
+      it("can use the |parser| variable to access the parser object", function() {
+        var parser = PEG.buildParser([
+              '{ var result; }',
+              'start = "a" !{ result = parser; return false; } { return result; }'
+            ].join("\n"), options);
+
+        expect(parser).toParse("a", parser);
       });
 
       it("can use options passed to the parser", function() {
@@ -1009,71 +993,6 @@ describe("generated parser", function() {
       });
     });
 
-    describe("allowed start rules", function() {
-      var grammar = [
-            'a = "x"',
-            'b = "x"',
-            'c = "x"'
-          ].join("\n");
-
-      describe("without the |allowedStartRules| option", function() {
-        var parser = PEG.buildParser(grammar);
-
-        it("allows the first rule", function() {
-          expect(parser).toParse("x", { startRule: "a" }, "x");
-        });
-
-        it("does not allow any other rules", function() {
-          expect(parser).toFailToParse("x", { startRule: "b" }, { });
-          expect(parser).toFailToParse("x", { startRule: "c" }, { });
-        });
-      });
-
-      describe("with the |allowedStartRules| option", function() {
-        var parser = PEG.buildParser(grammar, { allowedStartRules: ["b", "c"] });
-
-        it("allows the specified rules", function() {
-          expect(parser).toParse("x", { startRule: "b" }, "x");
-          expect(parser).toParse("x", { startRule: "c" }, "x");
-        });
-
-        it("does not allow any other rules", function() {
-          expect(parser).toFailToParse("x", { startRule: "a" }, { });
-        });
-      });
-    });
-
-    describe("output", function() {
-      var grammar = 'start = "a"';
-
-      describe("without the |output| option", function() {
-        it("returns a parser object", function() {
-          var parser = PEG.buildParser(grammar);
-
-          expect(typeof parser).toBe("object");
-          expect(parser).toParse("a", "a");
-        });
-      });
-
-      describe("when the |output| option is set to \"parser\"", function() {
-        it("returns a parser object", function() {
-          var parser = PEG.buildParser(grammar, { output: "parser" });
-
-          expect(typeof parser).toBe("object");
-          expect(parser).toParse("a", "a");
-        });
-      });
-
-      describe("when the |output| option is set to \"source\"", function() {
-        it("returns a parser source code", function() {
-          var source = PEG.buildParser(grammar, { output: "source" });
-
-          expect(typeof source).toBe("string");
-          expect(eval(source)).toParse("a", "a");
-        });
-      });
-    });
-
     /*
      * Following examples are from Wikipedia, see
      * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
@@ -1088,19 +1007,19 @@ describe("generated parser", function() {
          */
         var parser = PEG.buildParser([
               'Expr    = Sum',
-              'Sum     = head:Product tail:(("+" / "-") Product)* {',
-              '            var result = head, i;',
-              '            for (i = 0; i < tail.length; i++) {',
-              '              if (tail[i][0] == "+") { result += tail[i][1]; }',
-              '              if (tail[i][0] == "-") { result -= tail[i][1]; }',
+              'Sum     = first:Product rest:(("+" / "-") Product)* {',
+              '            var result = first, i;',
+              '            for (i = 0; i < rest.length; i++) {',
+              '              if (rest[i][0] == "+") { result += rest[i][1]; }',
+              '              if (rest[i][0] == "-") { result -= rest[i][1]; }',
               '            }',
               '            return result;',
               '          }',
-              'Product = head:Value tail:(("*" / "/") Value)* {',
-              '            var result = head, i;',
-              '            for (i = 0; i < tail.length; i++) {',
-              '              if (tail[i][0] == "*") { result *= tail[i][1]; }',
-              '              if (tail[i][0] == "/") { result /= tail[i][1]; }',
+              'Product = first:Value rest:(("*" / "/") Value)* {',
+              '            var result = first, i;',
+              '            for (i = 0; i < rest.length; i++) {',
+              '              if (rest[i][0] == "*") { result *= rest[i][1]; }',
+              '              if (rest[i][0] == "/") { result /= rest[i][1]; }',
               '            }',
               '            return result;',
               '          }',

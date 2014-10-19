@@ -11,8 +11,8 @@ $("#run").click(function() {
   }
 
   function appendResult(klass, title, url, inputSize, parseTime) {
-    var KB      = 1024;
-    var MS_IN_S = 1000;
+    var KB      = 1024,
+        MS_IN_S = 1000;
 
     resultsTable.append(
         "<tr class='" + klass + "'>"
@@ -56,16 +56,16 @@ $("#run").click(function() {
    *   2. To minimize random errors.
    */
 
-  var runCount = parseInt($("#run-count").val(), 10);
+  var runCount = parseInt($("#run-count").val(), 10),
+      options  = {
+        cache:    $("#cache").is(":checked"),
+        optimize: $("#optimize").val()
+      };
+
   if (isNaN(runCount) || runCount <= 0) {
     alert("Number of runs must be a positive integer.");
     return;
   }
-
-  var options = {
-    cache:    $("#cache").is(":checked"),
-    optimize: $("#optimize").val()
-  };
 
   Runner.run(benchmarks, runCount, options, {
     readFile: function(file) {

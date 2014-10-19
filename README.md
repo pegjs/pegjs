@@ -182,13 +182,14 @@ written as a JavaScript string between the name and separating equality sign.
 Rules need to be separated only by whitespace (their beginning is easily
 recognizable), but a semicolon (“;”) after the parsing expression is allowed.
 
-Rules can be preceded by an *initializer* — a piece of JavaScript code in curly
-braces (“{” and “}”). This code is executed before the generated parser starts
-parsing. All variables and functions defined in the initializer are accessible
-in rule actions and semantic predicates. The code inside the initializer can
-access options passed to the parser using the `options` variable. Curly braces
-in the initializer code must be balanced. Let's look at the example grammar 
-from above using a simple initializer.
+The first rule can be preceded by an *initializer* — a piece of JavaScript code
+in curly braces (“{” and “}”). This code is executed before the generated parser
+starts parsing. All variables and functions defined in the initializer are
+accessible in rule actions and semantic predicates. The code inside the
+initializer can access the parser object using the `parser` variable and options
+passed to the parser using the `options` variable. Curly braces in the
+initializer code must be balanced. Let's look at the example grammar from above
+using a simple initializer.
 
     {
       function makeInteger(o) {
@@ -321,8 +322,8 @@ the `offset` function. It returns a zero-based character index into the input
 string. The code can also access the current line and column using the `line`
 and `column` functions. Both return one-based indexes.
 
-The code inside the predicate can also access options passed to the parser using
-the `options` variable.
+The code inside the predicate can also access the parser object using the
+`parser` variable and options passed to the parser using the `options` variable.
 
 Note that curly braces in the predicate code must be balanced.
 
@@ -343,8 +344,8 @@ the `offset` function. It returns a zero-based character index into the input
 string. The code can also access the current line and column using the `line`
 and `column` functions. Both return one-based indexes.
 
-The code inside the predicate can also access options passed to the parser using
-the `options` variable.
+The code inside the predicate can also access the parser object using the
+`parser` variable and options passed to the parser using the `options` variable.
 
 Note that curly braces in the predicate code must be balanced.
 
@@ -398,8 +399,8 @@ character index into the input string. The code can also access the line and
 column at the beginning of the action's expression using the `line` and `column`
 functions. Both return one-based indexes.
 
-The code inside the action can also access options passed to the parser using
-the `options` variable.
+The code inside the action can also access the parser object using the `parser`
+variable and options passed to the parser using the `options` variable.
 
 Note that curly braces in the action code must be balanced.
 
@@ -415,7 +416,7 @@ Compatibility
 Both the parser generator and generated parsers should run well in the following
 environments:
 
-  * Node.js 0.8.0+
+  * Node.js 0.10.0+
   * IE 8+
   * Firefox
   * Chrome

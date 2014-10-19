@@ -159,7 +159,7 @@ describe("PEG.js grammar parser", function() {
 
         try {
           result = PEG.parser.parse(this.actual);
-          // Remove |node.region| from each node, becouse we don't check it there.
+          // Remove |node.region| from each node, because we don't check it there.
           removeRegionKey(result);
 
           this.message = function() {
@@ -183,19 +183,6 @@ describe("PEG.js grammar parser", function() {
       },
 
       toFailToParse: function(details) {
-        /*
-         * Extracted into a function just to silence JSHint complaining about
-         * creating functions in a loop.
-         */
-        function buildKeyMessage(key, value) {
-          return function() {
-            return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
-                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                 + "but " + jasmine.pp(key) + " "
-                 + "is " + jasmine.pp(value) + ".";
-          };
-        }
-
         var result;
 
         try {
@@ -226,7 +213,12 @@ describe("PEG.js grammar parser", function() {
               for (key in details) {
                 if (details.hasOwnProperty(key)) {
                   if (!this.env.equals_(e[key], details[key])) {
-                    this.message = buildKeyMessage(key, e[key]);
+                    this.message = function() {
+                      return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
+                           + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                           + "but " + jasmine.pp(key) + " "
+                           + "is " + jasmine.pp(e[key]) + ".";
+                    };
 
                     return false;
                   }
@@ -444,10 +436,6 @@ describe("PEG.js grammar parser", function() {
   /* Canonical Identifier is "a". */
   it("parses Identifier", function() {
     expect('start = a:"abcd"').toParseAs(oneRuleGrammar(labeledAbcd));
-
-    expect('start = return:"abcd"').toFailToParse({
-      message: "Reserved word \"return\" can't be used as an identifier."
-    });
   });
 
   /* Canonical IdentifierName is "a". */
