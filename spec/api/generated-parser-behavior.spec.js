@@ -860,6 +860,12 @@ describe("generated parser behavior", function() {
         expect(parser).toFailToParse("a~a~a~");
         expect(parser).toFailToParse("a~a~a~a");
       });
+
+      it("does not advance position on failure", function() {
+        var parser = PEG.buildParser('start = "a"|3| / "a"|2| { return 42; }', options);
+
+        expect(parser).toParse("aa", 42);
+      });
     });
 
     describe("rule reference matching", function() {
