@@ -429,15 +429,18 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
+          1,                           // PUSH_CURR_POS
           29,                          // PUSH_EMPTY_ARRAY
           14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
           12, 9,                       // WHILE_NOT_ERROR
           6,                           //   * APPEND
           14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
           2,                           // POP
-          30, 2, 2, 0,                 // IF_ARRLEN_MIN
+          30, 2, 3, 1,                 // IF_ARRLEN_MIN <2>
           2,                           //   * POP
-          28                           //     PUSH_FAILED
+          3,                           //     POP_CURR_POS
+          28,                          //     PUSH_FAILED
+          5                            //   * NIP
         ]));
       });
 
@@ -476,15 +479,18 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
+          1,                           // PUSH_CURR_POS
           29,                          // PUSH_EMPTY_ARRAY
           14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
           12, 9,                       // WHILE_NOT_ERROR
           6,                           //   * APPEND
           14, 0, 2, 2, 18, 0, 19, 1,   //     <expression>
           2,                           // POP
-          30, 1, 2, 0,                 // IF_ARRLEN_MIN
+          30, 1, 3, 1,                 // IF_ARRLEN_MIN <1>
           2,                           //   * POP
-          28                           //     PUSH_FAILED
+          3,                           //     POP_CURR_POS
+          28,                          //     PUSH_FAILED
+          5                            //   * NIP
         ]));
       });
 
@@ -501,17 +507,20 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
+          1,                           // PUSH_CURR_POS
           29,                          // PUSH_EMPTY_ARRAY
           14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
           12, 14,                      // WHILE_NOT_ERROR
           6,                           //   * APPEND
-          31, 3, 1, 8,                 //     IF_ARRLEN_MAX
+          31, 3, 1, 8,                 //     IF_ARRLEN_MAX <3>
           28,                          //       * PUSH_FAILED
           14, 0, 2, 2, 18, 0, 19, 1,   //       * <expression>
           2,                           // POP
-          30, 2, 2, 0,                 // IF_ARRLEN_MIN
+          30, 2, 3, 1,                 // IF_ARRLEN_MIN <2>
           2,                           //   * POP
-          28                           //     PUSH_FAILED
+          3,                           //     POP_CURR_POS
+          28,                          //     PUSH_FAILED
+          5                            //   * NIP
         ]));
       });
 
@@ -528,17 +537,20 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
+          1,                           // PUSH_CURR_POS
           29,                          // PUSH_EMPTY_ARRAY
           14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
           12, 14,                      // WHILE_NOT_ERROR
           6,                           //   * APPEND
-          31, 42, 1, 8,                //     IF_ARRLEN_MAX
+          31, 42, 1, 8,                //     IF_ARRLEN_MAX <42>
           28,                          //       * PUSH_FAILED
           14, 0, 2, 2, 18, 0, 19, 1,   //       * <expression>
           2,                           // POP
-          30, 42, 2, 0,                // IF_ARRLEN_MIN
+          30, 42, 3, 1,                // IF_ARRLEN_MIN <42>
           2,                           //   * POP
-          28                           //     PUSH_FAILED
+          3,                           //     POP_CURR_POS
+          28,                          //     PUSH_FAILED
+          5                            //   * NIP
         ]));
       });
 
