@@ -671,6 +671,18 @@ describe("generated parser behavior", function() {
         expect(parser).toParse("Java",   "Java");
         expect(parser).toParse("Python", "Python");
       });
+
+      it("use template argument, not rule with same name", function() {
+        var parser = PEG.buildParser([
+              'start = List<"a", ",">',
+              'List<E, D> = h:E t:(D r:E {return r;})* {return [h].concat(t);}',
+              'E = . { error("Must not match rule `E`"); }',
+              'D = . { error("Must not match rule `D`"); }',
+            ].join("\n"), options);
+
+        expect(parser).toParse("a",   ["a"]);
+        expect(parser).toParse("a,a", ["a", "a"]);
+      });
     });
 
     describe("literal matching", function() {
