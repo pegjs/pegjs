@@ -47,17 +47,17 @@ describe("PEG.js grammar parser", function() {
         alternatives: [actionAbcd, actionEfgh, actionIjkl, actionMnop]
       },
       named             = { type: "named",       name: "start rule", expression: literalAbcd },
-      ruleA             = { type: "rule",        name: "a",          expression: literalAbcd },
-      ruleB             = { type: "rule",        name: "b",          expression: literalEfgh },
-      ruleC             = { type: "rule",        name: "c",          expression: literalIjkl },
-      ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd },
+      ruleA             = { type: "rule",        name: "a",          expression: literalAbcd, params: [] },
+      ruleB             = { type: "rule",        name: "b",          expression: literalEfgh, params: [] },
+      ruleC             = { type: "rule",        name: "c",          expression: literalIjkl, params: [] },
+      ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd, params: [] },
       initializer       = { type: "initializer", code: " code " };
 
   function oneRuleGrammar(expression) {
     return {
       type:        "grammar",
       initializer: null,
-      rules:       [{ type: "rule", name: "start", expression: expression }]
+      rules:       [{ type: "rule", name: "start", expression: expression, params: [] }]
     };
   }
 
@@ -88,7 +88,7 @@ describe("PEG.js grammar parser", function() {
   }
 
   function ruleRefGrammar(name) {
-    return oneRuleGrammar({ type: "rule_ref", name: name });
+    return oneRuleGrammar({ type: "rule_ref", name: name, args: [] });
   }
 
   var trivialGrammar = literalGrammar("abcd", false),

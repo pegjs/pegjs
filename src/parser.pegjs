@@ -87,22 +87,32 @@ Initializer
   = code:CodeBlock EOS { return { type: "initializer", code: code }; }
 
 Rule
-  = name:IdentifierName __
-    displayName:(StringLiteral __)?
-    "=" __
+  = name:RuleName __
     expression:Expression EOS
     {
       return {
         type:        "rule",
-        name:        name,
-        expression:  displayName !== null
+        name:        name[0],
+        params:      name[2] !== null ? name[2][0] : [],
+        expression:  name[3] !== null
           ? {
               type:       "named",
-              name:       displayName[0],
+              name:       name[3][0],
               expression: expression
             }
           : expression
       };
+    }
+
+RuleName
+  = IdentifierName __
+    (TemplateParams __)?
+    (StringLiteral __)?
+    "="
+
+TemplateParams
+  = "<" __ first:IdentifierName rest:(__ "," __ IdentifierName)* __ ">" {
+      return buildList(first, rest, 3);
     }
 
 Expression
@@ -166,8 +176,18 @@ PrimaryExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 RuleReferenceExpression
-  = name:IdentifierName !(__ (StringLiteral __)? "=") {
-      return { type: "rule_ref", name: name };
+  = !RuleName name:IdentifierName args:(__ TemplateArgs)? {
+      return { type: "rule_ref", name: name, args: args !== null ? args[1] : [] };
+    }
+
+TemplateArgs
+  = "<" __ first:TemplateArg rest:(__ "," __ TemplateArg)* ">" {
+      return buildList(first, rest, 3);
+    }
+
+TemplateArg
+  = expression:Expression {
+      return { type: "template_arg", expression: expression };
     }
 
 SemanticPredicateExpression
