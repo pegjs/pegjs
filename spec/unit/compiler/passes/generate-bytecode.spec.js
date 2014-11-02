@@ -511,7 +511,7 @@ describe("compiler pass |generateBytecode|", function() {
       ].join("\n"), {
         rules: [
           {
-            bytecode: [23, 1]   // RULE
+            bytecode: [23, 1, 0]   // RULE
           },
           { }
         ]
