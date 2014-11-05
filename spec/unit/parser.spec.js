@@ -1,102 +1,102 @@
 describe("PEG.js grammar parser", function() {
-  var literalAbcd       = { type: "literal",      value: "abcd", ignoreCase: false },
-      literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false },
-      literalIjkl       = { type: "literal",      value: "ijkl", ignoreCase: false },
-      literalMnop       = { type: "literal",      value: "mnop", ignoreCase: false },
-      semanticAnd       = { type: "semantic_and", code: " code " },
-      semanticNot       = { type: "semantic_not", code: " code " },
-      optional          = { type: "optional",     expression: literalAbcd },
-      zeroOrMore        = { type: "zero_or_more", expression: literalAbcd },
-      oneOrMore         = { type: "one_or_more",  expression: literalAbcd },
-      textOptional      = { type: "text",         expression: optional    },
-      simpleNotAbcd     = { type: "simple_not",   expression: literalAbcd },
-      simpleAndOptional = { type: "simple_and",   expression: optional    },
-      simpleNotOptional = { type: "simple_not",   expression: optional    },
-      labeledAbcd       = { type: "labeled",      label: "a", expression: literalAbcd   },
-      labeledEfgh       = { type: "labeled",      label: "b", expression: literalEfgh   },
-      labeledIjkl       = { type: "labeled",      label: "c", expression: literalIjkl   },
-      labeledMnop       = { type: "labeled",      label: "d", expression: literalMnop   },
-      labeledSimpleNot  = { type: "labeled",      label: "a", expression: simpleNotAbcd },
-      sequence          = {
+  var literalAbcd       = jasmine.objectContaining({ type: "literal",      value: "abcd", ignoreCase: false }),
+      literalEfgh       = jasmine.objectContaining({ type: "literal",      value: "efgh", ignoreCase: false }),
+      literalIjkl       = jasmine.objectContaining({ type: "literal",      value: "ijkl", ignoreCase: false }),
+      literalMnop       = jasmine.objectContaining({ type: "literal",      value: "mnop", ignoreCase: false }),
+      semanticAnd       = jasmine.objectContaining({ type: "semantic_and", code: " code " }),
+      semanticNot       = jasmine.objectContaining({ type: "semantic_not", code: " code " }),
+      optional          = jasmine.objectContaining({ type: "optional",     expression: literalAbcd }),
+      zeroOrMore        = jasmine.objectContaining({ type: "zero_or_more", expression: literalAbcd }),
+      oneOrMore         = jasmine.objectContaining({ type: "one_or_more",  expression: literalAbcd }),
+      textOptional      = jasmine.objectContaining({ type: "text",         expression: optional    }),
+      simpleNotAbcd     = jasmine.objectContaining({ type: "simple_not",   expression: literalAbcd }),
+      simpleAndOptional = jasmine.objectContaining({ type: "simple_and",   expression: optional    }),
+      simpleNotOptional = jasmine.objectContaining({ type: "simple_not",   expression: optional    }),
+      labeledAbcd       = jasmine.objectContaining({ type: "labeled",      label: "a", expression: literalAbcd   }),
+      labeledEfgh       = jasmine.objectContaining({ type: "labeled",      label: "b", expression: literalEfgh   }),
+      labeledIjkl       = jasmine.objectContaining({ type: "labeled",      label: "c", expression: literalIjkl   }),
+      labeledMnop       = jasmine.objectContaining({ type: "labeled",      label: "d", expression: literalMnop   }),
+      labeledSimpleNot  = jasmine.objectContaining({ type: "labeled",      label: "a", expression: simpleNotAbcd }),
+      sequence          = jasmine.objectContaining({
         type:     "sequence",
         elements: [literalAbcd, literalEfgh, literalIjkl]
-      },
-      sequence2         = {
+      }),
+      sequence2         = jasmine.objectContaining({
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh]
-      },
-      sequence4         = {
+      }),
+      sequence4         = jasmine.objectContaining({
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
-      },
-      actionAbcd        = { type: "action", expression: literalAbcd, code: " code " },
-      actionEfgh        = { type: "action", expression: literalEfgh, code: " code " },
-      actionIjkl        = { type: "action", expression: literalIjkl, code: " code " },
-      actionMnop        = { type: "action", expression: literalMnop, code: " code " },
-      actionSequence    = { type: "action", expression: sequence,    code: " code " },
-      choice            = {
+      }),
+      actionAbcd        = jasmine.objectContaining({ type: "action", expression: literalAbcd, code: " code " }),
+      actionEfgh        = jasmine.objectContaining({ type: "action", expression: literalEfgh, code: " code " }),
+      actionIjkl        = jasmine.objectContaining({ type: "action", expression: literalIjkl, code: " code " }),
+      actionMnop        = jasmine.objectContaining({ type: "action", expression: literalMnop, code: " code " }),
+      actionSequence    = jasmine.objectContaining({ type: "action", expression: sequence,    code: " code " }),
+      choice            = jasmine.objectContaining({
         type:         "choice",
         alternatives: [literalAbcd, literalEfgh, literalIjkl]
-      },
-      choice2           = {
+      }),
+      choice2           = jasmine.objectContaining({
         type:         "choice",
         alternatives: [actionAbcd, actionEfgh]
-      },
-      choice4           = {
+      }),
+      choice4           = jasmine.objectContaining({
         type:         "choice",
         alternatives: [actionAbcd, actionEfgh, actionIjkl, actionMnop]
-      },
-      named             = { type: "named",       name: "start rule", expression: literalAbcd },
-      ruleA             = { type: "rule",        name: "a",          expression: literalAbcd },
-      ruleB             = { type: "rule",        name: "b",          expression: literalEfgh },
-      ruleC             = { type: "rule",        name: "c",          expression: literalIjkl },
-      ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd },
-      initializer       = { type: "initializer", code: " code " };
+      }),
+      named             = jasmine.objectContaining({ type: "named",       name: "start rule", expression: literalAbcd }),
+      ruleA             = jasmine.objectContaining({ type: "rule",        name: "a",          expression: literalAbcd }),
+      ruleB             = jasmine.objectContaining({ type: "rule",        name: "b",          expression: literalEfgh }),
+      ruleC             = jasmine.objectContaining({ type: "rule",        name: "c",          expression: literalIjkl }),
+      ruleStart         = jasmine.objectContaining({ type: "rule",        name: "start",      expression: literalAbcd }),
+      initializer       = jasmine.objectContaining({ type: "initializer", code: " code " });
 
   function oneRuleGrammar(expression) {
-    return {
+    return jasmine.objectContaining({
       type:        "grammar",
       initializer: null,
-      rules:       [{ type: "rule", name: "start", expression: expression }]
-    };
+      rules:       [jasmine.objectContaining({ type: "rule", name: "start", expression: expression })]
+    });
   }
 
   function actionGrammar(code) {
     return oneRuleGrammar(
-      { type: "action", expression: literalAbcd, code: code }
+      jasmine.objectContaining({ type: "action", expression: literalAbcd, code: code })
     );
   }
 
   function literalGrammar(value, ignoreCase) {
     return oneRuleGrammar(
-      { type: "literal", value: value, ignoreCase: ignoreCase }
+      jasmine.objectContaining({ type: "literal", value: value, ignoreCase: ignoreCase })
     );
   }
 
   function classGrammar(parts, inverted, ignoreCase, rawText) {
-    return oneRuleGrammar({
+    return oneRuleGrammar(jasmine.objectContaining({
       type:       "class",
       parts:      parts,
       inverted:   inverted,
       ignoreCase: ignoreCase,
       rawText:    rawText
-    });
+    }));
   }
 
   function anyGrammar() {
-    return oneRuleGrammar({ type: "any" });
+    return oneRuleGrammar(jasmine.objectContaining({ type: "any" }));
   }
 
   function ruleRefGrammar(name) {
-    return oneRuleGrammar({ type: "rule_ref", name: name });
+    return oneRuleGrammar(jasmine.objectContaining({ type: "rule_ref", name: name }));
   }
 
   var trivialGrammar = literalGrammar("abcd", false),
-      twoRuleGrammar = {
+      twoRuleGrammar = jasmine.objectContaining({
         type:        "grammar",
         initializer: null,
         rules:       [ruleA, ruleB]
-      };
+      });
 
   beforeEach(function() {
     this.addMatchers({
@@ -180,20 +180,20 @@ describe("PEG.js grammar parser", function() {
   /* Canonical Grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
   it("parses Grammar", function() {
     expect('\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA] }
+      jasmine.objectContaining({ type:  "grammar", initializer: null, rules: [ruleA] })
     );
     expect('\na = "abcd";\nb = "efgh";\nc = "ijkl";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA, ruleB, ruleC] }
+      jasmine.objectContaining({ type:  "grammar", initializer: null, rules: [ruleA, ruleB, ruleC] })
     );
     expect('\n{ code };\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleA] }
+      jasmine.objectContaining({ type:  "grammar", initializer: initializer, rules: [ruleA] })
     );
   });
 
   /* Canonical Initializer is "{ code }". */
   it("parses Initializer", function() {
     expect('{ code };start = "abcd"').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleStart] }
+      jasmine.objectContaining({ type:  "grammar", initializer: initializer, rules: [ruleStart] })
     );
   });
 
