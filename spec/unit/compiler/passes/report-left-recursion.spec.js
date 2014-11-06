@@ -36,8 +36,7 @@ describe("compiler pass |reportLeftRecursion|", function() {
         'start = template<start> "a"',
         'template<A> = A "b"',
       ].join('\n'), {
-        // message: 'Left recursion detected for rule "start" (through template parameter "A" of rule "template").'
-        message: 'Left recursion detected for rule "start".'
+        message: 'Left recursion detected for rule "start" (through template parameter "A" of template rule "template").'
       });
 
       expect(pass).not.toReportError([
