@@ -19,6 +19,7 @@ MODULES = utils/arrays                          \
           compiler/passes/remove-proxy-rules    \
           compiler/passes/report-left-recursion \
           compiler/passes/report-missing-rules  \
+          compiler/passes/check-template-args   \
           compiler                              \
           peg
 
