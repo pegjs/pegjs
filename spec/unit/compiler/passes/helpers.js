@@ -53,7 +53,7 @@ beforeEach(function() {
              + "but it " + (this.isNot ? "did" : "didn't") + ".";
       };
 
-      return matchDetails(ast, details);
+      return this.isNot ^ matchDetails(ast, details);
     },
 
     toReportError: function(grammar, details) {
@@ -79,9 +79,9 @@ beforeEach(function() {
 
         if (this.isNot) {
           this.message = function() {
-            return "Expected the pass not to report an error"
+            return "Expected the pass not to report an error "
                  + "for grammar " + jasmine.pp(grammar) + ", "
-                 + "but it did.";
+                 + "but it did: " + jasmine.pp(e);
           };
         } else {
           if (details) {

@@ -26,4 +26,19 @@ describe("compiler pass |reportLeftRecursion|", function() {
       expect(pass).not.toReportError('start = "a" "b" start');
     });
   });
+
+  it("not check imported rules", function() {
+    expect(pass).not.toReportError('start = #start');
+    expect(pass).not.toReportError('start = #start:start');
+
+    expect(pass).not.toReportError([
+      'start = stop',
+      'stop = #start'
+    ].join('\n'));
+    expect(pass).not.toReportError([
+      'start = stop',
+      'stop = #start:start'
+    ].join('\n'));
+  });
+
 });

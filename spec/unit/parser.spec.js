@@ -192,6 +192,37 @@ describe("PEG.js grammar parser", function() {
     );
   });
 
+  /* Canonical Import is "#alias = 'path'". */
+  it("parses Import", function() {
+    expect('#alias = "path/to/grammar";start = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [{ type: "import", alias: "alias", path: "path/to/grammar" }],
+      initializer: null,
+      rules: [ruleStart]
+    });
+    expect('#alias = \'path/to/grammar\';start = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [{ type: "import", alias: "alias", path: "path/to/grammar" }],
+      initializer: null,
+      rules: [ruleStart]
+    });
+    expect('#alias1 = "path/to/grammar1"\n#alias2="path/to/grammar2"\nstart = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [
+        { type: "import", alias: "alias1", path: "path/to/grammar1" },
+        { type: "import", alias: "alias2", path: "path/to/grammar2" },
+      ],
+      initializer: null,
+      rules: [ruleStart]
+    });
+    expect('#alias = "path/to/grammar";{ code };start = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [{ type: "import", alias: "alias", path: "path/to/grammar" }],
+      initializer: initializer,
+      rules: [ruleStart]
+    });
+  });
+
   /* Canonical Initializer is "{ code }". */
   it("parses Initializer", function() {
     expect('{ code };start = "abcd"').toParseAs(
@@ -297,11 +328,22 @@ describe("PEG.js grammar parser", function() {
   });
 
   /* Canonical RuleReferenceExpression is "a". */
-  it("parses RuleReferenceExpression", function() {
-    expect('start = a').toParseAs(ruleRefGrammar("a"));
+  describe("parses RuleReferenceExpression", function() {
+    it("refer to rule defined in this grammar", function() {
+      expect('start = a').toParseAs(ruleRefGrammar("a"));
 
-    expect('start = a\n='        ).toFailToParse();
-    expect('start = a\n"abcd"\n=').toFailToParse();
+      expect('start = a\n='        ).toFailToParse();
+      expect('start = a\n"abcd"\n=').toFailToParse();
+    });
+
+    it("refer to rule imported from other grammar", function() {
+      expect('start = #alias').toParseAs(oneRuleGrammar({ type: "rule_ref", namespace: "alias", name: null }));
+      expect('start = #\nalias').toFailToParse();
+      expect('start = #alias:').toFailToParse();
+      expect('start = #alias:a').toParseAs(oneRuleGrammar({ type: "rule_ref", namespace: "alias", name: "a" }));
+      expect('start = #alias\n:a').toFailToParse();
+      expect('start = #alias:\na').toFailToParse();
+    });
   });
 
   /* Canonical SemanticPredicateExpression is "!{ code }". */
