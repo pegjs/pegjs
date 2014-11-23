@@ -75,11 +75,21 @@
 /* ---- Syntactic Grammar ----- */
 
 Grammar
-  = __ initializer:(Initializer __)? rules:(Rule __)+ {
+  = __ imports:(Import __)* initializer:(Initializer __)? rules:(Rule __)+ {
       return {
         type:        "grammar",
+        imports:     extractList(imports, 0),
         initializer: extractOptional(initializer, 0),
         rules:       extractList(rules, 0)
+      };
+    }
+
+Import
+  = "#" alias:Identifier __ "=" __ path:StringLiteral EOS {
+      return {
+        type: "import",
+        path: path,
+        alias: alias
       };
     }
 
@@ -87,23 +97,26 @@ Initializer
   = code:CodeBlock EOS { return { type: "initializer", code: code }; }
 
 Rule
-  = name:IdentifierName __
-    displayName:(StringLiteral __)?
-    "=" __
+  = name:RuleName __
     expression:Expression EOS
     {
       return {
         type:        "rule",
-        name:        name,
-        expression:  displayName !== null
+        name:        name[0],
+        expression:  name[2] !== null
           ? {
               type:       "named",
-              name:       displayName[0],
+              name:       name[2][0],
               expression: expression
             }
           : expression
       };
     }
+
+RuleName
+  = IdentifierName __
+    (StringLiteral __)?
+    "="
 
 Expression
   = ChoiceExpression
@@ -166,8 +179,11 @@ PrimaryExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 RuleReferenceExpression
-  = name:IdentifierName !(__ (StringLiteral __)? "=") {
-      return { type: "rule_ref", name: name };
+  = namespace:("#" IdentifierName ":")? !RuleName name:IdentifierName {
+      return { type: "rule_ref", namespace: extractOptional(namespace, 1), name: name };
+    }
+  / "#" namespace:IdentifierName {
+      return { type: "rule_ref", namespace: namespace, name: null };
     }
 
 SemanticPredicateExpression
