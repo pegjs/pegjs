@@ -427,10 +427,10 @@ Development
 -----------
 
   * [Project website](http://pegjs.majda.cz/)
-  * [Wiki](https://github.com/dmajda/pegjs/wiki)
-  * [Source code](https://github.com/dmajda/pegjs)
+  * [Wiki](https://github.com/pegjs/pegjs/wiki)
+  * [Source code](https://github.com/pegjs/pegjs)
   * [Trello board](https://trello.com/board/peg-js/50a8eba48cf95d4957006b01)
-  * [Issue tracker](https://github.com/dmajda/pegjs/issues)
+  * [Issue tracker](https://github.com/pegjs/pegjs/issues)
   * [Google Group](http://groups.google.com/group/pegjs)
   * [Twitter](http://twitter.com/peg_js)
 

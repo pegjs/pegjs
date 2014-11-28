@@ -856,7 +856,7 @@ describe("generated parser behavior", function() {
            * duplicates. This is why the following test uses three choices
            * instead of seemingly sufficient two.
            *
-           * See https://github.com/dmajda/pegjs/pull/146.
+           * See https://github.com/pegjs/pegjs/pull/146.
            */
           var parser = PEG.buildParser('start = "a" / "a" / "a"', options);
 
