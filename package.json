@@ -23,6 +23,7 @@
     "lib/compiler/javascript.js",
     "lib/compiler/opcodes.js",
     "lib/compiler/visitor.js",
+    "lib/compiler/resolver.js",
     "lib/compiler/passes/generate-bytecode.js",
     "lib/compiler/passes/generate-javascript.js",
     "lib/compiler/passes/remove-proxy-rules.js",

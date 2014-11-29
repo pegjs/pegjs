@@ -14,11 +14,13 @@ MODULES = utils/arrays                          \
           compiler/visitor                      \
           compiler/opcodes                      \
           compiler/javascript                   \
+          compiler/resolver                     \
           compiler/passes/generate-bytecode     \
           compiler/passes/generate-javascript   \
           compiler/passes/remove-proxy-rules    \
           compiler/passes/report-left-recursion \
           compiler/passes/report-missing-rules  \
+          compiler/passes/include-grammars      \
           compiler                              \
           peg
 
