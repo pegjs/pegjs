@@ -1,4 +1,66 @@
 describe("PEG.js API", function() {
+  beforeEach(function() {
+    this.addMatchers({
+      toEqualAST: function(ast) {
+        function matchDetails(value, details) {
+          function isArray(value) {
+            return Object.prototype.toString.apply(value) === "[object Array]";
+          }
+
+          function isObject(value) {
+            return value !== null && typeof value === "object";
+          }
+
+          var i, key;
+
+          if (isArray(details)) {
+            if (!isArray(value)) { return false; }
+
+            if (value.length !== details.length) { return false; }
+            for (i = 0; i < details.length; i++) {
+              if (!matchDetails(value[i], details[i])) { return false; }
+            }
+
+            return true;
+          } else if (isObject(details)) {
+            if (!isObject(value)) { return false; }
+
+            for (key in details) {
+              if (details.hasOwnProperty(key)) {
+                if (!(key in value)) { return false; }
+
+                if (!matchDetails(value[key], details[key])) { return false; }
+              }
+            }
+
+            return true;
+          } else {
+            return value === details;
+          }
+        }
+
+        this.message = function() {
+          return "Expected AST "
+               + jasmine.pp(this.actual) + " "
+               + (this.isNot ? "not " : "")
+               + "to match " + jasmine.pp(ast) + ", "
+               + "but it " + (this.isNot ? "did" : "didn't") + ".";
+        };
+
+        return matchDetails(this.actual, ast);
+      },
+
+      toHasKeys: function(keys) {
+        for (var k in this.actual) {
+          if (keys.indexOf(k) < 0) {
+            return this.isNot;
+          }
+        }
+        return !this.isNot;
+      }
+    });
+  });
+
   describe("buildParser", function() {
     it("builds parsers", function() {
       var parser = PEG.buildParser('start = "a"');
@@ -154,6 +216,32 @@ describe("PEG.js API", function() {
 
           expect(typeof source).toBe("string");
           expect(eval(source).parse("a")).toBe("a");
+        });
+      });
+
+      describe("when |output| is set to |\"ast\"|", function() {
+        it("returns generated parser AST", function() {
+          var ast = PEG.buildParser(grammar, { output: "ast" });
+
+          expect(typeof ast).toBe("object");
+          expect(ast).toEqualAST(PEG.parser.parse(grammar));
+        });
+      });
+
+      describe("when |output| is set to array of outputs", function() {
+        it('returns object with keys of array', function() {
+          var result = PEG.buildParser(grammar, { output: ["parser", "source", "ast"] });
+
+          expect(result).toHasKeys(['parser', 'source', 'ast']);
+
+          expect(typeof(result.parser)).toBe("object");
+          expect(result.parser.parse("a")).toBe("a");
+
+          expect(typeof(result.source)).toBe("string");
+          expect(eval(result.source).parse("a")).toBe("a");
+
+          expect(typeof(result.ast)).toBe("object");
+          expect(result.ast).toEqualAST(PEG.parser.parse(grammar));
         });
       });
     });
