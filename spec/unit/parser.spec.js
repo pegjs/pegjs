@@ -3,8 +3,8 @@ describe("PEG.js grammar parser", function() {
       literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false },
       literalIjkl       = { type: "literal",      value: "ijkl", ignoreCase: false },
       literalMnop       = { type: "literal",      value: "mnop", ignoreCase: false },
-      semanticAnd       = { type: "semantic_and", code: " code " },
-      semanticNot       = { type: "semantic_not", code: " code " },
+      semanticAnd       = { type: "semantic_and", namespace: null, code: " code " },
+      semanticNot       = { type: "semantic_not", namespace: null, code: " code " },
       optional          = { type: "optional",     expression: literalAbcd },
       zeroOrMore        = { type: "zero_or_more", expression: literalAbcd },
       oneOrMore         = { type: "one_or_more",  expression: literalAbcd },
@@ -29,11 +29,11 @@ describe("PEG.js grammar parser", function() {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
       },
-      actionAbcd        = { type: "action", expression: literalAbcd, code: " code " },
-      actionEfgh        = { type: "action", expression: literalEfgh, code: " code " },
-      actionIjkl        = { type: "action", expression: literalIjkl, code: " code " },
-      actionMnop        = { type: "action", expression: literalMnop, code: " code " },
-      actionSequence    = { type: "action", expression: sequence,    code: " code " },
+      actionAbcd        = { type: "action", expression: literalAbcd, namespace: null, code: " code " },
+      actionEfgh        = { type: "action", expression: literalEfgh, namespace: null, code: " code " },
+      actionIjkl        = { type: "action", expression: literalIjkl, namespace: null, code: " code " },
+      actionMnop        = { type: "action", expression: literalMnop, namespace: null, code: " code " },
+      actionSequence    = { type: "action", expression: sequence,    namespace: null, code: " code " },
       choice            = {
         type:         "choice",
         alternatives: [literalAbcd, literalEfgh, literalIjkl]
@@ -51,19 +51,19 @@ describe("PEG.js grammar parser", function() {
       ruleB             = { type: "rule",        name: "b",          expression: literalEfgh },
       ruleC             = { type: "rule",        name: "c",          expression: literalIjkl },
       ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd },
-      initializer       = { type: "initializer", code: " code " };
+      initializer       = [{ type: "initializer", namespace: null,    code: " code " }];
 
   function oneRuleGrammar(expression) {
     return {
-      type:        "grammar",
-      initializer: null,
-      rules:       [{ type: "rule", name: "start", expression: expression }]
+      type:         "grammar",
+      initializers: [],
+      rules:        [{ type: "rule", name: "start", expression: expression }]
     };
   }
 
   function actionGrammar(code) {
     return oneRuleGrammar(
-      { type: "action", expression: literalAbcd, code: code }
+      { type: "action", expression: literalAbcd, namespace: null, code: code }
     );
   }
 
@@ -93,9 +93,9 @@ describe("PEG.js grammar parser", function() {
 
   var trivialGrammar = literalGrammar("abcd", false),
       twoRuleGrammar = {
-        type:        "grammar",
-        initializer: null,
-        rules:       [ruleA, ruleB]
+        type:         "grammar",
+        initializers: [],
+        rules:        [ruleA, ruleB]
       };
 
   beforeEach(function() {
@@ -180,20 +180,20 @@ describe("PEG.js grammar parser", function() {
   /* Canonical Grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
   it("parses Grammar", function() {
     expect('\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA] }
+      { type:  "grammar", initializers: [], rules: [ruleA] }
     );
     expect('\na = "abcd";\nb = "efgh";\nc = "ijkl";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA, ruleB, ruleC] }
+      { type:  "grammar", initializers: [], rules: [ruleA, ruleB, ruleC] }
     );
     expect('\n{ code };\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleA] }
+      { type:  "grammar", initializers: initializer, rules: [ruleA] }
     );
   });
 
   /* Canonical Initializer is "{ code }". */
   it("parses Initializer", function() {
     expect('{ code };start = "abcd"').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleStart] }
+      { type:  "grammar", initializers: initializer, rules: [ruleStart] }
     );
   });
 
