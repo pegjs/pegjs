@@ -26,7 +26,7 @@ describe("generated parser API", function() {
       });
 
       describe("when |startRule| is set to an allowed rule", function() {
-        it("starts parsing from the specified rule", function() {
+        it("starts parsing from specified rule", function() {
           expect(parser.parse("x", { startRule: "b" })).toBe("b");
           expect(parser.parse("x", { startRule: "c" })).toBe("c");
         });
