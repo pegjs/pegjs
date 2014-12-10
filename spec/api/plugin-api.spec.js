@@ -102,6 +102,7 @@ describe("plugin API", function() {
                     '    rules: [',
                     '      {',
                     '        type:       "rule",',
+                    '        name:       "rule",',
                     '        expression: { type: "literal",  value: text(), ignoreCase: false }',
                     '      }',
                     '    ]',
