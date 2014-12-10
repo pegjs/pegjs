@@ -43,7 +43,7 @@
   },
   "repository":      {
     "type": "git",
-    "url":  "http://github.com/dmajda/pegjs.git"
+    "url":  "http://github.com/pegjs/pegjs.git"
   },
   "devDependencies": {
     "jasmine-node": "= 1.11.0",
