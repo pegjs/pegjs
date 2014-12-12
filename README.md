@@ -44,7 +44,9 @@ ways.
 ### Browser
 
 [Download](http://pegjs.majda.cz/#download) the PEG.js library (regular or
-minified version).
+minified version) or install it using Bower:
+
+    $ bower install pegjs
 
 Generating a Parser
 -------------------
