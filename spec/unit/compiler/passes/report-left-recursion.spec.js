@@ -4,6 +4,7 @@ describe("compiler pass |reportLeftRecursion|", function() {
   it("reports direct left recursion", function() {
     var tests = [
       'start = start;',
+      'start = start "a";',
       'start = start {};',
       'start = "a"? start;',
       'start = "a"* start;',
@@ -24,6 +25,7 @@ describe("compiler pass |reportLeftRecursion|", function() {
   it("reports indirect left recursion", function() {
     var tests = [
       'start = stop; stop = start;',
+      'start = stop; stop = start "a";',
       'start = stop; stop = start {};',
       'start = stop; stop = "a"? start;',
       'start = stop; stop = "a"* start;',
@@ -40,18 +42,24 @@ describe("compiler pass |reportLeftRecursion|", function() {
       });
     }
   });
-  it("not report reports indirect left recursion", function() {
-  });
 
   describe("in sequences", function() {
-    it("reports left recursion only for the first element", function() {
-      expect(pass).toReportError('start = start "a" "b"', {
-        message: 'Left recursion detected: start->start'
-      });
-
-      expect(pass).not.toReportError('start = "a" start "b"');
-      expect(pass).not.toReportError('start = "a" "b" start');
-      expect(pass).not.toReportError('start = "a"+ start');
+    it("not report left recursion when preceding elements consume input", function() {
+      var tests = [
+        'start = "a" start "b"',
+        'start = "a" "b" start',
+        'start = "a"+ start',
+        'start = ["a"] start',
+        'start = $"a" start',
+        'start = . start',
+        'start = stop; stop = "a" start',
+        'start = (. {}) start',
+        'start = (!{} .) start',
+        'start = (&{} .) start',
+      ];
+      for (var i = 0; i < tests.length; ++i) {
+        expect(pass).not.toReportError(tests[i]);
+      }
     });
   });
 });
