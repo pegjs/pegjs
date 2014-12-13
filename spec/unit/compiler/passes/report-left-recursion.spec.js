@@ -43,6 +43,25 @@ describe("compiler pass |reportLeftRecursion|", function() {
     }
   });
 
+  it("not reports left recursion, if some rules in possible recursion path not exist", function() {
+    var tests = [
+      'start = nonexist start;',
+      'start = nonexist start "a";',
+      'start = nonexist start {};',
+      'start = nonexist "a"? start;',
+      'start = nonexist "a"* start;',
+      'start = nonexist !"a" start;',
+      'start = nonexist &"a" start;',
+      'start = nonexist !{} start;',
+      'start = nonexist &{} start;',
+      'start = nonexist "" start;',
+      'start = nonexist [] start;'
+    ];
+    for (var i = 0; i < tests.length; ++i) {
+      expect(pass).not.toReportError(tests[i]);
+    }
+  });
+
   describe("in sequences", function() {
     it("not report left recursion when preceding elements consume input", function() {
       var tests = [
