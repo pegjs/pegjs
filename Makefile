@@ -72,7 +72,7 @@ browser:
 	echo '/*'                                                                          >> $(BROWSER_FILE_DEV)
 	echo " * PEG.js $(PEGJS_VERSION)"                                                  >> $(BROWSER_FILE_DEV)
 	echo ' *'                                                                          >> $(BROWSER_FILE_DEV)
-	echo ' * http://pegjs.majda.cz/'                                                   >> $(BROWSER_FILE_DEV)
+	echo ' * http://pegjs.org/'                                                        >> $(BROWSER_FILE_DEV)
 	echo ' *'                                                                          >> $(BROWSER_FILE_DEV)
 	echo ' * Copyright (c) 2010-2013 David Majda'                                      >> $(BROWSER_FILE_DEV)
 	echo ' * Licensed under the MIT license.'                                          >> $(BROWSER_FILE_DEV)
