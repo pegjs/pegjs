@@ -29,6 +29,7 @@
     "lib/compiler/passes/remove-proxy-rules.js",
     "lib/compiler/passes/report-left-recursion.js",
     "lib/compiler/passes/report-missing-rules.js",
+    "lib/compiler/passes/include-grammars.js",
     "lib/grammar-error.js",
     "lib/parser.js",
     "lib/peg.js",
