@@ -66,7 +66,7 @@ file but with “.js” extension. You can also specify the output file explicit
 
     $ pegjs arithmetics.pegjs arithmetics-parser.js
 
-If you omit both input and ouptut file, standard input and output are used.
+If you omit both input and output file, standard input and output are used.
 
 By default, the parser object is assigned to `module.exports`, which makes the
 output a Node.js module. You can assign it to another variable by passing a
