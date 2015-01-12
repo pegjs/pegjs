@@ -123,10 +123,12 @@ ActionExpression
     }
 
 SequenceExpression
-  = first:LabeledExpression rest:(__ LabeledExpression)* {
-      return rest.length > 0
-        ? { type: "sequence", elements: buildList(first, rest, 1) }
-        : first;
+  = first:LabeledExpression? rest:(__ LabeledExpression)* {
+      return first === null
+        ? { type: "sequence", elements: [] }
+        : rest.length > 0
+          ? { type: "sequence", elements: buildList(first, rest, 1) }
+          : first;
     }
 
 LabeledExpression

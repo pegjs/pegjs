@@ -86,23 +86,21 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for action", function() {
     describe("without labels", function() {
-      var grammar = 'start = "a" { code }';
+      var grammar = 'start = { code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
           1,                           // PUSH_CURR_POS
-          14, 0, 2, 2, 18, 0, 19, 1,   // <expression>
+          29,                          // <expression>
           11, 6, 0,                    // IF_NOT_ERROR
           20, 1,                       //   * REPORT_SAVED_POS
-          22, 2, 1, 0,                 //     CALL
+          22, 0, 1, 0,                 //     CALL <0>
           5                            // NIP
         ]));
       });
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          '{ type: "literal", value: "a", description: "\\"a\\"" }',
           'function() { code }'
         ]));
       });
@@ -173,40 +171,56 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for sequence", function() {
-    var grammar = 'start = "a" "b" "c"';
+    describe("empty", function() {
+      var grammar = 'start = ';
 
-    it("generates correct bytecode", function() {
-      expect(pass).toChangeAST(grammar, bytecodeDetails([
-        1,                           // PUSH_CURR_POS
-        14, 0, 2, 2, 18, 0, 19, 1,   // <elements[0]>
-        11, 33, 3,                   // IF_NOT_ERROR
-        14, 2, 2, 2, 18, 2, 19, 3,   //   * <elements[1]>
-        11, 18, 4,                   //     IF_NOT_ERROR
-        14, 4, 2, 2, 18, 4, 19, 5,   //       * <elements[2]>
-        11, 3, 4,                    //         IF_NOT_ERROR
-        7, 3,                        //           * WRAP
-        5,                           //             NIP
-        4, 3,                        //           * POP_N
-        3,                           //             POP_CURR_POS
-        28,                          //             PUSH_FAILED
-        4, 2,                        //       * POP_N
-        3,                           //         POP_CURR_POS
-        28,                          //         PUSH_FAILED
-        2,                           //   * POP
-        3,                           //     POP_CURR_POS
-        28                           //     PUSH_FAILED
-      ]));
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          29     // PUSH_EMPTY_ARRAY
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([]));
+      });
     });
 
-    it("defines correct constants", function() {
-      expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        '{ type: "literal", value: "a", description: "\\"a\\"" }',
-        '"b"',
-        '{ type: "literal", value: "b", description: "\\"b\\"" }',
-        '"c"',
-        '{ type: "literal", value: "c", description: "\\"c\\"" }'
-      ]));
+    describe("non-empty", function() {
+      var grammar = 'start = "a" "b" "c"';
+
+      it("generates correct bytecode", function() {
+        expect(pass).toChangeAST(grammar, bytecodeDetails([
+          1,                           // PUSH_CURR_POS
+          14, 0, 2, 2, 18, 0, 19, 1,   // <elements[0]>
+          11, 33, 3,                   // IF_NOT_ERROR
+          14, 2, 2, 2, 18, 2, 19, 3,   //   * <elements[1]>
+          11, 18, 4,                   //     IF_NOT_ERROR
+          14, 4, 2, 2, 18, 4, 19, 5,   //       * <elements[2]>
+          11, 3, 4,                    //         IF_NOT_ERROR
+          7, 3,                        //           * WRAP
+          5,                           //             NIP
+          4, 3,                        //           * POP_N
+          3,                           //             POP_CURR_POS
+          28,                          //             PUSH_FAILED
+          4, 2,                        //       * POP_N
+          3,                           //         POP_CURR_POS
+          28,                          //         PUSH_FAILED
+          2,                           //   * POP
+          3,                           //     POP_CURR_POS
+          28                           //     PUSH_FAILED
+        ]));
+      });
+
+      it("defines correct constants", function() {
+        expect(pass).toChangeAST(grammar, constsDetails([
+          '"a"',
+          '{ type: "literal", value: "a", description: "\\"a\\"" }',
+          '"b"',
+          '{ type: "literal", value: "b", description: "\\"b\\"" }',
+          '"c"',
+          '{ type: "literal", value: "c", description: "\\"c\\"" }'
+        ]));
+      });
     });
   });
 
