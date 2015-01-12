@@ -38,20 +38,24 @@ describe("generated parser behavior", function() {
         try {
           result = this.actual.parse(input, options);
 
-          this.message = function() {
-            return "Expected " + jasmine.pp(input) + " "
-                 + "with options " + jasmine.pp(options) + " "
-                 + (this.isNot ? "not " : "")
-                 + "to parse as " + jasmine.pp(expected) + ", "
-                 + "but it parsed as " + jasmine.pp(result) + ".";
-          };
+          if (arguments.length > 1) {
+            this.message = function() {
+              return "Expected " + jasmine.pp(input) + " "
+                   + "with options " + jasmine.pp(options) + " "
+                   + (this.isNot ? "not " : "")
+                   + "to parse as " + jasmine.pp(expected) + ", "
+                   + "but it parsed as " + jasmine.pp(result) + ".";
+            };
 
-          return this.env.equals_(result, expected);
+            return this.env.equals_(result, expected);
+          } else {
+            return true;
+          }
         } catch (e) {
           this.message = function() {
             return "Expected " + jasmine.pp(input) + " "
                  + "with options " + jasmine.pp(options) + " "
-                 + "to parse as " + jasmine.pp(expected) + ", "
+                 + "to parse" + (arguments.length > 1 ? " as " + jasmine.pp(expected) : "") + ", "
                  + "but it failed to parse with message "
                  + jasmine.pp(e.message) + ".";
           };
