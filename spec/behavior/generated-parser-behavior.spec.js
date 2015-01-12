@@ -282,62 +282,74 @@ describe("generated parser behavior", function() {
     });
 
     describe("character class", function() {
-      it("matches empty class correctly", function() {
-        var parser = PEG.buildParser('start = []', options);
+      describe("matching", function() {
+        it("matches empty classes", function() {
+          var parser = PEG.buildParser('start = []', options);
 
-        expect(parser).toFailToParse("a");
+          expect(parser).toFailToParse("a");
+        });
+
+        it("matches classes with a character list", function() {
+          var parser = PEG.buildParser('start = [abc]', options);
+
+          expect(parser).toParse("a");
+          expect(parser).toParse("b");
+          expect(parser).toParse("c");
+          expect(parser).toFailToParse("d");
+        });
+
+        it("matches classes with a character range", function() {
+          var parser = PEG.buildParser('start = [a-c]', options);
+
+          expect(parser).toParse("a");
+          expect(parser).toParse("b");
+          expect(parser).toParse("c");
+          expect(parser).toFailToParse("d");
+        });
+
+        it("matches inverted classes", function() {
+          var parser = PEG.buildParser('start = [^a]', options);
+
+          expect(parser).toFailToParse("a");
+          expect(parser).toParse("b");
+        });
+
+        it("is case sensitive without the \"i\" flag", function() {
+          var parser = PEG.buildParser('start = [a]', options);
+
+          expect(parser).toParse("a");
+          expect(parser).toFailToParse("A");
+        });
+
+        it("is case insensitive with the \"i\" flag", function() {
+          var parser = PEG.buildParser('start = [a]i', options);
+
+          expect(parser).toParse("a");
+          expect(parser).toParse("A");
+        });
       });
 
-      it("matches class with a character list correctly", function() {
-        var parser = PEG.buildParser('start = [abc]', options);
+      describe("when it matches", function() {
+        it("returns the matched character", function() {
+          var parser = PEG.buildParser('start = [a]', options);
 
-        expect(parser).toParse("a", "a");
-        expect(parser).toParse("b", "b");
-        expect(parser).toParse("c", "c");
-        expect(parser).toFailToParse("d");
+          expect(parser).toParse("a", "a");
+        });
+
+        it("advances parse position past the matched character", function() {
+          var parser = PEG.buildParser('start = [a] .', options);
+
+          expect(parser).toParse("ab");
+        });
       });
 
-      it("matches class with a range correctly", function() {
-        var parser = PEG.buildParser('start = [a-c]', options);
+      describe("when it doesn't match", function() {
+        it("reports match failure and records an expectation of type \"class\"", function() {
+          var parser = PEG.buildParser('start = [a]', options);
 
-        expect(parser).toParse("a", "a");
-        expect(parser).toParse("b", "b");
-        expect(parser).toParse("c", "c");
-        expect(parser).toFailToParse("d");
-      });
-
-      it("matches inverted class correctly", function() {
-        var parser = PEG.buildParser('start = [^a]', options);
-
-        expect(parser).toFailToParse("a");
-        expect(parser).toParse("b", "b");
-      });
-
-      it("is case sensitive without the \"i\" flag", function() {
-        var parser = PEG.buildParser('start = [a]', options);
-
-        expect(parser).toParse("a", "a");
-        expect(parser).toFailToParse("A");
-      });
-
-      it("is case insensitive with the \"i\" flag", function() {
-        var parser = PEG.buildParser('start = [a]i', options);
-
-        expect(parser).toParse("a", "a");
-        expect(parser).toParse("A", "A");
-      });
-
-      it("advances position on success", function() {
-        var parser = PEG.buildParser('start = [a] .', options);
-
-        expect(parser).toParse("ab", ["a", "b"]);
-      });
-
-      it("sets expectation correctly on failure", function() {
-        var parser = PEG.buildParser('start = [a]', options);
-
-        expect(parser).toFailToParse("b", {
-          expected: [{ type: "class", value: "[a]", description: "[a]" }]
+          expect(parser).toFailToParse("b", {
+            expected: [{ type: "class", value: "[a]", description: "[a]" }]
+          });
         });
       });
     });
