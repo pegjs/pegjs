@@ -391,15 +391,26 @@ describe("generated parser behavior", function() {
     });
 
     describe("rule reference", function() {
-      it("follows rule references", function() {
-        var parser = PEG.buildParser([
-              'start   = static / dynamic',
-              'static  = "C" / "C++" / "Java" / "C#"',
-              'dynamic = "Ruby" / "Python" / "JavaScript"'
-            ].join("\n"), options);
+      describe("when referenced rule's expression matches", function() {
+        it("returns its result", function() {
+          var parser = PEG.buildParser([
+                'start = a',
+                'a = "a"',
+              ].join("\n"), options);
 
-        expect(parser).toParse("Java",   "Java");
-        expect(parser).toParse("Python", "Python");
+          expect(parser).toParse("a", "a");
+        });
+      });
+
+      describe("when referenced rule's expression doesn't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser([
+                'start = a',
+                'a = "a"',
+              ].join("\n"), options);
+
+          expect(parser).toFailToParse("b");
+        });
       });
     });
 
