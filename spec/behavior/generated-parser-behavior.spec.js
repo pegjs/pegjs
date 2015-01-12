@@ -178,21 +178,6 @@ describe("generated parser behavior", function() {
       });
     });
 
-    describe("named rule", function() {
-      var parser = PEG.buildParser('start "start" = "a"');
-
-      it("delegates to the expression", function() {
-        expect(parser).toParse("a", "a");
-        expect(parser).toFailToParse("b");
-      });
-
-      it("overwrites expected string on failure", function() {
-        expect(parser).toFailToParse("b", {
-          expected: [{ type: "other", description: "start" }]
-        });
-      });
-    });
-
     describe("rule", function() {
       var grammar = [
             '{ var n = 0; }',
@@ -213,6 +198,21 @@ describe("generated parser behavior", function() {
           expect(parser).toParse("ac", 2);
         });
       }
+
+      describe("named rule", function() {
+        var parser = PEG.buildParser('start "start" = "a"');
+
+        it("delegates to the expression", function() {
+          expect(parser).toParse("a", "a");
+          expect(parser).toFailToParse("b");
+        });
+
+        it("overwrites expected string on failure", function() {
+          expect(parser).toFailToParse("b", {
+            expected: [{ type: "other", description: "start" }]
+          });
+        });
+      });
     });
 
     describe("literal", function() {
