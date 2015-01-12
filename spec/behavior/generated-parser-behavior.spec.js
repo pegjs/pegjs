@@ -220,54 +220,63 @@ describe("generated parser behavior", function() {
     });
 
     describe("literal", function() {
-      it("matches empty literal correctly", function() {
-        var parser = PEG.buildParser('start = ""', options);
+      describe("matching", function() {
+        it("matches empty literals", function() {
+          var parser = PEG.buildParser('start = ""', options);
 
-        expect(parser).toParse("", "");
+          expect(parser).toParse("");
+        });
+
+        it("matches one-character literals", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toParse("a");
+          expect(parser).toFailToParse("b");
+        });
+
+        it("matches multi-character literals", function() {
+          var parser = PEG.buildParser('start = "abcd"', options);
+
+          expect(parser).toParse("abcd");
+          expect(parser).toFailToParse("efgh");
+        });
+
+        it("is case sensitive without the \"i\" flag", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toParse("a");
+          expect(parser).toFailToParse("A");
+        });
+
+        it("is case insensitive with the \"i\" flag", function() {
+          var parser = PEG.buildParser('start = "a"i', options);
+
+          expect(parser).toParse("a");
+          expect(parser).toParse("A");
+        });
       });
 
-      it("matches one-character literal correctly", function() {
-        var parser = PEG.buildParser('start = "a"', options);
+      describe("when it matches", function() {
+        it("returns the matched text", function() {
+          var parser = PEG.buildParser('start = "a"', options);
 
-        expect(parser).toParse("a", "a");
-        expect(parser).toFailToParse("b");
+          expect(parser).toParse("a", "a");
+        });
+
+        it("advances parse position past the matched text", function() {
+          var parser = PEG.buildParser('start = "a" .', options);
+
+          expect(parser).toParse("ab");
+        });
       });
 
-      it("matches multi-character literal correctly", function() {
-        var parser = PEG.buildParser('start = "abcd"', options);
+      describe("when it doesn't match", function() {
+        it("reports match failure and records an expectation of type \"literal\"", function() {
+          var parser = PEG.buildParser('start = "a"', options);
 
-        expect(parser).toParse("abcd", "abcd");
-        expect(parser).toFailToParse("ebcd");
-        expect(parser).toFailToParse("afcd");
-        expect(parser).toFailToParse("abgd");
-        expect(parser).toFailToParse("abch");
-      });
-
-      it("is case sensitive without the \"i\" flag", function() {
-        var parser = PEG.buildParser('start = "a"', options);
-
-        expect(parser).toParse("a", "a");
-        expect(parser).toFailToParse("A");
-      });
-
-      it("is case insensitive with the \"i\" flag", function() {
-        var parser = PEG.buildParser('start = "a"i', options);
-
-        expect(parser).toParse("a", "a");
-        expect(parser).toParse("A", "A");
-      });
-
-      it("advances position on success", function() {
-        var parser = PEG.buildParser('start = "a" .', options);
-
-        expect(parser).toParse("ab", ["a", "b"]);
-      });
-
-      it("sets expectation correctly on failure", function() {
-        var parser = PEG.buildParser('start = "a"', options);
-
-        expect(parser).toFailToParse("b", {
-          expected: [{ type: "literal", value: "a", description: '"a"' }]
+          expect(parser).toFailToParse("b", {
+            expected: [{ type: "literal", value: "a", description: '"a"' }]
+          });
         });
       });
     });
