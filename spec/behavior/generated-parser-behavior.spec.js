@@ -355,23 +355,37 @@ describe("generated parser behavior", function() {
     });
 
     describe("dot", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = .', options);
+      describe("matching", function() {
+        it("matches any character", function() {
+          var parser = PEG.buildParser('start = .', options);
 
-        expect(parser).toParse("a", "a");
+          expect(parser).toParse("a");
+          expect(parser).toParse("b");
+          expect(parser).toParse("c");
+        });
       });
 
-      it("advances position on success", function() {
-        var parser = PEG.buildParser('start = . .', options);
+      describe("when it matches", function() {
+        it("returns the matched character", function() {
+          var parser = PEG.buildParser('start = .', options);
 
-        expect(parser).toParse("ab", ["a", "b"]);
+          expect(parser).toParse("a", "a");
+        });
+
+        it("advances parse position past the matched character", function() {
+          var parser = PEG.buildParser('start = . .', options);
+
+          expect(parser).toParse("ab");
+        });
       });
 
-      it("sets expectation correctly on failure", function() {
-        var parser = PEG.buildParser('start = .', options);
+      describe("when it doesn't match", function() {
+        it("reports match failure and records an expectation of type \"any\"", function() {
+          var parser = PEG.buildParser('start = .', options);
 
-        expect(parser).toFailToParse("", {
-          expected: [{ type: "any", description: "any character" }]
+          expect(parser).toFailToParse("", {
+            expected: [{ type: "any", description: "any character" }]
+          });
         });
       });
     });
