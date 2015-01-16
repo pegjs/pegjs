@@ -664,10 +664,20 @@ describe("generated parser behavior", function() {
     });
 
     describe("text", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = $("a" "b" "c")', options);
+      describe("when the expression matches", function() {
+        it("returns the matched text", function() {
+          var parser = PEG.buildParser('start = $("a" "b" "c")', options);
 
-        expect(parser).toParse("abc", "abc");
+          expect(parser).toParse("abc", "abc");
+        });
+      });
+
+      describe("when the expression doesn't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = $("a")', options);
+
+          expect(parser).toFailToParse("b");
+        });
       });
     });
 
