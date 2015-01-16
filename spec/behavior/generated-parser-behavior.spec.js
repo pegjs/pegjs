@@ -682,44 +682,72 @@ describe("generated parser behavior", function() {
     });
 
     describe("positive simple predicate", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = &"a" "a"', options);
+      describe("when the expression matches", function() {
+        it("returns |undefined|", function() {
+          var parser = PEG.buildParser('start = &"a" "a"', options);
 
-        expect(parser).toParse("a", [undefined, "a"]);
-        expect(parser).toFailToParse("b");
+          expect(parser).toParse("a", [undefined, "a"]);
+        });
+
+        it("resets parse position", function() {
+          var parser = PEG.buildParser('start = &"a" "a"', options);
+
+          expect(parser).toParse("a");
+        });
       });
 
-      it("does not advance position on success", function() {
-        var parser = PEG.buildParser('start = &"a" "a"', options);
+      describe("when the expression doesn't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = &"a"', options);
 
-        expect(parser).toParse("a", [undefined, "a"]);
-      });
+          expect(parser).toFailToParse("b");
+        });
 
-      it("does not influence expected strings on failure", function() {
-        var parser = PEG.buildParser('start = &"a"', options);
+        it("discards any expectations recorded when matching the expression", function() {
+          var parser = PEG.buildParser('start = "a" / &"b" / "c"', options);
 
-        expect(parser).toFailToParse("b", { expected: [] });
+          expect(parser).toFailToParse("d", {
+            expected: [
+              { type: "literal", value: "a", description: '"a"' },
+              { type: "literal", value: "c", description: '"c"' }
+            ]
+          });
+        });
       });
     });
 
     describe("negative simple predicate", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = !"a" "b"', options);
+      describe("when the expression matches", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = !"a"', options);
 
-        expect(parser).toParse("b", [undefined, "b"]);
-        expect(parser).toFailToParse("a");
+          expect(parser).toFailToParse("a");
+        });
       });
 
-      it("does not advance position on failure", function() {
-        var parser = PEG.buildParser('start = !"a" / "a"', options);
+      describe("when the expression doesn't match", function() {
+        it("returns |undefined|", function() {
+          var parser = PEG.buildParser('start = !"a" "b"', options);
 
-        expect(parser).toParse("a", "a");
-      });
+          expect(parser).toParse("b", [undefined, "b"]);
+        });
 
-      it("does not influence expected strings on failure", function() {
-        var parser = PEG.buildParser('start = !"a"', options);
+        it("resets parse position", function() {
+          var parser = PEG.buildParser('start = !"a" "b"', options);
 
-        expect(parser).toFailToParse("a", { expected: [] });
+          expect(parser).toParse("b");
+        });
+
+        it("discards any expectations recorded when matching the expression", function() {
+          var parser = PEG.buildParser('start = "a" / !"b" / "c"', options);
+
+          expect(parser).toFailToParse("b", {
+            expected: [
+              { type: "literal", value: "a", description: '"a"' },
+              { type: "literal", value: "c", description: '"c"' }
+            ]
+          });
+        });
       });
     });
 
