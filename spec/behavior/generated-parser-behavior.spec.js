@@ -633,12 +633,14 @@ describe("generated parser behavior", function() {
     });
 
     describe("zero or more", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"*', options);
+      describe("when the expression matches zero or more times", function() {
+        it("returns an array of its match results", function() {
+          var parser = PEG.buildParser('start = "a"*', options);
 
-        expect(parser).toParse("",    []);
-        expect(parser).toParse("a",   ["a"]);
-        expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).toParse("",    []);
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+        });
       });
     });
 
