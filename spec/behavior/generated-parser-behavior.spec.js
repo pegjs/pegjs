@@ -724,11 +724,20 @@ describe("generated parser behavior", function() {
     });
 
     describe("label", function() {
-      it("delegates to the expression", function() {
-        var parser = PEG.buildParser('start = a:"a"', options);
+      describe("when the expression matches", function() {
+        it("returns its match result", function() {
+          var parser = PEG.buildParser('start = a:"a"', options);
 
-        expect(parser).toParse("a", "a");
-        expect(parser).toFailToParse("b");
+          expect(parser).toParse("a", "a");
+        });
+      });
+
+      describe("when the expression doesn't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = a:"a"', options);
+
+          expect(parser).toFailToParse("b");
+        });
       });
     });
 
