@@ -1,16 +1,16 @@
 describe("generated parser behavior", function() {
-  function varyOptimizationOptions(block) {
-    function clone(object) {
-      var result = {}, key;
+  function clone(object) {
+    var result = {}, key;
 
-      for (key in object) {
-        if (object.hasOwnProperty(key)) {
-          result[key] = object[key];
-        }
+    for (key in object) {
+      if (object.hasOwnProperty(key)) {
+        result[key] = object[key];
       }
-
-      return result;
     }
+
+    return result;
+  }
+  function varyOptimizationOptions(block) {
 
     var optionsVariants = [
           { cache: false, optimize: "speed" },
@@ -175,6 +175,65 @@ describe("generated parser behavior", function() {
             ].join("\n"), options);
 
         expect(parser).toParse("a", { a: 42 }, { a: 42 });
+      });
+
+      describe("can be split to namespaces", function() {
+        function values(object) {
+          var result = [], key;
+          for (key in object) {
+            if (object.hasOwnProperty(key)) {
+              result.push(object[key]);
+            }
+          }
+
+          return result;
+        }
+        function convertPasses(passes) {
+          var converted = {}, stage;
+
+          for (stage in passes) {
+            if (passes.hasOwnProperty(stage)) {
+              converted[stage] = values(passes[stage]);
+            }
+          }
+
+          return converted;
+        }
+        function rule(name, namespace) {
+          return {
+            type: 'rule',
+            name: name,
+            expression: {
+              type: 'action',
+              expression: { type: 'any' },
+              namespace: namespace,
+              code: 'return result;'
+            }
+          };
+        }
+        var ast = {
+          type: 'grammar',
+          initializers: [
+            { type: 'initializer', namespace: null, code: 'var result = 41;' },
+            { type: 'initializer', namespace: 'a',  code: 'var result = 42;' },
+            { type: 'initializer', namespace: 'b',  code: 'var result = 43;' },
+          ],
+          rules: [
+            rule('default', null),
+            rule('a', 'a'),
+            rule('b', 'b')
+          ]
+        };
+        var options = clone(options);
+        options.allowedStartRules = ['default', 'a', 'b'];
+
+        var parser = PEG.compiler.compile(ast, convertPasses(PEG.compiler.passes), options);
+
+        it("use distinct variables", function() {
+          expect(parser).toParse("x", { startRule: 'default' }, 41);
+          expect(parser).toParse("x", { startRule: 'a'       }, 42);
+          expect(parser).toParse("x", { startRule: 'b'       }, 43);
+        });
       });
     });
 

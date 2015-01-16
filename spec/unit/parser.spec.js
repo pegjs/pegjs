@@ -3,8 +3,8 @@ describe("PEG.js grammar parser", function() {
       literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false },
       literalIjkl       = { type: "literal",      value: "ijkl", ignoreCase: false },
       literalMnop       = { type: "literal",      value: "mnop", ignoreCase: false },
-      semanticAnd       = { type: "semantic_and", code: " code " },
-      semanticNot       = { type: "semantic_not", code: " code " },
+      semanticAnd       = { type: "semantic_and", namespace: null, code: " code " },
+      semanticNot       = { type: "semantic_not", namespace: null, code: " code " },
       optional          = { type: "optional",     expression: literalAbcd },
       zeroOrMore        = { type: "zero_or_more", expression: literalAbcd },
       oneOrMore         = { type: "one_or_more",  expression: literalAbcd },
@@ -29,11 +29,11 @@ describe("PEG.js grammar parser", function() {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
       },
-      actionAbcd        = { type: "action", expression: literalAbcd, code: " code " },
-      actionEfgh        = { type: "action", expression: literalEfgh, code: " code " },
-      actionIjkl        = { type: "action", expression: literalIjkl, code: " code " },
-      actionMnop        = { type: "action", expression: literalMnop, code: " code " },
-      actionSequence    = { type: "action", expression: sequence,    code: " code " },
+      actionAbcd        = { type: "action", expression: literalAbcd, namespace: null, code: " code " },
+      actionEfgh        = { type: "action", expression: literalEfgh, namespace: null, code: " code " },
+      actionIjkl        = { type: "action", expression: literalIjkl, namespace: null, code: " code " },
+      actionMnop        = { type: "action", expression: literalMnop, namespace: null, code: " code " },
+      actionSequence    = { type: "action", expression: sequence,    namespace: null, code: " code " },
       choice            = {
         type:         "choice",
         alternatives: [literalAbcd, literalEfgh, literalIjkl]
@@ -51,19 +51,20 @@ describe("PEG.js grammar parser", function() {
       ruleB             = { type: "rule",        name: "b",          expression: literalEfgh },
       ruleC             = { type: "rule",        name: "c",          expression: literalIjkl },
       ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd },
-      initializer       = { type: "initializer", code: " code " };
+      initializer       = [{ type: "initializer", namespace: null,    code: " code " }];
 
   function oneRuleGrammar(expression) {
     return {
-      type:        "grammar",
-      initializer: null,
-      rules:       [{ type: "rule", name: "start", expression: expression }]
+      type:         "grammar",
+      imports:      [],
+      initializers: [],
+      rules:        [{ type: "rule", name: "start", expression: expression }]
     };
   }
 
   function actionGrammar(code) {
     return oneRuleGrammar(
-      { type: "action", expression: literalAbcd, code: code }
+      { type: "action", expression: literalAbcd, namespace: null, code: code }
     );
   }
 
@@ -88,14 +89,15 @@ describe("PEG.js grammar parser", function() {
   }
 
   function ruleRefGrammar(name) {
-    return oneRuleGrammar({ type: "rule_ref", name: name });
+    return oneRuleGrammar({ type: "rule_ref", namespace: null, name: name });
   }
 
   var trivialGrammar = literalGrammar("abcd", false),
       twoRuleGrammar = {
-        type:        "grammar",
-        initializer: null,
-        rules:       [ruleA, ruleB]
+        type:         "grammar",
+        imports:      [],
+        initializers: [],
+        rules:        [ruleA, ruleB]
       };
 
   beforeEach(function() {
@@ -180,20 +182,51 @@ describe("PEG.js grammar parser", function() {
   /* Canonical Grammar is "a = \"abcd\"; b = \"efgh\"; c = \"ijkl\";". */
   it("parses Grammar", function() {
     expect('\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA] }
+      { type:  "grammar", imports: [], initializers: [], rules: [ruleA] }
     );
     expect('\na = "abcd";\nb = "efgh";\nc = "ijkl";\n').toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA, ruleB, ruleC] }
+      { type:  "grammar", imports: [], initializers: [], rules: [ruleA, ruleB, ruleC] }
     );
     expect('\n{ code };\na = "abcd";\n').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleA] }
+      { type:  "grammar", imports: [], initializers: initializer, rules: [ruleA] }
     );
+  });
+
+  /* Canonical Import is "#alias = 'path'". */
+  it("parses Import", function() {
+    expect('#alias = "path/to/grammar";start = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [{ type: "import", alias: "alias", path: "path/to/grammar" }],
+      initializers: [],
+      rules: [ruleStart]
+    });
+    expect('#alias = \'path/to/grammar\';start = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [{ type: "import", alias: "alias", path: "path/to/grammar" }],
+      initializers: [],
+      rules: [ruleStart]
+    });
+    expect('#alias1 = "path/to/grammar1"\n#alias2="path/to/grammar2"\nstart = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [
+        { type: "import", alias: "alias1", path: "path/to/grammar1" },
+        { type: "import", alias: "alias2", path: "path/to/grammar2" },
+      ],
+      initializers: [],
+      rules: [ruleStart]
+    });
+    expect('#alias = "path/to/grammar";{ code };start = "abcd"').toParseAs({
+      type: "grammar",
+      imports: [{ type: "import", alias: "alias", path: "path/to/grammar" }],
+      initializers: initializer,
+      rules: [ruleStart]
+    });
   });
 
   /* Canonical Initializer is "{ code }". */
   it("parses Initializer", function() {
     expect('{ code };start = "abcd"').toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleStart] }
+      { type:  "grammar", imports: [], initializers: initializer, rules: [ruleStart] }
     );
   });
 
@@ -295,11 +328,22 @@ describe("PEG.js grammar parser", function() {
   });
 
   /* Canonical RuleReferenceExpression is "a". */
-  it("parses RuleReferenceExpression", function() {
+  describe("parses RuleReferenceExpression", function() {
+    it("refer to rule defined in this grammar", function() {
     expect('start = a').toParseAs(ruleRefGrammar("a"));
 
     expect('start = a\n='        ).toFailToParse();
     expect('start = a\n"abcd"\n=').toFailToParse();
+  });
+
+    it("refer to rule imported from other grammar", function() {
+      expect('start = #alias').toParseAs(oneRuleGrammar({ type: "rule_ref", namespace: "alias", name: null }));
+      expect('start = #\nalias').toFailToParse();
+      expect('start = #alias:').toFailToParse();
+      expect('start = #alias:a').toParseAs(oneRuleGrammar({ type: "rule_ref", namespace: "alias", name: "a" }));
+      expect('start = #alias\n:a').toFailToParse();
+      expect('start = #alias:\na').toFailToParse();
+    });
   });
 
   /* Canonical SemanticPredicateExpression is "!{ code }". */

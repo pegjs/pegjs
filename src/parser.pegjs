@@ -70,40 +70,57 @@
   function buildList(first, rest, index) {
     return [first].concat(extractList(rest, index));
   }
+
+  /// Namespace for all code in grammar.
+  /// Use non-strong check for |null|, becouse it filter |undefined|, but not empty string
+  var namespace = options.defaultNamespace != null ? options.defaultNamespace : null;
 }
 
 /* ---- Syntactic Grammar ----- */
 
 Grammar
-  = __ initializer:(Initializer __)? rules:(Rule __)+ {
+  = __ imports:(Import __)* initializer:(Initializer __)? rules:(Rule __)+ {
       return {
-        type:        "grammar",
-        initializer: extractOptional(initializer, 0),
-        rules:       extractList(rules, 0)
+        type:         "grammar",
+        imports:      extractList(imports, 0),
+        initializers: initializer ? [initializer[0]] : [],
+        rules:        extractList(rules, 0)
+      };
+    }
+
+Import
+  = "#" alias:Identifier __ "=" __ path:StringLiteral EOS {
+      return {
+        type: "import",
+        path: path,
+        alias: alias
       };
     }
 
 Initializer
-  = code:CodeBlock EOS { return { type: "initializer", code: code }; }
+  = code:CodeBlock EOS { return { type: "initializer", namespace: namespace, code: code }; }
 
 Rule
-  = name:IdentifierName __
-    displayName:(StringLiteral __)?
-    "=" __
+  = name:RuleName __
     expression:Expression EOS
     {
       return {
         type:        "rule",
-        name:        name,
-        expression:  displayName !== null
+        name:        name[0],
+        expression:  name[2] !== null
           ? {
               type:       "named",
-              name:       displayName[0],
+              name:       name[2][0],
               expression: expression
             }
           : expression
       };
     }
+
+RuleName
+  = IdentifierName __
+    (StringLiteral __)?
+    "="
 
 Expression
   = ChoiceExpression
@@ -118,7 +135,7 @@ ChoiceExpression
 ActionExpression
   = expression:SequenceExpression code:(__ CodeBlock)? {
       return code !== null
-        ? { type: "action", expression: expression, code: code[1] }
+        ? { type: "action", expression: expression, namespace: namespace, code: code[1] }
         : expression;
     }
 
@@ -166,13 +183,16 @@ PrimaryExpression
   / "(" __ expression:Expression __ ")" { return expression; }
 
 RuleReferenceExpression
-  = name:IdentifierName !(__ (StringLiteral __)? "=") {
-      return { type: "rule_ref", name: name };
+  = namespace:("#" IdentifierName ":")? !RuleName name:IdentifierName {
+      return { type: "rule_ref", namespace: extractOptional(namespace, 1), name: name };
+    }
+  / "#" namespace:IdentifierName {
+      return { type: "rule_ref", namespace: namespace, name: null };
     }
 
 SemanticPredicateExpression
   = operator:SemanticPredicateOperator __ code:CodeBlock {
-      return { type: OPS_TO_SEMANTIC_PREDICATE_TYPES[operator], code: code };
+      return { type: OPS_TO_SEMANTIC_PREDICATE_TYPES[operator], namespace: namespace, code: code };
     }
 
 SemanticPredicateOperator
