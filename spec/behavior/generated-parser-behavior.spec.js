@@ -645,12 +645,21 @@ describe("generated parser behavior", function() {
     });
 
     describe("one or more", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"+', options);
+      describe("when the expression matches one or more times", function() {
+        it("returns an array of its match results", function() {
+          var parser = PEG.buildParser('start = "a"+', options);
 
-        expect(parser).toFailToParse("");
-        expect(parser).toParse("a",   ["a"]);
-        expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).toParse("a",   ["a"]);
+          expect(parser).toParse("aaa", ["a", "a", "a"]);
+        });
+      });
+
+      describe("when the expression doesn't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = "a"+', options);
+
+          expect(parser).toFailToParse("");
+        });
       });
     });
 
