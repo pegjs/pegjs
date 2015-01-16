@@ -615,11 +615,20 @@ describe("generated parser behavior", function() {
     });
 
     describe("optional", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = "a"?', options);
+      describe("when the expression matches", function() {
+        it("returns its match result", function() {
+          var parser = PEG.buildParser('start = "a"?', options);
 
-        expect(parser).toParse("",  null);
-        expect(parser).toParse("a", "a");
+          expect(parser).toParse("a", "a");
+        });
+      });
+
+      describe("when the expression doesn't match", function() {
+        it("returns |null|", function() {
+          var parser = PEG.buildParser('start = "a"?', options);
+
+          expect(parser).toParse("", null);
+        });
       });
     });
 
