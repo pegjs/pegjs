@@ -26,4 +26,14 @@ describe("compiler pass |reportLeftRecursion|", function() {
       expect(pass).not.toReportError('start = "a" "b" start');
     });
   });
+
+  describe("in range", function() {
+    it("reports left recursion only for the element, not delimiter", function() {
+      expect(pass).toReportError('start = start|2, "~"|', {
+        message: 'Left recursion detected for rule \"start\".'
+      });
+
+      expect(pass).not.toReportError('start = "a"|2, start|');
+    });
+  });
 });
