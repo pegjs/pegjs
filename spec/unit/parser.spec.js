@@ -47,17 +47,18 @@ describe("PEG.js grammar parser", function() {
         alternatives: [actionAbcd, actionEfgh, actionIjkl, actionMnop]
       },
       named             = { type: "named",       name: "start rule", expression: literalAbcd },
-      ruleA             = { type: "rule",        name: "a",          expression: literalAbcd },
-      ruleB             = { type: "rule",        name: "b",          expression: literalEfgh },
-      ruleC             = { type: "rule",        name: "c",          expression: literalIjkl },
-      ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd },
+      ruleA             = { type: "rule",        name: "a",          params: [], expression: literalAbcd },
+      ruleB             = { type: "rule",        name: "b",          params: [], expression: literalEfgh },
+      ruleC             = { type: "rule",        name: "c",          params: [], expression: literalIjkl },
+      ruleStart         = { type: "rule",        name: "start",      params: [], expression: literalAbcd },
       initializer       = { type: "initializer", code: " code " };
 
   function oneRuleGrammar(expression) {
+    var params = arguments.length > 1 ? arguments[1] : [];
     return {
       type:        "grammar",
       initializer: null,
-      rules:       [{ type: "rule", name: "start", expression: expression }]
+      rules:       [{ type: "rule", name: "start", params: params, expression: expression }]
     };
   }
 
@@ -88,7 +89,16 @@ describe("PEG.js grammar parser", function() {
   }
 
   function ruleRefGrammar(name) {
-    return oneRuleGrammar({ type: "rule_ref", name: name });
+    var args = arguments.length > 1 ? arguments[1] : [];
+    return oneRuleGrammar({ type: "rule_ref", name: name, args: args });
+  }
+  
+  function templateGrammar(name) {
+    var args = arguments.length > 1 ? arguments[1] : [];
+    for (var i = 0; i < args.length; ++i) {
+      args[i] = { type: "template_arg", expression: { type: "rule_ref", name: args[i], args: [] } }
+    }
+    return ruleRefGrammar(name, args);
   }
 
   var trivialGrammar = literalGrammar("abcd", false),
@@ -198,13 +208,24 @@ describe("PEG.js grammar parser", function() {
   });
 
   /* Canonical Rule is "a = \"abcd\";". */
-  it("parses Rule", function() {
-    expect('start\n=\n"abcd";').toParseAs(
-      oneRuleGrammar(literalAbcd)
-    );
-    expect('start\n"start rule"\n=\n"abcd";').toParseAs(
-      oneRuleGrammar(named)
-    );
+  describe("parses Rule", function() {
+    it("non-template", function() {
+      expect('start\n=\n"abcd";').toParseAs(
+        oneRuleGrammar(literalAbcd)
+      );
+      expect('start\n"start rule"\n=\n"abcd";').toParseAs(
+        oneRuleGrammar(named)
+      );
+    });
+
+    it("template", function() {
+      expect('start\n<A,B>\n=\n"abcd";').toParseAs(
+        oneRuleGrammar(literalAbcd, ['A', 'B'])
+      );
+      expect('start\n<A,B>\n"start rule"\n=\n"abcd";').toParseAs(
+        oneRuleGrammar(named, ['A', 'B'])
+      );
+    });
   });
 
   /* Canonical Expression is "\"abcd\"". */
@@ -295,11 +316,20 @@ describe("PEG.js grammar parser", function() {
   });
 
   /* Canonical RuleReferenceExpression is "a". */
-  it("parses RuleReferenceExpression", function() {
-    expect('start = a').toParseAs(ruleRefGrammar("a"));
+  describe("parses RuleReferenceExpression", function() {
+    it("to non-template", function() {
+      expect('start = a').toParseAs(ruleRefGrammar("a"));
 
-    expect('start = a\n='        ).toFailToParse();
-    expect('start = a\n"abcd"\n=').toFailToParse();
+      expect('start = a\n='        ).toFailToParse();
+      expect('start = a\n"abcd"\n=').toFailToParse();
+    });
+
+    it("to template", function() {
+      expect('start = a<A>').toParseAs(templateGrammar("a", ['A']));
+      expect('start = a<A\n,\nB>').toParseAs(templateGrammar("a", ['A', 'B']));
+
+      expect('start = a<>').toFailToParse();
+    });
   });
 
   /* Canonical SemanticPredicateExpression is "!{ code }". */
