@@ -770,16 +770,28 @@ describe("generated parser behavior", function() {
     });
 
     describe("sequence", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = "a" "b" "c"', options);
+      describe("when all expressions match", function() {
+        it("returns an array of their match results", function() {
+          var parser = PEG.buildParser('start = "a" "b" "c"', options);
 
-        expect(parser).toParse("abc", ["a", "b", "c"]);
+          expect(parser).toParse("abc", ["a", "b", "c"]);
+        });
       });
 
-      it("does not advance position on failure", function() {
-        var parser = PEG.buildParser('start = "a" "b" / "a"', options);
+      describe("when any expression doesn't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = "a" "b" "c"', options);
 
-        expect(parser).toParse("a", "a");
+          expect(parser).toFailToParse("dbc");
+          expect(parser).toFailToParse("adc");
+          expect(parser).toFailToParse("abd");
+        });
+
+        it("resets parse position", function() {
+          var parser = PEG.buildParser('start = "a" "b" / "a"', options);
+
+          expect(parser).toParse("a", "a");
+        });
       });
     });
 
