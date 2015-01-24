@@ -183,37 +183,62 @@ describe("generated parser behavior", function() {
     });
 
     describe("rule", function() {
-      var grammar = [
-            '{ var n = 0; }',
-            'start = (a "b") / (a "c") { return n; }',
-            'a     = "a" { n++; }'
-          ].join("\n");
-
       if (options.cache) {
         it("caches rule match results", function() {
-          var parser = PEG.buildParser(grammar, options);
+          var parser = PEG.buildParser([
+                '{ var n = 0; }',
+                'start = (a "b") / (a "c") { return n; }',
+                'a = "a" { n++; }'
+              ].join("\n"), options);
 
           expect(parser).toParse("ac", 1);
         });
       } else {
-        it("does not cache rule match results", function() {
-          var parser = PEG.buildParser(grammar, options);
+        it("doesn't cache rule match results", function() {
+          var parser = PEG.buildParser([
+                '{ var n = 0; }',
+                'start = (a "b") / (a "c") { return n; }',
+                'a = "a" { n++; }'
+              ].join("\n"), options);
 
           expect(parser).toParse("ac", 2);
         });
       }
 
-      describe("named rule", function() {
-        var parser = PEG.buildParser('start "start" = "a"');
+      describe("when the expression matches", function() {
+        it("returns its match result", function() {
+          var parser = PEG.buildParser('start = "a"');
 
-        it("delegates to the expression", function() {
           expect(parser).toParse("a", "a");
-          expect(parser).toFailToParse("b");
+        });
+      });
+
+      describe("when the expression doesn't match", function() {
+        describe("without display name", function() {
+          it("reports match failure and doesn't record any expectation", function() {
+            var parser = PEG.buildParser('start = "a"');
+
+            expect(parser).toFailToParse("b", {
+              expected: [{ type: "literal", value: "a", description: '"a"' }]
+            });
+          });
         });
 
-        it("overwrites expected string on failure", function() {
-          expect(parser).toFailToParse("b", {
-            expected: [{ type: "other", description: "start" }]
+        describe("with display name", function() {
+          it("reports match failure and records an expectation of type \"other\"", function() {
+            var parser = PEG.buildParser('start "start" = "a"');
+
+            expect(parser).toFailToParse("b", {
+              expected: [{ type: "other", description: "start" }]
+            });
+          });
+
+          it("discards any expectations recorded when matching the expression", function() {
+            var parser = PEG.buildParser('start "start" = "a"');
+
+            expect(parser).toFailToParse("b", {
+              expected: [{ type: "other", description: "start" }]
+            });
           });
         });
       });
