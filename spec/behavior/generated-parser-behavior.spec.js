@@ -928,13 +928,22 @@ describe("generated parser behavior", function() {
     });
 
     describe("choice", function() {
-      it("matches correctly", function() {
-        var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
+      describe("when any expression matches", function() {
+        it("returns its match result", function() {
+          var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
 
-        expect(parser).toParse("a", "a");
-        expect(parser).toParse("b", "b");
-        expect(parser).toParse("c", "c");
-        expect(parser).toFailToParse("d");
+          expect(parser).toParse("a", "a");
+          expect(parser).toParse("b", "b");
+          expect(parser).toParse("c", "c");
+        });
+      });
+
+      describe("when all expressions don't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
+
+          expect(parser).toFailToParse("d");
+        });
       });
     });
 
