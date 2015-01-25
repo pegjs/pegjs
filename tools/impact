@@ -12,7 +12,7 @@ prepare() {
 }
 
 run_benchmark() {
-  echo $(make benchmark | awk 'BEGIN { FS = " *│ *" } /Total/ { split($5, a, " "); print a[1] }')
+  echo $(gulp benchmark | awk 'BEGIN { FS = " *│ *" } /Total/ { split($5, a, " "); print a[1] }')
 }
 
 measure_speed() {
