@@ -127,7 +127,7 @@ describe("generated parser behavior", function() {
 
   varyOptimizationOptions(function(options) {
     describe("initializer", function() {
-      it("runs before the parsing begins", function() {
+      it("executes the code before parsing starts", function() {
         var parser = PEG.buildParser([
               '{ var result = 42; }',
               'start = "a" { return result; }'
@@ -136,49 +136,24 @@ describe("generated parser behavior", function() {
         expect(parser).toParse("a", 42);
       });
 
-      it("can use the |text| function", function() {
-        var parser = PEG.buildParser([
-              '{ var result = text(); }',
-              'start = "a" { return result; }'
-            ].join("\n"), options);
+      describe("available variables and functions", function() {
+        it("|parser| contains the parser object", function() {
+          var parser = PEG.buildParser([
+                '{ var result = parser; }',
+                'start = "a" { return result; }'
+              ].join("\n"), options);
 
-        expect(parser).toParse("a", "");
-      });
+          expect(parser).toParse("a", parser);
+        });
 
-      it("can use the |offset| function to get the current parse position", function() {
-        var parser = PEG.buildParser([
-              '{ var result = offset(); }',
-              'start = "a" { return result; }'
-            ].join("\n"), options);
+        it("|options| contains options", function() {
+          var parser = PEG.buildParser([
+                '{ var result = options; }',
+                'start = "a" { return result; }'
+              ].join("\n"), options);
 
-        expect(parser).toParse("a", 0);
-      });
-
-      it("can use the |line| and |column| functions to get the current line and column", function() {
-        var parser = PEG.buildParser([
-              '{ var result = [line(), column()]; }',
-              'start = "a" { return result; }'
-            ].join("\n"), options);
-
-        expect(parser).toParse("a", [1, 1]);
-      });
-
-      it("can use the |parser| variable to access the parser object", function() {
-        var parser = PEG.buildParser([
-              '{ var result = parser; }',
-              'start = "a" { return result; }'
-            ].join("\n"), options);
-
-        expect(parser).toParse("a", parser);
-      });
-
-      it("can use options passed to the parser", function() {
-        var parser = PEG.buildParser([
-              '{ var result = options; }',
-              'start = "a" { return result; }'
-            ].join("\n"), options);
-
-        expect(parser).toParse("a", { a: 42 }, { a: 42 });
+          expect(parser).toParse("a", { a: 42 }, { a: 42 });
+        });
       });
     });
 
