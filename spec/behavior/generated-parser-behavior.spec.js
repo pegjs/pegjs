@@ -598,6 +598,24 @@ describe("generated parser behavior", function() {
       });
     });
 
+    describe("group", function() {
+      describe("when the expression matches", function() {
+        it("returns its match result", function() {
+          var parser = PEG.buildParser('start = ("a")', options);
+
+          expect(parser).toParse("a", "a");
+        });
+      });
+
+      describe("when the expression doesn't match", function() {
+        it("reports match failure", function() {
+          var parser = PEG.buildParser('start = ("a")', options);
+
+          expect(parser).toFailToParse("b");
+        });
+      });
+    });
+
     describe("optional", function() {
       describe("when the expression matches", function() {
         it("returns its match result", function() {
