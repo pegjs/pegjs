@@ -1090,7 +1090,7 @@ describe("generated parser behavior", function() {
                 'start  = line (nl+ line)*',
                 'line   = digit (" "+ digit)*',
                 'digit  = [0-9]',
-                'nl     = ("\\r" / "\\n" / "\\u2028" / "\\u2029")'
+                'nl     = [\\r\\n\\u2028\\u2029]'
               ].join("\n"), options);
 
           expect(parser).toFailToParse("1\n2\n\n3\n\n\n4 5 x", {
@@ -1100,29 +1100,29 @@ describe("generated parser behavior", function() {
           });
 
           /* Non-Unix newlines */
-          expect(parser).toFailToParse("1\rx", {   // Old Mac
+          expect(parser).toFailToParse("1\rx", {     // Old Mac
             offset: 2,
             line:   2,
             column: 1
           });
-          expect(parser).toFailToParse("1\r\nx", { // Windows
+          expect(parser).toFailToParse("1\r\nx", {   // Windows
             offset: 3,
             line:   2,
             column: 1
           });
-          expect(parser).toFailToParse("1\n\rx", { // mismatched
+          expect(parser).toFailToParse("1\n\rx", {   // mismatched
             offset: 3,
             line:   3,
             column: 1
           });
 
           /* Strange newlines */
-          expect(parser).toFailToParse("1\u2028x", { // line separator
+          expect(parser).toFailToParse("1\u2028x", {   // line separator
             offset: 2,
             line:   2,
             column: 1
           });
-          expect(parser).toFailToParse("1\u2029x", { // paragraph separator
+          expect(parser).toFailToParse("1\u2029x", {   // paragraph separator
             offset: 2,
             line:   2,
             column: 1
