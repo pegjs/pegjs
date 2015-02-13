@@ -3,7 +3,7 @@ describe("compiler pass |reportMissingRules|", function() {
 
   it("reports missing rules", function() {
     expect(pass).toReportError('start = missing', {
-      message: 'Referenced rule "missing" does not exist.'
+      message: 'Line 1, column 9: Referenced rule "missing" does not exist.'
     });
   });
 });
