@@ -17,7 +17,7 @@ All commands in the following steps need to be executed in PEG.js root directory
 
   2. Execute the benchmark suite:
 
-        $ make spec
+        $ gulp spec
 
   3. Wait for results.
 
@@ -35,7 +35,7 @@ All commands in the following steps need to be executed in PEG.js root directory
 
   3. Build browser version of PEG.js:
 
-        $ make browser
+        $ gulp browser
 
   4. Serve PEG.js root directory using a web server:
 
