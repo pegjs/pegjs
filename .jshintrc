@@ -12,5 +12,6 @@
   "noempty":  true,
   "nonew":    true,
   "trailing": true,
-  "-W082":    false
+  "-W082":    false,
+  "newcap":   true
 }
