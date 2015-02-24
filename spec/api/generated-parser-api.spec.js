@@ -41,6 +41,86 @@ describe("generated parser API", function() {
       });
     });
 
+    describe("tracing", function() {
+      var parser = PEG.buildParser([
+            'start = a / b',
+            'a = "a"',
+            'b = "b"'
+          ].join("\n"), { trace: true });
+
+      describe("default tracer", function() {
+        it("traces using console.log", function() {
+          spyOn(console, "log");
+
+          parser.parse("b");
+
+          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter start");
+          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter   a");
+          expect(console.log).toHaveBeenCalledWith("1:1 rule.fail    a");
+          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter   b");
+          expect(console.log).toHaveBeenCalledWith("1:2 rule.match   b");
+          expect(console.log).toHaveBeenCalledWith("1:2 rule.match start");
+        });
+      });
+
+      describe("custom tracers", function() {
+        describe("trace", function() {
+          it("receives tracing events", function() {
+            var tracer = { trace: function() { } };
+
+            spyOn(tracer, "trace");
+
+            parser.parse("b", { tracer: tracer });
+
+            expect(tracer.trace).toHaveBeenCalledWith({
+              type:   'rule.enter',
+              rule:   'start',
+              offset: 0,
+              line:   1,
+              column: 1
+            });
+            expect(tracer.trace).toHaveBeenCalledWith({
+              type:   'rule.enter',
+              rule:   'a',
+              offset: 0,
+              line:   1,
+              column: 1
+            });
+            expect(tracer.trace).toHaveBeenCalledWith({
+              type:   'rule.fail',
+              rule:   'a',
+              offset: 0,
+              line:   1,
+              column: 1
+            });
+            expect(tracer.trace).toHaveBeenCalledWith({
+              type:   'rule.enter',
+              rule:   'b',
+              offset: 0,
+              line:   1,
+              column: 1
+            });
+            expect(tracer.trace).toHaveBeenCalledWith({
+              type:   'rule.match',
+              rule:   'b',
+              result: 'b',
+              offset: 1,
+              line:   1,
+              column: 2
+            });
+            expect(tracer.trace).toHaveBeenCalledWith({
+              type:   'rule.match',
+              rule:   'start',
+              result: 'b',
+              offset: 1,
+              line:   1,
+              column: 2
+            });
+          });
+        });
+      });
+    });
+
     it("accepts custom options", function() {
       var parser = PEG.buildParser('start = "a"');
 
