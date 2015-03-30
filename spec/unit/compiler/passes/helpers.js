@@ -80,6 +80,7 @@ beforeEach(function() {
         if (this.isNot) {
           this.message = function() {
             return "Expected the pass not to report an error"
+                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
                  + "for grammar " + jasmine.pp(grammar) + ", "
                  + "but it did.";
           };
