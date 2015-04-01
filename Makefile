@@ -18,6 +18,7 @@ MODULES = utils/arrays                          \
           compiler/passes/generate-javascript   \
           compiler/passes/remove-proxy-rules    \
           compiler/passes/report-left-recursion \
+          compiler/passes/report-infinite-loops \
           compiler/passes/report-missing-rules  \
           compiler                              \
           peg
