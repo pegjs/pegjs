@@ -10,8 +10,8 @@ MODULES = utils/arrays                          \
           utils/classes                         \
           grammar-error                         \
           parser                                \
-          compiler/asts                         \
           compiler/visitor                      \
+          compiler/asts                         \
           compiler/opcodes                      \
           compiler/javascript                   \
           compiler/passes/generate-bytecode     \
