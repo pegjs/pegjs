@@ -32,6 +32,7 @@ function printHelp() {
   util.puts("                                     grammar)");
   util.puts("  -o, --optimize <goal>              select optimization for speed or size");
   util.puts("                                     (default: speed)");
+  util.puts("      --trace                        enable tracing in generated parser");
   util.puts("      --plugin <plugin>              use a specified plugin (can be specified");
   util.puts("                                     multiple times)");
   util.puts("      --extra-options <options>      additional options (in JSON format) to pass");
@@ -112,6 +113,7 @@ var options = {
   cache:    false,
   output:   "source",
   optimize: "speed",
+  trace:    false,
   plugins:  []
 };
 
@@ -138,6 +140,10 @@ while (args.length > 0 && isOption(args[0])) {
       options.allowedStartRules = args[0]
         .split(",")
         .map(trim);
+      break;
+
+    case "--trace":
+      options.trace = true;
       break;
 
     case "-o":

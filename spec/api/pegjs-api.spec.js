@@ -122,6 +122,47 @@ describe("PEG.js API", function() {
       });
     });
 
+    describe("tracing", function() {
+      var grammar = 'start = "a"';
+
+      describe("when |trace| is not set", function() {
+        it("generated parser doesn't trace", function() {
+          var parser = PEG.buildParser(grammar);
+
+          spyOn(console, "log");
+
+          parser.parse("a");
+
+          expect(console.log).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("when |trace| is set to |false|", function() {
+        it("generated parser doesn't trace", function() {
+          var parser = PEG.buildParser(grammar, { trace: false });
+
+          spyOn(console, "log");
+
+          parser.parse("a");
+
+          expect(console.log).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("when |trace| is set to |true|", function() {
+        it("generated parser traces", function() {
+          var parser = PEG.buildParser(grammar, { trace: true });
+
+          spyOn(console, "log");
+
+          parser.parse("a");
+
+          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter start");
+          expect(console.log).toHaveBeenCalledWith("1:2 rule.match start");
+        });
+      });
+    });
+
     /*
      * The |optimize| option isn't tested because there is no meaningful way to
      * write the specs without turning this into a performance test.

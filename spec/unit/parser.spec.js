@@ -417,13 +417,13 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical StringLiteral is "\"abcd\"". */
   it("parses StringLiteral", function() {
-    expect('start = ""'    ).toParseAs(literalGrammar("",    false));
-    expect('start = "a"'   ).toParseAs(literalGrammar("a",   false));
-    expect('start = "abc"' ).toParseAs(literalGrammar("abc", false));
+    expect('start = ""'   ).toParseAs(literalGrammar("",    false));
+    expect('start = "a"'  ).toParseAs(literalGrammar("a",   false));
+    expect('start = "abc"').toParseAs(literalGrammar("abc", false));
 
-    expect("start = ''"    ).toParseAs(literalGrammar("",    false));
-    expect("start = 'a'"   ).toParseAs(literalGrammar("a",   false));
-    expect("start = 'abc'" ).toParseAs(literalGrammar("abc", false));
+    expect("start = ''"   ).toParseAs(literalGrammar("",    false));
+    expect("start = 'a'"  ).toParseAs(literalGrammar("a",   false));
+    expect("start = 'abc'").toParseAs(literalGrammar("abc", false));
   });
 
   /* Canonical DoubleStringCharacter is "a". */
