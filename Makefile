@@ -104,7 +104,7 @@ browser:
 
 	for module in $(MODULES); do                                                                \
 	  echo "  modules.define(\"$$module\", function(module, require) {" >> $(BROWSER_FILE_DEV); \
-	  sed -e 's/^/    /' lib/$$module.js                                >> $(BROWSER_FILE_DEV); \
+	  sed -e 's/^\(..*\)$$/    \1/' lib/$$module.js                     >> $(BROWSER_FILE_DEV); \
 	  echo '  });'                                                      >> $(BROWSER_FILE_DEV); \
 	  echo ''                                                           >> $(BROWSER_FILE_DEV); \
 	done
