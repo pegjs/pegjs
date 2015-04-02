@@ -10,14 +10,15 @@ MODULES = utils/arrays                          \
           utils/classes                         \
           grammar-error                         \
           parser                                \
-          compiler/asts                         \
           compiler/visitor                      \
+          compiler/asts                         \
           compiler/opcodes                      \
           compiler/javascript                   \
           compiler/passes/generate-bytecode     \
           compiler/passes/generate-javascript   \
           compiler/passes/remove-proxy-rules    \
           compiler/passes/report-left-recursion \
+          compiler/passes/report-infinite-loops \
           compiler/passes/report-missing-rules  \
           compiler                              \
           peg
@@ -103,7 +104,7 @@ browser:
 
 	for module in $(MODULES); do                                                                \
 	  echo "  modules.define(\"$$module\", function(module, require) {" >> $(BROWSER_FILE_DEV); \
-	  sed -e 's/^/    /' lib/$$module.js                                >> $(BROWSER_FILE_DEV); \
+	  sed -e 's/^\(..*\)$$/    \1/' lib/$$module.js                     >> $(BROWSER_FILE_DEV); \
 	  echo '  });'                                                      >> $(BROWSER_FILE_DEV); \
 	  echo ''                                                           >> $(BROWSER_FILE_DEV); \
 	done

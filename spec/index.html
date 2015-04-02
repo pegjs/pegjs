@@ -11,6 +11,7 @@
     <script src="unit/compiler/passes/helpers.js"></script>
     <script src="unit/compiler/passes/report-missing-rules.spec.js"></script>
     <script src="unit/compiler/passes/report-left-recursion.spec.js"></script>
+    <script src="unit/compiler/passes/report-infinite-loops.spec.js"></script>
     <script src="unit/compiler/passes/remove-proxy-rules.spec.js"></script>
     <script src="unit/compiler/passes/generate-bytecode.spec.js"></script>
     <script src="api/pegjs-api.spec.js"></script>
@@ -25,7 +26,7 @@
         env.addReporter(reporter);
         env.specFilter = reporter.specFilter;
 
-        window.onload = function() { env.execute(); }
+        window.onload = function() { env.execute(); };
       })();
     </script>
   </head>
