@@ -54,12 +54,12 @@ describe("generated parser API", function() {
 
           parser.parse("b");
 
-          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter start");
-          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter   a");
-          expect(console.log).toHaveBeenCalledWith("1:1 rule.fail    a");
-          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter   b");
-          expect(console.log).toHaveBeenCalledWith("1:2 rule.match   b");
-          expect(console.log).toHaveBeenCalledWith("1:2 rule.match start");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter start");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter   a");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.fail    a");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter   b");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:2 rule.match   b");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:2 rule.match start");
         });
       });
 
@@ -73,48 +73,54 @@ describe("generated parser API", function() {
             parser.parse("b", { tracer: tracer });
 
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:   'rule.enter',
-              rule:   'start',
-              offset: 0,
-              line:   1,
-              column: 1
+              type:     'rule.enter',
+              rule:     'start',
+              location: {
+                start: { offset: 0, line: 1, column: 1 },
+                end:   { offset: 0, line: 1, column: 1 }
+              }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:   'rule.enter',
-              rule:   'a',
-              offset: 0,
-              line:   1,
-              column: 1
+              type:     'rule.enter',
+              rule:     'a',
+              location: {
+                start: { offset: 0, line: 1, column: 1 },
+                end:   { offset: 0, line: 1, column: 1 }
+              }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:   'rule.fail',
-              rule:   'a',
-              offset: 0,
-              line:   1,
-              column: 1
+              type:     'rule.fail',
+              rule:     'a',
+              location: {
+                start: { offset: 0, line: 1, column: 1 },
+                end:   { offset: 0, line: 1, column: 1 }
+              }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:   'rule.enter',
-              rule:   'b',
-              offset: 0,
-              line:   1,
-              column: 1
+              type:     'rule.enter',
+              rule:     'b',
+              location: {
+                start: { offset: 0, line: 1, column: 1 },
+                end:   { offset: 0, line: 1, column: 1 }
+              }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:   'rule.match',
-              rule:   'b',
-              result: 'b',
-              offset: 1,
-              line:   1,
-              column: 2
+              type:     'rule.match',
+              rule:     'b',
+              result:   'b',
+              location: {
+                start: { offset: 0, line: 1, column: 1 },
+                end:   { offset: 1, line: 1, column: 2 }
+              }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:   'rule.match',
-              rule:   'start',
-              result: 'b',
-              offset: 1,
-              line:   1,
-              column: 2
+              type:     'rule.match',
+              rule:     'start',
+              result:   'b',
+              location: {
+                start: { offset: 0, line: 1, column: 1 },
+                end:   { offset: 1, line: 1, column: 2 }
+              }
             });
           });
         });

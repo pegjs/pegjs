@@ -157,8 +157,8 @@ describe("PEG.js API", function() {
 
           parser.parse("a");
 
-          expect(console.log).toHaveBeenCalledWith("1:1 rule.enter start");
-          expect(console.log).toHaveBeenCalledWith("1:2 rule.match start");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter start");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:2 rule.match start");
         });
       });
     });
