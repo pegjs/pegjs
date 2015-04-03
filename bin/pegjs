@@ -253,8 +253,8 @@ readStream(inputStream, function(input) {
   try {
     source = PEG.buildParser(input, options);
   } catch (e) {
-    if (e.line !== undefined && e.column !== undefined) {
-      abort(e.line + ":" + e.column + ": " + e.message);
+    if (e.location !== undefined) {
+      abort(e.location.start.line + ":" + e.location.start.column + ": " + e.message);
     } else {
       abort(e.message);
     }
