@@ -98,6 +98,74 @@ describe("PEG.js grammar parser", function() {
         rules:       [ruleA, ruleB]
       };
 
+  var stripLocation = (function() {
+    function buildVisitor(functions) {
+      return function(node) {
+        return functions[node.type].apply(null, arguments);
+      };
+    }
+
+    function stripLeaf(node) {
+      delete node.location;
+    }
+
+    function stripExpression(node) {
+      delete node.location;
+
+      strip(node.expression);
+    }
+
+    function stripChildren(property) {
+      return function(node) {
+        var i;
+
+        delete node.location;
+
+        for (i = 0; i < node[property].length; i++) {
+          strip(node[property][i]);
+        }
+      };
+    }
+
+    var strip = buildVisitor({
+      grammar: function(node) {
+        var i;
+
+        delete node.location;
+
+        if (node.initializer) {
+          strip(node.initializer);
+        }
+
+        for (i = 0; i < node.rules.length; i++) {
+          strip(node.rules[i]);
+        }
+      },
+
+      initializer:  stripLeaf,
+      rule:         stripExpression,
+      named:        stripExpression,
+      choice:       stripChildren("alternatives"),
+      action:       stripExpression,
+      sequence:     stripChildren("elements"),
+      labeled:      stripExpression,
+      text:         stripExpression,
+      simple_and:   stripExpression,
+      simple_not:   stripExpression,
+      optional:     stripExpression,
+      zero_or_more: stripExpression,
+      one_or_more:  stripExpression,
+      semantic_and: stripLeaf,
+      semantic_not: stripLeaf,
+      rule_ref:     stripLeaf,
+      literal:      stripLeaf,
+      "class":      stripLeaf,
+      any:          stripLeaf
+    });
+
+    return strip;
+  })();
+
   beforeEach(function() {
     this.addMatchers({
       toParseAs:     function(expected) {
@@ -105,6 +173,8 @@ describe("PEG.js grammar parser", function() {
 
         try {
           result = PEG.parser.parse(this.actual);
+
+          stripLocation(result);
 
           this.message = function() {
             return "Expected " + jasmine.pp(this.actual) + " "
@@ -131,6 +201,8 @@ describe("PEG.js grammar parser", function() {
 
         try {
           result = PEG.parser.parse(this.actual);
+
+          stripLocation(result);
 
           this.message = function() {
             return "Expected " + jasmine.pp(this.actual) + " to fail to parse"

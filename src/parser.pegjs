@@ -79,12 +79,15 @@ Grammar
       return {
         type:        "grammar",
         initializer: extractOptional(initializer, 0),
-        rules:       extractList(rules, 0)
+        rules:       extractList(rules, 0),
+        location:    location()
       };
     }
 
 Initializer
-  = code:CodeBlock EOS { return { type: "initializer", code: code }; }
+  = code:CodeBlock EOS {
+      return { type: "initializer", code: code, location: location() };
+    }
 
 Rule
   = name:IdentifierName __
@@ -99,9 +102,11 @@ Rule
           ? {
               type:       "named",
               name:       displayName[0],
-              expression: expression
+              expression: expression,
+              location:   location()
             }
-          : expression
+          : expression,
+        location:    location()
       };
     }
 
@@ -111,33 +116,55 @@ Expression
 ChoiceExpression
   = first:ActionExpression rest:(__ "/" __ ActionExpression)* {
       return rest.length > 0
-        ? { type: "choice", alternatives: buildList(first, rest, 3) }
+        ? {
+            type:         "choice",
+            alternatives: buildList(first, rest, 3),
+            location:     location()
+          }
         : first;
     }
 
 ActionExpression
   = expression:SequenceExpression code:(__ CodeBlock)? {
       return code !== null
-        ? { type: "action", expression: expression, code: code[1] }
+        ? {
+            type:       "action",
+            expression: expression,
+            code:       code[1],
+            location:   location()
+          }
         : expression;
     }
 
 SequenceExpression
   = first:LabeledExpression rest:(__ LabeledExpression)* {
       return rest.length > 0
-        ? { type: "sequence", elements: buildList(first, rest, 1) }
+        ? {
+            type:     "sequence",
+            elements: buildList(first, rest, 1),
+            location: location()
+          }
         : first;
     }
 
 LabeledExpression
   = label:Identifier __ ":" __ expression:PrefixedExpression {
-      return { type: "labeled", label: label, expression: expression };
+      return {
+        type:       "labeled",
+        label:      label,
+        expression: expression,
+        location:   location()
+      };
     }
   / PrefixedExpression
 
 PrefixedExpression
   = operator:PrefixedOperator __ expression:SuffixedExpression {
-      return { type: OPS_TO_PREFIXED_TYPES[operator], expression: expression };
+      return {
+        type:       OPS_TO_PREFIXED_TYPES[operator],
+        expression: expression,
+        location:   location()
+      };
     }
   / SuffixedExpression
 
@@ -148,7 +175,11 @@ PrefixedOperator
 
 SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
-      return { type: OPS_TO_SUFFIXED_TYPES[operator], expression: expression };
+      return {
+        type:       OPS_TO_SUFFIXED_TYPES[operator],
+        expression: expression,
+        location:   location()
+      };
     }
   / PrimaryExpression
 
@@ -167,12 +198,16 @@ PrimaryExpression
 
 RuleReferenceExpression
   = name:IdentifierName !(__ (StringLiteral __)? "=") {
-      return { type: "rule_ref", name: name };
+      return { type: "rule_ref", name: name, location: location() };
     }
 
 SemanticPredicateExpression
   = operator:SemanticPredicateOperator __ code:CodeBlock {
-      return { type: OPS_TO_SEMANTIC_PREDICATE_TYPES[operator], code: code };
+      return {
+        type:     OPS_TO_SEMANTIC_PREDICATE_TYPES[operator],
+        code:     code,
+        location: location()
+      };
     }
 
 SemanticPredicateOperator
@@ -306,7 +341,12 @@ BooleanLiteral
 
 LiteralMatcher "literal"
   = value:StringLiteral ignoreCase:"i"? {
-      return { type: "literal", value: value, ignoreCase: ignoreCase !== null };
+      return {
+        type:       "literal",
+        value:      value,
+        ignoreCase: ignoreCase !== null,
+        location:   location()
+      };
     }
 
 StringLiteral "string"
@@ -335,7 +375,8 @@ CharacterClassMatcher "character class"
         parts:      filterEmptyStrings(parts),
         inverted:   inverted !== null,
         ignoreCase: ignoreCase !== null,
-        rawText:    text()
+        rawText:    text(),
+        location:   location()
       };
     }
 
@@ -405,7 +446,7 @@ HexDigit
   = [0-9a-f]i
 
 AnyMatcher
-  = "." { return { type: "any" }; }
+  = "." { return { type: "any", location: location() }; }
 
 CodeBlock "code block"
   = "{" code:Code "}" { return code; }
