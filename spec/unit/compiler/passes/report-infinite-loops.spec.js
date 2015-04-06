@@ -3,13 +3,21 @@ describe("compiler pass |reportLeftRecursion|", function() {
 
   it("reports infinite loops for zero_or_more", function() {
     expect(pass).toReportError('start = ("")*', {
-      message: "Infinite loop detected."
+      message:  "Infinite loop detected.",
+      location: {
+        start: { offset:  8, line: 1, column:  9 },
+        end:   { offset: 13, line: 1, column: 14 }
+      }
     });
   });
 
   it("reports infinite loops for one_or_more", function() {
     expect(pass).toReportError('start = ("")+', {
-      message: "Infinite loop detected."
+      message:  "Infinite loop detected.",
+      location: {
+        start: { offset:  8, line: 1, column:  9 },
+        end:   { offset: 13, line: 1, column: 14 }
+      }
     });
   });
 
