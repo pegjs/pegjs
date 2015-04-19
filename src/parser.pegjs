@@ -156,7 +156,13 @@ LabeledExpression
         location:   location()
       };
     }
-  / PrefixedExpression
+  / expression:PrefixedExpression {
+      return {
+        type:       "unlabeled",
+        expression: expression,
+        location:   location()
+      };
+    }
 
 PrefixedExpression
   = operator:PrefixedOperator __ expression:SuffixedExpression {
