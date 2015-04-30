@@ -70,16 +70,19 @@
   function buildList(first, rest, index) {
     return [first].concat(extractList(rest, index));
   }
+  
 }
+
+
 
 /* ---- Syntactic Grammar ----- */
 
 Grammar
-  = __ initializer:(Initializer __)? rules:(Rule __)+ {
+  =  initializer:Initializer? rules:Rule+  {
       return {
         type:        "grammar",
-        initializer: extractOptional(initializer, 0),
-        rules:       extractList(rules, 0),
+        initializer: initializer,
+        rules:       rules,
         location:    location()
       };
     }
@@ -90,9 +93,9 @@ Initializer
     }
 
 Rule
-  = name:IdentifierName __
-    displayName:(StringLiteral __)?
-    "=" __
+  = name:IdentifierName 
+    displayName:StringLiteral?
+    EQUALS 
     expression:Expression EOS
     {
       return {
@@ -101,7 +104,7 @@ Rule
         expression:  displayName !== null
           ? {
               type:       "named",
-              name:       displayName[0],
+              name:       displayName,
               expression: expression,
               location:   location()
             }
@@ -114,18 +117,18 @@ Expression
   = ChoiceExpression
 
 ChoiceExpression
-  = first:ActionExpression rest:(__ "/" __ ActionExpression)* {
+  = first:ActionExpression rest:(FORWARD_SLASH ActionExpression)* {
       return rest.length > 0
         ? {
             type:         "choice",
-            alternatives: buildList(first, rest, 3),
+            alternatives: buildList(first, rest, 1),
             location:     location()
           }
         : first;
     }
 
 ActionExpression
-  = expression:SequenceExpression code:(__ CodeBlock)? {
+  = expression:SequenceExpression code:CodeBlock? {
       return code !== null
         ? {
             type:       "action",
@@ -137,18 +140,18 @@ ActionExpression
     }
 
 SequenceExpression
-  = first:LabeledExpression rest:(__ LabeledExpression)* {
-      return rest.length > 0
+  = labeledExpression:LabeledExpression+ {
+      return labeledExpression.length > 1
         ? {
             type:     "sequence",
-            elements: buildList(first, rest, 1),
+            elements: labeledExpression,
             location: location()
           }
-        : first;
+        : labeledExpression[0];
     }
 
 LabeledExpression
-  = label:Identifier __ ":" __ expression:PrefixedExpression {
+  = label:Identifier COLON  expression:PrefixedExpression {
       return {
         type:       "labeled",
         label:      label,
@@ -159,9 +162,9 @@ LabeledExpression
   / PrefixedExpression
 
 PrefixedExpression
-  = operator:PrefixedOperator __ expression:SuffixedExpression {
+  = operator:PrefixedOperator  expression:SuffixedExpression {
       return {
-        type:       OPS_TO_PREFIXED_TYPES[operator],
+        type:       OPS_TO_PREFIXED_TYPES[operator[1]],
         expression: expression,
         location:   location()
       };
@@ -169,14 +172,14 @@ PrefixedExpression
   / SuffixedExpression
 
 PrefixedOperator
-  = "$"
-  / "&"
-  / "!"
+  = __ "$"
+  / __ "&"
+  / __ "!"
 
 SuffixedExpression
-  = expression:PrimaryExpression __ operator:SuffixedOperator {
+  = expression:PrimaryExpression  operator:SuffixedOperator {
       return {
-        type:       OPS_TO_SUFFIXED_TYPES[operator],
+        type:       OPS_TO_SUFFIXED_TYPES[operator[1]],
         expression: expression,
         location:   location()
       };
@@ -184,9 +187,9 @@ SuffixedExpression
   / PrimaryExpression
 
 SuffixedOperator
-  = "?"
-  / "*"
-  / "+"
+  = __ "?" 
+  / __ "*" 
+  / __ "+" 
 
 PrimaryExpression
   = LiteralMatcher
@@ -194,25 +197,25 @@ PrimaryExpression
   / AnyMatcher
   / RuleReferenceExpression
   / SemanticPredicateExpression
-  / "(" __ expression:Expression __ ")" { return expression; }
+  / LEFT_PAREN expression:Expression RIGHT_PAREN { return expression; }
 
 RuleReferenceExpression
-  = name:IdentifierName !(__ (StringLiteral __)? "=") {
+  = name:IdentifierName !(StringLiteral? EQUALS) {
       return { type: "rule_ref", name: name, location: location() };
     }
 
 SemanticPredicateExpression
-  = operator:SemanticPredicateOperator __ code:CodeBlock {
+  = operator:SemanticPredicateOperator  code:CodeBlock {
       return {
-        type:     OPS_TO_SEMANTIC_PREDICATE_TYPES[operator],
+        type:     OPS_TO_SEMANTIC_PREDICATE_TYPES[operator[1]],
         code:     code,
         location: location()
       };
     }
 
 SemanticPredicateOperator
-  = "&"
-  / "!"
+  = __ "&"
+  / __ "!"
 
 /* ---- Lexical Grammar ----- */
 
@@ -255,7 +258,7 @@ Identifier
   = !ReservedWord name:IdentifierName { return name; }
 
 IdentifierName "identifier"
-  = first:IdentifierStart rest:IdentifierPart* { return first + rest.join(""); }
+  = __ first:IdentifierStart rest:IdentifierPart* { return first + rest.join(""); }
 
 IdentifierStart
   = UnicodeLetter
@@ -350,8 +353,8 @@ LiteralMatcher "literal"
     }
 
 StringLiteral "string"
-  = '"' chars:DoubleStringCharacter* '"' { return chars.join(""); }
-  / "'" chars:SingleStringCharacter* "'" { return chars.join(""); }
+  = __ '"' chars:DoubleStringCharacter* '"' { return chars.join(""); }
+  / __ "'" chars:SingleStringCharacter* "'" { return chars.join(""); }
 
 DoubleStringCharacter
   = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
@@ -364,10 +367,10 @@ SingleStringCharacter
   / LineContinuation
 
 CharacterClassMatcher "character class"
-  = "["
+  = __ "["
     inverted:"^"?
     parts:(ClassCharacterRange / ClassCharacter)*
-    "]"
+    __ "]"
     ignoreCase:"i"?
     {
       return {
@@ -446,13 +449,13 @@ HexDigit
   = [0-9a-f]i
 
 AnyMatcher
-  = "." { return { type: "any", location: location() }; }
+  = __ "." { return { type: "any", location: location() }; }
 
 CodeBlock "code block"
-  = "{" code:Code "}" { return code; }
+  = LEFT_CURLY code:Code RIGHT_CURLY { return code; }
 
 Code
-  = $((![{}] SourceCharacter)+ / "{" Code "}")*
+  = $((![{}] SourceCharacter)+ / LEFT_CURLY Code RIGHT_CURLY)*
 
 /*
  * Unicode Character Categories
@@ -514,42 +517,50 @@ Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]
 
 /* Tokens */
 
-BreakToken      = "break"      !IdentifierPart
-CaseToken       = "case"       !IdentifierPart
-CatchToken      = "catch"      !IdentifierPart
-ClassToken      = "class"      !IdentifierPart
-ConstToken      = "const"      !IdentifierPart
-ContinueToken   = "continue"   !IdentifierPart
-DebuggerToken   = "debugger"   !IdentifierPart
-DefaultToken    = "default"    !IdentifierPart
-DeleteToken     = "delete"     !IdentifierPart
-DoToken         = "do"         !IdentifierPart
-ElseToken       = "else"       !IdentifierPart
-EnumToken       = "enum"       !IdentifierPart
-ExportToken     = "export"     !IdentifierPart
-ExtendsToken    = "extends"    !IdentifierPart
-FalseToken      = "false"      !IdentifierPart
-FinallyToken    = "finally"    !IdentifierPart
-ForToken        = "for"        !IdentifierPart
-FunctionToken   = "function"   !IdentifierPart
-IfToken         = "if"         !IdentifierPart
-ImportToken     = "import"     !IdentifierPart
-InstanceofToken = "instanceof" !IdentifierPart
-InToken         = "in"         !IdentifierPart
-NewToken        = "new"        !IdentifierPart
-NullToken       = "null"       !IdentifierPart
-ReturnToken     = "return"     !IdentifierPart
-SuperToken      = "super"      !IdentifierPart
-SwitchToken     = "switch"     !IdentifierPart
-ThisToken       = "this"       !IdentifierPart
-ThrowToken      = "throw"      !IdentifierPart
-TrueToken       = "true"       !IdentifierPart
-TryToken        = "try"        !IdentifierPart
-TypeofToken     = "typeof"     !IdentifierPart
-VarToken        = "var"        !IdentifierPart
-VoidToken       = "void"       !IdentifierPart
-WhileToken      = "while"      !IdentifierPart
-WithToken       = "with"       !IdentifierPart
+FORWARD_SLASH = __ "/"
+COLON         = __ ":"
+LEFT_PAREN    = __ "(" 
+RIGHT_PAREN   = __ ")"
+LEFT_CURLY    = __ "{" 
+RIGHT_CURLY   = __ "}"
+EQUALS        = __ "="
+
+BreakToken      = __ "break"      !IdentifierPart
+CaseToken       = __ "case"       !IdentifierPart
+CatchToken      = __ "catch"      !IdentifierPart
+ClassToken      = __ "class"      !IdentifierPart
+ConstToken      = __ "const"      !IdentifierPart
+ContinueToken   = __ "continue"   !IdentifierPart
+DebuggerToken   = __ "debugger"   !IdentifierPart
+DefaultToken    = __ "default"    !IdentifierPart
+DeleteToken     = __ "delete"     !IdentifierPart
+DoToken         = __ "do"         !IdentifierPart
+ElseToken       = __ "else"       !IdentifierPart
+EnumToken       = __ "enum"       !IdentifierPart
+ExportToken     = __ "export"     !IdentifierPart
+ExtendsToken    = __ "extends"    !IdentifierPart
+FalseToken      = __ "false"      !IdentifierPart
+FinallyToken    = __ "finally"    !IdentifierPart
+ForToken        = __ "for"        !IdentifierPart
+FunctionToken   = __ "function"   !IdentifierPart
+IfToken         = __ "if"         !IdentifierPart
+ImportToken     = __ "import"     !IdentifierPart
+InstanceofToken = __ "instanceof" !IdentifierPart
+InToken         = __ "in"         !IdentifierPart
+NewToken        = __ "new"        !IdentifierPart
+NullToken       = __ "null"       !IdentifierPart
+ReturnToken     = __ "return"     !IdentifierPart
+SuperToken      = __ "super"      !IdentifierPart
+SwitchToken     = __ "switch"     !IdentifierPart
+ThisToken       = __ "this"       !IdentifierPart
+ThrowToken      = __ "throw"      !IdentifierPart
+TrueToken       = __ "true"       !IdentifierPart
+TryToken        = __ "try"        !IdentifierPart
+TypeofToken     = __ "typeof"     !IdentifierPart
+VarToken        = __ "var"        !IdentifierPart
+VoidToken       = __ "void"       !IdentifierPart
+WhileToken      = __ "while"      !IdentifierPart
+WithToken       = __ "with"       !IdentifierPart
 
 /* Skipped */
 
