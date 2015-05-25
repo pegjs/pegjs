@@ -39,6 +39,7 @@
   ],
   "main":            "lib/peg",
   "bin":             "bin/pegjs",
+  "license":         "MIT",
   "scripts":         {
     "test": "make spec"
   },
