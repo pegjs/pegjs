@@ -1,3 +1,6 @@
+/* global expect, it, PEG, describe */
+"use strict";
+
 describe("compiler pass |reportLeftRecursion|", function() {
   var pass = PEG.compiler.passes.check.reportInfiniteLoops;
 

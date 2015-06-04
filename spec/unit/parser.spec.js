@@ -1,3 +1,6 @@
+/* global describe, expect, it, jasmine, PEG, beforeEach */
+"use strict";
+
 describe("PEG.js grammar parser", function() {
   var literalAbcd       = { type: "literal",      value: "abcd", ignoreCase: false },
       literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false },

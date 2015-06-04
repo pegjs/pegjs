@@ -6,7 +6,7 @@
  */
 
 {
-  function combine(first, rest, combiners) {
+  var combine = function(first, rest, combiners) {
     var result = first, i;
 
     for (i = 0; i < rest.length; i++) {
@@ -14,7 +14,7 @@
     }
 
     return result;
-  }
+  };
 }
 
 Expression

@@ -41,7 +41,7 @@
     "!": "semantic_not"
   };
 
-  function filterEmptyStrings(array) {
+  var filterEmptyStrings = function(array) {
     var result = [], i;
 
     for (i = 0; i < array.length; i++) {
@@ -51,13 +51,13 @@
     }
 
     return result;
-  }
+  };
 
-  function extractOptional(optional, index) {
+  var extractOptional = function(optional, index) {
     return optional ? optional[index] : null;
-  }
+  };
 
-  function extractList(list, index) {
+  var extractList = function(list, index) {
     var result = new Array(list.length), i;
 
     for (i = 0; i < list.length; i++) {
@@ -65,11 +65,11 @@
     }
 
     return result;
-  }
+  };
 
-  function buildList(first, rest, index) {
+  var buildList = function(first, rest, index) {
     return [first].concat(extractList(rest, index));
-  }
+  };
 }
 
 /* ---- Syntactic Grammar ----- */

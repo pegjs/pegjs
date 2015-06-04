@@ -1,3 +1,6 @@
+/* global describe, PEG, it, expect */
+"use strict";
+
 describe("compiler pass |reportMissingRules|", function() {
   var pass = PEG.compiler.passes.check.reportMissingRules;
 
