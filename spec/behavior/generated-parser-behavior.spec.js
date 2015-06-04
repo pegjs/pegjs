@@ -1,3 +1,6 @@
+/* global expect, it, PEG, describe, jasmine, beforeEach */
+"use strict";
+
 describe("generated parser behavior", function() {
   function varyOptimizationOptions(block) {
     function clone(object) {
@@ -553,7 +556,7 @@ describe("generated parser behavior", function() {
 
         it("can access functions defined in the initializer", function() {
           var parser = PEG.buildParser([
-                '{ function f() { return 42; } }',
+                '{ var f = function() { return 42; }; }',
                 'start = &{ return f() === 42; }'
               ].join("\n"), options);
 
@@ -753,7 +756,7 @@ describe("generated parser behavior", function() {
 
         it("can access functions defined in the initializer", function() {
           var parser = PEG.buildParser([
-                '{ function f() { return 42; } }',
+                '{ var f = function() { return 42; }; }',
                 'start = !{ return f() !== 42; }'
               ].join("\n"), options);
 
@@ -1158,7 +1161,7 @@ describe("generated parser behavior", function() {
 
           it("can access functions defined in the initializer", function() {
             var parser = PEG.buildParser([
-                  '{ function f() { return 42; } }',
+                  '{ var f = function() { return 42; }; }',
                   'start = "a" { return f(); }'
                 ].join("\n"), options);
 

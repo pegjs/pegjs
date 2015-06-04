@@ -20,11 +20,11 @@
  */
 
 {
-  function extractOptional(optional, index) {
+  var extractOptional = function(optional, index) {
     return optional ? optional[index] : null;
-  }
+  };
 
-  function extractList(list, index) {
+  var extractList = function(list, index) {
     var result = [], i;
 
     for (i = 0; i < list.length; i++) {
@@ -34,13 +34,13 @@
     }
 
     return result;
-  }
+  };
 
-  function buildList(first, rest, index) {
+  var buildList = function(first, rest, index) {
     return (first !== null ? [first] : []).concat(extractList(rest, index));
-  }
+  };
 
-  function buildExpression(first, rest) {
+  var buildExpression = function(first, rest) {
     var result = first, i;
 
     for (i = 0; i < rest.length; i++) {
@@ -53,7 +53,7 @@
     }
 
     return result;
-  }
+  };
 }
 
 start

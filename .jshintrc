@@ -12,5 +12,10 @@
   "noempty":  true,
   "nonew":    true,
   "trailing": true,
-  "-W082":    false
+  "-W082":    false,
+  "strict":   true,
+  "-W097":    false,
+  "node":     true,
+  "jquery":   true,
+  "browser":  true
 }

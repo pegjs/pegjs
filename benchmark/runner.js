@@ -1,4 +1,15 @@
-Runner = {
+/* global PEG */
+"use strict";
+
+;(function(root, factory) {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory;
+    } else {
+        root.Runner = factory(root.PEG);
+    }
+}(this, function(PEG) {  // jshint ignore:line
+
+return {
   run: function(benchmarks, runCount, options, callbacks) {
 
     /* Queue */
@@ -117,3 +128,5 @@ Runner = {
     Q.run();
   }
 };
+
+}));

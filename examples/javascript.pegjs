@@ -39,7 +39,7 @@
     MemberExpression: "object",
   };
 
-  function filledArray(count, value) {
+  var filledArray = function(count, value) {
     var result = new Array(count), i;
 
     for (i = 0; i < count; i++) {
@@ -47,13 +47,13 @@
     }
 
     return result;
-  }
+  };
 
-  function extractOptional(optional, index) {
+  var extractOptional = function(optional, index) {
     return optional ? optional[index] : null;
-  }
+  };
 
-  function extractList(list, index) {
+  var extractList = function(list, index) {
     var result = new Array(list.length), i;
 
     for (i = 0; i < list.length; i++) {
@@ -61,13 +61,13 @@
     }
 
     return result;
-  }
+  };
 
-  function buildList(first, rest, index) {
+  var buildList = function(first, rest, index) {
     return [first].concat(extractList(rest, index));
-  }
+  };
 
-  function buildTree(first, rest, builder) {
+  var buildTree = function(first, rest, builder) {
     var result = first, i;
 
     for (i = 0; i < rest.length; i++) {
@@ -75,9 +75,9 @@
     }
 
     return result;
-  }
+  };
 
-  function buildBinaryExpression(first, rest) {
+  var buildBinaryExpression = function(first, rest) {
     return buildTree(first, rest, function(result, element) {
       return {
         type:     "BinaryExpression",
@@ -86,9 +86,9 @@
         right:    element[3]
       };
     });
-  }
+  };
 
-  function buildLogicalExpression(first, rest) {
+  var buildLogicalExpression = function(first, rest) {
     return buildTree(first, rest, function(result, element) {
       return {
         type:     "LogicalExpression",
@@ -97,11 +97,11 @@
         right:    element[3]
       };
     });
-  }
+  };
 
-  function optionalList(value) {
+  var optionalList = function(value) {
     return value !== null ? value : [];
-  }
+  };
 }
 
 Start
