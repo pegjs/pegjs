@@ -40,7 +40,7 @@
   "main":            "lib/peg",
   "bin":             "bin/pegjs",
   "scripts":         {
-    "test": "make spec"
+    "test": "make hint && make spec"
   },
   "repository":      {
     "type": "git",
