@@ -10,6 +10,7 @@
   "loopfunc":  true,
   "newcap":    false,
   "noarg":     true,
+  "node":      true,
   "noempty":   true,
   "nonew":     true,
   "trailing":  true,

@@ -1,3 +1,5 @@
+/* jshint node:false */
+
 $("#run").click(function() {
 
   /* Results Table Manipulation */
