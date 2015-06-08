@@ -1,3 +1,7 @@
+/* global describe, expect, it, PEG */
+
+"use strict";
+
 describe("compiler pass |removeProxyRules|", function() {
   var pass = PEG.compiler.passes.transform.removeProxyRules;
 

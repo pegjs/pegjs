@@ -1,3 +1,7 @@
+/* global beforeEach, describe, expect, it, jasmine, PEG */
+
+"use strict";
+
 describe("plugin API", function() {
   beforeEach(function() {
     this.addMatchers({

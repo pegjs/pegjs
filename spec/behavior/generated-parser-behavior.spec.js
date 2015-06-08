@@ -1,3 +1,7 @@
+/* global beforeEach, describe, expect, it, jasmine, PEG */
+
+"use strict";
+
 describe("generated parser behavior", function() {
   function varyOptimizationOptions(block) {
     function clone(object) {
