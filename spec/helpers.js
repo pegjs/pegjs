@@ -1,3 +1,5 @@
-if (typeof module !== "undefined") {
-  PEG = require("../lib/peg.js");
-}
+(function(root) {
+  if (typeof module !== 'undefined') {
+    root.PEG = require("../lib/peg.js");
+  }
+}(this));
