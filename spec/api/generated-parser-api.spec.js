@@ -1,3 +1,7 @@
+/* global describe, expect, it, PEG, spyOn */
+
+"use strict";
+
 describe("generated parser API", function() {
   describe("parse", function() {
     it("parses input", function() {

@@ -1,3 +1,7 @@
+/* global beforeEach, jasmine, PEG */
+
+"use strict";
+
 beforeEach(function() {
   this.addMatchers({
     toChangeAST: function(grammar) {

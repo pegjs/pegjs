@@ -1,3 +1,7 @@
+/* global describe, expect, it, PEG */
+
+"use strict";
+
 describe("compiler pass |generateBytecode|", function() {
   var pass = PEG.compiler.passes.generate.generateBytecode;
 

@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
+"use strict";
+
 var util = require("util");
 var fs   = require("fs");
 var PEG  = require("../lib/peg");
 
-[
-  "benchmarks.js",
-  "runner.js",
-].forEach(function(file) {
-  eval(fs.readFileSync(__dirname + "/" + file, "utf8"));
-});
+var benchmarks = require("./benchmarks.js");
+var Runner = require("./runner.js")(PEG);
 
 /* Results Table Manipulation */
 

@@ -1,4 +1,8 @@
+/* jshint node:false */
+/* global $, alert, benchmarks, document, Runner */
+
 $("#run").click(function() {
+  "use strict";
 
   /* Results Table Manipulation */
 
@@ -130,5 +134,7 @@ $("#run").click(function() {
 });
 
 $(document).ready(function() {
+  "use strict";
+
   $("#run").focus();
 });
