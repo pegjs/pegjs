@@ -113,6 +113,7 @@ function nextArg() {
 var runCount = 10;
 var options = {
   cache:    false,
+  stackvm:  false,
   optimize: "speed"
 };
 
@@ -132,6 +133,10 @@ while (args.length > 0 && isOption(args[0])) {
 
     case "--cache":
       options.cache = true;
+      break;
+
+    case "--stackvm":
+      options.stackvm = true;
       break;
 
     case "-o":
