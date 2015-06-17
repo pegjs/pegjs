@@ -1517,18 +1517,6 @@ describe("generated parser behavior", function() {
           });
         });
       });
-
-      describe("error object", function () {
-        it("has stack property", function () {
-          var message = 'some error', err;
-
-          err = new PEG.parser.SyntaxError(message);
-          expect(err.stack).toBeDefined();
-
-          err = new PEG.GrammarError(message);
-          expect(err.stack).toBeDefined();
-        });
-      });
     });
 
     /*
