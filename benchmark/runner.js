@@ -11,27 +11,38 @@
   return {
     run: function(benchmarks, runCount, options, callbacks) {
 
+      var isNode = typeof process === 'object'
+                   && process.versions
+                   && "node" in process.versions;
+
       /* Queue */
 
       var Q = {
-            functions: [],
+        functions: [],
 
-            add: function(f) {
-              this.functions.push(f);
-            },
+        add: function(f) {
+          this.functions.push(f);
+        },
 
-            run: function() {
-              if (this.functions.length > 0) {
-                this.functions.shift()();
+        run_browser: function() {
+          if (this.functions.length > 0) {
+            this.functions.shift()();
+            /*
+             * We can't use |arguments.callee| here because |this| would get
+             * messed-up in that case.
+             */
+            setTimeout(function() { Q.run(); }, 0);
+          }
+        },
 
-                /*
-                 * We can't use |arguments.callee| here because |this| would get
-                 * messed-up in that case.
-                 */
-                setTimeout(function() { Q.run(); }, 0);
-              }
-            }
-          };
+        run_node: function() {
+          for (var i = 0; i < this.functions.length; i++) {
+            this.functions[i]();
+          }
+        }
+      };
+
+      Q.run = isNode ? Q.run_node : Q.run_browser;
 
       /*
        * The benchmark itself is factored out into several functions (some of them
@@ -76,16 +87,27 @@
               test      = benchmark.tests[j],
               input, parseTime, averageParseTime, k, t;
 
+          var now;
+          if (isNode) {
+            now = function() {
+              var t = process.hrtime();
+              return t[0] * 1e3 + t[1] / 1e6;
+            };
+          } else {
+            now = function() {
+              return (new Date()).getTime();
+            };
+          }
+
           callbacks.testStart(benchmark, test);
 
           input = callbacks.readFile(benchmark.id + "/" + test.file);
 
-          parseTime = 0;
+          t = now();
           for (k = 0; k < runCount; k++) {
-            t = (new Date()).getTime();
             state.parser.parse(input);
-            parseTime += (new Date()).getTime() - t;
           }
+          parseTime = now() - t;
           averageParseTime = parseTime / runCount;
 
           callbacks.testFinish(benchmark, test, input.length, averageParseTime);

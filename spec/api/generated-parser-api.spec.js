@@ -58,12 +58,12 @@ describe("generated parser API", function() {
 
           parser.parse("b");
 
-          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter start");
-          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter   a");
-          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.fail    a");
-          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter   b");
-          expect(console.log).toHaveBeenCalledWith("1:1-1:2 rule.match   b");
-          expect(console.log).toHaveBeenCalledWith("1:1-1:2 rule.match start");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1             rule.enter start");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1             rule.enter   a");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1             rule.fail    a");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:1             rule.enter   b");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:2             rule.match   b");
+          expect(console.log).toHaveBeenCalledWith("1:1-1:2             rule.match start");
         });
       });
 
