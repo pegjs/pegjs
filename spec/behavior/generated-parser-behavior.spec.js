@@ -1050,6 +1050,16 @@ describe("generated parser behavior", function() {
             expect(parser).toParse("abc", ["a", "b", "c"]);
           });
 
+          it("can make default labels for rule references", function () {
+            var parser = PEG.buildParser([
+                  'start = :upper lower:lower { return {upper:upper, lower:lower}; };',
+                  'lower = $([a-z])+;',
+                  'upper = $([A-Z])+;'
+                ].join("\n"), options);
+
+            expect(parser).toParse('ABCabc', {upper: 'ABC', lower: 'abc'});
+          });
+
           it("can access label variables from preceding labeled elements in an outside sequence (group)", function() {
             var parser = PEG.buildParser(
               'start = a:"a" b:"b" c:"c" ("d" { return [a, b, c]; })',
