@@ -156,6 +156,14 @@ LabeledExpression
         location:   location()
       };
     }
+  / ":" __ rule:RuleReferenceExpression {
+      return {
+        type:       "labeled",
+        label:      rule.name,
+        expression: rule,
+        location:   location()
+      };
+    }
   / PrefixedExpression
 
 PrefixedExpression
