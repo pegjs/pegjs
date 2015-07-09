@@ -24,7 +24,7 @@ var modules = [
 
 var runtimeModules = [
   'runtime/common-helpers',
-  'runtime/regalloc-helpers',
+  'runtime/trace-helpers',
   'runtime/tracer',
   'runtime/wrapper'];
 

@@ -35,7 +35,7 @@
     "lib/peg.js",
     "lib/runtime/browser-main.js",
     "lib/runtime/common-helpers.js",
-    "lib/runtime/regalloc-helpers.js",
+    "lib/runtime/trace-helpers.js",
     "lib/runtime/tracer.js",
     "lib/runtime/wrapper.js",
     "tools/build-browser.js",
