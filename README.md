@@ -284,19 +284,20 @@ Match a subexpression and return its match result.
 #### *expression* \*
 
 Match zero or more repetitions of the expression and return their match results
-in an array. The matching is greedy, i.e. the parser tries to match the
-expression as many times as possible.
+in an array. The matching is greedy, matching the expression as many times as
+possible without backtracking.
 
 #### *expression* +
 
 Match one or more repetitions of the expression and return their match results
-in an array. The matching is greedy, i.e. the parser tries to match the
-expression as many times as possible.
+in an array. The matching is greedy, matching the expression as many times as
+possible without backtracking.
 
 #### *expression* ?
 
 Try to match the expression. If the match succeeds, return its match result,
-otherwise return `null`.
+otherwise return `null`. The matching is greedy, matching the expression as
+many times as possible without backtracking.
 
 #### & *expression*
 
