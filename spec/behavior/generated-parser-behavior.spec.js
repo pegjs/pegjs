@@ -164,6 +164,14 @@ describe("generated parser behavior", function() {
 
         expect(parser).toParse("a", 42);
       });
+
+      it("in an expression", function() {
+        var parser = PEG.buildParser([
+          'start = "a" { return ({ a: 1 / 2 }) / 3; } / $"b"'
+        ].join("\n"), options);
+
+        expect(parser).toParse("b", "b");
+      });
     });
 
     describe("initializer", function() {

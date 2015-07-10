@@ -497,8 +497,26 @@ AnyMatcher
 CodeBlock "code block"
   = "{" code:Code "}" { return code; }
 
+CodeNotRegExp
+  = Comment / TokenThenRegularExpressionLiteral / StringLiteral / CodeBlock WhitespaceRegularExpressionLiteral? / ![{}] SourceCharacter
+
 Code
-  = $((Comment / RegularExpressionLiteral / StringLiteral / ![{}] SourceCharacter)+ / "{" Code "}")*
+  = $(WhitespaceRegularExpressionLiteral? CodeNotRegExp*)
+
+/*
+ * Exactly parsing regular expressions in JavaScript requires a full
+ * expression grammar.  Most JS tools (for example, JSLint) use the
+ * following look-behind hack to distinguish cases like `var a = 1 / 2 / 3;`
+ * from regular expression literals. See: http://stackoverflow.com/a/11766233
+ * Note that RegularExpressionLiterals are also allowed/expected at the
+ * start of Code and following a CodeBlock (since the preceding token is
+ * a curly brace).
+ */
+TokenThenRegularExpressionLiteral
+  = [\(,=:\[!&|?] WhitespaceRegularExpressionLiteral
+
+WhitespaceRegularExpressionLiteral
+  = __? RegularExpressionLiteral
 
 /*
  * Unicode Character Categories
