@@ -285,18 +285,21 @@ Match a subexpression and return its match result.
 
 Match zero or more repetitions of the expression and return their match results
 in an array. The matching is greedy, i.e. the parser tries to match the
-expression as many times as possible.
+expression as many times as possible. Unlike in regular expressions, there is no
+backtracking.
 
 #### *expression* +
 
 Match one or more repetitions of the expression and return their match results
 in an array. The matching is greedy, i.e. the parser tries to match the
-expression as many times as possible.
+expression as many times as possible. Unlike in regular expressions, there is no
+backtracking.
 
 #### *expression* ?
 
 Try to match the expression. If the match succeeds, return its match result,
-otherwise return `null`.
+otherwise return `null`. Unlike in regular expressions, there is no
+backtracking.
 
 #### & *expression*
 
