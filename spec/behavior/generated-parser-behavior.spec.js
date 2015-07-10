@@ -447,101 +447,101 @@ describe("generated parser behavior", function() {
 
         it("can access label variables from preceding labeled elements in an outside sequence (group)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" &{ return a === "a" && b === "b" && c === "c"; })',
+            'start = a:"a" ("b" &{ return a === "a"; })',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", ["d", undefined]]);
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (optional)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" &{ return a === "a" && b === "b" && c === "c"; })?',
+            'start = a:"a" ("b" &{ return a === "a"; })?',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", ["d", undefined]]);
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (zero or more)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" &{ return a === "a" && b === "b" && c === "c"; })*',
+            'start = a:"a" ("b" &{ return a === "a"; })*',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", [["d", undefined]]]);
+          expect(parser).toParse("ab", ["a", [["b", undefined]]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (one or more)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" &{ return a === "a" && b === "b" && c === "c"; })+',
+            'start = a:"a" ("b" &{ return a === "a"; })+',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", [["d", undefined]]]);
+          expect(parser).toParse("ab", ["a", [["b", undefined]]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (text)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" $("d" &{ return a === "a" && b === "b" && c === "c"; })',
+            'start = a:"a" $("b" &{ return a === "a"; })',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", "d"]);
+          expect(parser).toParse("ab", ["a", "b"]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (positive simple predicate)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" &("d" &{ return a === "a" && b === "b" && c === "c"; }) "d"',
+            'start = a:"a" &("b" &{ return a === "a"; }) "b"',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", undefined, "d"]);
+          expect(parser).toParse("ab", ["a", undefined, "b"]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (negative simple predicate)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" !("d" &{ return a === "a" && b === "b" && c === "c"; }) "e"',
+            'start = a:"a" !("b" &{ return a === "a"; }) "c"',
             options
           );
 
-          expect(parser).toParse("abce", ["a", "b", "c", undefined, "e"]);
+          expect(parser).toParse("ac", ["a", undefined, "c"]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (label)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" d:("d" &{ return a === "a" && b === "b" && c === "c"; })',
+            'start = a:"a" b:("b" &{ return a === "a"; })',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", ["d", undefined]]);
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (sequence)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" "e" "f" &{ return a === "a" && b === "b" && c === "c"; })',
+            'start = a:"a" ("b" ("c" &{ return a === "a"; }) "d")',
             options
           );
 
-          expect(parser).toParse("abcdef", ["a", "b", "c", ["d", "e", "f", undefined]]);
+          expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (action)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" (d:("d" &{ return a === "a" && b === "b" && c === "c"; }) { return d; })',
+            'start = a:"a" (b:("b" &{ return a === "a"; }) { return b; })',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", ["d", undefined]]);
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (choice)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" / "e" / "f" &{ return a === "a" && b === "b" && c === "c"; })',
+            'start = a:"a" ("b" / "c" &{ return a === "a"; } / "d")',
             options
           );
 
-          expect(parser).toParse("abcf", ["a", "b", "c", ["f", undefined]]);
+          expect(parser).toParse("ac", ["a", ["c", undefined]]);
         });
       });
 
@@ -656,92 +656,92 @@ describe("generated parser behavior", function() {
 
         it("can access label variables from preceding labeled elements in an outside sequence (optional)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" !{ return a !== "a" || b !== "b" || c !== "c"; })?',
+            'start = a:"a" ("b" !{ return a !== "a"; })?',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", ["d", undefined]]);
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (zero or more)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" !{ return a !== "a" || b !== "b" || c !== "c"; })*',
+            'start = a:"a" ("b" !{ return a !== "a"; })*',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", [["d", undefined]]]);
+          expect(parser).toParse("ab", ["a", [["b", undefined]]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (one or more)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" !{ return a !== "a" || b !== "b" || c !== "c"; })+',
+            'start = a:"a" ("b" !{ return a !== "a"; })+',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", [["d", undefined]]]);
+          expect(parser).toParse("ab", ["a", [["b", undefined]]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (text)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" $("d" !{ return a !== "a" || b !== "b" || c !== "c"; })',
+            'start = a:"a" $("b" !{ return a !== "a"; })',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", "d"]);
+          expect(parser).toParse("ab", ["a", "b"]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (positive simple predicate)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" &("d" !{ return a !== "a" || b !== "b" || c !== "c"; }) "d"',
+            'start = a:"a" &("b" !{ return a !== "a"; }) "b"',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", undefined, "d"]);
+          expect(parser).toParse("ab", ["a", undefined, "b"]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (negative simple predicate)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" !("d" !{ return a !== "a" || b !== "b" || c !== "c"; }) "e"',
+            'start = a:"a" !("b" !{ return a !== "a"; }) "c"',
             options
           );
 
-          expect(parser).toParse("abce", ["a", "b", "c", undefined, "e"]);
+          expect(parser).toParse("ac", ["a", undefined, "c"]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (label)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" d:("d" !{ return a !== "a" || b !== "b" || c !== "c"; })',
+            'start = a:"a" b:("b" !{ return a !== "a"; })',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", ["d", undefined]]);
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (sequence)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" "e" "f" !{ return a !== "a" || b !== "b" || c !== "c"; })',
+            'start = a:"a" ("b" ("c" !{ return a !== "a"; }) "d")',
             options
           );
 
-          expect(parser).toParse("abcdef", ["a", "b", "c", ["d", "e", "f", undefined]]);
+          expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (action)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" (d:("d" !{ return a !== "a" || b !== "b" || c !== "c"; }) { return d; })',
+            'start = a:"a" (b:("b" !{ return a !== "a"; }) { return b; })',
             options
           );
 
-          expect(parser).toParse("abcd", ["a", "b", "c", ["d", undefined]]);
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
         });
 
         it("can access label variables from preceding labeled elements in an outside sequence (choice)", function() {
           var parser = PEG.buildParser(
-            'start = a:"a" b:"b" c:"c" ("d" / "e" / "f" !{ return a !== "a" || b !== "b" || c !== "c"; })',
+            'start = a:"a" ("b" / "c" !{ return a !== "a"; } / "d")',
             options
           );
 
-          expect(parser).toParse("abcf", ["a", "b", "c", ["f", undefined]]);
+          expect(parser).toParse("ac", ["a", ["c", undefined]]);
         });
       });
 
@@ -1052,101 +1052,101 @@ describe("generated parser behavior", function() {
 
           it("can access label variables from preceding labeled elements in an outside sequence (group)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" ("d" { return [a, b, c]; })',
+              'start = a:"a" ("b" { return a; })',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", ["a", "b", "c"]]);
+            expect(parser).toParse("ab", ["a", "a"]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (optional)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" ("d" { return [a, b, c]; })?',
+              'start = a:"a" ("b" { return a; })?',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", ["a", "b", "c"]]);
+            expect(parser).toParse("ab", ["a", "a"]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (zero or more)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" ("d" { return [a, b, c]; })*',
+              'start = a:"a" ("b" { return a; })*',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", [["a", "b", "c"]]]);
+            expect(parser).toParse("ab", ["a", ["a"]]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (one or more)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" ("d" { return [a, b, c]; })+',
+              'start = a:"a" ("b" { return a; })+',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", [["a", "b", "c"]]]);
+            expect(parser).toParse("ab", ["a", ["a"]]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (text)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" $("d" { return [a, b, c]; })',
+              'start = a:"a" $("b" { return a; })',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", "d"]);
+            expect(parser).toParse("ab", ["a", "b"]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (positive simple predicate)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" &("d" { return [a, b, c]; }) "d"',
+              'start = a:"a" &("b" { return a; }) "b"',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", undefined, "d"]);
+            expect(parser).toParse("ab", ["a", undefined, "b"]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (negative simple predicate)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" !("d" { return [a, b, c]; }) "e"',
+              'start = a:"a" !("b" { return a; }) "c"',
               options
             );
 
-            expect(parser).toParse("abce", ["a", "b", "c", undefined, "e"]);
+            expect(parser).toParse("ac", ["a", undefined, "c"]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (label)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" d:("d" { return [a, b, c]; })',
+              'start = a:"a" b:("b" { return a; })',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", ["a", "b", "c"]]);
+            expect(parser).toParse("ab", ["a", "a"]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (sequence)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" ("d" "e" ("f" { return [a, b, c]; }))',
+              'start = a:"a" ("b" ("c" { return a; }) "d")',
               options
             );
 
-            expect(parser).toParse("abcdef", ["a", "b", "c", ["d", "e", ["a", "b", "c"]]]);
+            expect(parser).toParse("abcd", ["a", ["b", "a", "d"]]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (action)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" (d:("d" { return [a, b, c]; }) { return d; })',
+              'start = a:"a" (b:("b" { return a; }) { return b; })',
               options
             );
 
-            expect(parser).toParse("abcd", ["a", "b", "c", ["a", "b", "c"]]);
+            expect(parser).toParse("ab", ["a", "a"]);
           });
 
           it("can access label variables from preceding labeled elements in an outside sequence (choice)", function() {
             var parser = PEG.buildParser(
-              'start = a:"a" b:"b" c:"c" ("d" / "e" / "f" { return [a, b, c]; })',
+              'start = a:"a" ("b" / "c" { return a; } / "d")',
               options
             );
 
-            expect(parser).toParse("abcf", ["a", "b", "c", ["a", "b", "c"]]);
+            expect(parser).toParse("ac", ["a", "a"]);
           });
         });
 
