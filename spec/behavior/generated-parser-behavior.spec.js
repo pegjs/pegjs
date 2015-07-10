@@ -130,6 +130,42 @@ describe("generated parser behavior", function() {
   });
 
   varyOptimizationOptions(function(options) {
+    describe("unbalanced braces", function() {
+      it("in comments", function() {
+        var parser = PEG.buildParser([
+          '{ var result = 42; // a brace } in a comment',
+          '}',
+          'start = "a" { return result; }'
+        ].join("\n"), options);
+
+        expect(parser).toParse("a", 42);
+      });
+
+      it("in quotes", function() {
+        var parser = PEG.buildParser([
+          '{',
+          'var result = 42;',
+          'var b = "a string literal with a brace } in it!";',
+          '}',
+          'start = "a" { return result; }'
+        ].join("\n"), options);
+
+        expect(parser).toParse("a", 42);
+      });
+
+      it("in a regexp", function() {
+        var parser = PEG.buildParser([
+          '{',
+          'var result = 42;',
+          'var b = /}/',
+          '}',
+          'start = "a" { return result; }'
+        ].join("\n"), options);
+
+        expect(parser).toParse("a", 42);
+      });
+    });
+
     describe("initializer", function() {
       it("executes the code before parsing starts", function() {
         var parser = PEG.buildParser([

@@ -191,9 +191,8 @@ in curly braces (“{” and “}”). This code is executed before the generate
 starts parsing. All variables and functions defined in the initializer are
 accessible in rule actions and semantic predicates. The code inside the
 initializer can access the parser object using the `parser` variable and options
-passed to the parser using the `options` variable. Curly braces in the
-initializer code must be balanced. Let's look at the example grammar from above
-using a simple initializer.
+passed to the parser using the `options` variable. Let's look at the example
+grammar from above using a simple initializer.
 
     {
       function makeInteger(o) {
@@ -339,8 +338,6 @@ The `start` and `end` properties both refer to the current parse position. The
 The code inside the predicate can also access the parser object using the
 `parser` variable and options passed to the parser using the `options` variable.
 
-Note that curly braces in the predicate code must be balanced.
-
 #### ! { *predicate* }
 
 The predicate is a piece of JavaScript code that is executed as if it was inside
@@ -367,8 +364,6 @@ The `start` and `end` properties both refer to the current parse position. The
 
 The code inside the predicate can also access the parser object using the
 `parser` variable and options passed to the parser using the `options` variable.
-
-Note that curly braces in the predicate code must be balanced.
 
 #### $ *expression*
 
@@ -408,8 +403,7 @@ the parser throw an exception. The function takes one parameter — an error
 message. This message will be used by the thrown exception.
 
 The code inside the action can access all variables and functions defined in the
-initializer at the beginning of the grammar. Curly braces in the action code
-must be balanced.
+initializer at the beginning of the grammar.
 
 The code inside the action can also access the string matched by the expression
 using the `text` function.
@@ -430,8 +424,6 @@ the `end` property refers to position after the end of the expression. The
 
 The code inside the action can also access the parser object using the `parser`
 variable and options passed to the parser using the `options` variable.
-
-Note that curly braces in the action code must be balanced.
 
 #### *expression<sub>1</sub>* / *expression<sub>2</sub>* / ... / *expression<sub>n</sub>*
 
