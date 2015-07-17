@@ -78,6 +78,6 @@ describe("compiler pass |reportLeftRecursion|", function() {
 
     expect(pass).not.toReportError('start = [a-d]*');
 
-    expect(pass).not.toReportError('start = "."*');
+    expect(pass).not.toReportError('start = .*');
   });
 });
