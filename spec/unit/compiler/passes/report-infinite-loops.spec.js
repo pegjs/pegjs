@@ -2,7 +2,7 @@
 
 "use strict";
 
-describe("compiler pass |reportLeftRecursion|", function() {
+describe("compiler pass |reportInfiniteLoops|", function() {
   var pass = PEG.compiler.passes.check.reportInfiniteLoops;
 
   it("reports infinite loops for zero_or_more", function() {
