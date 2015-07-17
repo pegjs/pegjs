@@ -654,6 +654,15 @@ describe("generated parser behavior", function() {
           expect(parser).toParse("abc");
         });
 
+        it("can access label variables from preceding labeled elements in an outside sequence (group)", function() {
+          var parser = PEG.buildParser(
+                'start = a:"a" ("b" !{ return a !== "a"; })',
+                options
+              );
+
+          expect(parser).toParse("ab", ["a", ["b", undefined]]);
+        });
+
         it("can access label variables from preceding labeled elements in an outside sequence (optional)", function() {
           var parser = PEG.buildParser(
                 'start = a:"a" ("b" !{ return a !== "a"; })?',
