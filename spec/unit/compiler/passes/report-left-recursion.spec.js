@@ -40,6 +40,15 @@ describe("compiler pass |reportLeftRecursion|", function() {
     });
 
     it("computes empty string matching correctly", function() {
+      expect(pass).toReportError([
+        'start = a start',
+        'a "a" = ""'
+      ].join('\n'));
+      expect(pass).not.toReportError([
+        'start = a start',
+        'a "a" = "a"'
+      ].join('\n'));
+
       expect(pass).toReportError('start = ("" / "a" / "b") start');
       expect(pass).toReportError('start = ("a" / "" / "b") start');
       expect(pass).toReportError('start = ("a" / "b" / "") start');

@@ -26,6 +26,15 @@ describe("compiler pass |reportInfiniteLoops|", function() {
   });
 
   it("computes empty string matching correctly", function() {
+    expect(pass).toReportError([
+      'start = a*',
+      'a "a" = ""'
+    ].join('\n'));
+    expect(pass).not.toReportError([
+      'start = a*',
+      'a "a" = "a"'
+    ].join('\n'));
+
     expect(pass).toReportError('start = ("" / "a" / "b")*');
     expect(pass).toReportError('start = ("a" / "" / "b")*');
     expect(pass).toReportError('start = ("a" / "b" / "")*');
