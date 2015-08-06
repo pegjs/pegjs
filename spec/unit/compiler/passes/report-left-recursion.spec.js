@@ -39,7 +39,7 @@ describe("compiler pass |reportLeftRecursion|", function() {
       expect(pass).not.toReportError('start = "" "" "a" start');
     });
 
-    it("computes empty string matching correctly", function() {
+    it("computes expressions that always advance on success correctly", function() {
       expect(pass).toReportError([
         'start = a start',
         'a "a" = ""'
