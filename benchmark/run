@@ -2,9 +2,8 @@
 
 "use strict";
 
-var util = require("util");
-var fs   = require("fs");
-var PEG  = require("../lib/peg");
+var fs  = require("fs");
+var PEG = require("../lib/peg");
 
 var benchmarks = require("./benchmarks.js");
 var Runner = require("./runner.js")(PEG);
@@ -35,21 +34,21 @@ function center(text, length) {
 }
 
 function writeTableHeader() {
-  util.puts("┌─────────────────────────────────────┬───────────┬────────────┬──────────────┐");
-  util.puts("│                Test                 │ Inp. size │ Avg. time  │  Avg. speed  │");
+  console.log("┌─────────────────────────────────────┬───────────┬────────────┬──────────────┐");
+  console.log("│                Test                 │ Inp. size │ Avg. time  │  Avg. speed  │");
 }
 
 function writeHeading(heading) {
-  util.puts("├─────────────────────────────────────┴───────────┴────────────┴──────────────┤");
-  util.puts("│ " + center(heading, 75) + " │");
-  util.puts("├─────────────────────────────────────┬───────────┬────────────┬──────────────┤");
+  console.log("├─────────────────────────────────────┴───────────┴────────────┴──────────────┤");
+  console.log("│ " + center(heading, 75) + " │");
+  console.log("├─────────────────────────────────────┬───────────┬────────────┬──────────────┤");
 }
 
 function writeResult(title, inputSize, parseTime) {
   var KB      = 1024;
   var MS_IN_S = 1000;
 
-  util.puts("│ "
+  console.log("│ "
     + padRight(title, 35)
     + " │ "
     + padLeft((inputSize / KB).toFixed(2), 6)
@@ -62,25 +61,25 @@ function writeResult(title, inputSize, parseTime) {
 }
 
 function writeSeparator() {
-  util.puts("├─────────────────────────────────────┼───────────┼────────────┼──────────────┤");
+  console.log("├─────────────────────────────────────┼───────────┼────────────┼──────────────┤");
 }
 
 function writeTableFooter() {
-  util.puts("└─────────────────────────────────────┴───────────┴────────────┴──────────────┘");
+  console.log("└─────────────────────────────────────┴───────────┴────────────┴──────────────┘");
 }
 
 /* Helpers */
 
 function printHelp() {
-  util.puts("Usage: run [options]");
-  util.puts("");
-  util.puts("Runs PEG.js benchmark suite.");
-  util.puts("");
-  util.puts("Options:");
-  util.puts("  -n, --run-count <n>          number of runs (default: 10)");
-  util.puts("      --cache                  make tested parsers cache results");
-  util.puts("  -o, --optimize <goal>        select optimization for speed or size (default:");
-  util.puts("                               speed)");
+  console.log("Usage: run [options]");
+  console.log("");
+  console.log("Runs PEG.js benchmark suite.");
+  console.log("");
+  console.log("Options:");
+  console.log("  -n, --run-count <n>          number of runs (default: 10)");
+  console.log("      --cache                  make tested parsers cache results");
+  console.log("  -o, --optimize <goal>        select optimization for speed or size (default:");
+  console.log("                               speed)");
 }
 
 function exitSuccess() {
@@ -92,7 +91,7 @@ function exitFailure() {
 }
 
 function abort(message) {
-  util.error(message);
+  console.error(message);
   exitFailure();
 }
 
