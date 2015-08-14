@@ -3,6 +3,7 @@
   "version":         "0.8.0",
   "description":     "Parser generator for JavaScript",
   "homepage":        "http://pegjs.org/",
+  "license":         "MIT",
   "author":          {
     "name":  "David Majda",
     "email": "david@majda.cz",
