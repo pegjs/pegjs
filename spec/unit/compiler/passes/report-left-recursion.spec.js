@@ -39,6 +39,11 @@ describe("compiler pass |reportLeftRecursion|", function() {
       expect(pass).not.toReportError('start = "" "" "a" start');
     });
 
+    /* Regression test for #359. */
+    it("reports left recursion when rule reference is wrapped in an expression", function() {
+      expect(pass).toReportError('start = "" start?');
+    });
+
     it("computes expressions that always advance on success correctly", function() {
       expect(pass).toReportError([
         'start = a start',
