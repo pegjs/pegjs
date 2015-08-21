@@ -1,4 +1,4 @@
-/* global describe, expect, it, PEG, spyOn */
+/* global describe, expect, it, jasmine, PEG */
 
 "use strict";
 
@@ -131,38 +131,34 @@ describe("PEG.js API", function() {
 
       describe("when |trace| is not set", function() {
         it("generated parser doesn't trace", function() {
-          var parser = PEG.buildParser(grammar);
+          var parser = PEG.buildParser(grammar),
+              tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
-          spyOn(console, "log");
+          parser.parse("a", { tracer: tracer });
 
-          parser.parse("a");
-
-          expect(console.log).not.toHaveBeenCalled();
+          expect(tracer.trace).not.toHaveBeenCalled();
         });
       });
 
       describe("when |trace| is set to |false|", function() {
         it("generated parser doesn't trace", function() {
-          var parser = PEG.buildParser(grammar, { trace: false });
+          var parser = PEG.buildParser(grammar, { trace: false }),
+              tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
-          spyOn(console, "log");
+          parser.parse("a", { tracer: tracer });
 
-          parser.parse("a");
-
-          expect(console.log).not.toHaveBeenCalled();
+          expect(tracer.trace).not.toHaveBeenCalled();
         });
       });
 
       describe("when |trace| is set to |true|", function() {
         it("generated parser traces", function() {
-          var parser = PEG.buildParser(grammar, { trace: true });
+          var parser = PEG.buildParser(grammar, { trace: true }),
+              tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
-          spyOn(console, "log");
+          parser.parse("a", { tracer: tracer });
 
-          parser.parse("a");
-
-          expect(console.log).toHaveBeenCalledWith("1:1-1:1 rule.enter start");
-          expect(console.log).toHaveBeenCalledWith("1:1-1:2 rule.match start");
+          expect(tracer.trace).toHaveBeenCalled();
         });
       });
     });
