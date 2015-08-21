@@ -1,4 +1,4 @@
-/* global describe, expect, it, PEG, spyOn */
+/* global describe, expect, it, jasmine, PEG, spyOn */
 
 "use strict";
 
@@ -74,9 +74,7 @@ describe("generated parser API", function() {
       describe("custom tracers", function() {
         describe("trace", function() {
           it("receives tracing events", function() {
-            var tracer = { trace: function() { } };
-
-            spyOn(tracer, "trace");
+            var tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
             parser.parse("b", { tracer: tracer });
 
