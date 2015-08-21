@@ -180,7 +180,7 @@ id
   = id:HASH { return { type: "IDSelector", id: id }; }
 
 class
-  = "." class_:IDENT { return { type: "ClassSelector", class: class_ }; }
+  = "." class_:IDENT { return { type: "ClassSelector", "class": class_ }; }
 
 element_name
   = IDENT
