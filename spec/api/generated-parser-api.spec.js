@@ -79,50 +79,50 @@ describe("generated parser API", function() {
             parser.parse("b", { tracer: tracer });
 
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:     'rule.enter',
-              rule:     'start',
+              type:     "rule.enter",
+              rule:     "start",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 0, line: 1, column: 1 }
               }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:     'rule.enter',
-              rule:     'a',
+              type:     "rule.enter",
+              rule:     "a",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 0, line: 1, column: 1 }
               }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:     'rule.fail',
-              rule:     'a',
+              type:     "rule.fail",
+              rule:     "a",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 0, line: 1, column: 1 }
               }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:     'rule.enter',
-              rule:     'b',
+              type:     "rule.enter",
+              rule:     "b",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 0, line: 1, column: 1 }
               }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:     'rule.match',
-              rule:     'b',
-              result:   'b',
+              type:     "rule.match",
+              rule:     "b",
+              result:   "b",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 1, line: 1, column: 2 }
               }
             });
             expect(tracer.trace).toHaveBeenCalledWith({
-              type:     'rule.match',
-              rule:     'start',
-              result:   'b',
+              type:     "rule.match",
+              rule:     "start",
+              result:   "b",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 1, line: 1, column: 2 }
