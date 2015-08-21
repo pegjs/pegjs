@@ -33,7 +33,7 @@ describe("plugin API", function() {
         };
 
         return typeof this.actual === "function";
-      },
+      }
     });
   });
 

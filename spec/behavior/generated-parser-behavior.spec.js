@@ -601,31 +601,31 @@ describe("generated parser behavior", function() {
 
           expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
             start: { offset: 13, line: 7, column: 5 },
-            end:   { offset: 13, line: 7, column: 5 },
+            end:   { offset: 13, line: 7, column: 5 }
           });
 
           /* Non-Unix newlines */
           expect(parser).toParse("1\rx", {     // Old Mac
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 },
+            end:   { offset: 2, line: 2, column: 1 }
           });
           expect(parser).toParse("1\r\nx", {   // Windows
             start: { offset: 3, line: 2, column: 1 },
-            end:   { offset: 3, line: 2, column: 1 },
+            end:   { offset: 3, line: 2, column: 1 }
           });
           expect(parser).toParse("1\n\rx", {   // mismatched
             start: { offset: 3, line: 3, column: 1 },
-            end:   { offset: 3, line: 3, column: 1 },
+            end:   { offset: 3, line: 3, column: 1 }
           });
 
           /* Strange newlines */
           expect(parser).toParse("1\u2028x", {   // line separator
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 },
+            end:   { offset: 2, line: 2, column: 1 }
           });
           expect(parser).toParse("1\u2029x", {   // paragraph separator
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 },
+            end:   { offset: 2, line: 2, column: 1 }
           });
         });
       });
@@ -814,31 +814,31 @@ describe("generated parser behavior", function() {
 
           expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
             start: { offset: 13, line: 7, column: 5 },
-            end:   { offset: 13, line: 7, column: 5 },
+            end:   { offset: 13, line: 7, column: 5 }
           });
 
           /* Non-Unix newlines */
           expect(parser).toParse("1\rx", {     // Old Mac
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 },
+            end:   { offset: 2, line: 2, column: 1 }
           });
           expect(parser).toParse("1\r\nx", {   // Windows
             start: { offset: 3, line: 2, column: 1 },
-            end:   { offset: 3, line: 2, column: 1 },
+            end:   { offset: 3, line: 2, column: 1 }
           });
           expect(parser).toParse("1\n\rx", {   // mismatched
             start: { offset: 3, line: 3, column: 1 },
-            end:   { offset: 3, line: 3, column: 1 },
+            end:   { offset: 3, line: 3, column: 1 }
           });
 
           /* Strange newlines */
           expect(parser).toParse("1\u2028x", {   // line separator
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 },
+            end:   { offset: 2, line: 2, column: 1 }
           });
           expect(parser).toParse("1\u2029x", {   // paragraph separator
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 },
+            end:   { offset: 2, line: 2, column: 1 }
           });
         });
       });
@@ -1232,31 +1232,31 @@ describe("generated parser behavior", function() {
 
             expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
               start: { offset: 13, line: 7, column: 5 },
-              end:   { offset: 14, line: 7, column: 6 },
+              end:   { offset: 14, line: 7, column: 6 }
             });
 
             /* Non-Unix newlines */
             expect(parser).toParse("1\rx", {     // Old Mac
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 },
+              end:   { offset: 3, line: 2, column: 2 }
             });
             expect(parser).toParse("1\r\nx", {   // Windows
               start: { offset: 3, line: 2, column: 1 },
-              end:   { offset: 4, line: 2, column: 2 },
+              end:   { offset: 4, line: 2, column: 2 }
             });
             expect(parser).toParse("1\n\rx", {   // mismatched
               start: { offset: 3, line: 3, column: 1 },
-              end:   { offset: 4, line: 3, column: 2 },
+              end:   { offset: 4, line: 3, column: 2 }
             });
 
             /* Strange newlines */
             expect(parser).toParse("1\u2028x", {   // line separator
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 },
+              end:   { offset: 3, line: 2, column: 2 }
             });
             expect(parser).toParse("1\u2029x", {   // paragraph separator
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 },
+              end:   { offset: 3, line: 2, column: 2 }
             });
           });
 
