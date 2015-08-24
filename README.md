@@ -446,7 +446,9 @@ Both the parser generator and generated parsers should run well in the following
 environments:
 
   * Node.js 0.10.0+
-  * IE 8+
+  * io.js
+  * Internet Explorer 8+
+  * Edge
   * Firefox
   * Chrome
   * Safari
