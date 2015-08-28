@@ -1,3 +1,9 @@
+Change Log
+==========
+
+This file documents all notable changes to PEG.js. The releases follow [semantic
+versioning](http://semver.org/).
+
 0.8.0
 -----
 
