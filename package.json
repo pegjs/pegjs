@@ -1,6 +1,6 @@
 {
   "name":            "pegjs",
-  "version":         "0.8.0",
+  "version":         "0.9.0",
   "description":     "Parser generator for JavaScript",
   "homepage":        "http://pegjs.org/",
   "license":         "MIT",
