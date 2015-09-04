@@ -25,7 +25,7 @@
     "lib/compiler/opcodes.js",
     "lib/compiler/visitor.js",
     "lib/compiler/passes/generate-bytecode.js",
-    "lib/compiler/passes/generate-javascript.js",
+    "lib/compiler/passes/generate-js.js",
     "lib/compiler/passes/remove-proxy-rules.js",
     "lib/compiler/passes/report-left-recursion.js",
     "lib/compiler/passes/report-infinite-loops.js",

@@ -15,7 +15,7 @@ MODULES = utils/arrays                          \
           compiler/opcodes                      \
           compiler/js                           \
           compiler/passes/generate-bytecode     \
-          compiler/passes/generate-javascript   \
+          compiler/passes/generate-js           \
           compiler/passes/remove-proxy-rules    \
           compiler/passes/report-left-recursion \
           compiler/passes/report-infinite-loops \
