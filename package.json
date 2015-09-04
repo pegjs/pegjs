@@ -2,13 +2,11 @@
   "name":            "pegjs",
   "version":         "0.9.0",
   "description":     "Parser generator for JavaScript",
+  "keywords":        ["parser generator", "PEG"],
   "homepage":        "http://pegjs.org/",
+  "bugs":            "https://github.com/pegjs/pegjs/issues",
   "license":         "MIT",
-  "author":          {
-    "name":  "David Majda",
-    "email": "david@majda.cz",
-    "url":   "http://majda.cz/"
-  },
+  "author":          "David Majda <david@majda.cz> (http://majda.cz/)",
   "files": [
     "CHANGELOG.md",
     "LICENSE",
@@ -40,17 +38,14 @@
   ],
   "main":            "lib/peg",
   "bin":             "bin/pegjs",
+  "repository":      "pegjs/pegjs",
   "scripts":         {
     "test": "make hint && make spec"
   },
-  "repository":      {
-    "type": "git",
-    "url":  "http://github.com/pegjs/pegjs.git"
-  },
   "devDependencies": {
-    "jasmine-node": "= 1.14.5",
-    "uglify-js":    "= 2.4.24",
-    "jshint":       "= 2.8.0"
+    "jasmine-node": "1.14.5",
+    "uglify-js":    "2.4.24",
+    "jshint":       "2.8.0"
   },
   "engines":         {
     "node": ">= 0.10.0"
