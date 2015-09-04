@@ -21,7 +21,7 @@
     "examples/json.pegjs",
     "lib/compiler.js",
     "lib/compiler/asts.js",
-    "lib/compiler/javascript.js",
+    "lib/compiler/js.js",
     "lib/compiler/opcodes.js",
     "lib/compiler/visitor.js",
     "lib/compiler/passes/generate-bytecode.js",

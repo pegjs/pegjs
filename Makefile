@@ -13,7 +13,7 @@ MODULES = utils/arrays                          \
           compiler/visitor                      \
           compiler/asts                         \
           compiler/opcodes                      \
-          compiler/javascript                   \
+          compiler/js                           \
           compiler/passes/generate-bytecode     \
           compiler/passes/generate-javascript   \
           compiler/passes/remove-proxy-rules    \
