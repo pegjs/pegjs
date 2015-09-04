@@ -268,7 +268,7 @@ describe("generated parser behavior", function() {
           expect(parser).toParse("a", "a");
         });
 
-        it("advances parse position past the matched text", function() {
+        it("consumes the matched text", function() {
           var parser = PEG.buildParser('start = "a" .', options);
 
           expect(parser).toParse("ab");
@@ -341,7 +341,7 @@ describe("generated parser behavior", function() {
           expect(parser).toParse("a", "a");
         });
 
-        it("advances parse position past the matched character", function() {
+        it("consumes the matched character", function() {
           var parser = PEG.buildParser('start = [a] .', options);
 
           expect(parser).toParse("ab");
@@ -377,7 +377,7 @@ describe("generated parser behavior", function() {
           expect(parser).toParse("a", "a");
         });
 
-        it("advances parse position past the matched character", function() {
+        it("consumes the matched character", function() {
           var parser = PEG.buildParser('start = . .', options);
 
           expect(parser).toParse("ab");

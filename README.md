@@ -304,13 +304,12 @@ backtracking.
 #### & *expression*
 
 Try to match the expression. If the match succeeds, just return `undefined` and
-do not advance the parser position, otherwise consider the match failed.
+do not consume any input, otherwise consider the match failed.
 
 #### ! *expression*
 
 Try to match the expression. If the match does not succeed, just return
-`undefined` and do not advance the parser position, otherwise consider the match
-failed.
+`undefined` and do not consume any input, otherwise consider the match failed.
 
 #### & { *predicate* }
 
@@ -318,8 +317,8 @@ The predicate is a piece of JavaScript code that is executed as if it was inside
 a function. It gets the match results of labeled expressions in preceding
 expression as its arguments. It should return some JavaScript value using the
 `return` statement. If the returned value evaluates to `true` in boolean
-context, just return `undefined` and do not advance the parser position;
-otherwise consider the match failed.
+context, just return `undefined` and do not consume any input; otherwise
+consider the match failed.
 
 The code inside the predicate can access all variables and functions defined in
 the initializer at the beginning of the grammar.
@@ -347,8 +346,8 @@ The predicate is a piece of JavaScript code that is executed as if it was inside
 a function. It gets the match results of labeled expressions in preceding
 expression as its arguments. It should return some JavaScript value using the
 `return` statement. If the returned value evaluates to `false` in boolean
-context, just return `undefined` and do not advance the parser position;
-otherwise consider the match failed.
+context, just return `undefined` and do not consume any input; otherwise
+consider the match failed.
 
 The code inside the predicate can access all variables and functions defined in
 the initializer at the beginning of the grammar.
