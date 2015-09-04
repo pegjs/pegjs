@@ -1,5 +1,5 @@
-/* jshint node:false */
-/* global $, alert, benchmarks, document, Runner */
+/* jshint node:false, browser:true, devel:true, jquery:true */
+/* global Runner */
 
 $("#run").click(function() {
   "use strict";

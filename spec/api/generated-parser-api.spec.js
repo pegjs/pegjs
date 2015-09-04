@@ -1,4 +1,5 @@
-/* global describe, expect, it, jasmine, PEG, spyOn */
+/* jshint jasmine:true */
+/* global PEG */
 
 "use strict";
 

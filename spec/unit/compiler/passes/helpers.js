@@ -1,4 +1,5 @@
-/* global beforeEach, jasmine, PEG */
+/* jshint jasmine:true */
+/* global PEG */
 
 "use strict";
 
