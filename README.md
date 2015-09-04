@@ -229,7 +229,7 @@ generated parser, it produces a *match result*, which is a JavaScript value. For
 example:
 
   * An expression matching a literal string produces a JavaScript string
-    containing matched part of the input.
+    containing matched text.
   * An expression matching repeated occurrence of some subexpression produces a
     JavaScript array with all the matches.
 
@@ -372,7 +372,7 @@ Note that curly braces in the predicate code must be balanced.
 
 #### $ *expression*
 
-Try to match the expression. If the match succeeds, return the matched string
+Try to match the expression. If the match succeeds, return the matched text
 instead of the match result.
 
 #### *label* : *expression*
@@ -411,7 +411,7 @@ The code inside the action can access all variables and functions defined in the
 initializer at the beginning of the grammar. Curly braces in the action code
 must be balanced.
 
-The code inside the action can also access the string matched by the expression
+The code inside the action can also access the text matched by the expression
 using the `text` function.
 
 
