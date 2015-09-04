@@ -45,7 +45,7 @@ describe("compiler pass |reportLeftRecursion|", function() {
       expect(pass).toReportError('start = "" start?');
     });
 
-    it("computes expressions that always advance on success correctly", function() {
+    it("computes expressions that always consume input on success correctly", function() {
       expect(pass).toReportError([
         'start = a start',
         'a "a" = ""'
