@@ -8,7 +8,7 @@ describe("compiler pass |reportLeftRecursion|", function() {
 
   it("reports direct left recursion", function() {
     expect(pass).toReportError('start = start', {
-      message:  'Left recursion detected for rule \"start\".',
+      message:  'Possible left recursion detected for rule \"start\".',
       location: {
         start: { offset:  8, line: 1, column:  9 },
         end:   { offset: 13, line: 1, column: 14 }
@@ -21,7 +21,7 @@ describe("compiler pass |reportLeftRecursion|", function() {
       'start = stop',
       'stop  = start'
     ].join("\n"), {
-      message:  'Left recursion detected for rule \"start\".',
+      message:  'Possible left recursion detected for rule \"start\".',
       location: {
         start: { offset: 21, line: 2, column:  9 },
         end:   { offset: 26, line: 2, column: 14 }
