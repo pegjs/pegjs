@@ -1268,9 +1268,8 @@ describe("generated parser behavior", function() {
                 );
 
             expect(parser).toFailToParse("a", {
-              message:  'Expected a but "a" found.',
+              message:  'Expected a.',
               expected: [{ type: "other", description: "a" }],
-              found:    "a",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 1, line: 1, column: 2 }
@@ -1287,7 +1286,6 @@ describe("generated parser behavior", function() {
             expect(parser).toFailToParse("a", {
               message:  "a",
               expected: null,
-              found:    "a",
               location: {
                 start: { offset: 0, line: 1, column: 1 },
                 end:   { offset: 1, line: 1, column: 2 }
@@ -1403,26 +1401,12 @@ describe("generated parser behavior", function() {
         });
       });
 
-      describe("found string reporting", function() {
-        it("reports found string correctly at the end of input", function() {
-          var parser = PEG.buildParser('start = "a"', options);
-
-          expect(parser).toFailToParse("", { found: null });
-        });
-
-        it("reports found string correctly in the middle of input", function() {
-          var parser = PEG.buildParser('start = "a"', options);
-
-          expect(parser).toFailToParse("b", { found: "b" });
-        });
-      });
-
       describe("message building", function() {
         it("builds message correctly with no alternative", function() {
           var parser = PEG.buildParser('start = "a"', options);
 
           expect(parser).toFailToParse("ab", {
-            message: 'Expected end of input but "b" found.'
+            message: 'Expected end of input.'
           });
         });
 
@@ -1430,7 +1414,7 @@ describe("generated parser behavior", function() {
           var parser = PEG.buildParser('start = "a"', options);
 
           expect(parser).toFailToParse("b", {
-            message: 'Expected "a" but "b" found.'
+            message: 'Expected "a".'
           });
         });
 
@@ -1438,46 +1422,19 @@ describe("generated parser behavior", function() {
           var parser = PEG.buildParser('start = "a" / "b" / "c"', options);
 
           expect(parser).toFailToParse("d", {
-            message: 'Expected "a", "b" or "c" but "d" found.'
-          });
-        });
-
-        it("builds message correctly at the end of input", function() {
-          var parser = PEG.buildParser('start = "a"', options);
-
-          expect(parser).toFailToParse("", {
-            message: 'Expected "a" but end of input found.'
-          });
-        });
-
-        it("builds message correctly in the middle of input", function() {
-          var parser = PEG.buildParser('start = "a"', options);
-
-          expect(parser).toFailToParse("b", {
-            message: 'Expected "a" but "b" found.'
+            message: 'Expected "a", "b" or "c".'
           });
         });
       });
 
       describe("position reporting", function() {
-        it("reports position correctly at the end of input", function() {
-          var parser = PEG.buildParser('start = "a"', options);
-
-          expect(parser).toFailToParse("", {
-            location: {
-              start: { offset: 0, line: 1, column: 1 },
-              end:   { offset: 0, line: 1, column: 1 }
-            }
-          });
-        });
-
-        it("reports position correctly in the middle of input", function() {
+        it("reports position correctly with no trailing input", function() {
           var parser = PEG.buildParser('start = "a"', options);
 
           expect(parser).toFailToParse("b", {
             location: {
               start: { offset: 0, line: 1, column: 1 },
-              end:   { offset: 1, line: 1, column: 2 }
+              end:   { offset: 0, line: 1, column: 1 }
             }
           });
         });
@@ -1488,7 +1445,7 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("aa", {
             location: {
               start: { offset: 1, line: 1, column: 2 },
-              end:   { offset: 2, line: 1, column: 3 }
+              end:   { offset: 1, line: 1, column: 2 }
             }
           });
         });
@@ -1504,7 +1461,7 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("1\n2\n\n3\n\n\n4 5 x", {
             location: {
               start: { offset: 13, line: 7, column: 5 },
-              end:   { offset: 14, line: 7, column: 6 }
+              end:   { offset: 13, line: 7, column: 5 }
             }
           });
 
@@ -1512,19 +1469,19 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("1\rx", {     // Old Mac
             location: {
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 }
+              end:   { offset: 2, line: 2, column: 1 }
             }
           });
           expect(parser).toFailToParse("1\r\nx", {   // Windows
             location: {
               start: { offset: 3, line: 2, column: 1 },
-              end:   { offset: 4, line: 2, column: 2 }
+              end:   { offset: 3, line: 2, column: 1 }
             }
           });
           expect(parser).toFailToParse("1\n\rx", {   // mismatched
             location: {
               start: { offset: 3, line: 3, column: 1 },
-              end:   { offset: 4, line: 3, column: 2 }
+              end:   { offset: 3, line: 3, column: 1 }
             }
           });
 
@@ -1532,13 +1489,13 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("1\u2028x", {   // line separator
             location: {
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 }
+              end:   { offset: 2, line: 2, column: 1 }
             }
           });
           expect(parser).toFailToParse("1\u2029x", {   // paragraph separator
             location: {
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 }
+              end:   { offset: 2, line: 2, column: 1 }
             }
           });
         });
