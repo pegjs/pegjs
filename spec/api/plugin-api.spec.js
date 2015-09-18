@@ -108,7 +108,7 @@ describe("plugin API", function() {
                     '      {',
                     '        type:       "rule",',
                     '        name:       "start",',
-                    '        expression: { type: "literal",  value: text(), ignoreCase: false }',
+                    '        expression: { type: "literal",  value: text(), ignoreCase: false, rawText: text() }',
                     '      }',
                     '    ]',
                     '  };',

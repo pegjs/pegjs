@@ -572,7 +572,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", value: "A", description: "\\"A\\"" }'
+          '{ type: "literal", value: "A", description: "\\"A\\"i" }'
         ]));
       });
     });
