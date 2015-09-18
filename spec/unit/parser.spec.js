@@ -364,7 +364,7 @@ describe("PEG.js grammar parser", function() {
   /* Canonical PrimaryExpression is "\"abcd\"". */
   it("parses PrimaryExpression", function() {
     expect('start = "abcd"'      ).toParseAs(trivialGrammar);
-    expect('start = [a-d]'       ).toParseAs(classGrammar([["a", "d"]], false, false, "[a-d]"));
+    expect('start = [a-d]'       ).toParseAs(classGrammar([["a", "d"]], false, false, '[a-d]'));
     expect('start = .'           ).toParseAs(anyGrammar());
     expect('start = a'           ).toParseAs(ruleRefGrammar("a"));
     expect('start = &{ code }'   ).toParseAs(oneRuleGrammar(semanticAnd));
@@ -528,42 +528,42 @@ describe("PEG.js grammar parser", function() {
   /* Canonical CharacterClassMatcher is "[a-d]". */
   it("parses CharacterClassMatcher", function() {
     expect('start = []').toParseAs(
-      classGrammar([], false, false, "[]")
+      classGrammar([], false, false, '[]')
     );
     expect('start = [a-d]').toParseAs(
-      classGrammar([["a", "d"]], false, false, "[a-d]")
+      classGrammar([["a", "d"]], false, false, '[a-d]')
     );
     expect('start = [a]').toParseAs(
-      classGrammar(["a"], false, false, "[a]")
+      classGrammar(["a"], false, false, '[a]')
     );
     expect('start = [a-de-hi-l]').toParseAs(
       classGrammar(
         [["a", "d"], ["e", "h"], ["i", "l"]],
         false,
         false,
-        "[a-de-hi-l]"
+        '[a-de-hi-l]'
       )
     );
     expect('start = [^a-d]').toParseAs(
-      classGrammar([["a", "d"]], true, false, "[^a-d]")
+      classGrammar([["a", "d"]], true, false, '[^a-d]')
     );
     expect('start = [a-d]i').toParseAs(
-      classGrammar([["a", "d"]], false, true, "[a-d]i")
+      classGrammar([["a", "d"]], false, true, '[a-d]i')
     );
 
     expect('start = [\\\n]').toParseAs(
-      classGrammar([], false, false, "[\\\n]")
+      classGrammar([], false, false, '[\\\n]')
     );
   });
 
   /* Canonical ClassCharacterRange is "a-d". */
   it("parses ClassCharacterRange", function() {
     expect('start = [a-d]').toParseAs(
-      classGrammar([["a", "d"]], false, false, "[a-d]")
+      classGrammar([["a", "d"]], false, false, '[a-d]')
     );
 
     expect('start = [a-a]').toParseAs(
-      classGrammar([["a", "a"]], false, false, "[a-a]")
+      classGrammar([["a", "a"]], false, false, '[a-a]')
     );
     expect('start = [b-a]').toFailToParse({
       message: "Invalid character range: b-a."
@@ -573,13 +573,13 @@ describe("PEG.js grammar parser", function() {
   /* Canonical ClassCharacter is "a". */
   it("parses ClassCharacter", function() {
     expect('start = [a]'   ).toParseAs(
-      classGrammar(["a"], false, false, "[a]")
+      classGrammar(["a"], false, false, '[a]')
     );
     expect('start = [\\n]' ).toParseAs(
-      classGrammar(["\n"], false, false, "[\\n]")
+      classGrammar(["\n"], false, false, '[\\n]')
     );
     expect('start = [\\\n]').toParseAs(
-      classGrammar([], false, false, "[\\\n]")
+      classGrammar([], false, false, '[\\\n]')
     );
 
     expect('start = []]' ).toFailToParse();
