@@ -67,8 +67,8 @@
     return result;
   }
 
-  function buildList(first, rest, index) {
-    return [first].concat(extractList(rest, index));
+  function buildList(head, tail, index) {
+    return [head].concat(extractList(tail, index));
   }
 }
 
@@ -114,14 +114,14 @@ Expression
   = ChoiceExpression
 
 ChoiceExpression
-  = first:ActionExpression rest:(__ "/" __ ActionExpression)* {
-      return rest.length > 0
+  = head:ActionExpression tail:(__ "/" __ ActionExpression)* {
+      return tail.length > 0
         ? {
             type:         "choice",
-            alternatives: buildList(first, rest, 3),
+            alternatives: buildList(head, tail, 3),
             location:     location()
           }
-        : first;
+        : head;
     }
 
 ActionExpression
@@ -137,14 +137,14 @@ ActionExpression
     }
 
 SequenceExpression
-  = first:LabeledExpression rest:(__ LabeledExpression)* {
-      return rest.length > 0
+  = head:LabeledExpression tail:(__ LabeledExpression)* {
+      return tail.length > 0
         ? {
             type:     "sequence",
-            elements: buildList(first, rest, 1),
+            elements: buildList(head, tail, 1),
             location: location()
           }
-        : first;
+        : head;
     }
 
 LabeledExpression
@@ -255,7 +255,7 @@ Identifier
   = !ReservedWord name:IdentifierName { return name; }
 
 IdentifierName "identifier"
-  = first:IdentifierStart rest:IdentifierPart* { return first + rest.join(""); }
+  = head:IdentifierStart tail:IdentifierPart* { return head + tail.join(""); }
 
 IdentifierStart
   = UnicodeLetter
