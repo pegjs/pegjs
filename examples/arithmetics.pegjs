@@ -6,24 +6,24 @@
  */
 
 Expression
-  = first:Term rest:(_ ("+" / "-") _ Term)* {
-      var result = first, i;
+  = head:Term tail:(_ ("+" / "-") _ Term)* {
+      var result = head, i;
 
-      for (i = 0; i < rest.length; i++) {
-        if (rest[i][1] === "+") { result += rest[i][3]; }
-        if (rest[i][1] === "-") { result -= rest[i][3]; }
+      for (i = 0; i < tail.length; i++) {
+        if (tail[i][1] === "+") { result += tail[i][3]; }
+        if (tail[i][1] === "-") { result -= tail[i][3]; }
       }
 
       return result;
     }
 
 Term
-  = first:Factor rest:(_ ("*" / "/") _ Factor)* {
-      var result = first, i;
+  = head:Factor tail:(_ ("*" / "/") _ Factor)* {
+      var result = head, i;
 
-      for (i = 0; i < rest.length; i++) {
-        if (rest[i][1] === "*") { result *= rest[i][3]; }
-        if (rest[i][1] === "/") { result /= rest[i][3]; }
+      for (i = 0; i < tail.length; i++) {
+        if (tail[i][1] === "*") { result *= tail[i][3]; }
+        if (tail[i][1] === "/") { result /= tail[i][3]; }
       }
 
       return result;

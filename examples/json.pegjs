@@ -49,15 +49,15 @@ true  = "true"  { return true;  }
 object
   = begin_object
     members:(
-      first:member
-      rest:(value_separator m:member { return m; })*
+      head:member
+      tail:(value_separator m:member { return m; })*
       {
         var result = {}, i;
 
-        result[first.name] = first.value;
+        result[head.name] = head.value;
 
-        for (i = 0; i < rest.length; i++) {
-          result[rest[i].name] = rest[i].value;
+        for (i = 0; i < tail.length; i++) {
+          result[tail[i].name] = tail[i].value;
         }
 
         return result;
@@ -76,9 +76,9 @@ member
 array
   = begin_array
     values:(
-      first:value
-      rest:(value_separator v:value { return v; })*
-      { return [first].concat(rest); }
+      head:value
+      tail:(value_separator v:value { return v; })*
+      { return [head].concat(tail); }
     )?
     end_array
     { return values !== null ? values : []; }
