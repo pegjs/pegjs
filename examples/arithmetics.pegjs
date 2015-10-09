@@ -5,32 +5,28 @@
  * Accepts expressions like "2 * (3 + 4)" and computes their value.
  */
 
-{
-  function combine(first, rest, combiners) {
-    var result = first, i;
-
-    for (i = 0; i < rest.length; i++) {
-      result = combiners[rest[i][1]](result, rest[i][3]);
-    }
-
-    return result;
-  }
-}
-
 Expression
   = first:Term rest:(_ ("+" / "-") _ Term)* {
-      return combine(first, rest, {
-        "+": function(left, right) { return left + right; },
-        "-": function(left, right) { return left - right; }
-      });
+      var result = first, i;
+
+      for (i = 0; i < rest.length; i++) {
+        if (rest[i][1] === "+") { result += rest[i][3]; }
+        if (rest[i][1] === "-") { result -= rest[i][3]; }
+      }
+
+      return result;
     }
 
 Term
   = first:Factor rest:(_ ("*" / "/") _ Factor)* {
-      return combine(first, rest, {
-        "*": function(left, right) { return left * right; },
-        "/": function(left, right) { return left / right; }
-      });
+      var result = first, i;
+
+      for (i = 0; i < rest.length; i++) {
+        if (rest[i][1] === "*") { result *= rest[i][3]; }
+        if (rest[i][1] === "/") { result /= rest[i][3]; }
+      }
+
+      return result;
     }
 
 Factor
