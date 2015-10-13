@@ -43,6 +43,7 @@
     "test": "make hint && make spec"
   },
   "devDependencies": {
+    "browserify":   "11.2.0",
     "jasmine-node": "1.14.5",
     "uglify-js":    "2.4.24",
     "jshint":       "2.8.0"
