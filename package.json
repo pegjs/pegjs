@@ -42,6 +42,9 @@
   "scripts":         {
     "test": "make hint && make spec"
   },
+  "dependencies": {
+    "minimist": "1.2.0"
+  },
   "devDependencies": {
     "browserify":   "11.2.0",
     "jasmine-node": "1.14.5",
