@@ -205,18 +205,31 @@ switch (argv._.length) {
   case 1:
   case 2:
     var inputFile = argv._[0];
-    var inputStream = fs.createReadStream(inputFile);
-    inputStream.on("error", function() {
-      abort("Can't read from file \"" + inputFile + "\".");
-    });
+    if (inputFile === "-") {
+      process.stdin.resume();
+      var inputStream = process.stdin;
+      // We can't infer the output filename, so default to stdout if needed.
+      if (argv._.length === 1) {
+        argv._[1] = "-";
+      }
+    } else {
+      var inputStream = fs.createReadStream(inputFile);
+      inputStream.on("error", function() {
+        abort("Can't read from file \"" + inputFile + "\".");
+      });
+    }
 
     var outputFile = argv._.length === 1
       ? argv._[0].replace(/\.[^.]*$/, ".js")
       : argv._[1];
-    var outputStream = fs.createWriteStream(outputFile);
-    outputStream.on("error", function() {
-      abort("Can't write to file \"" + outputFile + "\".");
-    });
+    if (outputFile === "-") {
+      var outputStream = process.stdout;
+    } else {
+      var outputStream = fs.createWriteStream(outputFile);
+      outputStream.on("error", function() {
+        abort("Can't write to file \"" + outputFile + "\".");
+      });
+    }
 
     break;
 
