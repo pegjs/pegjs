@@ -136,7 +136,7 @@ while (args.length > 0 && isOption(args[0])) {
     case "--allowed-start-rules":
       nextArg();
       if (args.length === 0) {
-        abort("Missing parameter of the -e/--allowed-start-rules option.");
+        abort("Missing parameter of the --allowed-start-rules option.");
       }
       options.allowedStartRules = args[0]
         .split(",")
