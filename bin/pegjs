@@ -92,7 +92,13 @@ function trim(s) {
 
 // Trim "node" and the script path.
 var argv = minimist(process.argv.slice(2), {
-  "boolean": ["cache", "trace"]
+  "boolean": ["cache", "trace"],
+  "alias": {
+    e: "export-var",
+    o: "optimize",
+    v: "version",
+    h: "help"
+  }
 });
 
 /* Files */
@@ -115,33 +121,39 @@ var options = {
   plugins:  []
 };
 
-exportVar = argv.e || argv["export-var"];
-if (exportVar === true) {
-  abort("Missing parameter of the -e/--export-var option.");
+if (exportVar) {
+  if (exportVar === true) {
+    abort("Missing parameter of the -e/--export-var option.");
+  }
+  exportVar = argv["export-var"];
 }
 
 options.cache = argv.cache;
 
 var allowedStartRules = argv["allowed-start-rules"];
-if (allowedStartRules === true) {
-  abort("Missing parameter of the --allowed-start-rules option.");
+if (allowedStartRules) {
+  if (allowedStartRules === true) {
+    abort("Missing parameter of the --allowed-start-rules option.");
+  }
+  options.allowedStartRules = allowedStartRules
+    .split(",")
+    .map(trim);
 }
-options.allowedStartRules = allowedStartRules
-  .split(",")
-  .map(trim);
 
 options.trace = argv.trace;
 
-var optimize = argv.o || argv.optimize;
-if (optimize === true) {
-  abort("Missing parameter of the -o/--optimize option.");
+var optimize = argv.optimize;
+if (optimize) {
+  if (optimize === true) {
+    abort("Missing parameter of the -o/--optimize option.");
+  }
+  if (optimize !== "speed" && optimize !== "size") {
+    abort("Optimization goal must be either \"speed\" or \"size\".");
+  }
+  options.optimize = optimize;
 }
-if (optimize !== "speed" && optimize !== "size") {
-  abort("Optimization goal must be either \"speed\" or \"size\".");
-}
-options.optimize = optimize;
 
-var plugins = [].concat(argv.plugin);
+var plugins = [].concat(argv.plugin || []);
 arrays.each(plugins, function (plugin) {
   if (plugin === true) {
     abort("Missing parameter of the --plugin option.");
@@ -159,28 +171,32 @@ arrays.each(plugins, function (plugin) {
 });
 
 var extraOptions = argv["extra-options"];
-if (extraOptions === true) {
-  abort("Missing parameter of the --extra-options option.");
+if (extraOptions) {
+  if (extraOptions === true) {
+    abort("Missing parameter of the --extra-options option.");
+  }
+  addExtraOptions(options, extraOptions);
 }
-addExtraOptions(options, extraOptions);
 
 var extraOptionsFile = argv["extra-options-file"];
-if (extraOptionsFile === true) {
-  abort("Missing parameter of the --extra-options-file option.");
+if (extraOptionsFile) {
+  if (extraOptionsFile === true) {
+    abort("Missing parameter of the --extra-options-file option.");
+  }
+  try {
+    var json = fs.readFileSync(extraOptionsFile);
+  } catch(e) {
+    abort("Can't read from file \"" + extraOptionsFile + "\".");
+  }
+  addExtraOptions(options, json);
 }
-try {
-  var json = fs.readFileSync(extraOptionsFile);
-} catch(e) {
-  abort("Can't read from file \"" + extraOptionsFile + "\".");
-}
-addExtraOptions(options, json);
 
-if (argv.v || argv.version) {
+if (argv.version) {
   printVersion();
   exitSuccess();
 }
 
-if (argv.h || argv.help) {
+if (argv.help) {
   printHelp();
   exitSuccess();
 }
