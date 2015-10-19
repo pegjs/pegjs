@@ -4,6 +4,8 @@
 
 var fs   = require("fs");
 var path = require("path");
+var minimist = require("minimist");
+var arrays  = require("../lib/utils/arrays");
 var PEG  = require("../lib/peg");
 
 /* Helpers */
@@ -88,15 +90,10 @@ function trim(s) {
 
 /* Arguments */
 
-var args = process.argv.slice(2); // Trim "node" and the script path.
-
-function isOption(arg) {
-  return (/^-/).test(arg);
-}
-
-function nextArg() {
-  args.shift();
-}
+// Trim "node" and the script path.
+var argv = minimist(process.argv.slice(2), {
+  "boolean": ["cache", "trace"]
+});
 
 /* Files */
 
@@ -118,108 +115,77 @@ var options = {
   plugins:  []
 };
 
-while (args.length > 0 && isOption(args[0])) {
-  switch (args[0]) {
-    case "-e":
-    case "--export-var":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -e/--export-var option.");
-      }
-      exportVar = args[0];
-      break;
-
-    case "--cache":
-      options.cache = true;
-      break;
-
-    case "--allowed-start-rules":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --allowed-start-rules option.");
-      }
-      options.allowedStartRules = args[0]
-        .split(",")
-        .map(trim);
-      break;
-
-    case "--trace":
-      options.trace = true;
-      break;
-
-    case "-o":
-    case "--optimize":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -o/--optimize option.");
-      }
-      if (args[0] !== "speed" && args[0] !== "size") {
-        abort("Optimization goal must be either \"speed\" or \"size\".");
-      }
-      options.optimize = args[0];
-      break;
-
-    case "--plugin":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --plugin option.");
-      }
-      var id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
-      var mod;
-      try {
-        mod = require(id);
-      } catch (e) {
-        if (e.code !== "MODULE_NOT_FOUND") { throw e; }
-
-        abort("Can't load module \"" + id + "\".");
-      }
-      options.plugins.push(mod);
-      break;
-
-    case "--extra-options":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --extra-options option.");
-      }
-      addExtraOptions(options, args[0]);
-      break;
-
-    case "--extra-options-file":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --extra-options-file option.");
-      }
-      try {
-        var json = fs.readFileSync(args[0]);
-      } catch(e) {
-        abort("Can't read from file \"" + args[0] + "\".");
-      }
-      addExtraOptions(options, json);
-      break;
-
-    case "-v":
-    case "--version":
-      printVersion();
-      exitSuccess();
-      break;
-
-    case "-h":
-    case "--help":
-      printHelp();
-      exitSuccess();
-      break;
-
-    case "--":
-      nextArg();
-      break;
-
-    default:
-      abort("Unknown option: " + args[0] + ".");
-  }
-  nextArg();
+exportVar = argv.e || argv["export-var"];
+if (exportVar === true) {
+  abort("Missing parameter of the -e/--export-var option.");
 }
 
-switch (args.length) {
+options.cache = argv.cache;
+
+var allowedStartRules = argv["allowed-start-rules"];
+if (allowedStartRules === true) {
+  abort("Missing parameter of the --allowed-start-rules option.");
+}
+options.allowedStartRules = allowedStartRules
+  .split(",")
+  .map(trim);
+
+options.trace = argv.trace;
+
+var optimize = argv.o || argv.optimize;
+if (optimize === true) {
+  abort("Missing parameter of the -o/--optimize option.");
+}
+if (optimize !== "speed" && optimize !== "size") {
+  abort("Optimization goal must be either \"speed\" or \"size\".");
+}
+options.optimize = optimize;
+
+var plugins = [].concat(argv.plugin);
+arrays.each(plugins, function (plugin) {
+  if (plugin === true) {
+    abort("Missing parameter of the --plugin option.");
+  }
+  var id = /^(\.\/|\.\.\/)/.test(plugin) ? path.resolve(plugin) : plugin;
+  var mod;
+  try {
+    mod = require(id);
+  } catch (e) {
+    if (e.code !== "MODULE_NOT_FOUND") { throw e; }
+
+    abort("Can't load module \"" + id + "\".");
+  }
+  options.plugins.push(mod);
+});
+
+var extraOptions = argv["extra-options"];
+if (extraOptions === true) {
+  abort("Missing parameter of the --extra-options option.");
+}
+addExtraOptions(options, extraOptions);
+
+var extraOptionsFile = argv["extra-options-file"];
+if (extraOptionsFile === true) {
+  abort("Missing parameter of the --extra-options-file option.");
+}
+try {
+  var json = fs.readFileSync(extraOptionsFile);
+} catch(e) {
+  abort("Can't read from file \"" + extraOptionsFile + "\".");
+}
+addExtraOptions(options, json);
+
+if (argv.v || argv.version) {
+  printVersion();
+  exitSuccess();
+}
+
+if (argv.h || argv.help) {
+  printHelp();
+  exitSuccess();
+}
+
+switch (argv._.length) {
   case 0:
     process.stdin.resume();
     var inputStream = process.stdin;
@@ -228,15 +194,15 @@ switch (args.length) {
 
   case 1:
   case 2:
-    var inputFile = args[0];
+    var inputFile = argv._[0];
     var inputStream = fs.createReadStream(inputFile);
     inputStream.on("error", function() {
       abort("Can't read from file \"" + inputFile + "\".");
     });
 
-    var outputFile = args.length === 1
-      ? args[0].replace(/\.[^.]*$/, ".js")
-      : args[1];
+    var outputFile = argv._.length === 1
+      ? argv._[0].replace(/\.[^.]*$/, ".js")
+      : argv._[1];
     var outputStream = fs.createWriteStream(outputFile);
     outputStream.on("error", function() {
       abort("Can't write to file \"" + outputFile + "\".");
