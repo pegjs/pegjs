@@ -78,6 +78,11 @@ browserclean:
 spec:
 	$(JASMINE_NODE) --verbose $(SPEC_DIR)
 
+# Run istunbul and push to coveralls
+coverage:
+	./node_modules/.bin/istanbul cover --include-all-sources jasmine-node spec
+	cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+
 # Run the benchmark suite
 benchmark:
 	$(BENCHMARK_RUN)
@@ -91,5 +96,5 @@ hint:
 	  $(BENCHMARK_RUN)                                                       \
 	  $(PEGJS)
 
-.PHONY:  all parser browser browserclean spec benchmark hint
-.SILENT: all parser browser browserclean spec benchmark hint
+.PHONY:  all parser browser browserclean spec benchmark hint coverage
+.SILENT: all parser browser browserclean spec benchmark hint coverage

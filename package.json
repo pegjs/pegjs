@@ -1,12 +1,15 @@
 {
-  "name":            "pegjs",
-  "version":         "0.9.0",
-  "description":     "Parser generator for JavaScript",
-  "keywords":        ["parser generator", "PEG"],
-  "homepage":        "http://pegjs.org/",
-  "bugs":            "https://github.com/pegjs/pegjs/issues",
-  "license":         "MIT",
-  "author":          "David Majda <david@majda.cz> (http://majda.cz/)",
+  "name": "pegjs",
+  "version": "0.9.0",
+  "description": "Parser generator for JavaScript",
+  "keywords": [
+    "parser generator",
+    "PEG"
+  ],
+  "homepage": "http://pegjs.org/",
+  "bugs": "https://github.com/pegjs/pegjs/issues",
+  "license": "MIT",
+  "author": "David Majda <david@majda.cz> (http://majda.cz/)",
   "files": [
     "CHANGELOG.md",
     "LICENSE",
@@ -36,19 +39,23 @@
     "lib/utils/objects.js",
     "package.json"
   ],
-  "main":            "lib/peg",
-  "bin":             "bin/pegjs",
-  "repository":      "pegjs/pegjs",
-  "scripts":         {
-    "test": "make hint && make spec"
+  "main": "lib/peg",
+  "bin": "bin/pegjs",
+  "repository": "pegjs/pegjs",
+  "scripts": {
+    "test": "make hint && make spec",
+    "coverage": "make coverage"
   },
   "devDependencies": {
-    "browserify":   "11.2.0",
+    "browserify": "11.2.0",
+    "coveralls": "^2.11.6",
+    "istanbul": "^0.4.1",
     "jasmine-node": "1.14.5",
-    "uglify-js":    "2.4.24",
-    "jshint":       "2.8.0"
+    "jshint": "2.8.0",
+    "mocha-lcov-reporter": "^1.0.0",
+    "uglify-js": "2.4.24"
   },
-  "engines":         {
+  "engines": {
     "node": ">= 0.10.0"
   }
 }
