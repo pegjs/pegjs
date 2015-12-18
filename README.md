@@ -1,6 +1,10 @@
 PEG.js
 ======
 
+[![npm version][npm-badge]][npm-url]
+[![Build Status][travis-badge]][travis-url]
+[![Coverage Status][coveralls-badge]][coveralls-url]
+
 PEG.js is a simple parser generator for JavaScript that produces fast parsers
 with excellent error reporting. You can use it to process complex data or
 computer languages and build transformers, interpreters, compilers and other
@@ -475,3 +479,11 @@ sides. You can send code both as a patch or a GitHub pull request.
 
 Note that PEG.js is still very much work in progress. There are no compatibility
 guarantees until version 1.0.
+
+
+[npm-badge]: https://badge.fury.io/js/pegjs.svg
+[npm-url]: https://badge.fury.io/js/pegjs
+[travis-badge]: https://api.travis-ci.org/pegjs/pegjs.svg
+[travis-url]: https://travis-ci.org/pegjs/pegjs
+[coveralls-badge]:https://coveralls.io/repos/pegjs/pegjs/badge.svg?branch=master&service=github
+[coveralls-url]: https://coveralls.io/github/pegjs/pegjs?branch=master
