@@ -100,13 +100,13 @@ fi
 
 cd_to_root
 
-echo -n "Measuring commit $commit_before..."
+printf "Measuring commit %s..." "$commit_before"
 prepare "$commit_before"
 speed1=$(measure_speed)
 size1=$(measure_size)
 echo " OK"
 
-echo -n "Measuring commit $commit_after..."
+printf "Measuring commit %s..." "$commit_after"
 prepare "$commit_after"
 speed2=$(measure_speed)
 size2=$(measure_size)
