@@ -61,7 +61,7 @@ print_results() {
 
   echo
 
-  echo "(Measured by /tools/impact with Node.js $(node --version) on $(uname --operating-system --machine).)"
+  echo "(Measured by /tools/impact with Node.js $(node --version) on $(uname -mrs).)"
 }
 
 print_usage() {
