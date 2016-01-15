@@ -4,6 +4,7 @@
 # speed and size. Makes sense to use only on PEG.js Git repository checkout.
 
 set -e
+export LC_ALL=C
 
 # Measurement
 
