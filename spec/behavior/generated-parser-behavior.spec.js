@@ -18,10 +18,14 @@ describe("generated parser behavior", function() {
     }
 
     var optionsVariants = [
-          { cache: false, optimize: "speed" },
-          { cache: false, optimize: "size"  },
-          { cache: true,  optimize: "speed" },
-          { cache: true,  optimize: "size"  },
+          { trace: false, cache: false, optimize: "speed" },
+          { trace: false, cache: false, optimize: "size"  },
+          { trace: false, cache: true,  optimize: "speed" },
+          { trace: false, cache: true,  optimize: "size"  },
+          { trace: true,  cache: false, optimize: "speed" },
+          { trace: true,  cache: false, optimize: "size"  },
+          { trace: true,  cache: true,  optimize: "speed" },
+          { trace: true,  cache: true,  optimize: "size"  },
         ],
         i;
 
