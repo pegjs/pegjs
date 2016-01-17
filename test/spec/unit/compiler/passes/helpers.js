@@ -67,7 +67,7 @@ module.exports = function ( chai, utils ) {
 
         this.assert(
             matchProps( ast, props ),
-            "expected #{this} to change the AST to match #{exp}",
+            "expected #{this} to change the AST to match #{exp} but #{act} was produced",
             "expected #{this} to not change the AST to match #{exp}",
             props,
             ast
