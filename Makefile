@@ -27,7 +27,7 @@ VERSION_FILE = VERSION
 
 # ===== Executables =====
 
-JSHINT        = $(NODE_MODULES_BIN_DIR)/jshint
+ESLINT        = $(NODE_MODULES_BIN_DIR)/eslint
 BROWSERIFY    = $(NODE_MODULES_BIN_DIR)/browserify
 UGLIFYJS      = $(NODE_MODULES_BIN_DIR)/uglifyjs
 JASMINE_NODE  = $(NODE_MODULES_BIN_DIR)/jasmine-node
@@ -82,14 +82,14 @@ spec:
 benchmark:
 	$(BENCHMARK_RUN)
 
-# Run JSHint on the source
-hint:
-	$(JSHINT)                                                                \
+# Run ESLint on the source
+lint:
+	$(ESLINT)                                                                \
 	  `find $(LIB_DIR) -name '*.js'`                                         \
 	  `find $(SPEC_DIR) -name '*.js' -and -not -path '$(SPEC_DIR)/vendor/*'` \
 	  $(BENCHMARK_DIR)/*.js                                                  \
 	  $(BENCHMARK_RUN)                                                       \
 	  $(PEGJS)
 
-.PHONY:  all parser browser browserclean spec benchmark hint
-.SILENT: all parser browser browserclean spec benchmark hint
+.PHONY:  all parser browser browserclean spec benchmark lint
+.SILENT: all parser browser browserclean spec benchmark lint

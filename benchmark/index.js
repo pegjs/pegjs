@@ -1,4 +1,4 @@
-/* jshint node:false, browser:true, devel:true, jquery:true */
+/* eslint-env browser, jquery */
 /* global Runner */
 
 $("#run").click(function() {

@@ -43,13 +43,13 @@
   "bin": "bin/pegjs",
   "repository": "pegjs/pegjs",
   "scripts": {
-    "test": "make hint && make spec"
+    "test": "make lint && make spec"
   },
   "devDependencies": {
     "browserify": "11.2.0",
+    "eslint": "1.10.3",
     "jasmine-node": "1.14.5",
-    "uglify-js": "2.4.24",
-    "jshint": "2.8.0"
+    "uglify-js": "2.4.24"
   },
   "engines": {
     "node": ">=0.10"
