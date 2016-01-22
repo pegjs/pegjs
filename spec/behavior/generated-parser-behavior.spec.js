@@ -21,7 +21,7 @@ describe("generated parser behavior", function() {
           { cache: false, optimize: "speed" },
           { cache: false, optimize: "size"  },
           { cache: true,  optimize: "speed" },
-          { cache: true,  optimize: "size"  },
+          { cache: true,  optimize: "size"  }
         ],
         i;
 
@@ -400,7 +400,7 @@ describe("generated parser behavior", function() {
         it("returns its result", function() {
           var parser = PEG.buildParser([
                 'start = a',
-                'a = "a"',
+                'a = "a"'
               ].join("\n"), options);
 
           expect(parser).toParse("a", "a");
@@ -411,7 +411,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           var parser = PEG.buildParser([
                 'start = a',
-                'a = "a"',
+                'a = "a"'
               ].join("\n"), options);
 
           expect(parser).toFailToParse("b");
