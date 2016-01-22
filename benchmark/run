@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint no-console: 0*/
+
 "use strict";
 
 var fs  = require("fs");
@@ -123,7 +125,7 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the -n/--run-count option.");
       }
-      var runCount = parseInt(args[0], 10);
+      runCount = parseInt(args[0], 10);
       if (isNaN(runCount) || runCount <= 0) {
         abort("Number of runs must be a positive integer.");
       }
@@ -166,7 +168,7 @@ Runner.run(benchmarks, runCount, options, {
     return fs.readFileSync(__dirname + "/" + file, "utf8");
   },
 
-  testStart: function(benchmark, test) {
+  testStart: function() {
     /* Nothing to do. */
   },
 
@@ -191,5 +193,5 @@ Runner.run(benchmarks, runCount, options, {
     writeSeparator();
     writeResult("Total", inputSize, parseTime);
     writeTableFooter();
-  },
+  }
 });
