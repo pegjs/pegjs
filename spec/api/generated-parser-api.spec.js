@@ -1,4 +1,5 @@
 /* eslint-env jasmine */
+/* eslint no-console: 0 */
 /* global PEG */
 
 "use strict";
