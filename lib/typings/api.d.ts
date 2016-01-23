@@ -98,6 +98,10 @@ declare namespace peg {
 
                 reportFailures?: boolean;
 
+                // Added by inference-match-result pass
+
+                match?: number;
+
             }
 
             interface Named extends INode {
