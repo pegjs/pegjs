@@ -64,8 +64,6 @@ browser:
 	rm -f $(BROWSER_FILE_DEV)
 	rm -f $(BROWSER_FILE_MIN)
 
-	# The following code is inspired by CoffeeScript's Cakefile.
-
 	echo '/*'                                                                          >> $(BROWSER_FILE_DEV)
 	echo " * PEG.js $(PEGJS_VERSION)"                                                  >> $(BROWSER_FILE_DEV)
 	echo ' *'                                                                          >> $(BROWSER_FILE_DEV)
