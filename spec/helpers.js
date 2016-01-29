@@ -1,3 +1,5 @@
+/* global require */
+
 "use strict";
 
 (function(root) {

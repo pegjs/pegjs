@@ -1,3 +1,5 @@
+/* global module, setTimeout */
+
 "use strict";
 
 (function(root, factory) {

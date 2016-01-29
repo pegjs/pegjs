@@ -1,3 +1,5 @@
+/* global module */
+
 "use strict";
 
 (function(root, factory) {
