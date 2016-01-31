@@ -438,6 +438,47 @@ Try to match the first expression, if it does not succeed, try the second one,
 etc. Return the match result of the first successfully matched expression. If no
 expression matches, consider the match failed.
 
+Error Messages
+--------------
+
+As described above, you can annotate your grammar rules with human-readable
+names that will be used in error messages. For example, this production:
+
+    integer "integer"
+      = digits:[0-9]+
+
+will produce an error message like:
+
+> Expected integer but "a" found.
+
+when parsing a non-number, referencing the human-readable name "integer."
+Without the human-readable name, PEG.js instead uses a description of the
+character class that failed to match:
+
+> Expected [0-9] but "a" found.
+
+Aside from the text content of messages, human-readable names also have a
+subtler effect on *where* errors are reported. PEG.js prefers shorter matches
+for named rules and longer matches for unnamed rules. For example, for this
+rule matching a comma-separated list of integers:
+
+    seq
+      = integer ("," integer)*
+
+an input like `1,2,a` produces this error message:
+
+> Expected integer but "a" found.
+
+But if we add a human-readable name to the `seq` production:
+
+    seq "list of numbers"
+      = integer ("," integer)*
+
+then PEG.js prefers an error message that implies a smaller attempted parse
+tree:
+
+> Expected end of input but "," found.
+
 Compatibility
 -------------
 
