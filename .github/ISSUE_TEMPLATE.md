@@ -6,7 +6,7 @@ Checklist:
 For bug reports, please include:
 
   * Steps to reproduce
-  * What I expected to happened
+  * What I expected to happen
   * What happened instead
 
 In most cases, it is also useful to include a **minimal** example (grammar + input)

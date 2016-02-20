@@ -16,7 +16,7 @@ wasn’t reported already.
 Each bug report should contain this information:
 
   * Steps to reproduce
-  * What you expected to happened
+  * What you expected to happen
   * What happened instead
 
 In most cases, it is useful to include a **minimal** example (grammar + input)
