@@ -1407,6 +1407,48 @@ describe("generated parser behavior", function() {
           });
         });
 
+        it("use |options.newLocation| for change location", function() {
+          var parser = PEG.buildParser('start = "a"', options);
+
+          expect(parser).toFailToParse(
+            "a",
+            { newLocation: 42 },
+            { message: 'Option "newLocation" must be function, but its type is "number".' }
+          );
+          expect(parser).toFailToParse(
+            "b",
+            { newLocation: 42 },
+            { message: 'Option "newLocation" must be function, but its type is "number".' }
+          );
+
+          expect(parser).toFailToParse(
+            "b",
+            { newLocation: function() { return 42; } },
+            { location: 42 }
+          );
+
+          parser = PEG.buildParser('start "start" = "a"', options);
+          expect(parser).toFailToParse(
+            "b",
+            { newLocation: function() { return 42; } },
+            { location: 42 }
+          );
+
+          parser = PEG.buildParser('start = . { expected("a"); }', options);
+          expect(parser).toFailToParse(
+            "b",
+            { newLocation: function() { return 42; } },
+            { location: 42 }
+          );
+
+          parser = PEG.buildParser('start = . { error("a"); }', options);
+          expect(parser).toFailToParse(
+            "b",
+            { newLocation: function() { return 42; } },
+            { location: 42 }
+          );
+        });
+
         it("reports position correctly in complex cases", function() {
           var parser = PEG.buildParser([
                 'start  = line (nl+ line)*',

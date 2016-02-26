@@ -144,6 +144,11 @@ object to the `parse` method. The following options are supported:
 
   * `startRule` — name of the rule to start parsing from
   * `tracer` — tracer to use
+  * `newLocation` — hook function for tweak location information, attached to all
+    AST nodes of grammar and returned by the API function `location`. It accept one
+    argument — computed location (format described in description of the `location` function).
+    For example you can use this function to attach filename to all errors, generated
+    by the parser
 
 Parsers can also support their own custom options.
 
@@ -338,7 +343,9 @@ The code inside the predicate can also access location information using the
 
 The `start` and `end` properties both refer to the current parse position. The
 `offset` property contains an offset as a zero-based index and `line` and
-`column` properties contain a line and a column as one-based indices.
+`column` properties contain a line and a column as one-based indices. Note, that
+you can tweak returned information by the `newLocation` function in `options`. See
+description of allowed options for `parse` function for details.
 
 The code inside the predicate can also access the parser object using the
 `parser` variable and options passed to the parser using the `options` variable.
@@ -367,7 +374,9 @@ The code inside the predicate can also access location information using the
 
 The `start` and `end` properties both refer to the current parse position. The
 `offset` property contains an offset as a zero-based index and `line` and
-`column` properties contain a line and a column as one-based indices.
+`column` properties contain a line and a column as one-based indices. Note, that
+you can tweak returned information by the `newLocation` function in `options`. See
+description of allowed options for `parse` function for details.
 
 The code inside the predicate can also access the parser object using the
 `parser` variable and options passed to the parser using the `options` variable.
@@ -430,7 +439,9 @@ The code inside the action can also access location information using the
 The `start` property refers to the position at the beginning of the expression,
 the `end` property refers to position after the end of the expression. The
 `offset` property contains an offset as a zero-based index and `line` and
-`column` properties contain a line and a column as one-based indices.
+`column` properties contain a line and a column as one-based indices. Note, that
+you can tweak returned information by the `newLocation` function in `options`. See
+description of allowed options for `parse` function for details.
 
 The code inside the action can also access the parser object using the `parser`
 variable and options passed to the parser using the `options` variable.
