@@ -240,7 +240,7 @@ switch (args.length) {
     });
 
     var outputFile = args.length === 1
-      ? args[0].replace(/\.[^.]*$/, ".js")
+      ? args[0].substr(0, args[0].length - path.extname(args[0]).length) + ".js"
       : args[1];
     outputStream = fs.createWriteStream(outputFile);
     outputStream.on("error", function() {
