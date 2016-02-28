@@ -123,7 +123,7 @@ char
 
 escape         = "\\"
 quotation_mark = '"'
-unescaped      = [\x20-\x21\x23-\x5B\x5D-\u10FFFF]
+unescaped      = [^\0-\x1F\x22\x5C]
 
 /* ----- Core ABNF Rules ----- */
 
