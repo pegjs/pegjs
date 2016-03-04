@@ -436,7 +436,7 @@ describe("generated parser behavior", function() {
       });
 
       describe("label variables", function() {
-        describe("in a containing sequence", function() {
+        describe("in containing sequence", function() {
           it("can access variables defined by preceding labeled elements", function() {
             var parser = PEG.buildParser(
                   'start = a:"a" b:"b" c:"c" &{ return a === "a" && b === "b" && c === "c"; }',
@@ -447,7 +447,7 @@ describe("generated parser behavior", function() {
           });
         });
 
-        describe("in an outside sequence", function() {
+        describe("in outer sequence", function() {
           it("can access variables defined by preceding labeled elements", function() {
             var testcases = [
                   {
@@ -591,7 +591,7 @@ describe("generated parser behavior", function() {
       });
 
       describe("label variables", function() {
-        describe("in a containing sequence", function() {
+        describe("in containing sequence", function() {
           it("can access variables defined by preceding labeled elements", function() {
             var parser = PEG.buildParser(
                   'start = a:"a" b:"b" c:"c" !{ return a !== "a" || b !== "b" || c !== "c"; }',
@@ -602,7 +602,7 @@ describe("generated parser behavior", function() {
           });
         });
 
-        describe("in an outside sequence", function() {
+        describe("in outer sequence", function() {
           it("can access variables defined by preceding labeled elements", function() {
             var testcases = [
                   {
@@ -953,7 +953,7 @@ describe("generated parser behavior", function() {
             });
           });
 
-          describe("in an outside sequence", function() {
+          describe("in outer sequence", function() {
             it("can access variables defined by preceding labeled elements", function() {
               var testcases = [
                     {
