@@ -448,103 +448,59 @@ describe("generated parser behavior", function() {
         });
 
         describe("in an outside sequence", function() {
-          it("can access variables defined by preceding labeled elements (group)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })',
-                  options
-                );
+          it("can access variables defined by preceding labeled elements", function() {
+            var testcases = [
+                  {
+                    grammar: 'start = a:"a" ("b" &{ return a === "a"; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" &{ return a === "a"; })?',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" &{ return a === "a"; })*',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" &{ return a === "a"; })+',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" $("b" &{ return a === "a"; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" &("b" &{ return a === "a"; }) "b"',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" !("b" &{ return a === "a"; }) "c"',
+                    input:   "ac"
+                  },
+                  {
+                    grammar: 'start = a:"a" b:("b" &{ return a === "a"; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" ("c" &{ return a === "a"; }) "d")',
+                    input:   "abcd"
+                  },
+                  {
+                    grammar: 'start = a:"a" (b:("b" &{ return a === "a"; }) { return b; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" / "c" &{ return a === "a"; } / "d")',
+                    input:   "ac"
+                  }
+                ],
+                parser, i;
 
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (optional)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })?',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (zero or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })*',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (one or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })+',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (text)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" $("b" &{ return a === "a"; })',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" &("b" &{ return a === "a"; }) "b"',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" !("b" &{ return a === "a"; }) "c"',
-                  options
-                );
-
-            expect(parser).toParse("ac");
-          });
-
-          it("can access variables defined by preceding labeled elements (label)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" b:("b" &{ return a === "a"; })',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (sequence)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" ("c" &{ return a === "a"; }) "d")',
-                  options
-                );
-
-            expect(parser).toParse("abcd");
-          });
-
-          it("can access variables defined by preceding labeled elements (action)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" (b:("b" &{ return a === "a"; }) { return b; })',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (choice)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" / "c" &{ return a === "a"; } / "d")',
-                  options
-                );
-
-            expect(parser).toParse("ac");
+            for (i = 0; i < testcases.length; i++) {
+              parser = PEG.buildParser(testcases[i].grammar, options);
+              expect(parser).toParse(testcases[i].input);
+            }
           });
         });
       });
@@ -647,103 +603,59 @@ describe("generated parser behavior", function() {
         });
 
         describe("in an outside sequence", function() {
-          it("can access variables defined by preceding labeled elements (group)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })',
-                  options
-                );
+          it("can access variables defined by preceding labeled elements", function() {
+            var testcases = [
+                  {
+                    grammar: 'start = a:"a" ("b" !{ return a !== "a"; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" !{ return a !== "a"; })?',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" !{ return a !== "a"; })*',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" !{ return a !== "a"; })+',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" $("b" !{ return a !== "a"; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" &("b" !{ return a !== "a"; }) "b"',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" !("b" !{ return a !== "a"; }) "c"',
+                    input:   "ac"
+                  },
+                  {
+                    grammar: 'start = a:"a" b:("b" !{ return a !== "a"; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" ("c" !{ return a !== "a"; }) "d")',
+                    input:   "abcd"
+                  },
+                  {
+                    grammar: 'start = a:"a" (b:("b" !{ return a !== "a"; }) { return b; })',
+                    input:   "ab"
+                  },
+                  {
+                    grammar: 'start = a:"a" ("b" / "c" !{ return a !== "a"; } / "d")',
+                    input:   "ac"
+                  }
+                ],
+                parser, i;
 
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (optional)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })?',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (zero or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })*',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (one or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })+',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (text)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" $("b" !{ return a !== "a"; })',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" &("b" !{ return a !== "a"; }) "b"',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" !("b" !{ return a !== "a"; }) "c"',
-                  options
-                );
-
-            expect(parser).toParse("ac");
-          });
-
-          it("can access variables defined by preceding labeled elements (label)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" b:("b" !{ return a !== "a"; })',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (sequence)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" ("c" !{ return a !== "a"; }) "d")',
-                  options
-                );
-
-            expect(parser).toParse("abcd");
-          });
-
-          it("can access variables defined by preceding labeled elements (action)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" (b:("b" !{ return a !== "a"; }) { return b; })',
-                  options
-                );
-
-            expect(parser).toParse("ab");
-          });
-
-          it("can access variables defined by preceding labeled elements (choice)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" / "c" !{ return a !== "a"; } / "d")',
-                  options
-                );
-
-            expect(parser).toParse("ac");
+            for (i = 0; i < testcases.length; i++) {
+              parser = PEG.buildParser(testcases[i].grammar, options);
+              expect(parser).toParse(testcases[i].input);
+            }
           });
         });
       });
@@ -1042,103 +954,70 @@ describe("generated parser behavior", function() {
           });
 
           describe("in an outside sequence", function() {
-            it("can access variables defined by preceding labeled elements (group)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })',
-                    options
-                  );
+            it("can access variables defined by preceding labeled elements", function() {
+              var testcases = [
+                    {
+                      grammar: 'start = a:"a" ("b" { return a; })',
+                      input:   "ab",
+                      result:  ["a", "a"]
+                    },
+                    {
+                      grammar: 'start = a:"a" ("b" { return a; })?',
+                      input:   "ab",
+                      result:  ["a", "a"]
+                    },
+                    {
+                      grammar: 'start = a:"a" ("b" { return a; })*',
+                      input:   "ab",
+                      result:  ["a", ["a"]]
+                    },
+                    {
+                      grammar: 'start = a:"a" ("b" { return a; })+',
+                      input:   "ab",
+                      result:  ["a", ["a"]]
+                    },
+                    {
+                      grammar: 'start = a:"a" $("b" { return a; })',
+                      input:   "ab",
+                      result:  ["a", "b"]
+                    },
+                    {
+                      grammar: 'start = a:"a" &("b" { return a; }) "b"',
+                      input:   "ab",
+                      result:  ["a", undefined, "b"]
+                    },
+                    {
+                      grammar: 'start = a:"a" !("b" { return a; }) "c"',
+                      input:   "ac",
+                      result:  ["a", undefined, "c"]
+                    },
+                    {
+                      grammar: 'start = a:"a" b:("b" { return a; })',
+                      input:   "ab",
+                      result:  ["a", "a"]
+                    },
+                    {
+                      grammar: 'start = a:"a" ("b" ("c" { return a; }) "d")',
+                      input:   "abcd",
+                      result:  ["a", ["b", "a", "d"]]
+                    },
+                    {
+                      grammar: 'start = a:"a" (b:("b" { return a; }) { return b; })',
+                      input:   "ab",
+                      result:  ["a", "a"]
+                    },
+                    {
+                      grammar: 'start = a:"a" ("b" / "c" { return a; } / "d")',
+                      input:   "ac",
+                      result:  ["a", "a"]
+                    }
+                  ],
+                  parser, i;
 
-              expect(parser).toParse("ab", ["a", "a"]);
-            });
-
-            it("can access variables defined by preceding labeled elements (optional)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })?',
-                    options
-                  );
-
-              expect(parser).toParse("ab", ["a", "a"]);
-            });
-
-            it("can access variables defined by preceding labeled elements (zero or more)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })*',
-                    options
-                  );
-
-              expect(parser).toParse("ab", ["a", ["a"]]);
-            });
-
-            it("can access variables defined by preceding labeled elements (one or more)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })+',
-                    options
-                  );
-
-              expect(parser).toParse("ab", ["a", ["a"]]);
-            });
-
-            it("can access variables defined by preceding labeled elements (text)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" $("b" { return a; })',
-                    options
-                  );
-
-              expect(parser).toParse("ab", ["a", "b"]);
-            });
-
-            it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" &("b" { return a; }) "b"',
-                    options
-                  );
-
-              expect(parser).toParse("ab", ["a", undefined, "b"]);
-            });
-
-            it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" !("b" { return a; }) "c"',
-                    options
-                  );
-
-              expect(parser).toParse("ac", ["a", undefined, "c"]);
-            });
-
-            it("can access variables defined by preceding labeled elements (label)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" b:("b" { return a; })',
-                    options
-                  );
-
-              expect(parser).toParse("ab", ["a", "a"]);
-            });
-
-            it("can access variables defined by preceding labeled elements (sequence)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" ("c" { return a; }) "d")',
-                    options
-                  );
-
-              expect(parser).toParse("abcd", ["a", ["b", "a", "d"]]);
-            });
-
-            it("can access variables defined by preceding labeled elements (action)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" (b:("b" { return a; }) { return b; })',
-                    options
-                  );
-
-              expect(parser).toParse("ab", ["a", "a"]);
-            });
-
-            it("can access variables defined by preceding labeled elements (choice)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" / "c" { return a; } / "d")',
-                    options
-                  );
-
-              expect(parser).toParse("ac", ["a", "a"]);
+              for (i = 0; i < testcases.length; i++) {
+                parser = PEG.buildParser(testcases[i].grammar, options);
+                expect(parser).toParse(testcases[i].input, testcases[i].result);
+              }
             });
           });
         });
