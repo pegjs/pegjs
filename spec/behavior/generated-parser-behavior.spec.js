@@ -937,13 +937,13 @@ describe("generated parser behavior", function() {
 
         describe("label variables", function() {
           describe("in the expression", function() {
-            it("can access label variables defined by a labeled expression", function() {
+            it("can access variable defined by labeled expression", function() {
               var parser = PEG.buildParser('start = a:"a" { return a; }', options);
 
               expect(parser).toParse("a", "a");
             });
 
-            it("can access label variables defined by labeled sequence elements", function() {
+            it("can access variables defined by labeled sequence elements", function() {
               var parser = PEG.buildParser(
                     'start = a:"a" b:"b" c:"c" { return [a, b, c]; }',
                     options
