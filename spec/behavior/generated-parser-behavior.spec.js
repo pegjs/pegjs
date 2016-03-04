@@ -454,7 +454,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (optional)", function() {
@@ -463,7 +463,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (zero or more)", function() {
@@ -472,7 +472,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (one or more)", function() {
@@ -481,7 +481,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (text)", function() {
@@ -490,7 +490,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", "b"]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
@@ -499,7 +499,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", undefined, "b"]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
@@ -508,7 +508,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ac", ["a", undefined, "c"]);
+            expect(parser).toParse("ac");
           });
 
           it("can access variables defined by preceding labeled elements (label)", function() {
@@ -517,7 +517,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (sequence)", function() {
@@ -526,7 +526,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
+            expect(parser).toParse("abcd");
           });
 
           it("can access variables defined by preceding labeled elements (action)", function() {
@@ -535,7 +535,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (choice)", function() {
@@ -544,7 +544,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ac", ["a", ["c", undefined]]);
+            expect(parser).toParse("ac");
           });
         });
       });
@@ -653,7 +653,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (optional)", function() {
@@ -662,7 +662,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (zero or more)", function() {
@@ -671,7 +671,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (one or more)", function() {
@@ -680,7 +680,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (text)", function() {
@@ -689,7 +689,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", "b"]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
@@ -698,7 +698,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", undefined, "b"]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
@@ -707,7 +707,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ac", ["a", undefined, "c"]);
+            expect(parser).toParse("ac");
           });
 
           it("can access variables defined by preceding labeled elements (label)", function() {
@@ -716,7 +716,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (sequence)", function() {
@@ -725,7 +725,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
+            expect(parser).toParse("abcd");
           });
 
           it("can access variables defined by preceding labeled elements (action)", function() {
@@ -734,7 +734,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            expect(parser).toParse("ab");
           });
 
           it("can access variables defined by preceding labeled elements (choice)", function() {
@@ -743,7 +743,7 @@ describe("generated parser behavior", function() {
                   options
                 );
 
-            expect(parser).toParse("ac", ["a", ["c", undefined]]);
+            expect(parser).toParse("ac");
           });
         });
       });
