@@ -445,6 +445,24 @@ describe("generated parser behavior", function() {
 
             expect(parser).toParse("a");
           });
+
+          it("cannot access variable defined by labeled predicate element", function() {
+            var parser = PEG.buildParser(
+                  'start = "a" b:&{ return b === undefined; } "c"',
+                  options
+                );
+
+            expect(parser).toFailToParse("ac");
+          });
+
+          it("cannot access variables defined by following labeled elements", function() {
+            var parser = PEG.buildParser(
+                  'start = &{ return a === "a"; } a:"a"',
+                  options
+                );
+
+            expect(parser).toFailToParse("a");
+          });
         });
 
         describe("in outer sequence", function() {
@@ -455,6 +473,24 @@ describe("generated parser behavior", function() {
                 );
 
             expect(parser).toParse("ab");
+          });
+
+          it("cannot access variable defined by labeled predicate element", function() {
+            var parser = PEG.buildParser(
+                  'start = "a" b:("b" &{ return b === undefined; }) "c"',
+                  options
+                );
+
+            expect(parser).toFailToParse("abc");
+          });
+
+          it("cannot access variables defined by following labeled elements", function() {
+            var parser = PEG.buildParser(
+                  'start = ("a" &{ return b === "b"; }) b:"b"',
+                  options
+                );
+
+            expect(parser).toFailToParse("ab");
           });
         });
       });
@@ -554,6 +590,24 @@ describe("generated parser behavior", function() {
 
             expect(parser).toParse("a");
           });
+
+          it("cannot access variable defined by labeled predicate element", function() {
+            var parser = PEG.buildParser(
+                  'start = "a" b:!{ return b !== undefined; } "c"',
+                  options
+                );
+
+            expect(parser).toFailToParse("ac");
+          });
+
+          it("cannot access variables defined by following labeled elements", function() {
+            var parser = PEG.buildParser(
+                  'start = !{ return a !== "a"; } a:"a"',
+                  options
+                );
+
+            expect(parser).toFailToParse("a");
+          });
         });
 
         describe("in outer sequence", function() {
@@ -564,6 +618,24 @@ describe("generated parser behavior", function() {
                 );
 
             expect(parser).toParse("ab");
+          });
+
+          it("cannot access variable defined by labeled predicate element", function() {
+            var parser = PEG.buildParser(
+                  'start = "a" b:("b" !{ return b !== undefined; }) "c"',
+                  options
+                );
+
+            expect(parser).toFailToParse("abc");
+          });
+
+          it("cannot access variables defined by following labeled elements", function() {
+            var parser = PEG.buildParser(
+                  'start = ("a" !{ return b !== "b"; }) b:"b"',
+                  options
+                );
+
+            expect(parser).toFailToParse("ab");
           });
         });
       });
@@ -869,6 +941,24 @@ describe("generated parser behavior", function() {
                   );
 
               expect(parser).toParse("ab", ["a", "a"]);
+            });
+
+            it("cannot access variable defined by labeled action element", function() {
+              var parser = PEG.buildParser(
+                    'start = "a" b:("b" { return b; }) c:"c"',
+                    options
+                  );
+
+              expect(parser).toFailToParse("abc");
+            });
+
+            it("cannot access variables defined by following labeled elements", function() {
+              var parser = PEG.buildParser(
+                    'start = ("a" { return b; }) b:"b"',
+                    options
+                  );
+
+              expect(parser).toFailToParse("ab");
             });
           });
         });
