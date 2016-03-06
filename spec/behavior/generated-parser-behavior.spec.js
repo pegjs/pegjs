@@ -463,6 +463,65 @@ describe("generated parser behavior", function() {
 
             expect(parser).toFailToParse("a");
           });
+
+          it("cannot access variables defined by subexpressions", function() {
+            var testcases = [
+                  // TODO: Fix #396.
+                  //
+                  // {
+                  //   grammar: 'start = (a:"a") &{ return a === "a"; }',
+                  //   input:   "a"
+                  // },
+                  {
+                    grammar: 'start = (a:"a")? &{ return a === "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = (a:"a")* &{ return a === "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = (a:"a")+ &{ return a === "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = $(a:"a") &{ return a === "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = &(a:"a") "a" &{ return a === "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = !(a:"a") "b" &{ return a === "a"; }',
+                    input:   "b"
+                  },
+                  {
+                    grammar: 'start = b:(a:"a") &{ return a === "a"; }',
+                    input:   "a"
+                  },
+                  // TODO: Fix #396.
+                  //
+                  // {
+                  //   grammar: 'start = ("a" b:"b" "c") &{ return b === "b"; }',
+                  //   input:   "abc"
+                  // },
+                  {
+                    grammar: 'start = (a:"a" { return a; }) &{ return a === "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = ("a" / b:"b" / "c") &{ return b === "b"; }',
+                    input:   "b"
+                  }
+                ],
+                parser, i;
+
+            for (i = 0; i < testcases.length; i++) {
+              parser = PEG.buildParser(testcases[i].grammar, options);
+              expect(parser).toFailToParse(testcases[i].input);
+            }
+          });
         });
 
         describe("in outer sequence", function() {
@@ -607,6 +666,65 @@ describe("generated parser behavior", function() {
                 );
 
             expect(parser).toFailToParse("a");
+          });
+
+          it("cannot access variables defined by subexpressions", function() {
+            var testcases = [
+                  // TODO: Fix #396.
+                  //
+                  // {
+                  //   grammar: 'start = (a:"a") !{ return a !== "a"; }',
+                  //   input:   "a"
+                  // },
+                  {
+                    grammar: 'start = (a:"a")? !{ return a !== "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = (a:"a")* !{ return a !== "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = (a:"a")+ !{ return a !== "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = $(a:"a") !{ return a !== "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = &(a:"a") "a" !{ return a !== "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = !(a:"a") "b" !{ return a !== "a"; }',
+                    input:   "b"
+                  },
+                  {
+                    grammar: 'start = b:(a:"a") !{ return a !== "a"; }',
+                    input:   "a"
+                  },
+                  // TODO: Fix #396.
+                  //
+                  // {
+                  //   grammar: 'start = ("a" b:"b" "c") !{ return b !== "b"; }',
+                  //   input:   "abc"
+                  // },
+                  {
+                    grammar: 'start = (a:"a" { return a; }) !{ return a !== "a"; }',
+                    input:   "a"
+                  },
+                  {
+                    grammar: 'start = ("a" / b:"b" / "c") !{ return b !== "b"; }',
+                    input:   "b"
+                  }
+                ],
+                parser, i;
+
+            for (i = 0; i < testcases.length; i++) {
+              parser = PEG.buildParser(testcases[i].grammar, options);
+              expect(parser).toFailToParse(testcases[i].input);
+            }
           });
         });
 
@@ -930,6 +1048,65 @@ describe("generated parser behavior", function() {
                   );
 
               expect(parser).toParse("abc", ["a", "b", "c"]);
+            });
+
+            it("cannot access variables defined by subexpressions", function() {
+              var testcases = [
+                    // TODO: Fix #396.
+                    //
+                    // {
+                    //   grammar: 'start = (a:"a") { return a; }',
+                    //   input:   "a"
+                    // },
+                    {
+                      grammar: 'start = (a:"a")? { return a; }',
+                      input:   "a"
+                    },
+                    {
+                      grammar: 'start = (a:"a")* { return a; }',
+                      input:   "a"
+                    },
+                    {
+                      grammar: 'start = (a:"a")+ { return a; }',
+                      input:   "a"
+                    },
+                    {
+                      grammar: 'start = $(a:"a") { return a; }',
+                      input:   "a"
+                    },
+                    {
+                      grammar: 'start = &(a:"a") "a" { return a; }',
+                      input:   "a"
+                    },
+                    {
+                      grammar: 'start = !(a:"a") "b" { return a; }',
+                      input:   "b"
+                    },
+                    {
+                      grammar: 'start = b:(a:"a") { return a; }',
+                      input:   "a"
+                    },
+                    // TODO: Fix #396.
+                    //
+                    // {
+                    //   grammar: 'start = ("a" b:"b" "c") { return b; }',
+                    //   input:   "abc"
+                    // },
+                    {
+                      grammar: 'start = (a:"a" { return a; }) { return a; }',
+                      input:   "a"
+                    },
+                    {
+                      grammar: 'start = ("a" / b:"b" / "c") { return b; }',
+                      input:   "b"
+                    }
+                  ],
+                  parser, i;
+
+              for (i = 0; i < testcases.length; i++) {
+                parser = PEG.buildParser(testcases[i].grammar, options);
+                expect(parser).toFailToParse(testcases[i].input);
+              }
             });
           });
 
