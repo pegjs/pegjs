@@ -439,11 +439,11 @@ describe("generated parser behavior", function() {
         describe("in containing sequence", function() {
           it("can access variables defined by preceding labeled elements", function() {
             var parser = PEG.buildParser(
-                  'start = a:"a" b:"b" c:"c" &{ return a === "a" && b === "b" && c === "c"; }',
+                  'start = a:"a" &{ return a === "a"; }',
                   options
                 );
 
-            expect(parser).toParse("abc");
+            expect(parser).toParse("a");
           });
         });
 
@@ -594,11 +594,11 @@ describe("generated parser behavior", function() {
         describe("in containing sequence", function() {
           it("can access variables defined by preceding labeled elements", function() {
             var parser = PEG.buildParser(
-                  'start = a:"a" b:"b" c:"c" !{ return a !== "a" || b !== "b" || c !== "c"; }',
+                  'start = a:"a" !{ return a !== "a"; }',
                   options
                 );
 
-            expect(parser).toParse("abc");
+            expect(parser).toParse("a");
           });
         });
 
