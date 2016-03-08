@@ -445,106 +445,218 @@ describe("generated parser behavior", function() {
 
             expect(parser).toParse("abc");
           });
+
+          it("cann't access label variables for self expression", function() {
+            var parser = PEG.buildParser(
+                  '{ var a = 42; }\nstart = a:("a" &{ return a === 42; })',
+                  options
+                );
+
+            expect(parser).toParse("a", ["a",undefined]);
+          });
         });
 
         describe("in an outside sequence", function() {
-          it("can access variables defined by preceding labeled elements (group)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })',
-                  options
-                );
+          describe("in the same hierarchy", function() {
+            it("visible by predicates (group)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" &{ return a === "a"; })',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (optional)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" &{ return a === "a"; })?',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (zero or more)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" &{ return a === "a"; })*',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            });
+
+            it("visible by predicates (one or more)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" &{ return a === "a"; })+',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            });
+
+            it("visible by predicates (text)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" $("b" &{ return a === "a"; })',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", "b"]);
+            });
+
+            it("visible by predicates (positive simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" &("b" &{ return a === "a"; }) "b"',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", undefined, "b"]);
+            });
+
+            it("visible by predicates (negative simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" !("b" &{ return a === "a"; }) "c"',
+                    options
+                  );
+
+              expect(parser).toParse("ac", ["a", undefined, "c"]);
+            });
+
+            it("visible by predicates (label)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" b:("b" &{ return a === "a"; })',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (sequence)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" ("c" &{ return a === "a"; }) "d")',
+                    options
+                  );
+
+              expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
+            });
+
+            it("visible by predicates (action)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" (b:("b" &{ return a === "a"; }) { return b; })',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (choice)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" / "c" &{ return a === "a"; } / "d")',
+                    options
+                  );
+
+              expect(parser).toParse("ac", ["a", ["c", undefined]]);
+            });
           });
 
-          it("can access variables defined by preceding labeled elements (optional)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })?',
-                  options
-                );
+          describe("in the parallel hierarchy", function() {
+            it("not visible by predicates (group)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" &{ return a === 42; })',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
-          });
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (zero or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })*',
-                  options
-                );
+            it("not visible by predicates (optional)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" &{ return a === 42; })?',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
-          });
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (one or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" &{ return a === "a"; })+',
-                  options
-                );
+            it("not visible by predicates (zero or more)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" &{ return a === 42; })*',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
-          });
+              expect(parser).toParse("ab", [["a"], [["b", undefined]]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (text)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" $("b" &{ return a === "a"; })',
-                  options
-                );
+            it("not visible by predicates (one or more)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" &{ return a === 42; })+',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", "b"]);
-          });
+              expect(parser).toParse("ab", [["a"], [["b", undefined]]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" &("b" &{ return a === "a"; }) "b"',
-                  options
-                );
+            it("not visible by predicates (text)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") $("b" &{ return a === 42; })',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", undefined, "b"]);
-          });
+              expect(parser).toParse("ab", [["a"], "b"]);
+            });
 
-          it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" !("b" &{ return a === "a"; }) "c"',
-                  options
-                );
+            it("not visible by predicates (positive simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") &("b" &{ return a === 42; }) "b"',
+                    options
+                  );
 
-            expect(parser).toParse("ac", ["a", undefined, "c"]);
-          });
+              expect(parser).toParse("ab", [["a"], undefined, "b"]);
+            });
 
-          it("can access variables defined by preceding labeled elements (label)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" b:("b" &{ return a === "a"; })',
-                  options
-                );
+            it("not visible by predicates (negative simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") !("b" &{ return a === 42; }) "c"',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
-          });
+              expect(parser).toParse("ac", [["a"], undefined, "c"]);
+            });
 
-          it("can access variables defined by preceding labeled elements (sequence)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" ("c" &{ return a === "a"; }) "d")',
-                  options
-                );
+            it("not visible by predicates (label)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") b:("b" &{ return a === 42; })',
+                    options
+                  );
 
-            expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
-          });
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (action)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" (b:("b" &{ return a === "a"; }) { return b; })',
-                  options
-                );
+            it("not visible by predicates (sequence)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" ("c" &{ return a === 42; }) "d")',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
-          });
+              expect(parser).toParse("abcd", [["a"], ["b", ["c", undefined], "d"]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (choice)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" / "c" &{ return a === "a"; } / "d")',
-                  options
-                );
+            it("not visible by predicates (action)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") (b:("b" &{ return a === 42; }) { return b; })',
+                    options
+                  );
 
-            expect(parser).toParse("ac", ["a", ["c", undefined]]);
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
+
+            it("not visible by predicates (choice)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" / "c" &{ return a === 42; } / "d")',
+                    options
+                  );
+
+              expect(parser).toParse("ac", [["a"], ["c", undefined]]);
+            });
           });
         });
       });
@@ -644,106 +756,218 @@ describe("generated parser behavior", function() {
 
             expect(parser).toParse("abc");
           });
+
+          it("cann't access label variables for self expression", function() {
+            var parser = PEG.buildParser(
+                  '{ var a = 42; }\nstart = a:("a" !{ return a !== 42; })',
+                  options
+                );
+
+            expect(parser).toParse("a", ["a",undefined]);
+          });
         });
 
         describe("in an outside sequence", function() {
-          it("can access variables defined by preceding labeled elements (group)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })',
-                  options
-                );
+          describe("in the same hierarchy", function() {
+            it("visible by predicates (group)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" !{ return a !== "a"; })',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (optional)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" !{ return a !== "a"; })?',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (zero or more)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" !{ return a !== "a"; })*',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            });
+
+            it("visible by predicates (one or more)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" !{ return a !== "a"; })+',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", [["b", undefined]]]);
+            });
+
+            it("visible by predicates (text)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" $("b" !{ return a !== "a"; })',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", "b"]);
+            });
+
+            it("visible by predicates (positive simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" &("b" !{ return a !== "a"; }) "b"',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", undefined, "b"]);
+            });
+
+            it("visible by predicates (negative simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" !("b" !{ return a !== "a"; }) "c"',
+                    options
+                  );
+
+              expect(parser).toParse("ac", ["a", undefined, "c"]);
+            });
+
+            it("visible by predicates (label)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" b:("b" !{ return a !== "a"; })',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (sequence)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" ("c" !{ return a !== "a"; }) "d")',
+                    options
+                  );
+
+              expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
+            });
+
+            it("visible by predicates (action)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" (b:("b" !{ return a !== "a"; }) { return b; })',
+                    options
+                  );
+
+              expect(parser).toParse("ab", ["a", ["b", undefined]]);
+            });
+
+            it("visible by predicates (choice)", function() {
+              var parser = PEG.buildParser(
+                    'start = a:"a" ("b" / "c" !{ return a !== "a"; } / "d")',
+                    options
+                  );
+
+              expect(parser).toParse("ac", ["a", ["c", undefined]]);
+            });
           });
 
-          it("can access variables defined by preceding labeled elements (optional)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })?',
-                  options
-                );
+          describe("in the parallel hierarchy", function() {
+            it("not visible by predicates (group)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" !{ return a !== 42; })',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
-          });
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (zero or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })*',
-                  options
-                );
+            it("not visible by predicates (optional)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" !{ return a !== 42; })?',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
-          });
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (one or more)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" !{ return a !== "a"; })+',
-                  options
-                );
+            it("not visible by predicates (zero or more)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" !{ return a !== 42; })*',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", [["b", undefined]]]);
-          });
+              expect(parser).toParse("ab", [["a"], [["b", undefined]]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (text)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" $("b" !{ return a !== "a"; })',
-                  options
-                );
+            it("not visible by predicates (one or more)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" !{ return a !== 42; })+',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", "b"]);
-          });
+              expect(parser).toParse("ab", [["a"], [["b", undefined]]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" &("b" !{ return a !== "a"; }) "b"',
-                  options
-                );
+            it("not visible by predicates (text)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") $("b" !{ return a !== 42; })',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", undefined, "b"]);
-          });
+              expect(parser).toParse("ab", [["a"], "b"]);
+            });
 
-          it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" !("b" !{ return a !== "a"; }) "c"',
-                  options
-                );
+            it("not visible by predicates (positive simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") &("b" !{ return a !== 42; }) "b"',
+                    options
+                  );
 
-            expect(parser).toParse("ac", ["a", undefined, "c"]);
-          });
+              expect(parser).toParse("ab", [["a"], undefined, "b"]);
+            });
 
-          it("can access variables defined by preceding labeled elements (label)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" b:("b" !{ return a !== "a"; })',
-                  options
-                );
+            it("not visible by predicates (negative simple predicate)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") !("b" !{ return a !== 42; }) "c"',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
-          });
+              expect(parser).toParse("ac", [["a"], undefined, "c"]);
+            });
 
-          it("can access variables defined by preceding labeled elements (sequence)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" ("c" !{ return a !== "a"; }) "d")',
-                  options
-                );
+            it("not visible by predicates (label)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") b:("b" !{ return a !== 42; })',
+                    options
+                  );
 
-            expect(parser).toParse("abcd", ["a", ["b", ["c", undefined], "d"]]);
-          });
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (action)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" (b:("b" !{ return a !== "a"; }) { return b; })',
-                  options
-                );
+            it("not visible by predicates (sequence)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" ("c" !{ return a !== 42; }) "d")',
+                    options
+                  );
 
-            expect(parser).toParse("ab", ["a", ["b", undefined]]);
-          });
+              expect(parser).toParse("abcd", [["a"], ["b", ["c", undefined], "d"]]);
+            });
 
-          it("can access variables defined by preceding labeled elements (choice)", function() {
-            var parser = PEG.buildParser(
-                  'start = a:"a" ("b" / "c" !{ return a !== "a"; } / "d")',
-                  options
-                );
+            it("not visible by predicates (action)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") (b:("b" !{ return a !== 42; }) { return b; })',
+                    options
+                  );
 
-            expect(parser).toParse("ac", ["a", ["c", undefined]]);
+              expect(parser).toParse("ab", [["a"], ["b", undefined]]);
+            });
+
+            it("not visible by predicates (choice)", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = (a:"a") ("b" / "c" !{ return a !== 42; } / "d")',
+                    options
+                  );
+
+              expect(parser).toParse("ac", [["a"], ["c", undefined]]);
+            });
           });
         });
       });
@@ -830,6 +1054,14 @@ describe("generated parser behavior", function() {
           var parser = PEG.buildParser('start = ("a")', options);
 
           expect(parser).toFailToParse("b");
+        });
+      });
+
+      describe("with nested groups in sequence", function() {
+        it("not flat result", function() {
+          var parser = PEG.buildParser('start = (("a") "b")', options);
+
+          expect(parser).toParse("ab", [["a"], "b"]);
         });
       });
     });
@@ -1039,106 +1271,218 @@ describe("generated parser behavior", function() {
 
               expect(parser).toParse("abc", ["a", "b", "c"]);
             });
+
+            it("cann't access label variables for self expression", function() {
+              var parser = PEG.buildParser(
+                    '{ var a = 42; }\nstart = a:("a" { return a; })',
+                    options
+                  );
+
+              expect(parser).toParse("a", 42);
+            });
           });
 
           describe("in an outside sequence", function() {
-            it("can access variables defined by preceding labeled elements (group)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })',
-                    options
-                  );
+            describe("in the same hierarchy", function() {
+              it("visible by actions (group)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" ("b" { return a; })',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", "a"]);
+                expect(parser).toParse("ab", ["a", "a"]);
+              });
+
+              it("visible by actions (optional)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" ("b" { return a; })?',
+                      options
+                    );
+
+                expect(parser).toParse("ab", ["a", "a"]);
+              });
+
+              it("visible by actions (zero or more)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" ("b" { return a; })*',
+                      options
+                    );
+
+                expect(parser).toParse("ab", ["a", ["a"]]);
+              });
+
+              it("visible by actions (one or more)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" ("b" { return a; })+',
+                      options
+                    );
+
+                expect(parser).toParse("ab", ["a", ["a"]]);
+              });
+
+              it("visible by actions (text)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" $("b" { return a; })',
+                      options
+                    );
+
+                expect(parser).toParse("ab", ["a", "b"]);
+              });
+
+              it("visible by actions (positive simple predicate)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" &("b" { return a; }) "b"',
+                      options
+                    );
+
+                expect(parser).toParse("ab", ["a", undefined, "b"]);
+              });
+
+              it("visible by actions (negative simple predicate)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" !("b" { return a; }) "c"',
+                      options
+                    );
+
+                expect(parser).toParse("ac", ["a", undefined, "c"]);
+              });
+
+              it("visible by actions (label)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" b:("b" { return a; })',
+                      options
+                    );
+
+                expect(parser).toParse("ab", ["a", "a"]);
+              });
+
+              it("visible by actions (sequence)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" ("b" ("c" { return a; }) "d")',
+                      options
+                    );
+
+                expect(parser).toParse("abcd", ["a", ["b", "a", "d"]]);
+              });
+
+              it("visible by actions (action)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" (b:("b" { return a; }) { return b; })',
+                      options
+                    );
+
+                expect(parser).toParse("ab", ["a", "a"]);
+              });
+
+              it("visible by actions (choice)", function() {
+                var parser = PEG.buildParser(
+                      'start = a:"a" ("b" / "c" { return a; } / "d")',
+                      options
+                    );
+
+                expect(parser).toParse("ac", ["a", "a"]);
+              });
             });
 
-            it("can access variables defined by preceding labeled elements (optional)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })?',
-                    options
-                  );
+            describe("in the parallel hierarchy", function() {
+              it("not visible by actions (group)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") ("b" { return a; })',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", "a"]);
-            });
+                expect(parser).toParse("ab", [["a"], 42]);
+              });
 
-            it("can access variables defined by preceding labeled elements (zero or more)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })*',
-                    options
-                  );
+              it("not visible by actions (optional)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") ("b" { return a; })?',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", ["a"]]);
-            });
+                expect(parser).toParse("ab", [["a"], 42]);
+              });
 
-            it("can access variables defined by preceding labeled elements (one or more)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" { return a; })+',
-                    options
-                  );
+              it("not visible by actions (zero or more)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") ("b" { return a; })*',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", ["a"]]);
-            });
+                expect(parser).toParse("ab", [["a"], [42]]);
+              });
 
-            it("can access variables defined by preceding labeled elements (text)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" $("b" { return a; })',
-                    options
-                  );
+              it("not visible by actions (one or more)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") ("b" { return a; })+',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", "b"]);
-            });
+                expect(parser).toParse("ab", [["a"], [42]]);
+              });
 
-            it("can access variables defined by preceding labeled elements (positive simple predicate)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" &("b" { return a; }) "b"',
-                    options
-                  );
+              it("not visible by actions (text)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") $("b" { return a; })',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", undefined, "b"]);
-            });
+                expect(parser).toParse("ab", [["a"], "b"]);
+              });
 
-            it("can access variables defined by preceding labeled elements (negative simple predicate)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" !("b" { return a; }) "c"',
-                    options
-                  );
+              it("not visible by actions (positive simple predicate)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") &("b" { return a; }) "b"',
+                      options
+                    );
 
-              expect(parser).toParse("ac", ["a", undefined, "c"]);
-            });
+                expect(parser).toParse("ab", [["a"], undefined, "b"]);
+              });
 
-            it("can access variables defined by preceding labeled elements (label)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" b:("b" { return a; })',
-                    options
-                  );
+              it("not visible by actions (negative simple predicate)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") !("b" { return a; }) "c"',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", "a"]);
-            });
+                expect(parser).toParse("ac", [["a"], undefined, "c"]);
+              });
 
-            it("can access variables defined by preceding labeled elements (sequence)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" ("c" { return a; }) "d")',
-                    options
-                  );
+              it("not visible by actions (label)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") b:("b" { return a; })',
+                      options
+                    );
 
-              expect(parser).toParse("abcd", ["a", ["b", "a", "d"]]);
-            });
+                expect(parser).toParse("ab", [["a"], 42]);
+              });
 
-            it("can access variables defined by preceding labeled elements (action)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" (b:("b" { return a; }) { return b; })',
-                    options
-                  );
+              it("not visible by actions (sequence)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") ("b" ("c" { return a; }) "d")',
+                      options
+                    );
 
-              expect(parser).toParse("ab", ["a", "a"]);
-            });
+                expect(parser).toParse("abcd", [["a"], ["b", 42, "d"]]);
+              });
 
-            it("can access variables defined by preceding labeled elements (choice)", function() {
-              var parser = PEG.buildParser(
-                    'start = a:"a" ("b" / "c" { return a; } / "d")',
-                    options
-                  );
+              it("not visible by actions (action)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") (b:("b" { return a; }) { return b; })',
+                      options
+                    );
 
-              expect(parser).toParse("ac", ["a", "a"]);
+                expect(parser).toParse("ab", [["a"], 42]);
+              });
+
+              it("not visible by actions (choice)", function() {
+                var parser = PEG.buildParser(
+                      '{ var a = 42; }\nstart = (a:"a") ("b" / "c" { return a; } / "d")',
+                      options
+                    );
+
+                expect(parser).toParse("ac", [["a"], 42]);
+              });
             });
           });
         });

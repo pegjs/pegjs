@@ -70,6 +70,18 @@
   function buildList(head, tail, index) {
     return [head].concat(extractList(tail, index));
   }
+
+  function simplifyExpression(expression) {
+    var needSimplify;
+
+    do {
+      needSimplify = expression.type === "sequence"
+                  && expression.elements.length === 1;
+      expression = needSimplify ? expression.elements[0] : expression;
+    } while (needSimplify);
+
+    return expression;
+  }
 }
 
 /* ---- Syntactic Grammar ----- */
@@ -102,10 +114,10 @@ Rule
           ? {
               type:       "named",
               name:       displayName[0],
-              expression: expression,
+              expression: simplifyExpression(expression),
               location:   location()
             }
-          : expression,
+          : simplifyExpression(expression),
         location:    location()
       };
     }
@@ -118,7 +130,7 @@ ChoiceExpression
       return tail.length > 0
         ? {
             type:         "choice",
-            alternatives: buildList(head, tail, 3),
+            alternatives: buildList(head, tail, 3).map(simplifyExpression),
             location:     location()
           }
         : head;
@@ -129,7 +141,7 @@ ActionExpression
       return code !== null
         ? {
             type:       "action",
-            expression: expression,
+            expression: simplifyExpression(expression),
             code:       code[1],
             location:   location()
           }
@@ -138,13 +150,11 @@ ActionExpression
 
 SequenceExpression
   = head:LabeledExpression tail:(__ LabeledExpression)* {
-      return tail.length > 0
-        ? {
-            type:     "sequence",
-            elements: buildList(head, tail, 1),
-            location: location()
-          }
-        : head;
+      return {
+        type:     "sequence",
+        elements: buildList(head, tail, 1),
+        location: location()
+      };
     }
 
 LabeledExpression
@@ -152,7 +162,7 @@ LabeledExpression
       return {
         type:       "labeled",
         label:      label,
-        expression: expression,
+        expression: simplifyExpression(expression),
         location:   location()
       };
     }
@@ -162,7 +172,7 @@ PrefixedExpression
   = operator:PrefixedOperator __ expression:SuffixedExpression {
       return {
         type:       OPS_TO_PREFIXED_TYPES[operator],
-        expression: expression,
+        expression: simplifyExpression(expression),
         location:   location()
       };
     }
@@ -177,7 +187,7 @@ SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
       return {
         type:       OPS_TO_SUFFIXED_TYPES[operator],
-        expression: expression,
+        expression: simplifyExpression(expression),
         location:   location()
       };
     }
