@@ -33,6 +33,8 @@ describe("PEG.js grammar parser", function() {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
       },
+      groupLabeled      = { type: "group",  expression: labeledAbcd },
+      groupSequence     = { type: "group",  expression: sequence    },
       actionAbcd        = { type: "action", expression: literalAbcd, code: " code " },
       actionEfgh        = { type: "action", expression: literalEfgh, code: " code " },
       actionIjkl        = { type: "action", expression: literalIjkl, code: " code " },
@@ -162,6 +164,7 @@ describe("PEG.js grammar parser", function() {
       optional:     stripExpression,
       zero_or_more: stripExpression,
       one_or_more:  stripExpression,
+      group:        stripExpression,
       semantic_and: stripLeaf,
       semantic_not: stripLeaf,
       rule_ref:     stripLeaf,
@@ -365,12 +368,15 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical PrimaryExpression is "\"abcd\"". */
   it("parses PrimaryExpression", function() {
-    expect('start = "abcd"'      ).toParseAs(trivialGrammar);
-    expect('start = [a-d]'       ).toParseAs(classGrammar([["a", "d"]], false, false, '[a-d]'));
-    expect('start = .'           ).toParseAs(anyGrammar());
-    expect('start = a'           ).toParseAs(ruleRefGrammar("a"));
-    expect('start = &{ code }'   ).toParseAs(oneRuleGrammar(semanticAnd));
-    expect('start = (\n"abcd"\n)').toParseAs(trivialGrammar);
+    expect('start = "abcd"'   ).toParseAs(trivialGrammar);
+    expect('start = [a-d]'    ).toParseAs(classGrammar([["a", "d"]], false, false, '[a-d]'));
+    expect('start = .'        ).toParseAs(anyGrammar());
+    expect('start = a'        ).toParseAs(ruleRefGrammar("a"));
+    expect('start = &{ code }').toParseAs(oneRuleGrammar(semanticAnd));
+
+    expect('start = (\na:"abcd"\n)'            ).toParseAs(oneRuleGrammar(groupLabeled));
+    expect('start = (\n"abcd" "efgh" "ijkl"\n)').toParseAs(oneRuleGrammar(groupSequence));
+    expect('start = (\n"abcd"\n)'              ).toParseAs(trivialGrammar);
   });
 
   /* Canonical RuleReferenceExpression is "a". */

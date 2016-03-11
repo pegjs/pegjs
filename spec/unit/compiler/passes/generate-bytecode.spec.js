@@ -357,6 +357,14 @@ describe("compiler pass |generateBytecode|", function() {
     });
   });
 
+  describe("for group", function() {
+    it("generates correct bytecode", function() {
+      expect(pass).toChangeAST('start = ("a")', bytecodeDetails([
+        18, 0, 2, 2, 22, 0, 23, 1   // <expression>
+      ]));
+    });
+  });
+
   describe("for semantic_and", function() {
     describe("without labels", function() {
       var grammar = 'start = &{ code }';

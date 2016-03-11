@@ -88,6 +88,9 @@ describe("compiler pass |reportLeftRecursion|", function() {
       expect(pass).toReportError('start = ""+ start');
       expect(pass).not.toReportError('start = "a"+ start');
 
+      expect(pass).toReportError('start = ("") start');
+      expect(pass).not.toReportError('start = ("a") start');
+
       expect(pass).toReportError('start = &{ } start');
 
       expect(pass).toReportError('start = !{ } start');

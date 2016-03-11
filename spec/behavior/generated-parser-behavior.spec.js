@@ -466,12 +466,10 @@ describe("generated parser behavior", function() {
 
           it("cannot access variables defined by subexpressions", function() {
             var testcases = [
-                  // TODO: Fix #396.
-                  //
-                  // {
-                  //   grammar: 'start = (a:"a") &{ return a === "a"; }',
-                  //   input:   "a"
-                  // },
+                  {
+                    grammar: 'start = (a:"a") &{ return a === "a"; }',
+                    input:   "a"
+                  },
                   {
                     grammar: 'start = (a:"a")? &{ return a === "a"; }',
                     input:   "a"
@@ -500,12 +498,10 @@ describe("generated parser behavior", function() {
                     grammar: 'start = b:(a:"a") &{ return a === "a"; }',
                     input:   "a"
                   },
-                  // TODO: Fix #396.
-                  //
-                  // {
-                  //   grammar: 'start = ("a" b:"b" "c") &{ return b === "b"; }',
-                  //   input:   "abc"
-                  // },
+                  {
+                    grammar: 'start = ("a" b:"b" "c") &{ return b === "b"; }',
+                    input:   "abc"
+                  },
                   {
                     grammar: 'start = (a:"a" { return a; }) &{ return a === "a"; }',
                     input:   "a"
@@ -670,12 +666,10 @@ describe("generated parser behavior", function() {
 
           it("cannot access variables defined by subexpressions", function() {
             var testcases = [
-                  // TODO: Fix #396.
-                  //
-                  // {
-                  //   grammar: 'start = (a:"a") !{ return a !== "a"; }',
-                  //   input:   "a"
-                  // },
+                  {
+                    grammar: 'start = (a:"a") !{ return a !== "a"; }',
+                    input:   "a"
+                  },
                   {
                     grammar: 'start = (a:"a")? !{ return a !== "a"; }',
                     input:   "a"
@@ -704,12 +698,10 @@ describe("generated parser behavior", function() {
                     grammar: 'start = b:(a:"a") !{ return a !== "a"; }',
                     input:   "a"
                   },
-                  // TODO: Fix #396.
-                  //
-                  // {
-                  //   grammar: 'start = ("a" b:"b" "c") !{ return b !== "b"; }',
-                  //   input:   "abc"
-                  // },
+                  {
+                    grammar: 'start = ("a" b:"b" "c") !{ return b !== "b"; }',
+                    input:   "abc"
+                  },
                   {
                     grammar: 'start = (a:"a" { return a; }) !{ return a !== "a"; }',
                     input:   "a"
@@ -1052,12 +1044,10 @@ describe("generated parser behavior", function() {
 
             it("cannot access variables defined by subexpressions", function() {
               var testcases = [
-                    // TODO: Fix #396.
-                    //
-                    // {
-                    //   grammar: 'start = (a:"a") { return a; }',
-                    //   input:   "a"
-                    // },
+                    {
+                      grammar: 'start = (a:"a") { return a; }',
+                      input:   "a"
+                    },
                     {
                       grammar: 'start = (a:"a")? { return a; }',
                       input:   "a"
@@ -1086,12 +1076,10 @@ describe("generated parser behavior", function() {
                       grammar: 'start = b:(a:"a") { return a; }',
                       input:   "a"
                     },
-                    // TODO: Fix #396.
-                    //
-                    // {
-                    //   grammar: 'start = ("a" b:"b" "c") { return b; }',
-                    //   input:   "abc"
-                    // },
+                    {
+                      grammar: 'start = ("a" b:"b" "c") { return b; }',
+                      input:   "abc"
+                    },
                     {
                       grammar: 'start = (a:"a" { return a; }) { return a; }',
                       input:   "a"

@@ -69,6 +69,9 @@ describe("compiler pass |reportInfiniteLoops|", function() {
     expect(pass).toReportError('start = (""+)*');
     expect(pass).not.toReportError('start = ("a"+)*');
 
+    expect(pass).toReportError('start = ("")*');
+    expect(pass).not.toReportError('start = ("a")*');
+
     expect(pass).toReportError('start = (&{ })*');
 
     expect(pass).toReportError('start = (!{ })*');
