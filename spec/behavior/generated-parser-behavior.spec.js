@@ -34,14 +34,15 @@ describe("generated parser behavior", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toParse: function(input, expected) {
-        var options = arguments.length > 2 ? arguments[2] : {},
-            result;
+      toParse: function(input, expected, options) {
+        options = options !== undefined ? options : {};
+
+        var result;
 
         try {
           result = this.actual.parse(input, options);
 
-          if (arguments.length > 1) {
+          if (expected !== undefined) {
             this.message = function() {
               return "Expected " + jasmine.pp(input) + " "
                    + "with options " + jasmine.pp(options) + " "
@@ -58,7 +59,7 @@ describe("generated parser behavior", function() {
           this.message = function() {
             return "Expected " + jasmine.pp(input) + " "
                  + "with options " + jasmine.pp(options) + " "
-                 + "to parse" + (arguments.length > 1 ? " as " + jasmine.pp(expected) : "") + ", "
+                 + "to parse" + (expected !== undefined ? " as " + jasmine.pp(expected) : "") + ", "
                  + "but it failed to parse with message "
                  + jasmine.pp(e.message) + ".";
           };
@@ -67,9 +68,10 @@ describe("generated parser behavior", function() {
         }
       },
 
-      toFailToParse: function(input, details) {
-        var options = arguments.length > 2 ? arguments[2] : {},
-            result;
+      toFailToParse: function(input, details, options) {
+        options = options !== undefined ? options : {};
+
+        var result;
 
         try {
           result = this.actual.parse(input, options);
@@ -417,9 +419,14 @@ describe("generated parser behavior", function() {
     describe("positive semantic predicate", function() {
       describe("when the code returns a truthy value", function() {
         it("returns |undefined|", function() {
-          var parser = PEG.buildParser('start = &{ return true; }', options);
+          /*
+           * The |""| is needed so that the parser doesn't return just
+           * |undefined| which we can't compare against in |toParse| due to the
+           * way optional parameters work.
+           */
+          var parser = PEG.buildParser('start = &{ return true; } ""', options);
 
-          expect(parser).toParse("", undefined);
+          expect(parser).toParse("", [undefined, ""]);
         });
       });
 
@@ -617,9 +624,14 @@ describe("generated parser behavior", function() {
     describe("negative semantic predicate", function() {
       describe("when the code returns a falsey value", function() {
         it("returns |undefined|", function() {
-          var parser = PEG.buildParser('start = !{ return false; }', options);
+          /*
+           * The |""| is needed so that the parser doesn't return just
+           * |undefined| which we can't compare against in |toParse| due to the
+           * way optional parameters work.
+           */
+          var parser = PEG.buildParser('start = !{ return false; } ""', options);
 
-          expect(parser).toParse("", undefined);
+          expect(parser).toParse("", [undefined, ""]);
         });
       });
 
