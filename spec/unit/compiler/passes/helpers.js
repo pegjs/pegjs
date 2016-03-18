@@ -4,7 +4,7 @@
 
 beforeEach(function() {
   this.addMatchers({
-    toChangeAST: function(grammar) {
+    toChangeAST: function(grammar, details) {
       function matchDetails(value, details) {
         function isArray(value) {
           return Object.prototype.toString.apply(value) === "[object Array]";
@@ -42,8 +42,7 @@ beforeEach(function() {
         }
       }
 
-      var options = arguments.length > 2 ? arguments[1] : {},
-          details = arguments[arguments.length - 1],
+      var options = arguments.length > 2 ? arguments[2] : {},
           ast     = PEG.parser.parse(grammar);
 
       this.actual(ast, options);

@@ -34,9 +34,8 @@ describe("generated parser behavior", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toParse: function(input) {
-        var options  = arguments.length > 2 ? arguments[1] : {},
-            expected = arguments[arguments.length - 1],
+      toParse: function(input, expected) {
+        var options = arguments.length > 2 ? arguments[2] : {},
             result;
 
         try {
@@ -68,11 +67,8 @@ describe("generated parser behavior", function() {
         }
       },
 
-      toFailToParse: function(input) {
-        var options = arguments.length > 2 ? arguments[1] : {},
-            details = arguments.length > 1
-                        ? arguments[arguments.length - 1]
-                        : undefined,
+      toFailToParse: function(input, details) {
+        var options = arguments.length > 2 ? arguments[2] : {},
             result;
 
         try {

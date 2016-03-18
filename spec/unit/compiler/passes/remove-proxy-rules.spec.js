@@ -13,7 +13,6 @@ describe("compiler pass |removeProxyRules|", function() {
           'proxy = proxied',
           'proxied = "a"'
         ].join("\n"),
-        { allowedStartRules: ["start"] },
         {
           rules: [
             {
@@ -22,7 +21,8 @@ describe("compiler pass |removeProxyRules|", function() {
             },
             { name: "proxied" }
           ]
-        }
+        },
+        { allowedStartRules: ["start"] }
       );
     });
   });
@@ -35,7 +35,6 @@ describe("compiler pass |removeProxyRules|", function() {
           'proxy = proxied',
           'proxied = "a"'
         ].join("\n"),
-        { allowedStartRules: ["start", "proxy"] },
         {
           rules: [
             {
@@ -48,7 +47,8 @@ describe("compiler pass |removeProxyRules|", function() {
             },
             { name: "proxied" }
           ]
-        }
+        },
+        { allowedStartRules: ["start", "proxy"] }
       );
     });
   });
