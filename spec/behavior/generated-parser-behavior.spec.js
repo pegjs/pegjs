@@ -1211,35 +1211,79 @@ describe("generated parser behavior", function() {
             });
           });
 
-          it("|expected| terminates parsing and throws an exception", function() {
-            var parser = PEG.buildParser(
-                  'start = "a" { expected("a"); }',
-                  options
-                );
+          describe("|expected|", function() {
+            it("terminates parsing and throws an exception", function() {
+              var parser = PEG.buildParser(
+                    'start = "a" { expected("a"); }',
+                    options
+                  );
 
-            expect(parser).toFailToParse("a", {
-              message:  'Expected a.',
-              expected: [{ type: "other", description: "a" }],
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end:   { offset: 1, line: 1, column: 2 }
-              }
+              expect(parser).toFailToParse("a", {
+                message:  'Expected a.',
+                expected: [{ type: "other", description: "a" }],
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end:   { offset: 1, line: 1, column: 2 }
+                }
+              });
+            });
+
+            it("allows to set custom location info", function() {
+              var parser = PEG.buildParser([
+                    'start = "a" {',
+                    '  expected("a", {',
+                    '    start: { offset: 1, line: 1, column: 2 },',
+                    '    end:   { offset: 2, line: 1, column: 3 }',
+                    '  });',
+                    '}'
+                  ].join("\n"), options);
+
+              expect(parser).toFailToParse("a", {
+                message:  'Expected a.',
+                expected: [{ type: "other", description: "a" }],
+                location: {
+                  start: { offset: 1, line: 1, column: 2 },
+                  end:   { offset: 2, line: 1, column: 3 }
+                }
+              });
             });
           });
 
-          it("|error| terminates parsing and throws an exception", function() {
-            var parser = PEG.buildParser(
-                  'start = "a" { error("a"); }',
-                  options
-                );
+          describe("|error|", function() {
+            it("terminates parsing and throws an exception", function() {
+              var parser = PEG.buildParser(
+                    'start = "a" { error("a"); }',
+                    options
+                  );
 
-            expect(parser).toFailToParse("a", {
-              message:  "a",
-              expected: null,
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end:   { offset: 1, line: 1, column: 2 }
-              }
+              expect(parser).toFailToParse("a", {
+                message:  "a",
+                expected: null,
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end:   { offset: 1, line: 1, column: 2 }
+                }
+              });
+            });
+
+            it("allows to set custom location info", function() {
+              var parser = PEG.buildParser([
+                    'start = "a" {',
+                    '  error("a", {',
+                    '    start: { offset: 1, line: 1, column: 2 },',
+                    '    end:   { offset: 2, line: 1, column: 3 }',
+                    '  });',
+                    '}'
+                  ].join("\n"), options);
+
+              expect(parser).toFailToParse("a", {
+                message:  "a",
+                expected: null,
+                location: {
+                  start: { offset: 1, line: 1, column: 2 },
+                  end:   { offset: 2, line: 1, column: 3 }
+                }
+              });
             });
           });
         });

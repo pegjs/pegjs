@@ -403,13 +403,16 @@ using the `return` statement. This value is considered match result of the
 preceding expression.
 
 To indicate an error, the code inside the action can invoke the `expected`
-function, which makes the parser throw an exception. The function takes one
-parameter — a description of what was expected at the current position. This
-description will be used as part of a message of the thrown exception.
+function, which makes the parser throw an exception. The function takes two
+parameters — a description of what was expected at the current position and
+optional location information (the default is what `location` would return — see
+below). The description will be used as part of a message of the thrown
+exception.
 
 The code inside an action can also invoke the `error` function, which also makes
-the parser throw an exception. The function takes one parameter — an error
-message. This message will be used by the thrown exception.
+the parser throw an exception. The function takes two parameters — an error
+message and optional location information (the default is what `location` would
+return — see below). The message will be used by the thrown exception.
 
 The code inside the action can access all variables and functions defined in the
 initializer at the beginning of the grammar. Curly braces in the action code
