@@ -5,6 +5,7 @@ node_js:
   - "0.12"
   - "4.0"
   - "5.0"
+  - "6.0"
 cache:
   directories:
     - node_modules
