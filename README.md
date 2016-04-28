@@ -99,7 +99,8 @@ In Node.js, require the PEG.js parser generator module:
     var PEG = require("pegjs");
 
 In browser, include the PEG.js library in your web page or application using the
-`<script>` tag. The API will be available in the `PEG` global object.
+`<script>` tag. If PEG.js detects an AMD loader, it will define itself as a
+module, otherwise the API will be available in the `PEG` global object.
 
 To generate a parser, call the `PEG.buildParser` method and pass your grammar as
 a parameter:
