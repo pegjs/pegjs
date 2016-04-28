@@ -6,7 +6,10 @@
 
 var fs   = require("fs");
 var path = require("path");
+var umd = require("umd");
 var PEG  = require("../lib/peg");
+
+var DEFAULT_EXPORT_VAR = "peg$parser";
 
 /* Helpers */
 
@@ -27,7 +30,7 @@ function printHelp() {
   console.log("Options:");
   console.log("  -e, --export-var <variable>        name of the variable where the parser");
   console.log("                                     object will be stored (default:");
-  console.log("                                     \"module.exports\")");
+  console.log("                                     \"" + DEFAULT_EXPORT_VAR + "\")");
   console.log("      --cache                        make generated parser cache results");
   console.log("      --allowed-start-rules <rules>  comma-separated list of rules the generated");
   console.log("                                     parser will be allowed to start parsing");
@@ -110,8 +113,8 @@ function readStream(inputStream, callback) {
 
 /* Main */
 
-/* This makes the generated parser a CommonJS module by default. */
-var exportVar = "module.exports";
+/* Try not to clobber any globals if no module system is present. */
+var exportVar = DEFAULT_EXPORT_VAR;
 var options = {
   cache:    false,
   output:   "source",
@@ -255,6 +258,7 @@ switch (args.length) {
 
 readStream(inputStream, function(input) {
   var source;
+  var umdSource;
 
   try {
     source = PEG.buildParser(input, options);
@@ -266,9 +270,9 @@ readStream(inputStream, function(input) {
     }
   }
 
-  outputStream.write(
-    exportVar !== "" ? exportVar + " = " + source + ";\n" : source + "\n"
-  );
+  umdSource = umd(exportVar, 'return ' + source);
+
+  outputStream.write(umdSource);
   if (outputStream !== process.stdout) {
     outputStream.end();
   }

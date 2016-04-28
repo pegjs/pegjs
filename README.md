@@ -73,10 +73,13 @@ file but with “.js” extension. You can also specify the output file explicit
 
 If you omit both input and output file, standard input and output are used.
 
-By default, the parser object is assigned to `module.exports`, which makes the
-output a Node.js module. You can assign it to another variable by passing a
-variable name using the `-e`/`--export-var` option. This may be helpful if you
-want to use the parser in browser environment.
+The output is a [UMD](https://github.com/ForbesLindesay/umd) module that
+exports the parser. If no module system is present, the parser object is
+assigned to `peg$parser` by default. You can assign it to another variable by
+passing a variable
+[name](https://github.com/ForbesLindesay/umd/tree/3.0.1#name-casing-and-characters)
+using the `-e`/`--export-var` option. This may be helpful if you want to use
+the parser in browser environment.
 
 You can tweak the generated parser with several options:
 
