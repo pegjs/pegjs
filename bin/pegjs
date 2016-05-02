@@ -25,9 +25,9 @@ function printHelp() {
   console.log("omitted, standard input and output are used.");
   console.log("");
   console.log("Options:");
-  console.log("  -e, --export-var <variable>        name of the variable where the parser");
-  console.log("                                     object will be stored (default:");
-  console.log("                                     \"module.exports\")");
+  console.log("  -e, --export-var <variable>        name of a global variable into which the");
+  console.log("                                     parser object is assigned to when no module");
+  console.log("                                     loader is detected (default: \"\")");
   console.log("      --cache                        make generated parser cache results");
   console.log("      --allowed-start-rules <rules>  comma-separated list of rules the generated");
   console.log("                                     parser will be allowed to start parsing");
@@ -110,14 +110,14 @@ function readStream(inputStream, callback) {
 
 /* Main */
 
-/* This makes the generated parser a CommonJS module by default. */
-var exportVar = "module.exports";
 var options = {
-  cache:    false,
-  output:   "source",
-  optimize: "speed",
-  trace:    false,
-  plugins:  []
+  cache:     false,
+  output:    "source",
+  format:    "umd",
+  exportVar: null,
+  optimize:  "speed",
+  trace:     false,
+  plugins:   []
 };
 
 while (args.length > 0 && isOption(args[0])) {
@@ -128,7 +128,7 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the -e/--export-var option.");
       }
-      exportVar = args[0];
+      options.exportVar = args[0];
       break;
 
     case "--cache":
@@ -266,9 +266,7 @@ readStream(inputStream, function(input) {
     }
   }
 
-  outputStream.write(
-    exportVar !== "" ? exportVar + " = " + source + ";\n" : source + "\n"
-  );
+  outputStream.write(source);
   if (outputStream !== process.stdout) {
     outputStream.end();
   }

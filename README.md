@@ -73,10 +73,10 @@ file but with “.js” extension. You can also specify the output file explicit
 
 If you omit both input and output file, standard input and output are used.
 
-By default, the parser object is assigned to `module.exports`, which makes the
-output a Node.js module. You can assign it to another variable by passing a
-variable name using the `-e`/`--export-var` option. This may be helpful if you
-want to use the parser in browser environment.
+The generated parser is in the [UMD](https://github.com/umdjs/umd) format, which
+means it works as a Node.js or AMD module. You can also use the
+`-e`/`--export-var` option to define a global variable into which the parser
+object is assigned to when no module loader is detected.
 
 You can tweak the generated parser with several options:
 
