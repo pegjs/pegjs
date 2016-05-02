@@ -120,6 +120,11 @@ object to `PEG.buildParser`. The following options are supported:
     `false`)
   * `allowedStartRules` — rules the parser will be allowed to start parsing from
     (default: the first rule in the grammar)
+  * `exportVar` — name of a global variable into which the parser object is
+    assigned to when no module loader is detected; valid only when `format` is
+    set to `"umd"` (default: `null`)
+  * `format` — format of the genreated parser (`"bare"` or `"umd"`); valid only
+    when `output` is set to `"source"` (default: `"bare"`)
   * `output` — if set to `"parser"`, the method will return generated parser
     object; if set to `"source"`, it will return parser source code as a string
     (default: `"parser"`)
