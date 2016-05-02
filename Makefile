@@ -51,6 +51,7 @@ parser:
 
 	rm -f $(PARSER_OUT_FILE)
 
+	echo '/* eslint-env node, amd */'     >> $(PARSER_OUT_FILE)
 	echo '/* eslint no-unused-vars: 0 */' >> $(PARSER_OUT_FILE)
 	echo                                  >> $(PARSER_OUT_FILE)
 	cat $(PARSER_OUT_FILE_NEW)            >> $(PARSER_OUT_FILE)
