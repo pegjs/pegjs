@@ -120,6 +120,9 @@ object to `PEG.buildParser`. The following options are supported:
     `false`)
   * `allowedStartRules` — rules the parser will be allowed to start parsing from
     (default: the first rule in the grammar)
+  * `dependencies` — parser dependencies, the value is an object which maps
+    variables used to access the dependencies in the parser to module IDs used
+    to load them; valid only when `format` is set to `"umd"` (default: `{}`)
   * `exportVar` — name of a global variable into which the parser object is
     assigned to when no module loader is detected; valid only when `format` is
     set to `"umd"` (default: `null`)

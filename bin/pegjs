@@ -28,6 +28,8 @@ function printHelp() {
   console.log("  -e, --export-var <variable>        name of a global variable into which the");
   console.log("                                     parser object is assigned to when no module");
   console.log("                                     loader is detected (default: \"\")");
+  console.log("  -d, --dependency <dependency>      use specified dependency (can be specified");
+  console.log("                                     multiple times)");
   console.log("      --cache                        make generated parser cache results");
   console.log("      --allowed-start-rules <rules>  comma-separated list of rules the generated");
   console.log("                                     parser will be allowed to start parsing");
@@ -111,13 +113,14 @@ function readStream(inputStream, callback) {
 /* Main */
 
 var options = {
-  cache:     false,
-  output:    "source",
-  format:    "umd",
-  exportVar: null,
-  optimize:  "speed",
-  trace:     false,
-  plugins:   []
+  cache:        false,
+  output:       "source",
+  format:       "umd",
+  exportVar:    null,
+  dependencies: {},
+  optimize:     "speed",
+  trace:        false,
+  plugins:      []
 };
 
 while (args.length > 0 && isOption(args[0])) {
@@ -129,6 +132,20 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the -e/--export-var option.");
       }
       options.exportVar = args[0];
+      break;
+
+    case "-d":
+    case "--dependency":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the -d/--dependency option.");
+      }
+      if (args[0].indexOf(":") !== -1) {
+        var parts = args[0].split(":");
+        options.dependencies[parts[0]] = parts[1];
+      } else {
+        options.dependencies[args[0]] = args[0];
+      }
       break;
 
     case "--cache":
