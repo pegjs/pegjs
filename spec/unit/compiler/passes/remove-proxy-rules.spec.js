@@ -1,9 +1,9 @@
-/* global PEG */
+/* global peg */
 
 "use strict";
 
 describe("compiler pass |removeProxyRules|", function() {
-  var pass = PEG.compiler.passes.transform.removeProxyRules;
+  var pass = peg.compiler.passes.transform.removeProxyRules;
 
   describe("when a proxy rule isn't listed in |allowedStartRules|", function() {
     it("updates references and removes it", function() {

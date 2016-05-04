@@ -1,4 +1,4 @@
-/* global PEG */
+/* global peg */
 
 "use strict";
 
@@ -44,7 +44,7 @@ beforeEach(function() {
         }
       }
 
-      var ast = PEG.parser.parse(grammar);
+      var ast = peg.parser.parse(grammar);
 
       this.actual(ast, options);
 
@@ -61,7 +61,7 @@ beforeEach(function() {
     },
 
     toReportError: function(grammar, details) {
-      var ast = PEG.parser.parse(grammar);
+      var ast = peg.parser.parse(grammar);
 
       try {
         this.actual(ast);

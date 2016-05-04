@@ -1,4 +1,4 @@
-/* global PEG */
+/* global peg */
 
 "use strict";
 
@@ -48,7 +48,7 @@ describe("plugin API", function() {
             { use: function() { pluginsUsed[2] = true; } }
           ];
 
-      PEG.buildParser(grammar, { plugins: plugins });
+      peg.buildParser(grammar, { plugins: plugins });
 
       expect(pluginsUsed).toEqual([true, true, true]);
     });
@@ -82,7 +82,7 @@ describe("plugin API", function() {
             }
           };
 
-      PEG.buildParser(grammar, { plugins: [plugin] });
+      peg.buildParser(grammar, { plugins: [plugin] });
     });
 
     it("receives options", function() {
@@ -93,13 +93,13 @@ describe("plugin API", function() {
           },
           buildParserOptions = { plugins: [plugin], foo: 42 };
 
-      PEG.buildParser(grammar, buildParserOptions);
+      peg.buildParser(grammar, buildParserOptions);
     });
 
     it("can replace parser", function() {
       var plugin = {
             use: function(config) {
-              var parser = PEG.buildParser([
+              var parser = peg.buildParser([
                     'start = .* {',
                     '  return {',
                     '    type:  "grammar",',
@@ -117,7 +117,7 @@ describe("plugin API", function() {
               config.parser = parser;
             }
           },
-          parser = PEG.buildParser('a', { plugins: [plugin] });
+          parser = peg.buildParser('a', { plugins: [plugin] });
 
       expect(parser.parse("a")).toBe("a");
     });
@@ -132,7 +132,7 @@ describe("plugin API", function() {
               config.passes.generate = [pass];
             }
           },
-          parser = PEG.buildParser(grammar, { plugins: [plugin] });
+          parser = peg.buildParser(grammar, { plugins: [plugin] });
 
       expect(parser.parse("a")).toBe(42);
     });
@@ -148,7 +148,7 @@ describe("plugin API", function() {
               options.allowedStartRules = ["b", "c"];
             }
           },
-          parser  = PEG.buildParser(grammar, {
+          parser  = peg.buildParser(grammar, {
             allowedStartRules: ["a"],
             plugins:           [plugin]
           });

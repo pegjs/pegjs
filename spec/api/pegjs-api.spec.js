@@ -1,22 +1,22 @@
-/* global PEG */
+/* global peg */
 
 "use strict";
 
 describe("PEG.js API", function() {
   describe("buildParser", function() {
     it("builds a parser", function() {
-      var parser = PEG.buildParser('start = "a"');
+      var parser = peg.buildParser('start = "a"');
 
       expect(typeof parser).toBe("object");
       expect(parser.parse("a")).toBe("a");
     });
 
     it("throws an exception on syntax error", function() {
-      expect(function() { PEG.buildParser('start = @'); }).toThrow();
+      expect(function() { peg.buildParser('start = @'); }).toThrow();
     });
 
     it("throws an exception on semantic error", function() {
-      expect(function() { PEG.buildParser('start = missing'); }).toThrow();
+      expect(function() { peg.buildParser('start = missing'); }).toThrow();
     });
 
     describe("allowed start rules", function() {
@@ -34,7 +34,7 @@ describe("PEG.js API", function() {
       describe("when optimizing for parsing speed", function() {
         describe("when |allowedStartRules| is not set", function() {
           it("generated parser can start only from the first rule", function() {
-            var parser = PEG.buildParser(grammar, { optimize: "speed" });
+            var parser = peg.buildParser(grammar, { optimize: "speed" });
 
             expect(parser.parse("x", { startRule: "a" })).toBe("x");
             expect(
@@ -48,7 +48,7 @@ describe("PEG.js API", function() {
 
         describe("when |allowedStartRules| is set", function() {
           it("generated parser can start only from specified rules", function() {
-            var parser = PEG.buildParser(grammar, {
+            var parser = peg.buildParser(grammar, {
               optimize:          "speed",
               allowedStartRules: ["b", "c"]
             });
@@ -65,7 +65,7 @@ describe("PEG.js API", function() {
       describe("when optimizing for code size", function() {
         describe("when |allowedStartRules| is not set", function() {
           it("generated parser can start only from the first rule", function() {
-            var parser = PEG.buildParser(grammar, { optimize: "size" });
+            var parser = peg.buildParser(grammar, { optimize: "size" });
 
             expect(parser.parse("x", { startRule: "a" })).toBe("x");
             expect(
@@ -79,7 +79,7 @@ describe("PEG.js API", function() {
 
         describe("when |allowedStartRules| is set", function() {
           it("generated parser can start only from specified rules", function() {
-            var parser = PEG.buildParser(grammar, {
+            var parser = peg.buildParser(grammar, {
               optimize:          "size",
               allowedStartRules: ["b", "c"]
             });
@@ -103,7 +103,7 @@ describe("PEG.js API", function() {
 
       describe("when |cache| is not set", function() {
         it("generated parser doesn't cache intermediate parse results", function() {
-          var parser = PEG.buildParser(grammar);
+          var parser = peg.buildParser(grammar);
 
           expect(parser.parse("ac")).toBe(2);
         });
@@ -111,7 +111,7 @@ describe("PEG.js API", function() {
 
       describe("when |cache| is set to |false|", function() {
         it("generated parser doesn't cache intermediate parse results", function() {
-          var parser = PEG.buildParser(grammar, { cache: false });
+          var parser = peg.buildParser(grammar, { cache: false });
 
           expect(parser.parse("ac")).toBe(2);
         });
@@ -119,7 +119,7 @@ describe("PEG.js API", function() {
 
       describe("when |cache| is set to |true|", function() {
         it("generated parser caches intermediate parse results", function() {
-          var parser = PEG.buildParser(grammar, { cache: true });
+          var parser = peg.buildParser(grammar, { cache: true });
 
           expect(parser.parse("ac")).toBe(1);
         });
@@ -131,7 +131,7 @@ describe("PEG.js API", function() {
 
       describe("when |trace| is not set", function() {
         it("generated parser doesn't trace", function() {
-          var parser = PEG.buildParser(grammar),
+          var parser = peg.buildParser(grammar),
               tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
           parser.parse("a", { tracer: tracer });
@@ -142,7 +142,7 @@ describe("PEG.js API", function() {
 
       describe("when |trace| is set to |false|", function() {
         it("generated parser doesn't trace", function() {
-          var parser = PEG.buildParser(grammar, { trace: false }),
+          var parser = peg.buildParser(grammar, { trace: false }),
               tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
           parser.parse("a", { tracer: tracer });
@@ -153,7 +153,7 @@ describe("PEG.js API", function() {
 
       describe("when |trace| is set to |true|", function() {
         it("generated parser traces", function() {
-          var parser = PEG.buildParser(grammar, { trace: true }),
+          var parser = peg.buildParser(grammar, { trace: true }),
               tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
           parser.parse("a", { tracer: tracer });
@@ -173,7 +173,7 @@ describe("PEG.js API", function() {
 
       describe("when |output| is not set", function() {
         it("returns generated parser object", function() {
-          var parser = PEG.buildParser(grammar);
+          var parser = peg.buildParser(grammar);
 
           expect(typeof parser).toBe("object");
           expect(parser.parse("a")).toBe("a");
@@ -182,7 +182,7 @@ describe("PEG.js API", function() {
 
       describe("when |output| is set to |\"parser\"|", function() {
         it("returns generated parser object", function() {
-          var parser = PEG.buildParser(grammar, { output: "parser" });
+          var parser = peg.buildParser(grammar, { output: "parser" });
 
           expect(typeof parser).toBe("object");
           expect(parser.parse("a")).toBe("a");
@@ -191,7 +191,7 @@ describe("PEG.js API", function() {
 
       describe("when |output| is set to |\"source\"|", function() {
         it("returns generated parser source code", function() {
-          var source = PEG.buildParser(grammar, { output: "source" });
+          var source = peg.buildParser(grammar, { output: "source" });
 
           expect(typeof source).toBe("string");
           expect(eval(source).parse("a")).toBe("a");
@@ -208,7 +208,7 @@ describe("PEG.js API", function() {
     /* The |plugins| option is tested in plugin API specs. */
 
     it("accepts custom options", function() {
-      PEG.buildParser('start = "a"', { foo: 42 });
+      peg.buildParser('start = "a"', { foo: 42 });
     });
   });
 });

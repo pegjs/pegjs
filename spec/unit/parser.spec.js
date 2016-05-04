@@ -1,4 +1,4 @@
-/* global PEG */
+/* global peg */
 
 "use strict";
 
@@ -182,7 +182,7 @@ describe("PEG.js grammar parser", function() {
         var result;
 
         try {
-          result = PEG.parser.parse(this.actual);
+          result = peg.parser.parse(this.actual);
 
           stripLocation(result);
 
@@ -210,7 +210,7 @@ describe("PEG.js grammar parser", function() {
         var result;
 
         try {
-          result = PEG.parser.parse(this.actual);
+          result = peg.parser.parse(this.actual);
 
           stripLocation(result);
 

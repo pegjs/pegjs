@@ -1,9 +1,9 @@
-/* global PEG */
+/* global peg */
 
 "use strict";
 
 describe("compiler pass |generateBytecode|", function() {
-  var pass = PEG.compiler.passes.generate.generateBytecode;
+  var pass = peg.compiler.passes.generate.generateBytecode;
 
   function bytecodeDetails(bytecode) {
     return {
