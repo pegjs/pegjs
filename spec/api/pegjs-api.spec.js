@@ -4,7 +4,7 @@
 
 describe("PEG.js API", function() {
   describe("generate", function() {
-    it("builds a parser", function() {
+    it("generates a parser", function() {
       var parser = peg.generate('start = "a"');
 
       expect(typeof parser).toBe("object");
