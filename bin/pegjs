@@ -39,9 +39,9 @@ function printHelp() {
   console.log("      --plugin <plugin>              use a specified plugin (can be specified");
   console.log("                                     multiple times)");
   console.log("      --extra-options <options>      additional options (in JSON format) to pass");
-  console.log("                                     to peg.buildParser");
+  console.log("                                     to peg.generate");
   console.log("      --extra-options-file <file>    file with additional options (in JSON");
-  console.log("                                     format) to pass to peg.buildParser");
+  console.log("                                     format) to pass to peg.generate");
   console.log("  -v, --version                      print version information and exit");
   console.log("  -h, --help                         print help and exit");
 }
@@ -272,7 +272,7 @@ readStream(inputStream, function(input) {
   var source;
 
   try {
-    source = peg.buildParser(input, options);
+    source = peg.generate(input, options);
   } catch (e) {
     if (e.location !== undefined) {
       abort(e.location.start.line + ":" + e.location.start.column + ": " + e.message);

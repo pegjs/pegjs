@@ -48,7 +48,7 @@ describe("plugin API", function() {
             { use: function() { pluginsUsed[2] = true; } }
           ];
 
-      peg.buildParser(grammar, { plugins: plugins });
+      peg.generate(grammar, { plugins: plugins });
 
       expect(pluginsUsed).toEqual([true, true, true]);
     });
@@ -82,24 +82,24 @@ describe("plugin API", function() {
             }
           };
 
-      peg.buildParser(grammar, { plugins: [plugin] });
+      peg.generate(grammar, { plugins: [plugin] });
     });
 
     it("receives options", function() {
       var plugin             = {
             use: function(config, options) {
-              expect(options).toEqual(buildParserOptions);
+              expect(options).toEqual(generateOptions);
             }
           },
-          buildParserOptions = { plugins: [plugin], foo: 42 };
+          generateOptions = { plugins: [plugin], foo: 42 };
 
-      peg.buildParser(grammar, buildParserOptions);
+      peg.generate(grammar, generateOptions);
     });
 
     it("can replace parser", function() {
       var plugin = {
             use: function(config) {
-              var parser = peg.buildParser([
+              var parser = peg.generate([
                     'start = .* {',
                     '  return {',
                     '    type:  "grammar",',
@@ -117,7 +117,7 @@ describe("plugin API", function() {
               config.parser = parser;
             }
           },
-          parser = peg.buildParser('a', { plugins: [plugin] });
+          parser = peg.generate('a', { plugins: [plugin] });
 
       expect(parser.parse("a")).toBe("a");
     });
@@ -132,7 +132,7 @@ describe("plugin API", function() {
               config.passes.generate = [pass];
             }
           },
-          parser = peg.buildParser(grammar, { plugins: [plugin] });
+          parser = peg.generate(grammar, { plugins: [plugin] });
 
       expect(parser.parse("a")).toBe(42);
     });
@@ -148,7 +148,7 @@ describe("plugin API", function() {
               options.allowedStartRules = ["b", "c"];
             }
           },
-          parser  = peg.buildParser(grammar, {
+          parser  = peg.generate(grammar, {
             allowedStartRules: ["a"],
             plugins:           [plugin]
           });

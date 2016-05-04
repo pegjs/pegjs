@@ -87,9 +87,9 @@ You can tweak the generated parser with several options:
   * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
     times)
   * `--extra-options` — additional options (in JSON format) to pass to
-    `peg.buildParser`
+    `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
-    pass to `peg.buildParser`
+    pass to `peg.generate`
   * `--trace` — makes the parser trace its progress
 
 ### JavaScript API
@@ -102,10 +102,10 @@ In browser, include the PEG.js library in your web page or application using the
 `<script>` tag. If PEG.js detects an AMD loader, it will define itself as a
 module, otherwise the API will be available in the `peg` global object.
 
-To generate a parser, call the `peg.buildParser` method and pass your grammar as
-a parameter:
+To generate a parser, call the `peg.generate` method and pass your grammar as a
+parameter:
 
-    var parser = peg.buildParser("start = ('a' / 'b')+");
+    var parser = peg.generate("start = ('a' / 'b')+");
 
 The method will return generated parser object or its source code as a string
 (depending on the value of the `output` option — see below). It will throw an
@@ -113,7 +113,7 @@ exception if the grammar is invalid. The exception will contain `message`
 property with more details about the error.
 
 You can tweak the generated parser by passing a second parameter with an options
-object to `peg.buildParser`. The following options are supported:
+object to `peg.generate`. The following options are supported:
 
   * `cache` — if `true`, makes the parser cache results, avoiding exponential
     parsing time in pathological cases but making the parser slower (default:

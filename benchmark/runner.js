@@ -63,7 +63,7 @@
         return function() {
           callbacks.benchmarkStart(benchmarks[i]);
 
-          state.parser = peg.buildParser(
+          state.parser = peg.generate(
             callbacks.readFile("../examples/" + benchmarks[i].id + ".pegjs"),
             options
           );
