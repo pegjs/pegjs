@@ -31,7 +31,7 @@ Running in the Browser
 All commands in the following steps need to be executed in PEG.js root directory
 (one level up from this one).
 
-  1. Make sure you have Node.js and Python installed.
+  1. Make sure you have Node.js installed.
 
   2. Install all PEG.js dependencies, including development ones:
 
@@ -48,9 +48,9 @@ All commands in the following steps need to be executed in PEG.js root directory
   4. Serve PEG.js root directory using a web server:
 
      ```console
-     $ python -m SimpleHTTPServer
+     $ node_modules/.bin/http-server
      ```
 
-  5. Point your browser to the [benchmark suite](http://localhost:8000/benchmark/index.html).
+  5. Point your browser to the [benchmark suite](http://localhost:8080/benchmark/index.html).
 
   6. Click the **Run** button and wait for results.
