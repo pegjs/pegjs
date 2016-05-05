@@ -37,11 +37,15 @@ Installation
 
 To use the `pegjs` command, install PEG.js globally:
 
-    $ npm install -g pegjs
+```console
+$ npm install -g pegjs
+```
 
 To use the JavaScript API, install PEG.js locally:
 
-    $ npm install pegjs
+```console
+$ npm install pegjs
+```
 
 If you need both the `pegjs` command and the JavaScript API, install PEG.js both
 ways.
@@ -51,7 +55,9 @@ ways.
 [Download](http://pegjs.org/#download) the PEG.js library (regular or minified
 version) or install it using Bower:
 
-    $ bower install pegjs
+```console
+$ bower install pegjs
+```
 
 Generating a Parser
 -------------------
@@ -64,12 +70,16 @@ input). Generated parser itself is a JavaScript object with a simple API.
 
 To generate a parser from your grammar, use the `pegjs` command:
 
-    $ pegjs arithmetics.pegjs
+```console
+$ pegjs arithmetics.pegjs
+```
 
 This writes parser source code into a file with the same name as the grammar
 file but with “.js” extension. You can also specify the output file explicitly:
 
-    $ pegjs arithmetics.pegjs arithmetics-parser.js
+```console
+$ pegjs arithmetics.pegjs arithmetics-parser.js
+```
 
 If you omit both input and output file, standard input and output are used.
 
@@ -96,7 +106,9 @@ You can tweak the generated parser with several options:
 
 In Node.js, require the PEG.js parser generator module:
 
-    var peg = require("pegjs");
+```javascript
+var peg = require("pegjs");
+```
 
 In browser, include the PEG.js library in your web page or application using the
 `<script>` tag. If PEG.js detects an AMD loader, it will define itself as a
@@ -105,7 +117,9 @@ module, otherwise the API will be available in the `peg` global object.
 To generate a parser, call the `peg.generate` method and pass your grammar as a
 parameter:
 
-    var parser = peg.generate("start = ('a' / 'b')+");
+```javascript
+var parser = peg.generate("start = ('a' / 'b')+");
+```
 
 The method will return generated parser object or its source code as a string
 (depending on the value of the `output` option — see below). It will throw an
@@ -144,9 +158,11 @@ value depends on the grammar used to generate the parser) or throw an exception
 if the input is invalid. The exception will contain `location`, `expected` and
 `message` properties with more details about the error.
 
-    parser.parse("abba"); // returns ["a", "b", "b", "a"]
+```javascript
+parser.parse("abba"); // returns ["a", "b", "b", "a"]
 
-    parser.parse("abcd"); // throws an exception
+parser.parse("abcd"); // throws an exception
+```
 
 You can tweak parser behavior by passing a second parameter with an options
 object to the `parse` method. The following options are supported:
@@ -166,23 +182,25 @@ ignores whitespace between tokens. You can also use JavaScript-style comments
 Let's look at example grammar that recognizes simple arithmetic expressions like
 `2*(3+4)`. A parser generated from this grammar computes their values.
 
-    start
-      = additive
+```pegjs
+start
+  = additive
 
-    additive
-      = left:multiplicative "+" right:additive { return left + right; }
-      / multiplicative
+additive
+  = left:multiplicative "+" right:additive { return left + right; }
+  / multiplicative
 
-    multiplicative
-      = left:primary "*" right:multiplicative { return left * right; }
-      / primary
+multiplicative
+  = left:primary "*" right:multiplicative { return left * right; }
+  / primary
 
-    primary
-      = integer
-      / "(" additive:additive ")" { return additive; }
+primary
+  = integer
+  / "(" additive:additive ")" { return additive; }
 
-    integer "integer"
-      = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+integer "integer"
+  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+```
 
 On the top level, the grammar consists of *rules* (in our example, there are
 five of them). Each rule has a *name* (e.g. `integer`) that identifies the rule,
@@ -209,29 +227,31 @@ passed to the parser using the `options` variable. Curly braces in the
 initializer code must be balanced. Let's look at the example grammar from above
 using a simple initializer.
 
-    {
-      function makeInteger(o) {
-        return parseInt(o.join(""), 10);
-      }
-    }
+```pegjs
+{
+  function makeInteger(o) {
+    return parseInt(o.join(""), 10);
+  }
+}
 
-    start
-      = additive
+start
+  = additive
 
-    additive
-      = left:multiplicative "+" right:additive { return left + right; }
-      / multiplicative
+additive
+  = left:multiplicative "+" right:additive { return left + right; }
+  / multiplicative
 
-    multiplicative
-      = left:primary "*" right:multiplicative { return left * right; }
-      / primary
+multiplicative
+  = left:primary "*" right:multiplicative { return left * right; }
+  / primary
 
-    primary
-      = integer
-      / "(" additive:additive ")" { return additive; }
+primary
+  = integer
+  / "(" additive:additive ")" { return additive; }
 
-    integer "integer"
-      = digits:[0-9]+ { return makeInteger(digits); }
+integer "integer"
+  = digits:[0-9]+ { return makeInteger(digits); }
+```
 
 The parsing expressions of the rules are used to match the input text to the
 grammar. There are various types of expressions — matching characters or
@@ -340,10 +360,12 @@ the initializer at the beginning of the grammar.
 The code inside the predicate can also access location information using the
 `location` function. It returns an object like this:
 
-    {
-      start: { offset: 23, line: 5, column: 6 },
-      end:   { offset: 23, line: 5, column: 6 }
-    }
+```javascript
+{
+  start: { offset: 23, line: 5, column: 6 },
+  end:   { offset: 23, line: 5, column: 6 }
+}
+```
 
 The `start` and `end` properties both refer to the current parse position. The
 `offset` property contains an offset as a zero-based index and `line` and
@@ -369,10 +391,12 @@ the initializer at the beginning of the grammar.
 The code inside the predicate can also access location information using the
 `location` function. It returns an object like this:
 
-    {
-      start: { offset: 23, line: 5, column: 6 },
-      end:   { offset: 23, line: 5, column: 6 }
-    }
+```javascript
+{
+  start: { offset: 23, line: 5, column: 6 },
+  end:   { offset: 23, line: 5, column: 6 }
+}
+```
 
 The `start` and `end` properties both refer to the current parse position. The
 `offset` property contains an offset as a zero-based index and `line` and
@@ -434,10 +458,12 @@ using the `text` function.
 The code inside the action can also access location information using the
 `location` function. It returns an object like this:
 
-    {
-      start: { offset: 23, line: 5, column: 6 },
-      end:   { offset: 25, line: 5, column: 8 }
-    }
+```javascript
+{
+  start: { offset: 23, line: 5, column: 6 },
+  end:   { offset: 25, line: 5, column: 8 }
+}
+```
 
 The `start` property refers to the position at the beginning of the expression,
 the `end` property refers to position after the end of the expression. The
