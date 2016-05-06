@@ -355,7 +355,6 @@ LiteralMatcher "literal"
         type:       "literal",
         value:      value,
         ignoreCase: ignoreCase !== null,
-        rawText:    text(),
         location:   location()
       };
     }
