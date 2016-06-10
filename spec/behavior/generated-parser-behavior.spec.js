@@ -71,7 +71,7 @@ describe("generated parser behavior", function() {
       toFailToParse: function(input, details, options) {
         options = options !== undefined ? options : {};
 
-        var result;
+        var result, key;
 
         try {
           result = this.actual.parse(input, options);
@@ -86,12 +86,6 @@ describe("generated parser behavior", function() {
 
           return false;
         } catch (e) {
-          /*
-           * Should be at the top level but then JSHint complains about bad for
-           * in variable.
-           */
-          var key;
-
           if (this.isNot) {
             this.message = function() {
               return "Expected " + jasmine.pp(input)

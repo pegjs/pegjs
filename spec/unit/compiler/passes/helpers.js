@@ -61,7 +61,8 @@ beforeEach(function() {
     },
 
     toReportError: function(grammar, details) {
-      var ast = peg.parser.parse(grammar);
+      var ast = peg.parser.parse(grammar),
+          key;
 
       try {
         this.actual(ast);
@@ -75,12 +76,6 @@ beforeEach(function() {
 
         return false;
       } catch (e) {
-        /*
-         * Should be at the top level but then JSHint complains about bad for
-         * in variable.
-         */
-        var key;
-
         if (this.isNot) {
           this.message = function() {
             return "Expected the pass not to report an error "
