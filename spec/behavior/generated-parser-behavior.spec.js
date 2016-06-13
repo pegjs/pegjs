@@ -1364,33 +1364,6 @@ describe("generated parser behavior", function() {
             ]
           });
         });
-
-        it("removes duplicates from expectations", function() {
-          /*
-           * There was a bug in the code that manifested only with three
-           * duplicates. This is why the following test uses three choices
-           * instead of seemingly sufficient two.
-           *
-           * See https://github.com/pegjs/pegjs/pull/146.
-           */
-          var parser = peg.generate('start = "a" / "a" / "a"', options);
-
-          expect(parser).toFailToParse("b", {
-            expected: [{ type: "literal", text: "a", ignoreCase: false, description: '"a"' }]
-          });
-        });
-
-        it("sorts expectations", function() {
-          var parser = peg.generate('start = "c" / "b" / "a"', options);
-
-          expect(parser).toFailToParse("d", {
-            expected: [
-              { type: "literal", text: "a", ignoreCase: false, description: '"a"' },
-              { type: "literal", text: "b", ignoreCase: false, description: '"b"' },
-              { type: "literal", text: "c", ignoreCase: false, description: '"c"' }
-            ]
-          });
-        });
       });
 
       describe("found string reporting", function() {
@@ -1447,6 +1420,23 @@ describe("generated parser behavior", function() {
             message: 'Expected "a" but "b" found.'
           });
         });
+
+        it("removes duplicates from expectations", function() {
+          var parser = peg.generate('start = "a" / "a"', options);
+
+          expect(parser).toFailToParse("b", {
+            message: 'Expected "a" but "b" found.'
+          });
+        });
+
+        it("sorts expectations", function() {
+          var parser = peg.generate('start = "c" / "b" / "a"', options);
+
+          expect(parser).toFailToParse("d", {
+            message: 'Expected "a", "b" or "c" but "d" found.'
+          });
+        });
+
       });
 
       describe("position reporting", function() {
