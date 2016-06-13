@@ -616,7 +616,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]i', constsDetails([
           '/^[a]/i',
-          '{ type: "class", value: "[a]i", description: "[a]i" }'
+          '{ type: "class", value: "[a]i", description: "[a]" }'
         ]));
       });
     });
