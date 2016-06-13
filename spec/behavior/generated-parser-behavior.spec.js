@@ -344,7 +344,7 @@ describe("generated parser behavior", function() {
           var parser = peg.generate('start = [a]', options);
 
           expect(parser).toFailToParse("b", {
-            expected: [{ type: "class", value: "[a]", description: "[a]" }]
+            expected: [{ type: "class", parts: ["a"], inverted: false, ignoreCase: false, description: "[a]" }]
           });
         });
       });

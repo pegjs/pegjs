@@ -598,7 +598,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]', constsDetails([
           '/^[a]/',
-          '{ type: "class", value: "[a]", description: "[a]" }'
+          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: false, description: "[a]" }'
         ]));
       });
     });
@@ -607,7 +607,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [^a]', constsDetails([
           '/^[^a]/',
-          '{ type: "class", value: "[^a]", description: "[^a]" }'
+          '{ type: "class", parts: ["a"], inverted: true, ignoreCase: false, description: "[^a]" }'
         ]));
       });
     });
@@ -616,7 +616,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]i', constsDetails([
           '/^[a]/i',
-          '{ type: "class", value: "[a]i", description: "[a]" }'
+          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: true, description: "[a]" }'
         ]));
       });
     });
@@ -625,7 +625,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [ab-def-hij-l]', constsDetails([
           '/^[ab-def-hij-l]/',
-          '{ type: "class", value: "[ab-def-hij-l]", description: "[ab-def-hij-l]" }'
+          '{ type: "class", parts: ["a", ["b", "d"], "e", ["f", "h"], "i", ["j", "l"]], inverted: false, ignoreCase: false, description: "[ab-def-hij-l]" }'
         ]));
       });
     });
@@ -634,7 +634,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = []', constsDetails([
           '/^(?!)/',
-          '{ type: "class", value: "[]", description: "[]" }'
+          '{ type: "class", parts: [], inverted: false, ignoreCase: false, description: "[]" }'
         ]));
       });
     });
@@ -643,7 +643,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [^]', constsDetails([
           '/^[\\S\\s]/',
-          '{ type: "class", value: "[^]", description: "[^]" }'
+          '{ type: "class", parts: [], inverted: true, ignoreCase: false, description: "[^]" }'
         ]));
       });
     });
