@@ -190,7 +190,7 @@ describe("generated parser behavior", function() {
             var parser = peg.generate('start = "a"');
 
             expect(parser).toFailToParse("b", {
-              expected: [{ type: "literal", value: "a", description: '"a"' }]
+              expected: [{ type: "literal", text: "a", ignoreCase: false, description: '"a"' }]
             });
           });
         });
@@ -271,7 +271,7 @@ describe("generated parser behavior", function() {
           var parser = peg.generate('start = "a"', options);
 
           expect(parser).toFailToParse("b", {
-            expected: [{ type: "literal", value: "a", description: '"a"' }]
+            expected: [{ type: "literal", text: "a", ignoreCase: false, description: '"a"' }]
           });
         });
       });
@@ -932,8 +932,8 @@ describe("generated parser behavior", function() {
 
           expect(parser).toFailToParse("d", {
             expected: [
-              { type: "literal", value: "a", description: '"a"' },
-              { type: "literal", value: "c", description: '"c"' }
+              { type: "literal", text: "a", ignoreCase: false, description: '"a"' },
+              { type: "literal", text: "c", ignoreCase: false, description: '"c"' }
             ]
           });
         });
@@ -967,8 +967,8 @@ describe("generated parser behavior", function() {
 
           expect(parser).toFailToParse("b", {
             expected: [
-              { type: "literal", value: "a", description: '"a"' },
-              { type: "literal", value: "c", description: '"c"' }
+              { type: "literal", text: "a", ignoreCase: false, description: '"a"' },
+              { type: "literal", text: "c", ignoreCase: false, description: '"c"' }
             ]
           });
         });
@@ -1331,7 +1331,7 @@ describe("generated parser behavior", function() {
           var parser = peg.generate('start = "a" "b" / "a" "c" "d"', options);
 
           expect(parser).toFailToParse("ace", {
-            expected: [{ type: "literal", value: "d", description: '"d"' }]
+            expected: [{ type: "literal", text: "d", ignoreCase: false, description: '"d"' }]
           });
         });
       });
@@ -1349,7 +1349,7 @@ describe("generated parser behavior", function() {
           var parser = peg.generate('start = "a"', options);
 
           expect(parser).toFailToParse("b", {
-            expected: [{ type: "literal", value: "a", description: '"a"' }]
+            expected: [{ type: "literal", text: "a", ignoreCase: false, description: '"a"' }]
           });
         });
 
@@ -1358,9 +1358,9 @@ describe("generated parser behavior", function() {
 
           expect(parser).toFailToParse("d", {
             expected: [
-              { type: "literal", value: "a", description: '"a"' },
-              { type: "literal", value: "b", description: '"b"' },
-              { type: "literal", value: "c", description: '"c"' }
+              { type: "literal", text: "a", ignoreCase: false, description: '"a"' },
+              { type: "literal", text: "b", ignoreCase: false, description: '"b"' },
+              { type: "literal", text: "c", ignoreCase: false, description: '"c"' }
             ]
           });
         });
@@ -1376,7 +1376,7 @@ describe("generated parser behavior", function() {
           var parser = peg.generate('start = "a" / "a" / "a"', options);
 
           expect(parser).toFailToParse("b", {
-            expected: [{ type: "literal", value: "a", description: '"a"' }]
+            expected: [{ type: "literal", text: "a", ignoreCase: false, description: '"a"' }]
           });
         });
 
@@ -1385,9 +1385,9 @@ describe("generated parser behavior", function() {
 
           expect(parser).toFailToParse("d", {
             expected: [
-              { type: "literal", value: "a", description: '"a"' },
-              { type: "literal", value: "b", description: '"b"' },
-              { type: "literal", value: "c", description: '"c"' }
+              { type: "literal", text: "a", ignoreCase: false, description: '"a"' },
+              { type: "literal", text: "b", ignoreCase: false, description: '"b"' },
+              { type: "literal", text: "c", ignoreCase: false, description: '"c"' }
             ]
           });
         });
