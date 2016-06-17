@@ -35,11 +35,11 @@ describe("compiler pass |generateBytecode|", function() {
         'c = "c"'
       ].join("\n"), constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }',
+        '{ type: "literal", text: "a", ignoreCase: false }',
         '"b"',
-        '{ type: "literal", text: "b", ignoreCase: false, description: "\\"b\\"" }',
+        '{ type: "literal", text: "b", ignoreCase: false }',
         '"c"',
-        '{ type: "literal", text: "c", ignoreCase: false, description: "\\"c\\"" }'
+        '{ type: "literal", text: "c", ignoreCase: false }'
       ]));
     });
   });
@@ -69,7 +69,7 @@ describe("compiler pass |generateBytecode|", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '{ type: "other", description: "start" }',
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }'
+        '{ type: "literal", text: "a", ignoreCase: false }'
       ]));
     });
   });
@@ -106,7 +106,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }',
+          '{ type: "literal", text: "a", ignoreCase: false }',
           'function() { code }'
         ]));
       });
@@ -129,7 +129,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }',
+          '{ type: "literal", text: "a", ignoreCase: false }',
           'function(a) { code }'
         ]));
       });
@@ -165,11 +165,11 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }',
+          '{ type: "literal", text: "a", ignoreCase: false }',
           '"b"',
-          '{ type: "literal", text: "b", ignoreCase: false, description: "\\"b\\"" }',
+          '{ type: "literal", text: "b", ignoreCase: false }',
           '"c"',
-          '{ type: "literal", text: "c", ignoreCase: false, description: "\\"c\\"" }',
+          '{ type: "literal", text: "c", ignoreCase: false }',
           'function(a, b, c) { code }'
         ]));
       });
@@ -205,11 +205,11 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }',
+        '{ type: "literal", text: "a", ignoreCase: false }',
         '"b"',
-        '{ type: "literal", text: "b", ignoreCase: false, description: "\\"b\\"" }',
+        '{ type: "literal", text: "b", ignoreCase: false }',
         '"c"',
-        '{ type: "literal", text: "c", ignoreCase: false, description: "\\"c\\"" }'
+        '{ type: "literal", text: "c", ignoreCase: false }'
       ]));
     });
   });
@@ -257,7 +257,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }'
+        '{ type: "literal", text: "a", ignoreCase: false }'
       ]));
     });
   });
@@ -284,7 +284,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }'
+        '{ type: "literal", text: "a", ignoreCase: false }'
       ]));
     });
   });
@@ -304,7 +304,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }'
+        '{ type: "literal", text: "a", ignoreCase: false }'
       ]));
     });
   });
@@ -326,7 +326,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }'
+        '{ type: "literal", text: "a", ignoreCase: false }'
       ]));
     });
   });
@@ -352,7 +352,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }'
+        '{ type: "literal", text: "a", ignoreCase: false }'
       ]));
     });
   });
@@ -429,11 +429,11 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }',
+          '{ type: "literal", text: "a", ignoreCase: false }',
           '"b"',
-          '{ type: "literal", text: "b", ignoreCase: false, description: "\\"b\\"" }',
+          '{ type: "literal", text: "b", ignoreCase: false }',
           '"c"',
-          '{ type: "literal", text: "c", ignoreCase: false, description: "\\"c\\"" }',
+          '{ type: "literal", text: "c", ignoreCase: false }',
           'function(a, b, c) { code }'
         ]));
       });
@@ -504,11 +504,11 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }',
+          '{ type: "literal", text: "a", ignoreCase: false }',
           '"b"',
-          '{ type: "literal", text: "b", ignoreCase: false, description: "\\"b\\"" }',
+          '{ type: "literal", text: "b", ignoreCase: false }',
           '"c"',
-          '{ type: "literal", text: "c", ignoreCase: false, description: "\\"c\\"" }',
+          '{ type: "literal", text: "c", ignoreCase: false }',
           'function(a, b, c) { code }'
         ]));
       });
@@ -560,7 +560,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false, description: "\\"a\\"" }'
+          '{ type: "literal", text: "a", ignoreCase: false }'
         ]));
       });
     });
@@ -579,7 +579,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "A", ignoreCase: true, description: "\\"A\\"" }'
+          '{ type: "literal", text: "A", ignoreCase: true }'
         ]));
       });
     });
@@ -598,7 +598,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]', constsDetails([
           '/^[a]/',
-          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: false, description: "[a]" }'
+          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: false }'
         ]));
       });
     });
@@ -607,7 +607,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [^a]', constsDetails([
           '/^[^a]/',
-          '{ type: "class", parts: ["a"], inverted: true, ignoreCase: false, description: "[^a]" }'
+          '{ type: "class", parts: ["a"], inverted: true, ignoreCase: false }'
         ]));
       });
     });
@@ -616,7 +616,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]i', constsDetails([
           '/^[a]/i',
-          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: true, description: "[a]" }'
+          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: true }'
         ]));
       });
     });
@@ -625,7 +625,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [ab-def-hij-l]', constsDetails([
           '/^[ab-def-hij-l]/',
-          '{ type: "class", parts: ["a", ["b", "d"], "e", ["f", "h"], "i", ["j", "l"]], inverted: false, ignoreCase: false, description: "[ab-def-hij-l]" }'
+          '{ type: "class", parts: ["a", ["b", "d"], "e", ["f", "h"], "i", ["j", "l"]], inverted: false, ignoreCase: false }'
         ]));
       });
     });
@@ -634,7 +634,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = []', constsDetails([
           '/^(?!)/',
-          '{ type: "class", parts: [], inverted: false, ignoreCase: false, description: "[]" }'
+          '{ type: "class", parts: [], inverted: false, ignoreCase: false }'
         ]));
       });
     });
@@ -643,7 +643,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [^]', constsDetails([
           '/^[\\S\\s]/',
-          '{ type: "class", parts: [], inverted: true, ignoreCase: false, description: "[^]" }'
+          '{ type: "class", parts: [], inverted: true, ignoreCase: false }'
         ]));
       });
     });
@@ -663,7 +663,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(
         grammar,
-        constsDetails(['{ type: "any", description: "any character" }'])
+        constsDetails(['{ type: "any" }'])
       );
     });
   });
