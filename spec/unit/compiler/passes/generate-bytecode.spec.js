@@ -35,11 +35,11 @@ describe("compiler pass |generateBytecode|", function() {
         'c = "c"'
       ].join("\n"), constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }',
+        'peg$literalExpectation("a", false)',
         '"b"',
-        '{ type: "literal", text: "b", ignoreCase: false }',
+        'peg$literalExpectation("b", false)',
         '"c"',
-        '{ type: "literal", text: "c", ignoreCase: false }'
+        'peg$literalExpectation("c", false)'
       ]));
     });
   });
@@ -67,9 +67,9 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        '{ type: "other", description: "start" }',
+        'peg$otherExpectation("start")',
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }'
+        'peg$literalExpectation("a", false)'
       ]));
     });
   });
@@ -106,7 +106,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false }',
+          'peg$literalExpectation("a", false)',
           'function() { code }'
         ]));
       });
@@ -129,7 +129,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false }',
+          'peg$literalExpectation("a", false)',
           'function(a) { code }'
         ]));
       });
@@ -165,11 +165,11 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false }',
+          'peg$literalExpectation("a", false)',
           '"b"',
-          '{ type: "literal", text: "b", ignoreCase: false }',
+          'peg$literalExpectation("b", false)',
           '"c"',
-          '{ type: "literal", text: "c", ignoreCase: false }',
+          'peg$literalExpectation("c", false)',
           'function(a, b, c) { code }'
         ]));
       });
@@ -205,11 +205,11 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }',
+        'peg$literalExpectation("a", false)',
         '"b"',
-        '{ type: "literal", text: "b", ignoreCase: false }',
+        'peg$literalExpectation("b", false)',
         '"c"',
-        '{ type: "literal", text: "c", ignoreCase: false }'
+        'peg$literalExpectation("c", false)'
       ]));
     });
   });
@@ -257,7 +257,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }'
+        'peg$literalExpectation("a", false)'
       ]));
     });
   });
@@ -284,7 +284,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }'
+        'peg$literalExpectation("a", false)'
       ]));
     });
   });
@@ -304,7 +304,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }'
+        'peg$literalExpectation("a", false)'
       ]));
     });
   });
@@ -326,7 +326,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }'
+        'peg$literalExpectation("a", false)'
       ]));
     });
   });
@@ -352,7 +352,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
         '"a"',
-        '{ type: "literal", text: "a", ignoreCase: false }'
+        'peg$literalExpectation("a", false)'
       ]));
     });
   });
@@ -429,11 +429,11 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false }',
+          'peg$literalExpectation("a", false)',
           '"b"',
-          '{ type: "literal", text: "b", ignoreCase: false }',
+          'peg$literalExpectation("b", false)',
           '"c"',
-          '{ type: "literal", text: "c", ignoreCase: false }',
+          'peg$literalExpectation("c", false)',
           'function(a, b, c) { code }'
         ]));
       });
@@ -504,11 +504,11 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false }',
+          'peg$literalExpectation("a", false)',
           '"b"',
-          '{ type: "literal", text: "b", ignoreCase: false }',
+          'peg$literalExpectation("b", false)',
           '"c"',
-          '{ type: "literal", text: "c", ignoreCase: false }',
+          'peg$literalExpectation("c", false)',
           'function(a, b, c) { code }'
         ]));
       });
@@ -560,7 +560,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "a", ignoreCase: false }'
+          'peg$literalExpectation("a", false)'
         ]));
       });
     });
@@ -579,7 +579,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
           '"a"',
-          '{ type: "literal", text: "A", ignoreCase: true }'
+          'peg$literalExpectation("A", true)'
         ]));
       });
     });
@@ -598,7 +598,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]', constsDetails([
           '/^[a]/',
-          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: false }'
+          'peg$classExpectation(["a"], false, false)'
         ]));
       });
     });
@@ -607,7 +607,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [^a]', constsDetails([
           '/^[^a]/',
-          '{ type: "class", parts: ["a"], inverted: true, ignoreCase: false }'
+          'peg$classExpectation(["a"], true, false)'
         ]));
       });
     });
@@ -616,7 +616,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]i', constsDetails([
           '/^[a]/i',
-          '{ type: "class", parts: ["a"], inverted: false, ignoreCase: true }'
+          'peg$classExpectation(["a"], false, true)'
         ]));
       });
     });
@@ -625,7 +625,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [ab-def-hij-l]', constsDetails([
           '/^[ab-def-hij-l]/',
-          '{ type: "class", parts: ["a", ["b", "d"], "e", ["f", "h"], "i", ["j", "l"]], inverted: false, ignoreCase: false }'
+          'peg$classExpectation(["a", ["b", "d"], "e", ["f", "h"], "i", ["j", "l"]], false, false)'
         ]));
       });
     });
@@ -634,7 +634,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = []', constsDetails([
           '/^(?!)/',
-          '{ type: "class", parts: [], inverted: false, ignoreCase: false }'
+          'peg$classExpectation([], false, false)'
         ]));
       });
     });
@@ -643,7 +643,7 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [^]', constsDetails([
           '/^[\\S\\s]/',
-          '{ type: "class", parts: [], inverted: true, ignoreCase: false }'
+          'peg$classExpectation([], true, false)'
         ]));
       });
     });
@@ -663,7 +663,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(
         grammar,
-        constsDetails(['{ type: "any" }'])
+        constsDetails(['peg$anyExpectation()'])
       );
     });
   });
