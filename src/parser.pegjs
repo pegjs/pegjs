@@ -385,7 +385,6 @@ CharacterClassMatcher "character class"
         parts:      filterEmptyStrings(parts),
         inverted:   inverted !== null,
         ignoreCase: ignoreCase !== null,
-        rawText:    text(),
         location:   location()
       };
     }
