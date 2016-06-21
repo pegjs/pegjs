@@ -33,7 +33,7 @@ function printHelp() {
   console.log("                                     parser will be allowed to start parsing");
   console.log("                                     from (default: the first rule in the");
   console.log("                                     grammar)");
-  console.log("  -o, --optimize <goal>              select optimization for speed or size");
+  console.log("  -O, --optimize <goal>              select optimization for speed or size");
   console.log("                                     (default: speed)");
   console.log("      --trace                        enable tracing in generated parser");
   console.log("      --plugin <plugin>              use a specified plugin (can be specified");
@@ -164,11 +164,11 @@ while (args.length > 0 && isOption(args[0])) {
       options.trace = true;
       break;
 
-    case "-o":
+    case "-O":
     case "--optimize":
       nextArg();
       if (args.length === 0) {
-        abort("Missing parameter of the -o/--optimize option.");
+        abort("Missing parameter of the -O/--optimize option.");
       }
       if (args[0] !== "speed" && args[0] !== "size") {
         abort("Optimization goal must be either \"speed\" or \"size\".");
