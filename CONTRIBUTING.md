@@ -1,48 +1,48 @@
 # Contribution Guidelines
 
-PEG.js is an open source project and it welcomes contributions. To make sure
-your contributions are useful and the overall process is smooth, please adhere
-to these guidelines.
+The best way to contribute to PEG.js is by using it and giving back useful
+feedback — reporting discovered bugs or requesting missing features.
 
-You can contribute in three main ways: by reporting bugs, requesting features,
-and contributing code.
+You can also contribute code, but be advised that many patches end up being
+rejected, usually because the change doesn’t fit the project or because of
+various implementation issues. In almost all cases it’s best to get in touch
+first before sending a patch.
 
 ## Reporting Bugs
 
-You can report bugs using [GitHub issues][issues]. Before submitting a bug
-report, [search the existing reports][issues-search-bugs] to see if the bug
-wasn’t reported already.
+Report bugs using [GitHub issues][issues]. Before submitting a bug report,
+please [search existing reports][issues-search-bugs] to see if the bug wasn’t
+reported already.
 
-Each bug report should contain this information:
+In the report, please describe:
 
-  * Steps to reproduce
-  * What you expected to happen
-  * What happened instead
+  * Steps to reproduce the problem
+  * Expected result(s)
+  * Actual result(s)
 
-In most cases, it is useful to include a **minimal** example (grammar + input)
-reproducing the problem.
+In most cases, it’s also useful to include a **minimal** example (grammar +
+input) reproducing the problem.
 
 ## Requesting Features
 
-You can request features using [GitHub issues][issues]. Before submitting a
-feature request, [search the existing requests][issues-search-enhancements] to
-see if the feature wasn’t requested already.
+Request features using [GitHub issues][issues]. Before submitting a feature
+request, please [search existing requests][issues-search-enhancements] to see if
+the feature wasn’t requested already.
 
-Each feature request should contain this information:
+In the request, please describe:
 
-  * Feature description
-  * Why do you request it
+  * How the feature should work
+  * Use case(s) behind it
 
 ## Contributing Code
 
-You can contribute code using [GitHub pull requests][pulls]. However, for
-anything but trivial changes, file an issue first. Your idea may not fit the
-project, or the implementation you have in mind may not be the right one. Filing
-an issue in these cases will prevent wasting time and effort on both sides.
+Contribute code using [GitHub pull requests][pulls]. For non-trivial changes,
+first file a corresponding bug report or feature request. This will ensure the
+*problem* is separated from a *solution*.
 
-Split your change into atomic commits with descriptive commit messages adhering
-to [these conventions][git-commit-messages]. Have a look in the commit history
-to see good examples.
+Split your change into atomic commits with descriptive messages adhering to
+[these conventions][git-commit-messages]. Have a look in the commit history to
+see good examples.
 
 When appropriate, add documentation and tests.
 
