@@ -93,7 +93,7 @@ function trim(s) {
 var args = process.argv.slice(2); // Trim "node" and the script path.
 
 function isOption(arg) {
-  return (/^-/).test(arg);
+  return (/^-.+/).test(arg);
 }
 
 function nextArg() {
@@ -236,36 +236,52 @@ while (args.length > 0 && isOption(args[0])) {
   nextArg();
 }
 
+var inputFile;
+var outputFile;
 var inputStream;
 var outputStream;
 
 switch (args.length) {
   case 0:
-    process.stdin.resume();
-    inputStream = process.stdin;
-    outputStream = process.stdout;
+    inputFile = "-";
+    outputFile = "-";
     break;
 
   case 1:
+    inputFile = args[0];
+    if (inputFile === "-") {
+      outputFile = "-";
+    } else {
+      outputFile = inputFile.substr(0, inputFile.length - path.extname(inputFile).length) + ".js";
+    }
+    break;
+
   case 2:
-    var inputFile = args[0];
-    inputStream = fs.createReadStream(inputFile);
-    inputStream.on("error", function() {
-      abort("Can't read from file \"" + inputFile + "\".");
-    });
-
-    var outputFile = args.length === 1
-      ? args[0].substr(0, args[0].length - path.extname(args[0]).length) + ".js"
-      : args[1];
-    outputStream = fs.createWriteStream(outputFile);
-    outputStream.on("error", function() {
-      abort("Can't write to file \"" + outputFile + "\".");
-    });
-
+    inputFile = args[0];
+    outputFile = args[1];
     break;
 
   default:
     abort("Too many arguments.");
+}
+
+if (inputFile === "-") {
+  process.stdin.resume();
+  inputStream = process.stdin;
+  inputStream.on("error", function() {
+    abort("Can't read from file \"" + inputFile + "\".");
+  });
+} else {
+  inputStream = fs.createReadStream(inputFile);
+}
+
+if (outputFile === "-") {
+  outputStream = process.stdout;
+} else {
+  outputStream = fs.createWriteStream(outputFile);
+  outputStream.on("error", function() {
+    abort("Can't write to file \"" + outputFile + "\".");
+  });
 }
 
 readStream(inputStream, function(input) {
