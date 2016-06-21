@@ -78,7 +78,7 @@ This writes parser source code into a file with the same name as the grammar
 file but with “.js” extension. You can also specify the output file explicitly:
 
 ```console
-$ pegjs arithmetics.pegjs arithmetics-parser.js
+$ pegjs -o arithmetics-parser.js arithmetics.pegjs
 ```
 
 If you omit both input and output file, standard input and output are used.

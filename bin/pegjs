@@ -13,9 +13,10 @@ function printVersion() {
 }
 
 function printHelp() {
-  console.log("Usage: pegjs [options] [--] [<input_file>] [<output_file>]");
+  console.log("Usage: pegjs [options] [--] [<input_file>]");
   console.log("");
   console.log("Options:");
+  console.log("  -o, --output <file>                output file");
   console.log("  -e, --export-var <variable>        name of a global variable into which the");
   console.log("                                     parser object is assigned to when no module");
   console.log("                                     loader is detected (default: \"\")");
@@ -103,6 +104,9 @@ function readStream(inputStream, callback) {
 
 /* Main */
 
+var inputFile = null;
+var outputFile = null;
+
 var options = {
   cache:        false,
   output:       "source",
@@ -116,6 +120,15 @@ var options = {
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
+    case "-o":
+    case "--output":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the -o/--output option.");
+      }
+      outputFile = args[0];
+      break;
+
     case "-e":
     case "--export-var":
       nextArg();
@@ -229,33 +242,28 @@ while (args.length > 0 && isOption(args[0])) {
   nextArg();
 }
 
-var inputFile;
-var outputFile;
 var inputStream;
 var outputStream;
 
 switch (args.length) {
   case 0:
     inputFile = "-";
-    outputFile = "-";
     break;
 
   case 1:
     inputFile = args[0];
-    if (inputFile === "-") {
-      outputFile = "-";
-    } else {
-      outputFile = inputFile.substr(0, inputFile.length - path.extname(inputFile).length) + ".js";
-    }
-    break;
-
-  case 2:
-    inputFile = args[0];
-    outputFile = args[1];
     break;
 
   default:
     abort("Too many arguments.");
+}
+
+if (outputFile === null) {
+  if (inputFile === "-") {
+    outputFile = "-";
+  } else {
+    outputFile = inputFile.substr(0, inputFile.length - path.extname(inputFile).length) + ".js";
+  }
 }
 
 if (inputFile === "-") {
