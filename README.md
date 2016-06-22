@@ -94,6 +94,8 @@ You can tweak the generated parser with several options:
     allowed to start parsing from (default: the first rule in the grammar)
   * `--cache` — makes the parser cache results, avoiding exponential parsing
     time in pathological cases but making the parser slower
+  * `--dependency` — makes the parser require a specified dependency (can be
+    specified multiple times)
   * `--extra-options` — additional options (in JSON format) to pass to
     `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
