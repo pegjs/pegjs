@@ -90,16 +90,16 @@ object is assigned to when no module loader is detected.
 
 You can tweak the generated parser with several options:
 
-  * `--cache` — makes the parser cache results, avoiding exponential parsing
-    time in pathological cases but making the parser slower
   * `--allowed-start-rules` — comma-separated list of rules the parser will be
     allowed to start parsing from (default: the first rule in the grammar)
-  * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
-    times)
+  * `--cache` — makes the parser cache results, avoiding exponential parsing
+    time in pathological cases but making the parser slower
   * `--extra-options` — additional options (in JSON format) to pass to
     `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
     pass to `peg.generate`
+  * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
+    times)
   * `--trace` — makes the parser trace its progress
 
 ### JavaScript API
