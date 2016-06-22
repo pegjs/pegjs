@@ -16,28 +16,28 @@ function printHelp() {
   console.log("Usage: pegjs [options] [--] [<input_file>]");
   console.log("");
   console.log("Options:");
-  console.log("  -o, --output <file>                output file");
-  console.log("  -e, --export-var <variable>        name of a global variable into which the");
-  console.log("                                     parser object is assigned to when no module");
-  console.log("                                     loader is detected (default: \"\")");
-  console.log("  -d, --dependency <dependency>      use specified dependency (can be specified");
-  console.log("                                     multiple times)");
-  console.log("      --cache                        make generated parser cache results");
   console.log("      --allowed-start-rules <rules>  comma-separated list of rules the generated");
   console.log("                                     parser will be allowed to start parsing");
   console.log("                                     from (default: the first rule in the");
   console.log("                                     grammar)");
-  console.log("  -O, --optimize <goal>              select optimization for speed or size");
-  console.log("                                     (default: speed)");
-  console.log("      --trace                        enable tracing in generated parser");
-  console.log("      --plugin <plugin>              use a specified plugin (can be specified");
+  console.log("      --cache                        make generated parser cache results");
+  console.log("  -d, --dependency <dependency>      use specified dependency (can be specified");
   console.log("                                     multiple times)");
+  console.log("  -e, --export-var <variable>        name of a global variable into which the");
+  console.log("                                     parser object is assigned to when no module");
+  console.log("                                     loader is detected (default: \"\")");
   console.log("      --extra-options <options>      additional options (in JSON format) to pass");
   console.log("                                     to peg.generate");
   console.log("      --extra-options-file <file>    file with additional options (in JSON");
   console.log("                                     format) to pass to peg.generate");
-  console.log("  -v, --version                      print version information and exit");
   console.log("  -h, --help                         print help and exit");
+  console.log("  -O, --optimize <goal>              select optimization for speed or size");
+  console.log("                                     (default: speed)");
+  console.log("  -o, --output <file>                output file");
+  console.log("      --plugin <plugin>              use a specified plugin (can be specified");
+  console.log("                                     multiple times)");
+  console.log("      --trace                        enable tracing in generated parser");
+  console.log("  -v, --version                      print version information and exit");
 }
 
 function exitSuccess() {
