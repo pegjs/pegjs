@@ -100,6 +100,8 @@ You can tweak the generated parser with several options:
     `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
     pass to `peg.generate`
+  * `--optimize` — selects between optimizing the generated parser for parsing
+    speed (`speed`) or code size (`size`) (default: `speed`)
   * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
     times)
   * `--trace` — makes the parser trace its progress
