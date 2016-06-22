@@ -148,6 +148,7 @@ object to `peg.generate`. The following options are supported:
     object; if set to `"source"`, it will return parser source code as a string
     (default: `"parser"`)
   * `plugins` — plugins to use
+  * `trace` — makes the parser trace its progress (default: `false`)
 
 Using the Parser
 ----------------
