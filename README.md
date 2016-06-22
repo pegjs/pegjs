@@ -129,11 +129,11 @@ property with more details about the error.
 You can tweak the generated parser by passing a second parameter with an options
 object to `peg.generate`. The following options are supported:
 
+  * `allowedStartRules` — rules the parser will be allowed to start parsing from
+    (default: the first rule in the grammar)
   * `cache` — if `true`, makes the parser cache results, avoiding exponential
     parsing time in pathological cases but making the parser slower (default:
     `false`)
-  * `allowedStartRules` — rules the parser will be allowed to start parsing from
-    (default: the first rule in the grammar)
   * `dependencies` — parser dependencies, the value is an object which maps
     variables used to access the dependencies in the parser to module IDs used
     to load them; valid only when `format` is set to `"umd"` (default: `{}`)
@@ -142,11 +142,11 @@ object to `peg.generate`. The following options are supported:
     set to `"umd"` (default: `null`)
   * `format` — format of the genreated parser (`"bare"` or `"umd"`); valid only
     when `output` is set to `"source"` (default: `"bare"`)
+  * `optimize`— selects between optimizing the generated parser for parsing
+    speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
   * `output` — if set to `"parser"`, the method will return generated parser
     object; if set to `"source"`, it will return parser source code as a string
     (default: `"parser"`)
-  * `optimize`— selects between optimizing the generated parser for parsing
-    speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
   * `plugins` — plugins to use
 
 Using the Parser
