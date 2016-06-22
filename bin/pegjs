@@ -120,22 +120,18 @@ var options = {
 
 while (args.length > 0 && isOption(args[0])) {
   switch (args[0]) {
-    case "-o":
-    case "--output":
+    case "--allowed-start-rules":
       nextArg();
       if (args.length === 0) {
-        abort("Missing parameter of the -o/--output option.");
+        abort("Missing parameter of the -e/--allowed-start-rules option.");
       }
-      outputFile = args[0];
+      options.allowedStartRules = args[0]
+        .split(",")
+        .map(trim);
       break;
 
-    case "-e":
-    case "--export-var":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -e/--export-var option.");
-      }
-      options.exportVar = args[0];
+    case "--cache":
+      options.cache = true;
       break;
 
     case "-d":
@@ -152,51 +148,13 @@ while (args.length > 0 && isOption(args[0])) {
       }
       break;
 
-    case "--cache":
-      options.cache = true;
-      break;
-
-    case "--allowed-start-rules":
+    case "-e":
+    case "--export-var":
       nextArg();
       if (args.length === 0) {
-        abort("Missing parameter of the -e/--allowed-start-rules option.");
+        abort("Missing parameter of the -e/--export-var option.");
       }
-      options.allowedStartRules = args[0]
-        .split(",")
-        .map(trim);
-      break;
-
-    case "--trace":
-      options.trace = true;
-      break;
-
-    case "-O":
-    case "--optimize":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -O/--optimize option.");
-      }
-      if (args[0] !== "speed" && args[0] !== "size") {
-        abort("Optimization goal must be either \"speed\" or \"size\".");
-      }
-      options.optimize = args[0];
-      break;
-
-    case "--plugin":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --plugin option.");
-      }
-      var id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
-      var mod;
-      try {
-        mod = require(id);
-      } catch (e) {
-        if (e.code !== "MODULE_NOT_FOUND") { throw e; }
-
-        abort("Can't load module \"" + id + "\".");
-      }
-      options.plugins.push(mod);
+      options.exportVar = args[0];
       break;
 
     case "--extra-options":
@@ -220,15 +178,57 @@ while (args.length > 0 && isOption(args[0])) {
       addExtraOptions(options, json);
       break;
 
-    case "-v":
-    case "--version":
-      printVersion();
-      exitSuccess();
-      break;
-
     case "-h":
     case "--help":
       printHelp();
+      exitSuccess();
+      break;
+
+    case "-O":
+    case "--optimize":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the -O/--optimize option.");
+      }
+      if (args[0] !== "speed" && args[0] !== "size") {
+        abort("Optimization goal must be either \"speed\" or \"size\".");
+      }
+      options.optimize = args[0];
+      break;
+
+    case "-o":
+    case "--output":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the -o/--output option.");
+      }
+      outputFile = args[0];
+      break;
+
+    case "--plugin":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the --plugin option.");
+      }
+      var id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
+      var mod;
+      try {
+        mod = require(id);
+      } catch (e) {
+        if (e.code !== "MODULE_NOT_FOUND") { throw e; }
+
+        abort("Can't load module \"" + id + "\".");
+      }
+      options.plugins.push(mod);
+      break;
+
+    case "--trace":
+      options.trace = true;
+      break;
+
+    case "-v":
+    case "--version":
+      printVersion();
       exitSuccess();
       break;
 
