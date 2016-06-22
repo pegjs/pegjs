@@ -109,13 +109,13 @@ var outputFile = null;
 
 var options = {
   cache:        false,
-  output:       "source",
-  format:       "umd",
-  exportVar:    null,
   dependencies: {},
+  exportVar:    null,
+  format:       "umd",
   optimize:     "speed",
-  trace:        false,
-  plugins:      []
+  output:       "source",
+  plugins:      [],
+  trace:        false
 };
 
 while (args.length > 0 && isOption(args[0])) {
