@@ -1401,7 +1401,7 @@ describe("generated parser behavior", function() {
           var parser = peg.generate('start = "a" / "b" / "c"', options);
 
           expect(parser).toFailToParse("d", {
-            message: 'Expected "a", "b" or "c" but "d" found.'
+            message: 'Expected "a", "b", or "c" but "d" found.'
           });
         });
 
@@ -1433,7 +1433,7 @@ describe("generated parser behavior", function() {
           var parser = peg.generate('start = "c" / "b" / "a"', options);
 
           expect(parser).toFailToParse("d", {
-            message: 'Expected "a", "b" or "c" but "d" found.'
+            message: 'Expected "a", "b", or "c" but "d" found.'
           });
         });
 
