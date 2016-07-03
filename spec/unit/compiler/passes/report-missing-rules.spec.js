@@ -7,7 +7,7 @@ describe("compiler pass |reportMissingRules|", function() {
 
   it("reports missing rules", function() {
     expect(pass).toReportError('start = missing', {
-      message:  'Referenced rule "missing" does not exist.',
+      message:  'Rule "missing" is not defined.',
       location: {
         start: { offset:  8, line: 1, column:  9 },
         end:   { offset: 15, line: 1, column: 16 }
