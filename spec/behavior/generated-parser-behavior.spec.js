@@ -133,15 +133,6 @@ describe("generated parser behavior", function() {
       });
 
       describe("available variables and functions", function() {
-        it("|parser| contains the parser object", function() {
-          var parser = peg.generate([
-                '{ var result = parser; }',
-                'start = "a" { return result; }'
-              ].join("\n"), options);
-
-          expect(parser).toParse("a", parser);
-        });
-
         it("|options| contains options", function() {
           var parser = peg.generate([
                 '{ var result = options; }',
@@ -568,15 +559,6 @@ describe("generated parser behavior", function() {
       });
 
       describe("available variables & functions", function() {
-        it("|parser| contains the parser object", function() {
-          var parser = peg.generate([
-                '{ var result; }',
-                'start = &{ result = parser; return true; } { return result; }'
-              ].join("\n"), options);
-
-          expect(parser).toParse("", parser);
-        });
-
         it("|options| contains options", function() {
           var parser = peg.generate([
                 '{ var result; }',
@@ -773,15 +755,6 @@ describe("generated parser behavior", function() {
       });
 
       describe("available variables & functions", function() {
-        it("|parser| contains the parser object", function() {
-          var parser = peg.generate([
-                '{ var result; }',
-                'start = !{ result = parser; return false; } { return result; }'
-              ].join("\n"), options);
-
-          expect(parser).toParse("", parser);
-        });
-
         it("|options| contains options", function() {
           var parser = peg.generate([
                 '{ var result; }',
@@ -1151,15 +1124,6 @@ describe("generated parser behavior", function() {
         });
 
         describe("available variables & functions", function() {
-          it("|parser| contains the parser object", function() {
-            var parser = peg.generate(
-                  'start = "a" { return parser; }',
-                  options
-                );
-
-            expect(parser).toParse("a", parser);
-          });
-
           it("|options| contains options", function() {
             var parser = peg.generate(
                   'start = "a" { return options; }',
