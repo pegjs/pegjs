@@ -47,7 +47,7 @@ parser:
 	# tricky because the file is used when generating its own new version, which
 	# means we can't start writing the header there until we call $(PEGJS).
 
-	$(PEGJS) $(PARSER_SRC_FILE) $(PARSER_OUT_FILE_NEW)
+	$(PEGJS) -o $(PARSER_OUT_FILE_NEW) $(PARSER_SRC_FILE)
 
 	rm -f $(PARSER_OUT_FILE)
 
