@@ -7,7 +7,7 @@ describe("compiler pass |reportInfiniteLoops|", function() {
 
   it("reports infinite loops for zero_or_more", function() {
     expect(pass).toReportError('start = ("")*', {
-      message:  "Possible infinite loop when parsing (repetition used with with an expression that may not consume any input).",
+      message:  "Possible infinite loop when parsing (repetition used with an expression that may not consume any input).",
       location: {
         start: { offset:  8, line: 1, column:  9 },
         end:   { offset: 13, line: 1, column: 14 }
@@ -17,7 +17,7 @@ describe("compiler pass |reportInfiniteLoops|", function() {
 
   it("reports infinite loops for one_or_more", function() {
     expect(pass).toReportError('start = ("")+', {
-      message:  "Possible infinite loop when parsing (repetition used with with an expression that may not consume any input).",
+      message:  "Possible infinite loop when parsing (repetition used with an expression that may not consume any input).",
       location: {
         start: { offset:  8, line: 1, column:  9 },
         end:   { offset: 13, line: 1, column: 14 }
