@@ -111,7 +111,7 @@ var options = {
   cache:        false,
   dependencies: {},
   exportVar:    null,
-  format:       "umd",
+  format:       "node",
   optimize:     "speed",
   output:       "source",
   plugins:      [],
