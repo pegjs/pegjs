@@ -140,13 +140,13 @@ object to `peg.generate`. The following options are supported:
     `false`)
   * `dependencies` — parser dependencies, the value is an object which maps
     variables used to access the dependencies in the parser to module IDs used
-    to load them; valid only when `format` is set to `"node"` or `"umd"`
-    (default: `{}`)
+    to load them; valid only when `format` is set to `"amd"`, `"node"`, or
+    `"umd"` (default: `{}`)
   * `exportVar` — name of a global variable into which the parser object is
     assigned to when no module loader is detected; valid only when `format` is
     set to `"umd"` (default: `null`)
-  * `format` — format of the genreated parser (`"bare"`, `"node"`, or `"umd"`);
-    valid only when `output` is set to `"source"` (default: `"bare"`)
+  * `format` — format of the genreated parser (`"amd"`, `"bare"`, `"node"`, or
+    `"umd"`); valid only when `output` is set to `"source"` (default: `"bare"`)
   * `optimize`— selects between optimizing the generated parser for parsing
     speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
   * `output` — if set to `"parser"`, the method will return generated parser
