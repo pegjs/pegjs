@@ -83,10 +83,8 @@ $ pegjs -o arithmetics-parser.js arithmetics.pegjs
 
 If you omit both input and output file, standard input and output are used.
 
-The generated parser is in the [UMD](https://github.com/umdjs/umd) format, which
-means it works as a Node.js or AMD module. You can also use the
-`-e`/`--export-var` option to define a global variable into which the parser
-object is assigned to when no module loader is detected.
+By default, the generated parser is in the Node.js module format. You can
+override this using the `--format` option.
 
 You can tweak the generated parser with several options:
 
@@ -96,10 +94,14 @@ You can tweak the generated parser with several options:
     time in pathological cases but making the parser slower
   * `--dependency` — makes the parser require a specified dependency (can be
     specified multiple times)
+  * `--export-var` — name of a global variable into which the parser object is
+    assigned to when no module loader is detected
   * `--extra-options` — additional options (in JSON format) to pass to
     `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
     pass to `peg.generate`
+  * `--format` — format of the generated parser: `amd`, `global`, `node`, `umd`
+    (default: `node`)
   * `--optimize` — selects between optimizing the generated parser for parsing
     speed (`speed`) or code size (`size`) (default: `speed`)
   * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple

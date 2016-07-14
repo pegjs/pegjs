@@ -2,9 +2,10 @@
 
 "use strict";
 
-var fs   = require("fs");
-var path = require("path");
-var peg  = require("../lib/peg");
+var fs      = require("fs");
+var path    = require("path");
+var peg     = require("../lib/peg");
+var objects = require("../lib/utils/objects");
 
 /* Helpers */
 
@@ -25,11 +26,13 @@ function printHelp() {
   console.log("                                     multiple times)");
   console.log("  -e, --export-var <variable>        name of a global variable into which the");
   console.log("                                     parser object is assigned to when no module");
-  console.log("                                     loader is detected (default: \"\")");
+  console.log("                                     loader is detected");
   console.log("      --extra-options <options>      additional options (in JSON format) to pass");
   console.log("                                     to peg.generate");
   console.log("      --extra-options-file <file>    file with additional options (in JSON");
   console.log("                                     format) to pass to peg.generate");
+  console.log("      --format <format>              format of the generated parser: amd, global,");
+  console.log("                                     node, umd (default: node)");
   console.log("  -h, --help                         print help and exit");
   console.log("  -O, --optimize <goal>              select optimization for speed or size");
   console.log("                                     (default: speed)");
@@ -178,6 +181,17 @@ while (args.length > 0 && isOption(args[0])) {
       addExtraOptions(options, json);
       break;
 
+    case "--format":
+      nextArg();
+      if (args.length === 0) {
+        abort("Missing parameter of the --format option.");
+      }
+      if (args[0] !== "amd" && args[0] !== "global" && args[0] !== "node" && args[0] !== "umd") {
+        abort("Module format must be one of \"amd\", \"global\", \"node\", and \"umd\".");
+      }
+      options.format = args[0];
+      break;
+
     case "-h":
     case "--help":
       printHelp();
@@ -240,6 +254,18 @@ while (args.length > 0 && isOption(args[0])) {
       abort("Unknown option: " + args[0] + ".");
   }
   nextArg();
+}
+
+if (objects.keys(options.dependencies).length > 0) {
+  if (options.format !== "amd" && options.format !== "node" && options.format !== "umd") {
+      abort("Can't use the -d/--dependency option with the \"" + options.format + "\" module format.");
+  }
+}
+
+if (options.exportVar !== null) {
+  if (options.format !== "global" && options.format !== "umd") {
+      abort("Can't use the -e/--export-var option with the \"" + options.format + "\" module format.");
+  }
 }
 
 var inputStream;
