@@ -16,7 +16,7 @@ describe("PEG.js API", function() {
     });
 
     it("throws an exception on semantic error", function() {
-      expect(function() { peg.generate('start = missing'); }).toThrow();
+      expect(function() { peg.generate('start = undefined'); }).toThrow();
     });
 
     describe("allowed start rules", function() {
