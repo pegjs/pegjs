@@ -97,9 +97,9 @@ You can tweak the generated parser with several options:
   * `--export-var` — name of a global variable into which the parser object is
     assigned to when no module loader is detected
   * `--extra-options` — additional options (in JSON format) to pass to
-    `peg.generate`
+    `peg.buildParser`
   * `--extra-options-file` — file with additional options (in JSON format) to
-    pass to `peg.generate`
+    pass to `peg.buildParser`
   * `--format` — format of the generated parser: `amd`, `global`, `node`, `umd`
     (default: `node`)
   * `--optimize` — selects between optimizing the generated parser for parsing
@@ -120,11 +120,11 @@ In browser, include the PEG.js library in your web page or application using the
 `<script>` tag. If PEG.js detects an AMD loader, it will define itself as a
 module, otherwise the API will be available in the `peg` global object.
 
-To generate a parser, call the `peg.generate` method and pass your grammar as a
+To generate a parser, call the `peg.buildParser` method and pass your grammar as a
 parameter:
 
 ```javascript
-var parser = peg.generate("start = ('a' / 'b')+");
+var parser = peg.buildParser("start = ('a' / 'b')+");
 ```
 
 The method will return generated parser object or its source code as a string
@@ -133,7 +133,7 @@ exception if the grammar is invalid. The exception will contain `message`
 property with more details about the error.
 
 You can tweak the generated parser by passing a second parameter with an options
-object to `peg.generate`. The following options are supported:
+object to `peg.buildParser`. The following options are supported:
 
   * `allowedStartRules` — rules the parser will be allowed to start parsing from
     (default: the first rule in the grammar)
