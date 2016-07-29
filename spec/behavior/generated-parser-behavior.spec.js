@@ -1218,7 +1218,7 @@ describe("generated parser behavior", function() {
 
               expect(parser).toFailToParse("a", {
                 message:  "a",
-                found:    "a",
+                found:    null,
                 expected: null,
                 location: {
                   start: { offset: 0, line: 1, column: 1 },
@@ -1240,7 +1240,7 @@ describe("generated parser behavior", function() {
               expect(parser).toFailToParse("a", {
                 message:  "a",
                 expected: null,
-                found:    "a",
+                found:    null,
                 location: {
                   start: { offset: 1, line: 1, column: 2 },
                   end:   { offset: 2, line: 1, column: 3 }
