@@ -2,8 +2,8 @@
 
 "use strict";
 
-describe("compiler pass |reportInfiniteLoops|", function() {
-  var pass = peg.compiler.passes.check.reportInfiniteLoops;
+describe("compiler pass |reportInfiniteRepetition|", function() {
+  var pass = peg.compiler.passes.check.reportInfiniteRepetition;
 
   it("reports infinite loops for zero_or_more", function() {
     expect(pass).toReportError('start = ("")*', {

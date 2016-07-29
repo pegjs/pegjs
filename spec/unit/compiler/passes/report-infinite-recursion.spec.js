@@ -2,8 +2,8 @@
 
 "use strict";
 
-describe("compiler pass |reportLeftRecursion|", function() {
-  var pass = peg.compiler.passes.check.reportLeftRecursion;
+describe("compiler pass |reportInfiniteRecursion|", function() {
+  var pass = peg.compiler.passes.check.reportInfiniteRecursion;
 
   it("reports direct left recursion", function() {
     expect(pass).toReportError('start = start', {
