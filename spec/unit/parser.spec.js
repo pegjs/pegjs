@@ -179,17 +179,6 @@ describe("PEG.js grammar parser", function() {
 
         try {
           result = peg.parser.parse(this.actual);
-
-          stripLocation(result);
-
-          this.message = function() {
-            return "Expected " + jasmine.pp(this.actual) + " "
-                 + (this.isNot ? "not " : "")
-                 + "to parse as " + jasmine.pp(expected) + ", "
-                 + "but it parsed as " + jasmine.pp(result) + ".";
-          };
-
-          return this.env.equals_(result, expected);
         } catch (e) {
           this.message = function() {
             return "Expected " + jasmine.pp(this.actual) + " "
@@ -200,6 +189,17 @@ describe("PEG.js grammar parser", function() {
 
           return false;
         }
+
+        stripLocation(result);
+
+        this.message = function() {
+          return "Expected " + jasmine.pp(this.actual) + " "
+               + (this.isNot ? "not " : "")
+               + "to parse as " + jasmine.pp(expected) + ", "
+               + "but it parsed as " + jasmine.pp(result) + ".";
+        };
+
+        return this.env.equals_(result, expected);
       },
 
       toFailToParse: function(details) {
@@ -207,16 +207,6 @@ describe("PEG.js grammar parser", function() {
 
         try {
           result = peg.parser.parse(this.actual);
-
-          stripLocation(result);
-
-          this.message = function() {
-            return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
-                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                 + "but it parsed as " + jasmine.pp(result) + ".";
-          };
-
-          return false;
         } catch (e) {
           if (this.isNot) {
             this.message = function() {
@@ -245,6 +235,16 @@ describe("PEG.js grammar parser", function() {
 
           return true;
         }
+
+        stripLocation(result);
+
+        this.message = function() {
+          return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
+               + (details ? " with details " + jasmine.pp(details) : "") + ", "
+               + "but it parsed as " + jasmine.pp(result) + ".";
+        };
+
+        return false;
       }
     });
   });

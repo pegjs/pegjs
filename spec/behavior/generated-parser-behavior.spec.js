@@ -41,20 +41,6 @@ describe("generated parser behavior", function() {
 
         try {
           result = this.actual.parse(input, options);
-
-          if (expected !== undefined) {
-            this.message = function() {
-              return "Expected " + jasmine.pp(input) + " "
-                   + "with options " + jasmine.pp(options) + " "
-                   + (this.isNot ? "not " : "")
-                   + "to parse as " + jasmine.pp(expected) + ", "
-                   + "but it parsed as " + jasmine.pp(result) + ".";
-            };
-
-            return this.env.equals_(result, expected);
-          } else {
-            return true;
-          }
         } catch (e) {
           this.message = function() {
             return "Expected " + jasmine.pp(input) + " "
@@ -66,6 +52,20 @@ describe("generated parser behavior", function() {
 
           return false;
         }
+
+        if (expected !== undefined) {
+          this.message = function() {
+            return "Expected " + jasmine.pp(input) + " "
+                 + "with options " + jasmine.pp(options) + " "
+                 + (this.isNot ? "not " : "")
+                 + "to parse as " + jasmine.pp(expected) + ", "
+                 + "but it parsed as " + jasmine.pp(result) + ".";
+          };
+
+          return this.env.equals_(result, expected);
+        } else {
+          return true;
+        }
       },
 
       toFailToParse: function(input, details, options) {
@@ -75,16 +75,6 @@ describe("generated parser behavior", function() {
 
         try {
           result = this.actual.parse(input, options);
-
-          this.message = function() {
-            return "Expected " + jasmine.pp(input) + " "
-                 + "with options " + jasmine.pp(options) + " "
-                 + "to fail to parse"
-                 + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                 + "but it parsed as " + jasmine.pp(result) + ".";
-          };
-
-          return false;
         } catch (e) {
           if (this.isNot) {
             this.message = function() {
@@ -117,6 +107,16 @@ describe("generated parser behavior", function() {
 
           return true;
         }
+
+        this.message = function() {
+          return "Expected " + jasmine.pp(input) + " "
+               + "with options " + jasmine.pp(options) + " "
+               + "to fail to parse"
+               + (details ? " with details " + jasmine.pp(details) : "") + ", "
+               + "but it parsed as " + jasmine.pp(result) + ".";
+        };
+
+        return false;
       }
     });
   });
