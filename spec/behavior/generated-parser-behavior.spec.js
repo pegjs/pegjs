@@ -1,4 +1,5 @@
-/* global peg */
+/* eslint no-console: 0 */
+/* global peg, console */
 
 "use strict";
 
@@ -17,10 +18,14 @@ describe("generated parser behavior", function() {
     }
 
     var optionsVariants = [
-          { cache: false, optimize: "speed" },
-          { cache: false, optimize: "size"  },
-          { cache: true,  optimize: "speed" },
-          { cache: true,  optimize: "size"  }
+          { cache: false, optimize: "speed", trace: false },
+          { cache: false, optimize: "speed", trace: true  },
+          { cache: false, optimize: "size",  trace: false },
+          { cache: false, optimize: "size",  trace: true  },
+          { cache: true,  optimize: "speed", trace: false },
+          { cache: true,  optimize: "speed", trace: true  },
+          { cache: true,  optimize: "size",  trace: false },
+          { cache: true,  optimize: "size",  trace: true  }
         ],
         i;
 
@@ -119,6 +124,14 @@ describe("generated parser behavior", function() {
         return false;
       }
     });
+
+    /*
+     * Stub out |console.log| so that the default tracer doesn't clutter
+     * test output.
+     */
+    if (typeof console === "object") {
+      spyOn(console, "log");
+    }
   });
 
   varyOptimizationOptions(function(options) {
