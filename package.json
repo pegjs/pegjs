@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "browserify": "13.1.0",
-    "eslint": "1.10.3",
+    "eslint": "3.2.0",
     "http-server": "0.9.0",
     "jasmine-node": "1.14.5",
     "uglify-js": "2.4.24"
