@@ -32,7 +32,7 @@ function printHelp() {
   console.log("      --extra-options-file <file>    file with additional options (in JSON");
   console.log("                                     format) to pass to peg.generate");
   console.log("      --format <format>              format of the generated parser: amd,");
-  console.log("                                     globals, node, umd (default: node)");
+  console.log("                                     commonjs, globals, umd (default: commonjs)");
   console.log("  -h, --help                         print help and exit");
   console.log("  -O, --optimize <goal>              select optimization for speed or size");
   console.log("                                     (default: speed)");
@@ -114,7 +114,7 @@ var options = {
   cache:        false,
   dependencies: {},
   exportVar:    null,
-  format:       "node",
+  format:       "commonjs",
   optimize:     "speed",
   output:       "source",
   plugins:      [],
@@ -186,8 +186,8 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the --format option.");
       }
-      if (args[0] !== "amd" && args[0] !== "globals" && args[0] !== "node" && args[0] !== "umd") {
-        abort("Module format must be one of \"amd\", \"globals\", \"node\", and \"umd\".");
+      if (args[0] !== "amd" && args[0] !== "commonjs" && args[0] !== "globals" && args[0] !== "umd") {
+        abort("Module format must be one of \"amd\", \"commonjs\", \"globals\", and \"umd\".");
       }
       options.format = args[0];
       break;
@@ -257,7 +257,7 @@ while (args.length > 0 && isOption(args[0])) {
 }
 
 if (objects.keys(options.dependencies).length > 0) {
-  if (options.format !== "amd" && options.format !== "node" && options.format !== "umd") {
+  if (options.format !== "amd" && options.format !== "commonjs" && options.format !== "umd") {
       abort("Can't use the -d/--dependency option with the \"" + options.format + "\" module format.");
   }
 }
