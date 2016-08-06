@@ -100,7 +100,7 @@ You can tweak the generated parser with several options:
     `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
     pass to `peg.generate`
-  * `--format` — format of the generated parser: `amd`, `global`, `node`, `umd`
+  * `--format` — format of the generated parser: `amd`, `globals`, `node`, `umd`
     (default: `node`)
   * `--optimize` — selects between optimizing the generated parser for parsing
     speed (`speed`) or code size (`size`) (default: `speed`)
@@ -146,8 +146,8 @@ object to `peg.generate`. The following options are supported:
     `"umd"` (default: `{}`)
   * `exportVar` — name of a global variable into which the parser object is
     assigned to when no module loader is detected; valid only when `format` is
-    set to `"global"` or `"umd"` (default: `null`)
-  * `format` — format of the genreated parser (`"amd"`, `"bare"`, `"global"`,
+    set to `"globals"` or `"umd"` (default: `null`)
+  * `format` — format of the genreated parser (`"amd"`, `"bare"`, `"globals"`,
     `"node"`, or `"umd"`); valid only when `output` is set to `"source"`
     (default: `"bare"`)
   * `optimize`— selects between optimizing the generated parser for parsing
