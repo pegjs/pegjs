@@ -3,8 +3,7 @@
  * ==================
  *
  * Based on grammar from ECMA-262, 5.1 Edition [1]. Generated parser builds a
- * syntax tree compatible with Mozilla SpiderMonkey Parser API [2]. Properties
- * and node types reflecting features not present in ECMA-262 are not included.
+ * syntax tree compatible with the ESTree spec [2].
  *
  * Limitations:
  *
@@ -28,7 +27,7 @@
  * check that I converted the original grammar correctly.
  *
  * [1] http://www.ecma-international.org/publications/standards/Ecma-262.htm
- * [2] https://developer.mozilla.org/en-US/docs/SpiderMonkey/Parser_API
+ * [2] https://github.com/estree/estree
  * [3] http://inimino.org/~inimino/blog/
  * [4] http://boshi.inimino.org/3box/asof/1270029991384/PEG/ECMAScript_unified.peg
  */
