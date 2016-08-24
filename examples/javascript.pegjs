@@ -580,13 +580,14 @@ PropertyNameAndValueList
 
 PropertyAssignment
   = key:PropertyName __ ":" __ value:AssignmentExpression {
-      return { key: key, value: value, kind: "init" };
+      return { type: "Property", key: key, value: value, kind: "init" };
     }
   / GetToken __ key:PropertyName __
     "(" __ ")" __
     "{" __ body:FunctionBody __ "}"
     {
       return {
+        type:  "Property",
         key:   key,
         value: {
           type:   "FunctionExpression",
@@ -602,6 +603,7 @@ PropertyAssignment
     "{" __ body:FunctionBody __ "}"
     {
       return {
+        type:  "Property",
         key:   key,
         value: {
           type:   "FunctionExpression",
