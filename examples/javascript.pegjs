@@ -1016,7 +1016,8 @@ VariableStatement
   = VarToken __ declarations:VariableDeclarationList EOS {
       return {
         type:         "VariableDeclaration",
-        declarations: declarations
+        declarations: declarations,
+        kind:         "var"
       };
     }
 
@@ -1124,7 +1125,8 @@ IterationStatement
         type:   "ForStatement",
         init:   {
           type:         "VariableDeclaration",
-          declarations: declarations
+          declarations: declarations,
+          kind:         "var"
         },
         test:   extractOptional(test, 0),
         update: extractOptional(update, 0),
@@ -1158,7 +1160,8 @@ IterationStatement
         type:  "ForInStatement",
         left:  {
           type:         "VariableDeclaration",
-          declarations: declarations
+          declarations: declarations,
+          kind:         "var"
         },
         right: right,
         body:  body
