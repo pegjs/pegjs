@@ -855,12 +855,12 @@ BitwiseOROperator
 LogicalANDExpression
   = head:BitwiseORExpression
     tail:(__ LogicalANDOperator __ BitwiseORExpression)*
-    { return buildBinaryExpression(head, tail); }
+    { return buildLogicalExpression(head, tail); }
 
 LogicalANDExpressionNoIn
   = head:BitwiseORExpressionNoIn
     tail:(__ LogicalANDOperator __ BitwiseORExpressionNoIn)*
-    { return buildBinaryExpression(head, tail); }
+    { return buildLogicalExpression(head, tail); }
 
 LogicalANDOperator
   = "&&"
@@ -868,12 +868,12 @@ LogicalANDOperator
 LogicalORExpression
   = head:LogicalANDExpression
     tail:(__ LogicalOROperator __ LogicalANDExpression)*
-    { return buildBinaryExpression(head, tail); }
+    { return buildLogicalExpression(head, tail); }
 
 LogicalORExpressionNoIn
   = head:LogicalANDExpressionNoIn
     tail:(__ LogicalOROperator __ LogicalANDExpressionNoIn)*
-    { return buildBinaryExpression(head, tail); }
+    { return buildLogicalExpression(head, tail); }
 
 LogicalOROperator
   = "||"
