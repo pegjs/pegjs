@@ -5,7 +5,6 @@
 var fs      = require("fs");
 var path    = require("path");
 var peg     = require("../lib/peg");
-var objects = require("../lib/utils/objects");
 
 /* Helpers */
 
@@ -256,7 +255,7 @@ while (args.length > 0 && isOption(args[0])) {
   nextArg();
 }
 
-if (objects.keys(options.dependencies).length > 0) {
+if (Object.keys(options.dependencies).length > 0) {
   if (options.format !== "amd" && options.format !== "commonjs" && options.format !== "umd") {
       abort("Can't use the -d/--dependency option with the \"" + options.format + "\" module format.");
   }
