@@ -594,7 +594,7 @@ describe("compiler pass |generateBytecode|", function() {
       ]));
     });
 
-    describe("non-empty non-inverted case-sensitive", function() {
+    describe("non-inverted case-sensitive", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]', constsDetails([
           '/^[a]/',
@@ -603,7 +603,7 @@ describe("compiler pass |generateBytecode|", function() {
       });
     });
 
-    describe("non-empty inverted case-sensitive", function() {
+    describe("inverted case-sensitive", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [^a]', constsDetails([
           '/^[^a]/',
@@ -612,7 +612,7 @@ describe("compiler pass |generateBytecode|", function() {
       });
     });
 
-    describe("non-empty non-inverted case-insensitive", function() {
+    describe("non-inverted case-insensitive", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [a]i', constsDetails([
           '/^[a]/i',
@@ -621,29 +621,11 @@ describe("compiler pass |generateBytecode|", function() {
       });
     });
 
-    describe("non-empty complex", function() {
+    describe("complex", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST('start = [ab-def-hij-l]', constsDetails([
           '/^[ab-def-hij-l]/',
           'peg$classExpectation(["a", ["b", "d"], "e", ["f", "h"], "i", ["j", "l"]], false, false)'
-        ]));
-      });
-    });
-
-    describe("empty non-inverted", function() {
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST('start = []', constsDetails([
-          '/^(?!)/',
-          'peg$classExpectation([], false, false)'
-        ]));
-      });
-    });
-
-    describe("empty inverted", function() {
-      it("defines correct constants", function() {
-        expect(pass).toChangeAST('start = [^]', constsDetails([
-          '/^[\\S\\s]/',
-          'peg$classExpectation([], true, false)'
         ]));
       });
     });
