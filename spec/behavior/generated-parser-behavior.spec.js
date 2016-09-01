@@ -1495,17 +1495,17 @@ describe("generated parser behavior", function() {
          */
         var parser = peg.generate([
               'Expr    = Sum',
-              'Sum     = first:Product rest:(("+" / "-") Product)* {',
-              '            return rest.reduce(function(result, element) {',
+              'Sum     = head:Product tail:(("+" / "-") Product)* {',
+              '            return tail.reduce(function(result, element) {',
               '              if (element[0] === "+") { return result + element[1]; }',
               '              if (element[0] === "-") { return result - element[1]; }',
-              '            }, first);',
+              '            }, head);',
               '          }',
-              'Product = first:Value rest:(("*" / "/") Value)* {',
-              '            return rest.reduce(function(result, element) {',
+              'Product = head:Value tail:(("*" / "/") Value)* {',
+              '            return tail.reduce(function(result, element) {',
               '              if (element[0] === "*") { return result * element[1]; }',
               '              if (element[0] === "/") { return result / element[1]; }',
-              '            }, first);',
+              '            }, head);',
               '          }',
               'Value   = digits:[0-9]+     { return parseInt(digits.join(""), 10); }',
               '        / "(" expr:Expr ")" { return expr; }'
