@@ -91,14 +91,14 @@ medium
 page
   = PAGE_SYM S* selector:pseudo_page?
     "{" S*
-    declarationsFirst:declaration?
-    declarationsRest:(";" S* declaration?)*
+    declarationsHead:declaration?
+    declarationsTail:(";" S* declaration?)*
     "}" S*
     {
       return {
         type:         "PageRule",
         selector:     selector,
-        declarations: buildList(declarationsFirst, declarationsRest, 2)
+        declarations: buildList(declarationsHead, declarationsTail, 2)
       };
     }
 
@@ -117,17 +117,17 @@ property
   = name:IDENT S* { return name; }
 
 ruleset
-  = selectorsFirst:selector
-    selectorsRest:("," S* selector)*
+  = selectorsHead:selector
+    selectorsTail:("," S* selector)*
     "{" S*
-    declarationsFirst:declaration?
-    declarationsRest:(";" S* declaration?)*
+    declarationsHead:declaration?
+    declarationsTail:(";" S* declaration?)*
     "}" S*
     {
       return {
         type:         "RuleSet",
-        selectors:    buildList(selectorsFirst, selectorsRest, 2),
-        declarations: buildList(declarationsFirst, declarationsRest, 2)
+        selectors:    buildList(selectorsHead, selectorsTail, 2),
+        declarations: buildList(declarationsHead, declarationsTail, 2)
       };
     }
 
