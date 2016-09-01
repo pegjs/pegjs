@@ -39,13 +39,8 @@
   };
 
   function filledArray(count, value) {
-    var result = new Array(count), i;
-
-    for (i = 0; i < count; i++) {
-      result[i] = value;
-    }
-
-    return result;
+    return Array.apply(null, new Array(count))
+      .map(function() { return value; });
   }
 
   function extractOptional(optional, index) {
@@ -53,49 +48,33 @@
   }
 
   function extractList(list, index) {
-    var result = new Array(list.length), i;
-
-    for (i = 0; i < list.length; i++) {
-      result[i] = list[i][index];
-    }
-
-    return result;
+    return list.map(function(element) { return element[index]; });
   }
 
   function buildList(head, tail, index) {
     return [head].concat(extractList(tail, index));
   }
 
-  function buildTree(head, tail, builder) {
-    var result = head, i;
-
-    for (i = 0; i < tail.length; i++) {
-      result = builder(result, tail[i]);
-    }
-
-    return result;
-  }
-
   function buildBinaryExpression(head, tail) {
-    return buildTree(head, tail, function(result, element) {
+    return tail.reduce(function(result, element) {
       return {
         type:     "BinaryExpression",
         operator: element[1],
         left:     result,
         right:    element[3]
       };
-    });
+    }, head);
   }
 
   function buildLogicalExpression(head, tail) {
-    return buildTree(head, tail, function(result, element) {
+    return tail.reduce(function(result, element) {
       return {
         type:     "LogicalExpression",
         operator: element[1],
         left:     result,
         right:    element[3]
       };
-    });
+    }, head);
   }
 
   function optionalList(value) {
@@ -639,14 +618,14 @@ MemberExpression
         }
     )*
     {
-      return buildTree(head, tail, function(result, element) {
+      return tail.reduce(function(result, element) {
         return {
           type:     "MemberExpression",
           object:   result,
           property: element.property,
           computed: element.computed
         };
-      });
+      }, head);
     }
 
 NewExpression
@@ -681,11 +660,11 @@ CallExpression
         }
     )*
     {
-      return buildTree(head, tail, function(result, element) {
+      return tail.reduce(function(result, element) {
         element[TYPES_TO_PROPERTY_NAMES[element.type]] = result;
 
         return element;
-      });
+      }, head);
     }
 
 Arguments

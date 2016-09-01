@@ -25,15 +25,9 @@
   }
 
   function extractList(list, index) {
-    var result = [], i;
-
-    for (i = 0; i < list.length; i++) {
-      if (list[i][index] !== null) {
-        result.push(list[i][index]);
-      }
-    }
-
-    return result;
+    return list
+      .map(function(element) { return element[index]; })
+      .filter(function(element) { return element !== null; });
   }
 
   function buildList(head, tail, index) {
@@ -41,18 +35,14 @@
   }
 
   function buildExpression(head, tail) {
-    var result = head, i;
-
-    for (i = 0; i < tail.length; i++) {
-      result = {
+    return tail.reduce(function(result, element) {
+      return {
         type:     "Expression",
-        operator: tail[i][0],
+        operator: element[0],
         left:     result,
-        right:    tail[i][1]
+        right:    element[1]
       };
-    }
-
-    return result;
+    }, head);
   }
 }
 

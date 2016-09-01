@@ -7,26 +7,18 @@
 
 Expression
   = head:Term tail:(_ ("+" / "-") _ Term)* {
-      var result = head, i;
-
-      for (i = 0; i < tail.length; i++) {
-        if (tail[i][1] === "+") { result += tail[i][3]; }
-        if (tail[i][1] === "-") { result -= tail[i][3]; }
-      }
-
-      return result;
+      return tail.reduce(function(result, element) {
+        if (element[1] === "+") { return result + element[3]; }
+        if (element[1] === "-") { return result - element[3]; }
+      }, head);
     }
 
 Term
   = head:Factor tail:(_ ("*" / "/") _ Factor)* {
-      var result = head, i;
-
-      for (i = 0; i < tail.length; i++) {
-        if (tail[i][1] === "*") { result *= tail[i][3]; }
-        if (tail[i][1] === "/") { result /= tail[i][3]; }
-      }
-
-      return result;
+      return tail.reduce(function(result, element) {
+        if (element[1] === "*") { return result * element[3]; }
+        if (element[1] === "/") { return result / element[3]; }
+      }, head);
     }
 
 Factor

@@ -52,13 +52,11 @@ object
       head:member
       tail:(value_separator m:member { return m; })*
       {
-        var result = {}, i;
+        var result = {};
 
-        result[head.name] = head.value;
-
-        for (i = 0; i < tail.length; i++) {
-          result[tail[i].name] = tail[i].value;
-        }
+        [head].concat(tail).forEach(function(element) {
+          result[element.name] = element.value;
+        });
 
         return result;
       }
