@@ -41,30 +41,12 @@
     "!": "semantic_not"
   };
 
-  function filterEmptyStrings(array) {
-    var result = [], i;
-
-    for (i = 0; i < array.length; i++) {
-      if (array[i] !== "") {
-        result.push(array[i]);
-      }
-    }
-
-    return result;
-  }
-
   function extractOptional(optional, index) {
     return optional ? optional[index] : null;
   }
 
   function extractList(list, index) {
-    var result = new Array(list.length), i;
-
-    for (i = 0; i < list.length; i++) {
-      result[i] = list[i][index];
-    }
-
-    return result;
+    return list.map(function(element) { return element[index]; });
   }
 
   function buildList(head, tail, index) {
@@ -382,7 +364,7 @@ CharacterClassMatcher "character class"
     {
       return {
         type:       "class",
-        parts:      filterEmptyStrings(parts),
+        parts:      parts.filter(function(part) { return part !== ""; }),
         inverted:   inverted !== null,
         ignoreCase: ignoreCase !== null,
         location:   location()
