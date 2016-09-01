@@ -122,29 +122,20 @@ describe("PEG.js grammar parser", function() {
 
     function stripChildren(property) {
       return function(node) {
-        var i;
-
         delete node.location;
 
-        for (i = 0; i < node[property].length; i++) {
-          strip(node[property][i]);
-        }
+        node[property].forEach(strip);
       };
     }
 
     var strip = buildVisitor({
       grammar: function(node) {
-        var i;
-
         delete node.location;
 
         if (node.initializer) {
           strip(node.initializer);
         }
-
-        for (i = 0; i < node.rules.length; i++) {
-          strip(node.rules[i]);
-        }
+        node.rules.forEach(strip);
       },
 
       initializer:  stripLeaf,

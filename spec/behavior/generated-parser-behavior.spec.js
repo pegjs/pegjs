@@ -26,15 +26,14 @@ describe("generated parser behavior", function() {
           { cache: true,  optimize: "speed", trace: true  },
           { cache: true,  optimize: "size",  trace: false },
           { cache: true,  optimize: "size",  trace: true  }
-        ],
-        i;
+        ];
 
-    for (i = 0; i < optionsVariants.length; i++) {
+    optionsVariants.forEach(function(variant) {
       describe(
-        "with options " + jasmine.pp(optionsVariants[i]),
-        function() { block(clone(optionsVariants[i])); }
+        "with options " + jasmine.pp(variant),
+        function() { block(clone(variant)); }
       );
-    }
+    });
   }
 
   beforeEach(function() {
@@ -512,12 +511,12 @@ describe("generated parser behavior", function() {
                     input:   "b"
                   }
                 ],
-                parser, i;
+                parser;
 
-            for (i = 0; i < testcases.length; i++) {
-              parser = peg.generate(testcases[i].grammar, options);
-              expect(parser).toFailToParse(testcases[i].input);
-            }
+            testcases.forEach(function(testcase) {
+              parser = peg.generate(testcase.grammar, options);
+              expect(parser).toFailToParse(testcase.input);
+            });
           });
         });
 
@@ -708,12 +707,12 @@ describe("generated parser behavior", function() {
                     input:   "b"
                   }
                 ],
-                parser, i;
+                parser;
 
-            for (i = 0; i < testcases.length; i++) {
-              parser = peg.generate(testcases[i].grammar, options);
-              expect(parser).toFailToParse(testcases[i].input);
-            }
+            testcases.forEach(function(testcase) {
+              parser = peg.generate(testcase.grammar, options);
+              expect(parser).toFailToParse(testcase.input);
+            });
           });
         });
 
@@ -1077,12 +1076,12 @@ describe("generated parser behavior", function() {
                       input:   "b"
                     }
                   ],
-                  parser, i;
+                  parser;
 
-              for (i = 0; i < testcases.length; i++) {
-                parser = peg.generate(testcases[i].grammar, options);
-                expect(parser).toFailToParse(testcases[i].input);
-              }
+              testcases.forEach(function(testcase) {
+                parser = peg.generate(testcase.grammar, options);
+                expect(parser).toFailToParse(testcase.input);
+              });
             });
           });
 
@@ -1497,20 +1496,16 @@ describe("generated parser behavior", function() {
         var parser = peg.generate([
               'Expr    = Sum',
               'Sum     = first:Product rest:(("+" / "-") Product)* {',
-              '            var result = first, i;',
-              '            for (i = 0; i < rest.length; i++) {',
-              '              if (rest[i][0] == "+") { result += rest[i][1]; }',
-              '              if (rest[i][0] == "-") { result -= rest[i][1]; }',
-              '            }',
-              '            return result;',
+              '            return rest.reduce(function(result, element) {',
+              '              if (element[0] == "+") { return result + element[1]; }',
+              '              if (element[0] == "-") { return result - element[1]; }',
+              '            }, first);',
               '          }',
               'Product = first:Value rest:(("*" / "/") Value)* {',
-              '            var result = first, i;',
-              '            for (i = 0; i < rest.length; i++) {',
-              '              if (rest[i][0] == "*") { result *= rest[i][1]; }',
-              '              if (rest[i][0] == "/") { result /= rest[i][1]; }',
-              '            }',
-              '            return result;',
+              '            return rest.reduce(function(result, element) {',
+              '              if (element[0] == "*") { return result * element[1]; }',
+              '              if (element[0] == "/") { return result / element[1]; }',
+              '            }, first);',
               '          }',
               'Value   = digits:[0-9]+     { return parseInt(digits.join(""), 10); }',
               '        / "(" expr:Expr ")" { return expr; }'

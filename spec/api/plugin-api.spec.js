@@ -56,8 +56,6 @@ describe("plugin API", function() {
     it("receives configuration", function() {
       var plugin = {
             use: function(config) {
-              var i;
-
               expect(config).toBeObject();
 
               expect(config.parser).toBeObject();
@@ -66,19 +64,19 @@ describe("plugin API", function() {
               expect(config.passes).toBeObject();
 
               expect(config.passes.check).toBeArray();
-              for (i = 0; i < config.passes.check.length; i++) {
-                expect(config.passes.check[i]).toBeFunction();
-              }
+              config.passes.check.forEach(function(pass) {
+                expect(pass).toBeFunction();
+              });
 
               expect(config.passes.transform).toBeArray();
-              for (i = 0; i < config.passes.transform.length; i++) {
-                expect(config.passes.transform[i]).toBeFunction();
-              }
+              config.passes.transform.forEach(function(pass) {
+                expect(pass).toBeFunction();
+              });
 
               expect(config.passes.generate).toBeArray();
-              for (i = 0; i < config.passes.generate.length; i++) {
-                expect(config.passes.generate[i]).toBeFunction();
-              }
+              config.passes.generate.forEach(function(pass) {
+                expect(pass).toBeFunction();
+              });
             }
           };
 
