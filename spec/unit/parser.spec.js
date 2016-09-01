@@ -384,7 +384,7 @@ describe("PEG.js grammar parser", function() {
   /* Canonical WhiteSpace is " ". */
   it("parses WhiteSpace", function() {
     expect('start =\t"abcd"'    ).toParseAs(trivialGrammar);
-    expect('start =\x0B"abcd"'  ).toParseAs(trivialGrammar);   // no "\v" in IE
+    expect('start =\v"abcd"'    ).toParseAs(trivialGrammar);
     expect('start =\f"abcd"'    ).toParseAs(trivialGrammar);
     expect('start = "abcd"'     ).toParseAs(trivialGrammar);
     expect('start =\u00A0"abcd"').toParseAs(trivialGrammar);
@@ -588,15 +588,15 @@ describe("PEG.js grammar parser", function() {
 
   /* Canonical SingleEscapeCharacter is "n". */
   it("parses SingleEscapeCharacter", function() {
-    expect('start = "\\\'"').toParseAs(literalGrammar("'",    false));
-    expect('start = "\\""' ).toParseAs(literalGrammar('"',    false));
-    expect('start = "\\\\"').toParseAs(literalGrammar("\\",   false));
-    expect('start = "\\b"' ).toParseAs(literalGrammar("\b",   false));
-    expect('start = "\\f"' ).toParseAs(literalGrammar("\f",   false));
-    expect('start = "\\n"' ).toParseAs(literalGrammar("\n",   false));
-    expect('start = "\\r"' ).toParseAs(literalGrammar("\r",   false));
-    expect('start = "\\t"' ).toParseAs(literalGrammar("\t",   false));
-    expect('start = "\\v"' ).toParseAs(literalGrammar("\x0B", false));   // no "\v" in IE
+    expect('start = "\\\'"').toParseAs(literalGrammar("'",  false));
+    expect('start = "\\""' ).toParseAs(literalGrammar('"',  false));
+    expect('start = "\\\\"').toParseAs(literalGrammar("\\", false));
+    expect('start = "\\b"' ).toParseAs(literalGrammar("\b", false));
+    expect('start = "\\f"' ).toParseAs(literalGrammar("\f", false));
+    expect('start = "\\n"' ).toParseAs(literalGrammar("\n", false));
+    expect('start = "\\r"' ).toParseAs(literalGrammar("\r", false));
+    expect('start = "\\t"' ).toParseAs(literalGrammar("\t", false));
+    expect('start = "\\v"' ).toParseAs(literalGrammar("\v", false));
   });
 
   /* Canonical NonEscapeCharacter is "a". */
