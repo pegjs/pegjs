@@ -50,7 +50,7 @@
        * of the |state| object.
        */
 
-      var state = {}, i, j;
+      var state = {};
 
       function initialize() {
         callbacks.start();
@@ -59,12 +59,12 @@
         state.totalParseTime = 0;
       }
 
-      function benchmarkInitializer(i) {
+      function benchmarkInitializer(benchmark) {
         return function() {
-          callbacks.benchmarkStart(benchmarks[i]);
+          callbacks.benchmarkStart(benchmark);
 
           state.parser = peg.generate(
-            callbacks.readFile("../examples/" + benchmarks[i].id + ".pegjs"),
+            callbacks.readFile("../examples/" + benchmark.id + ".pegjs"),
             options
           );
           state.benchmarkInputSize = 0;
@@ -72,18 +72,16 @@
         };
       }
 
-      function testRunner(i, j) {
+      function testRunner(benchmark, test) {
         return function() {
-          var benchmark = benchmarks[i],
-              test      = benchmark.tests[j],
-              input, parseTime, averageParseTime, k, t;
+          var input, parseTime, averageParseTime, i, t;
 
           callbacks.testStart(benchmark, test);
 
           input = callbacks.readFile(benchmark.id + "/" + test.file);
 
           parseTime = 0;
-          for (k = 0; k < runCount; k++) {
+          for (i = 0; i < runCount; i++) {
             t = (new Date()).getTime();
             state.parser.parse(input);
             parseTime += (new Date()).getTime() - t;
@@ -97,10 +95,10 @@
         };
       }
 
-      function benchmarkFinalizer(i) {
+      function benchmarkFinalizer(benchmark) {
         return function() {
           callbacks.benchmarkFinish(
-            benchmarks[i],
+            benchmark,
             state.benchmarkInputSize,
             state.benchmarkParseTime
           );
@@ -117,13 +115,13 @@
       /* Main */
 
       Q.add(initialize);
-      for (i = 0; i < benchmarks.length; i++) {
-        Q.add(benchmarkInitializer(i));
-        for (j = 0; j < benchmarks[i].tests.length; j++) {
-          Q.add(testRunner(i, j));
-        }
-        Q.add(benchmarkFinalizer(i));
-      }
+      benchmarks.forEach(function(benchmark) {
+        Q.add(benchmarkInitializer(benchmark));
+        benchmark.tests.forEach(function(test) {
+          Q.add(testRunner(benchmark, test));
+        });
+        Q.add(benchmarkFinalizer(benchmark));
+      });
       Q.add(finalize);
 
       Q.run();
