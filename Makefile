@@ -74,7 +74,10 @@ browser:
 	echo ' * Licensed under the MIT license.'                                          >> $(BROWSER_FILE_DEV)
 	echo ' */'                                                                         >> $(BROWSER_FILE_DEV)
 
-	$(BROWSERIFY) --standalone peg $(MAIN_FILE) >> $(BROWSER_FILE_DEV)
+	$(BROWSERIFY)                                                   \
+		--standalone peg                                              \
+		--transform [ babelify --presets [ es2015 ] --compact false ] \
+		$(MAIN_FILE) >> $(BROWSER_FILE_DEV)
 
 	$(UGLIFYJS)                 \
 	  --mangle                  \
