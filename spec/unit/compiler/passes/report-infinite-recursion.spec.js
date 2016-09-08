@@ -1,6 +1,6 @@
-/* global peg */
-
 "use strict";
+
+var peg = require("../../../../lib/peg");
 
 describe("compiler pass |reportInfiniteRecursion|", function() {
   var pass = peg.compiler.passes.check.reportInfiniteRecursion;

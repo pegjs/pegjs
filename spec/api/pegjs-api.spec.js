@@ -1,6 +1,6 @@
-/* global peg */
-
 "use strict";
+
+var peg = require("../../lib/peg");
 
 describe("PEG.js API", function() {
   describe("generate", function() {

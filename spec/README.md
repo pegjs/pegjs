@@ -38,18 +38,12 @@ All commands in the following steps need to be executed in PEG.js root directory
      $ npm install
      ```
 
-  3. Build browser version of PEG.js:
+  3. Serve the spec suite using a web server:
 
      ```console
-     $ make browser
+     $ spec/server
      ```
 
-  4. Serve PEG.js root directory using a web server:
+  4. Point your browser to the [spec suite](http://localhost:8000/).
 
-     ```console
-     $ node_modules/.bin/http-server
-     ```
-
-  5. Point your browser to the [spec suite](http://localhost:8080/spec/index.html).
-
-  6. Watch the specs pass (or fail).
+  5. Watch the specs pass (or fail).

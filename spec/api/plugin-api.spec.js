@@ -1,6 +1,6 @@
-/* global peg */
-
 "use strict";
+
+var peg = require("../../lib/peg");
 
 describe("plugin API", function() {
   beforeEach(function() {

@@ -1,6 +1,6 @@
-/* global peg */
-
 "use strict";
+
+var peg = require("../../../../lib/peg");
 
 describe("compiler pass |reportInfiniteRepetition|", function() {
   var pass = peg.compiler.passes.check.reportInfiniteRepetition;

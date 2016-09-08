@@ -24,6 +24,8 @@ PARSER_OUT_FILE_NEW = $(LIB_DIR)/parser.js.new
 BROWSER_FILE_DEV = $(BROWSER_DIR)/peg-$(PEGJS_VERSION).js
 BROWSER_FILE_MIN = $(BROWSER_DIR)/peg-$(PEGJS_VERSION).min.js
 
+SPEC_SERVER_FILE = $(SPEC_DIR)/server
+
 VERSION_FILE = VERSION
 
 # ===== Executables =====
@@ -103,6 +105,7 @@ lint:
 	$(ESLINT)                                                                \
 	  `find $(LIB_DIR) -name '*.js'`                                         \
 	  `find $(SPEC_DIR) -name '*.js' -and -not -path '$(SPEC_DIR)/vendor/*'` \
+	  $(SPEC_SERVER_FILE)                                                    \
 	  $(BENCHMARK_DIR)/*.js                                                  \
 	  $(BENCHMARK_RUN)                                                       \
 	  $(PEGJS)

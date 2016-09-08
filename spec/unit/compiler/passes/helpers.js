@@ -1,6 +1,6 @@
-/* global peg */
-
 "use strict";
+
+var peg = require("../../../../lib/peg");
 
 beforeEach(function() {
   this.addMatchers({

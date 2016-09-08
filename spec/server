@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+
+/* eslint-env node */
+/* eslint no-console: 0 */
+
+/*
+ * Small server whose main purpose is to ensure that both the specced code and
+ * the specs get passed through Babel & Browserify before they are served to the
+ * browser.
+ */
+
+var express    = require("express"),
+    logger     = require("morgan"),
+    glob       = require("glob"),
+    browserify = require("browserify"),
+    babelify   = require("babelify");
+
+var app = express();
+
+app.use(logger("dev"));
+app.use(express.static(__dirname));
+
+app.get("/bundle.js", function(req, res) {
+  var files = glob.sync(__dirname + "/**/*.js", {
+    ignore: __dirname + "/vendor/**/*"
+  });
+
+  browserify(files)
+    .transform(babelify, { presets: "es2015", compact: false })
+    .bundle()
+    .pipe(res);
+});
+
+app.listen(8000, function() {
+  console.log("Spec server running at http://localhost:8000...");
+});
+

@@ -1,5 +1,6 @@
 {
   "env": {
+    "commonjs": true,
     "jasmine": true
   }
 }

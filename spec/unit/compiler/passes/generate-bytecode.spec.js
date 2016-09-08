@@ -1,6 +1,6 @@
-/* global peg */
-
 "use strict";
+
+var peg = require("../../../../lib/peg");
 
 describe("compiler pass |generateBytecode|", function() {
   var pass = peg.compiler.passes.generate.generateBytecode;

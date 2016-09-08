@@ -1,7 +1,9 @@
 /* eslint no-console: 0 */
-/* global peg, console */
+/* global console */
 
 "use strict";
+
+var peg = require("../../lib/peg");
 
 describe("generated parser API", function() {
   describe("parse", function() {
