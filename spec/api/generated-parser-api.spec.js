@@ -3,24 +3,24 @@
 
 "use strict";
 
-var peg = require("../../lib/peg");
+let peg = require("../../lib/peg");
 
 describe("generated parser API", function() {
   describe("parse", function() {
     it("parses input", function() {
-      var parser = peg.generate('start = "a"');
+      let parser = peg.generate('start = "a"');
 
       expect(parser.parse("a")).toBe("a");
     });
 
     it("throws an exception on syntax error", function() {
-      var parser = peg.generate('start = "a"');
+      let parser = peg.generate('start = "a"');
 
       expect(function() { parser.parse("b"); }).toThrow();
     });
 
     describe("start rule", function() {
-      var parser = peg.generate([
+      let parser = peg.generate([
             'a = "x" { return "a"; }',
             'b = "x" { return "b"; }',
             'c = "x" { return "c"; }'
@@ -49,7 +49,7 @@ describe("generated parser API", function() {
     });
 
     describe("tracing", function() {
-      var parser = peg.generate([
+      let parser = peg.generate([
             'start = a / b',
             'a = "a"',
             'b = "b"'
@@ -77,7 +77,7 @@ describe("generated parser API", function() {
       describe("custom tracers", function() {
         describe("trace", function() {
           it("receives tracing events", function() {
-            var tracer = jasmine.createSpyObj("tracer", ["trace"]);
+            let tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
             parser.parse("b", { tracer: tracer });
 
@@ -137,7 +137,7 @@ describe("generated parser API", function() {
     });
 
     it("accepts custom options", function() {
-      var parser = peg.generate('start = "a"');
+      let parser = peg.generate('start = "a"');
 
       parser.parse("a", { foo: 42 });
     });

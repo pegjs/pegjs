@@ -24,19 +24,19 @@
  */
 
 {
-  var OPS_TO_PREFIXED_TYPES = {
+  const OPS_TO_PREFIXED_TYPES = {
     "$": "text",
     "&": "simple_and",
     "!": "simple_not"
   };
 
-  var OPS_TO_SUFFIXED_TYPES = {
+  const OPS_TO_SUFFIXED_TYPES = {
     "?": "optional",
     "*": "zero_or_more",
     "+": "one_or_more"
   };
 
-  var OPS_TO_SEMANTIC_PREDICATE_TYPES = {
+  const OPS_TO_SEMANTIC_PREDICATE_TYPES = {
     "&": "semantic_and",
     "!": "semantic_not"
   };

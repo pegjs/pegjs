@@ -1,9 +1,9 @@
 "use strict";
 
-var peg = require("../../../../lib/peg");
+let peg = require("../../../../lib/peg");
 
 describe("compiler pass |reportDuplicateRules|", function() {
-  var pass = peg.compiler.passes.check.reportDuplicateRules;
+  let pass = peg.compiler.passes.check.reportDuplicateRules;
 
   it("reports duplicate rules", function() {
     expect(pass).toReportError([

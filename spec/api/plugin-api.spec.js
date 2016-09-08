@@ -1,6 +1,6 @@
 "use strict";
 
-var peg = require("../../lib/peg");
+let peg = require("../../lib/peg");
 
 describe("plugin API", function() {
   beforeEach(function() {
@@ -38,10 +38,10 @@ describe("plugin API", function() {
   });
 
   describe("use", function() {
-    var grammar = 'start = "a"';
+    let grammar = 'start = "a"';
 
     it("is called for each plugin", function() {
-      var pluginsUsed = [false, false, false],
+      let pluginsUsed = [false, false, false],
           plugins     = [
             { use: function() { pluginsUsed[0] = true; } },
             { use: function() { pluginsUsed[1] = true; } },
@@ -54,7 +54,7 @@ describe("plugin API", function() {
     });
 
     it("receives configuration", function() {
-      var plugin = {
+      let plugin = {
             use: function(config) {
               expect(config).toBeObject();
 
@@ -84,7 +84,7 @@ describe("plugin API", function() {
     });
 
     it("receives options", function() {
-      var plugin             = {
+      let plugin             = {
             use: function(config, options) {
               expect(options).toEqual(generateOptions);
             }
@@ -95,9 +95,9 @@ describe("plugin API", function() {
     });
 
     it("can replace parser", function() {
-      var plugin = {
+      let plugin = {
             use: function(config) {
-              var parser = peg.generate([
+              let parser = peg.generate([
                     'start = .* {',
                     '  return {',
                     '    type:  "grammar",',
@@ -121,9 +121,9 @@ describe("plugin API", function() {
     });
 
     it("can change compiler passes", function() {
-      var plugin = {
+      let plugin = {
             use: function(config) {
-              var pass = function(ast) {
+              let pass = function(ast) {
                     ast.code = '({ parse: function() { return 42; } })';
                   };
 
@@ -136,7 +136,7 @@ describe("plugin API", function() {
     });
 
     it("can change options", function() {
-      var grammar = [
+      let grammar = [
             'a = "x"',
             'b = "x"',
             'c = "x"'

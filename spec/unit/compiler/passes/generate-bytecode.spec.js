@@ -1,9 +1,9 @@
 "use strict";
 
-var peg = require("../../../../lib/peg");
+let peg = require("../../../../lib/peg");
 
 describe("compiler pass |generateBytecode|", function() {
-  var pass = peg.compiler.passes.generate.generateBytecode;
+  let pass = peg.compiler.passes.generate.generateBytecode;
 
   function bytecodeDetails(bytecode) {
     return {
@@ -53,7 +53,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for named", function() {
-    var grammar = 'start "start" = "a"';
+    let grammar = 'start "start" = "a"';
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -90,7 +90,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for action", function() {
     describe("without labels", function() {
-      var grammar = 'start = "a" { code }';
+      let grammar = 'start = "a" { code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -113,7 +113,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     describe("with one label", function() {
-      var grammar = 'start = a:"a" { code }';
+      let grammar = 'start = a:"a" { code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -136,7 +136,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     describe("with multiple labels", function() {
-      var grammar = 'start = a:"a" b:"b" c:"c" { code }';
+      let grammar = 'start = a:"a" b:"b" c:"c" { code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -177,7 +177,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for sequence", function() {
-    var grammar = 'start = "a" "b" "c"';
+    let grammar = 'start = "a" "b" "c"';
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -236,7 +236,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for simple_and", function() {
-    var grammar = 'start = &"a"';
+    let grammar = 'start = &"a"';
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -263,7 +263,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for simple_not", function() {
-    var grammar = 'start = !"a"';
+    let grammar = 'start = !"a"';
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -290,7 +290,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for optional", function() {
-    var grammar = 'start = "a"?';
+    let grammar = 'start = "a"?';
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -310,7 +310,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for zero_or_more", function() {
-    var grammar = 'start = "a"*';
+    let grammar = 'start = "a"*';
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -332,7 +332,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for one_or_more", function() {
-    var grammar = 'start = "a"+';
+    let grammar = 'start = "a"+';
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -367,7 +367,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for semantic_and", function() {
     describe("without labels", function() {
-      var grammar = 'start = &{ code }';
+      let grammar = 'start = &{ code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -390,7 +390,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     describe("with labels", function() {
-      var grammar = 'start = a:"a" b:"b" c:"c" &{ code }';
+      let grammar = 'start = a:"a" b:"b" c:"c" &{ code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -442,7 +442,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for semantic_not", function() {
     describe("without labels", function() {
-      var grammar = 'start = !{ code }';
+      let grammar = 'start = !{ code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -465,7 +465,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     describe("with labels", function() {
-      var grammar = 'start = a:"a" b:"b" c:"c" !{ code }';
+      let grammar = 'start = a:"a" b:"b" c:"c" !{ code }';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -533,7 +533,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for literal", function() {
     describe("empty", function() {
-      var grammar = 'start = ""';
+      let grammar = 'start = ""';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -547,7 +547,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     describe("non-empty case-sensitive", function() {
-      var grammar = 'start = "a"';
+      let grammar = 'start = "a"';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -566,7 +566,7 @@ describe("compiler pass |generateBytecode|", function() {
     });
 
     describe("non-empty case-insensitive", function() {
-      var grammar = 'start = "A"i';
+      let grammar = 'start = "A"i';
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -632,7 +632,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for any", function() {
-    var grammar = 'start = .';
+    let grammar = 'start = .';
 
     it("generates bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([

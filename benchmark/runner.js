@@ -2,14 +2,14 @@
 
 "use strict";
 
-var peg = require("../lib/peg");
+let peg = require("../lib/peg");
 
-var Runner = {
+let Runner = {
   run: function(benchmarks, runCount, options, callbacks) {
 
     /* Queue */
 
-    var Q = {
+    let Q = {
           functions: [],
 
           add: function(f) {
@@ -44,7 +44,7 @@ var Runner = {
      * of the |state| object.
      */
 
-    var state = {};
+    let state = {};
 
     function initialize() {
       callbacks.start();
@@ -68,7 +68,7 @@ var Runner = {
 
     function testRunner(benchmark, test) {
       return function() {
-        var input, parseTime, averageParseTime, i, t;
+        let input, parseTime, averageParseTime, i, t;
 
         callbacks.testStart(benchmark, test);
 

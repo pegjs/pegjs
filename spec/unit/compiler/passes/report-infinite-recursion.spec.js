@@ -1,9 +1,9 @@
 "use strict";
 
-var peg = require("../../../../lib/peg");
+let peg = require("../../../../lib/peg");
 
 describe("compiler pass |reportInfiniteRecursion|", function() {
-  var pass = peg.compiler.passes.check.reportInfiniteRecursion;
+  let pass = peg.compiler.passes.check.reportInfiniteRecursion;
 
   it("reports direct left recursion", function() {
     expect(pass).toReportError('start = start', {

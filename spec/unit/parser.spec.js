@@ -1,9 +1,9 @@
 "use strict";
 
-var peg = require("../../lib/peg");
+let peg = require("../../lib/peg");
 
 describe("PEG.js grammar parser", function() {
-  var literalAbcd       = { type: "literal",      value: "abcd", ignoreCase: false },
+  let literalAbcd       = { type: "literal",      value: "abcd", ignoreCase: false },
       literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false },
       literalIjkl       = { type: "literal",      value: "ijkl", ignoreCase: false },
       literalMnop       = { type: "literal",      value: "mnop", ignoreCase: false },
@@ -96,14 +96,14 @@ describe("PEG.js grammar parser", function() {
     return oneRuleGrammar({ type: "rule_ref", name: name });
   }
 
-  var trivialGrammar = literalGrammar("abcd", false),
+  let trivialGrammar = literalGrammar("abcd", false),
       twoRuleGrammar = {
         type:        "grammar",
         initializer: null,
         rules:       [ruleA, ruleB]
       };
 
-  var stripLocation = (function() {
+  let stripLocation = (function() {
     function buildVisitor(functions) {
       return function(node) {
         return functions[node.type].apply(null, arguments);
@@ -128,7 +128,7 @@ describe("PEG.js grammar parser", function() {
       };
     }
 
-    var strip = buildVisitor({
+    let strip = buildVisitor({
       grammar: function(node) {
         delete node.location;
 
@@ -166,7 +166,7 @@ describe("PEG.js grammar parser", function() {
   beforeEach(function() {
     this.addMatchers({
       toParseAs:     function(expected) {
-        var result;
+        let result;
 
         try {
           result = peg.parser.parse(this.actual);
@@ -194,7 +194,7 @@ describe("PEG.js grammar parser", function() {
       },
 
       toFailToParse: function(details) {
-        var result, key;
+        let result, key;
 
         try {
           result = peg.parser.parse(this.actual);

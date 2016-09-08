@@ -1,6 +1,6 @@
 "use strict";
 
-var benchmarks = [
+let benchmarks = [
   {
     id:          "json",
     title:       "JSON",

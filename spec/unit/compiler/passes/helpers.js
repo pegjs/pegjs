@@ -1,6 +1,6 @@
 "use strict";
 
-var peg = require("../../../../lib/peg");
+let peg = require("../../../../lib/peg");
 
 beforeEach(function() {
   this.addMatchers({
@@ -16,7 +16,7 @@ beforeEach(function() {
           return value !== null && typeof value === "object";
         }
 
-        var i, key;
+        let i, key;
 
         if (isArray(details)) {
           if (!isArray(value)) { return false; }
@@ -44,7 +44,7 @@ beforeEach(function() {
         }
       }
 
-      var ast = peg.parser.parse(grammar);
+      let ast = peg.parser.parse(grammar);
 
       this.actual(ast, options);
 
@@ -61,7 +61,7 @@ beforeEach(function() {
     },
 
     toReportError: function(grammar, details) {
-      var ast = peg.parser.parse(grammar),
+      let ast = peg.parser.parse(grammar),
           key;
 
       try {

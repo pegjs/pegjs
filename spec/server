@@ -9,19 +9,19 @@
  * browser.
  */
 
-var express    = require("express"),
+let express    = require("express"),
     logger     = require("morgan"),
     glob       = require("glob"),
     browserify = require("browserify"),
     babelify   = require("babelify");
 
-var app = express();
+let app = express();
 
 app.use(logger("dev"));
 app.use(express.static(__dirname));
 
 app.get("/bundle.js", function(req, res) {
-  var files = glob.sync(__dirname + "/**/*.js", {
+  let files = glob.sync(__dirname + "/**/*.js", {
     ignore: __dirname + "/vendor/**/*"
   });
 

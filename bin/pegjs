@@ -2,9 +2,9 @@
 
 "use strict";
 
-var fs      = require("fs");
-var path    = require("path");
-var peg     = require("../lib/peg");
+let fs      = require("fs");
+let path    = require("path");
+let peg     = require("../lib/peg");
 
 /* Helpers */
 
@@ -56,7 +56,7 @@ function abort(message) {
 }
 
 function addExtraOptions(options, json) {
-  var extraOptions;
+  let extraOptions;
 
   try {
     extraOptions = JSON.parse(json);
@@ -69,7 +69,7 @@ function addExtraOptions(options, json) {
     abort("The JSON with extra options has to represent an object.");
   }
 
-  for (var key in extraOptions) {
+  for (let key in extraOptions) {
     if (extraOptions.hasOwnProperty(key)) {
       options[key] = extraOptions[key];
     }
@@ -86,7 +86,7 @@ function trim(s) {
 
 /* Arguments */
 
-var args = process.argv.slice(2); // Trim "node" and the script path.
+let args = process.argv.slice(2); // Trim "node" and the script path.
 
 function isOption(arg) {
   return (/^-.+/).test(arg);
@@ -99,17 +99,17 @@ function nextArg() {
 /* Files */
 
 function readStream(inputStream, callback) {
-  var input = "";
+  let input = "";
   inputStream.on("data", function(data) { input += data; });
   inputStream.on("end", function() { callback(input); });
 }
 
 /* Main */
 
-var inputFile = null;
-var outputFile = null;
+let inputFile = null;
+let outputFile = null;
 
-var options = {
+let options = {
   cache:        false,
   dependencies: {},
   exportVar:    null,
@@ -121,6 +121,8 @@ var options = {
 };
 
 while (args.length > 0 && isOption(args[0])) {
+  let json, id, mod;
+
   switch (args[0]) {
     case "--allowed-start-rules":
       nextArg();
@@ -143,7 +145,7 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the -d/--dependency option.");
       }
       if (args[0].indexOf(":") !== -1) {
-        var parts = args[0].split(":");
+        let parts = args[0].split(":");
         options.dependencies[parts[0]] = parts[1];
       } else {
         options.dependencies[args[0]] = args[0];
@@ -173,7 +175,7 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the --extra-options-file option.");
       }
       try {
-        var json = fs.readFileSync(args[0]);
+        json = fs.readFileSync(args[0]);
       } catch(e) {
         abort("Can't read from file \"" + args[0] + "\".");
       }
@@ -223,8 +225,8 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the --plugin option.");
       }
-      var id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
-      var mod;
+      id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
+      mod;
       try {
         mod = require(id);
       } catch (e) {
@@ -267,8 +269,8 @@ if (options.exportVar !== null) {
   }
 }
 
-var inputStream;
-var outputStream;
+let inputStream;
+let outputStream;
 
 switch (args.length) {
   case 0:
@@ -311,7 +313,7 @@ if (outputFile === "-") {
 }
 
 readStream(inputStream, function(input) {
-  var source;
+  let source;
 
   try {
     source = peg.generate(input, options);

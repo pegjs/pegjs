@@ -1,9 +1,9 @@
 "use strict";
 
-var peg = require("../../../../lib/peg");
+let peg = require("../../../../lib/peg");
 
 describe("compiler pass |reportDuplicateLabels|", function() {
-  var pass = peg.compiler.passes.check.reportDuplicateLabels;
+  let pass = peg.compiler.passes.check.reportDuplicateLabels;
 
   describe("in a sequence", function() {
     it("reports labels duplicate with labels of preceding elements", function() {

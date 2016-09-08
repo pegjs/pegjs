@@ -1,9 +1,9 @@
 "use strict";
 
-var peg = require("../../../../lib/peg");
+let peg = require("../../../../lib/peg");
 
 describe("compiler pass |reportUndefinedRules|", function() {
-  var pass = peg.compiler.passes.check.reportUndefinedRules;
+  let pass = peg.compiler.passes.check.reportUndefinedRules;
 
   it("reports undefined rules", function() {
     expect(pass).toReportError('start = undefined', {

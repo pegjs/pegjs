@@ -5,16 +5,16 @@
 
 "use strict";
 
-var fs  = require("fs");
+let fs  = require("fs");
 
-var benchmarks = require("./benchmarks.js");
-var Runner = require("./runner.js");
+let benchmarks = require("./benchmarks.js");
+let Runner = require("./runner.js");
 
 /* Results Table Manipulation */
 
 function dup(text, count) {
-  var result = "";
-  for (var i = 1; i <= count; i++) {
+  let result = "";
+  for (let i = 1; i <= count; i++) {
     result += text;
   }
   return result;
@@ -29,7 +29,7 @@ function padRight(text, length) {
 }
 
 function center(text, length) {
-  var padLength = (length - text.length) / 2;
+  let padLength = (length - text.length) / 2;
   return dup(" ", Math.floor(padLength))
     + text
     + dup(" ", Math.ceil(padLength));
@@ -47,8 +47,8 @@ function writeHeading(heading) {
 }
 
 function writeResult(title, inputSize, parseTime) {
-  var KB      = 1024;
-  var MS_IN_S = 1000;
+  const KB      = 1024;
+  const MS_IN_S = 1000;
 
   console.log("│ "
     + padRight(title, 35)
@@ -99,7 +99,7 @@ function abort(message) {
 
 /* Arguments */
 
-var args = process.argv.slice(2); // Trim "node" and the script path.
+let args = process.argv.slice(2); // Trim "node" and the script path.
 
 function isOption(arg) {
   return (/^-/).test(arg);
@@ -111,8 +111,8 @@ function nextArg() {
 
 /* Main */
 
-var runCount = 10;
-var options = {
+let runCount = 10;
+let options = {
   cache:    false,
   optimize: "speed"
 };

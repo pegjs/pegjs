@@ -1,6 +1,6 @@
 /* eslint-env browser, jquery */
 
-var benchmarks = require("./benchmarks.js"),
+let benchmarks = require("./benchmarks.js"),
     Runner     = require("./runner.js");
 
 $("#run").click(function() {
@@ -8,7 +8,7 @@ $("#run").click(function() {
 
   /* Results Table Manipulation */
 
-  var resultsTable = $("#results-table");
+  let resultsTable = $("#results-table");
 
   function appendHeading(heading) {
     resultsTable.append(
@@ -17,8 +17,8 @@ $("#run").click(function() {
   }
 
   function appendResult(klass, title, url, inputSize, parseTime) {
-    var KB      = 1024,
-        MS_IN_S = 1000;
+    const KB      = 1024,
+          MS_IN_S = 1000;
 
     resultsTable.append(
         "<tr class='" + klass + "'>"
@@ -62,7 +62,7 @@ $("#run").click(function() {
    *   2. To minimize random errors.
    */
 
-  var runCount = parseInt($("#run-count").val(), 10),
+  let runCount = parseInt($("#run-count").val(), 10),
       options  = {
         cache:    $("#cache").is(":checked"),
         optimize: $("#optimize").val()
