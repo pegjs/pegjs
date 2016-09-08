@@ -1,5 +1,7 @@
 /* eslint-env browser, jquery */
-/* global benchmarks, Runner */
+
+var benchmarks = require("./benchmarks.js"),
+    Runner     = require("./runner.js");
 
 $("#run").click(function() {
   "use strict";

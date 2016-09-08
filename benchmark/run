@@ -6,10 +6,9 @@
 "use strict";
 
 var fs  = require("fs");
-var peg = require("../lib/peg");
 
 var benchmarks = require("./benchmarks.js");
-var Runner = require("./runner.js")(peg);
+var Runner = require("./runner.js");
 
 /* Results Table Manipulation */
 

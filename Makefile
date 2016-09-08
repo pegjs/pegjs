@@ -24,7 +24,8 @@ PARSER_OUT_FILE_NEW = $(LIB_DIR)/parser.js.new
 BROWSER_FILE_DEV = $(BROWSER_DIR)/peg-$(PEGJS_VERSION).js
 BROWSER_FILE_MIN = $(BROWSER_DIR)/peg-$(PEGJS_VERSION).min.js
 
-SPEC_SERVER_FILE = $(SPEC_DIR)/server
+SPEC_SERVER_FILE      = $(SPEC_DIR)/server
+BENCHMARK_SERVER_FILE = $(BENCHMARK_DIR)/server
 
 VERSION_FILE = VERSION
 
@@ -108,6 +109,7 @@ lint:
 	  $(SPEC_SERVER_FILE)                                                    \
 	  $(BENCHMARK_DIR)/*.js                                                  \
 	  $(BENCHMARK_RUN)                                                       \
+	  $(BENCHMARK_SERVER_FILE)                                               \
 	  $(PEGJS)
 
 .PHONY:  all parser browser browserclean spec benchmark lint
