@@ -46,7 +46,7 @@
   }
 
   function extractList(list, index) {
-    return list.map(function(element) { return element[index]; });
+    return list.map(element => element[index]);
   }
 
   function buildList(head, tail, index) {
@@ -364,7 +364,7 @@ CharacterClassMatcher "character class"
     {
       return {
         type:       "class",
-        parts:      parts.filter(function(part) { return part !== ""; }),
+        parts:      parts.filter(part => part !== ""),
         inverted:   inverted !== null,
         ignoreCase: ignoreCase !== null,
         location:   location()

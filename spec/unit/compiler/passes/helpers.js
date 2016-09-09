@@ -46,14 +46,13 @@ beforeEach(function() {
 
       this.actual(ast, options);
 
-      this.message = function() {
-        return "Expected the pass "
-             + "with options " + jasmine.pp(options) + " "
-             + (this.isNot ? "not " : "")
-             + "to change the AST " + jasmine.pp(ast) + " "
-             + "to match " + jasmine.pp(details) + ", "
-             + "but it " + (this.isNot ? "did" : "didn't") + ".";
-      };
+      this.message = () =>
+        "Expected the pass "
+          + "with options " + jasmine.pp(options) + " "
+          + (this.isNot ? "not " : "")
+          + "to change the AST " + jasmine.pp(ast) + " "
+          + "to match " + jasmine.pp(details) + ", "
+          + "but it " + (this.isNot ? "did" : "didn't") + ".";
 
       return matchDetails(ast, details);
     },
@@ -65,23 +64,21 @@ beforeEach(function() {
         this.actual(ast);
       } catch (e) {
         if (this.isNot) {
-          this.message = function() {
-            return "Expected the pass not to report an error "
-                 + "for grammar " + jasmine.pp(grammar) + ", "
-                 + "but it did.";
-          };
+          this.message = () =>
+            "Expected the pass not to report an error "
+              + "for grammar " + jasmine.pp(grammar) + ", "
+              + "but it did.";
         } else {
           if (details) {
             for (let key in details) {
               if (details.hasOwnProperty(key)) {
                 if (!this.env.equals_(e[key], details[key])) {
-                  this.message = function() {
-                    return "Expected the pass to report an error "
-                         + "with details " + jasmine.pp(details) + " "
-                         + "for grammar " + jasmine.pp(grammar) + ", "
-                         + "but " + jasmine.pp(key) + " "
-                         + "is " + jasmine.pp(e[key]) + ".";
-                  };
+                  this.message = () =>
+                    "Expected the pass to report an error "
+                      + "with details " + jasmine.pp(details) + " "
+                      + "for grammar " + jasmine.pp(grammar) + ", "
+                      + "but " + jasmine.pp(key) + " "
+                      + "is " + jasmine.pp(e[key]) + ".";
 
                   return false;
                 }
@@ -93,12 +90,11 @@ beforeEach(function() {
         return true;
       }
 
-      this.message = function() {
-        return "Expected the pass to report an error "
-             + (details ? "with details " + jasmine.pp(details) + " ": "")
-             + "for grammar " + jasmine.pp(grammar) + ", "
-             + "but it didn't.";
-      };
+      this.message = () =>
+        "Expected the pass to report an error "
+          + (details ? "with details " + jasmine.pp(details) + " ": "")
+          + "for grammar " + jasmine.pp(grammar) + ", "
+          + "but it didn't.";
 
       return false;
     }

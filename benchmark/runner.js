@@ -24,7 +24,7 @@ let Runner = {
                * We can't use |arguments.callee| here because |this| would get
                * messed-up in that case.
                */
-              setTimeout(function() { Q.run(); }, 0);
+              setTimeout(() => { Q.run(); }, 0);
             }
           }
         };
@@ -107,9 +107,9 @@ let Runner = {
     /* Main */
 
     Q.add(initialize);
-    benchmarks.forEach(function(benchmark) {
+    benchmarks.forEach(benchmark => {
       Q.add(benchmarkInitializer(benchmark));
-      benchmark.tests.forEach(function(test) {
+      benchmark.tests.forEach(test => {
         Q.add(testRunner(benchmark, test));
       });
       Q.add(benchmarkFinalizer(benchmark));

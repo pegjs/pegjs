@@ -12,11 +12,11 @@ describe("PEG.js API", function() {
     });
 
     it("throws an exception on syntax error", function() {
-      expect(function() { peg.generate('start = @'); }).toThrow();
+      expect(() => { peg.generate('start = @'); }).toThrow();
     });
 
     it("throws an exception on semantic error", function() {
-      expect(function() { peg.generate('start = undefined'); }).toThrow();
+      expect(() => { peg.generate('start = undefined'); }).toThrow();
     });
 
     describe("allowed start rules", function() {
@@ -37,12 +37,8 @@ describe("PEG.js API", function() {
             let parser = peg.generate(grammar, { optimize: "speed" });
 
             expect(parser.parse("x", { startRule: "a" })).toBe("x");
-            expect(
-              function() { parser.parse("x", { startRule: "b" }); }
-            ).toThrow();
-            expect(
-              function() { parser.parse("x", { startRule: "c" }); }
-            ).toThrow();
+            expect(() => { parser.parse("x", { startRule: "b" }); }).toThrow();
+            expect(() => { parser.parse("x", { startRule: "c" }); }).toThrow();
           });
         });
 
@@ -53,9 +49,7 @@ describe("PEG.js API", function() {
               allowedStartRules: ["b", "c"]
             });
 
-            expect(
-              function() { parser.parse("x", { startRule: "a" }); }
-            ).toThrow();
+            expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();
             expect(parser.parse("x", { startRule: "b" })).toBe("x");
             expect(parser.parse("x", { startRule: "c" })).toBe("x");
           });
@@ -68,12 +62,8 @@ describe("PEG.js API", function() {
             let parser = peg.generate(grammar, { optimize: "size" });
 
             expect(parser.parse("x", { startRule: "a" })).toBe("x");
-            expect(
-              function() { parser.parse("x", { startRule: "b" }); }
-            ).toThrow();
-            expect(
-              function() { parser.parse("x", { startRule: "c" }); }
-            ).toThrow();
+            expect(() => { parser.parse("x", { startRule: "b" }); }).toThrow();
+            expect(() => { parser.parse("x", { startRule: "c" }); }).toThrow();
           });
         });
 
@@ -84,9 +74,7 @@ describe("PEG.js API", function() {
               allowedStartRules: ["b", "c"]
             });
 
-            expect(
-              function() { parser.parse("x", { startRule: "a" }); }
-            ).toThrow();
+            expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();
             expect(parser.parse("x", { startRule: "b" })).toBe("x");
             expect(parser.parse("x", { startRule: "c" })).toBe("x");
           });

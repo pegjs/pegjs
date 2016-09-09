@@ -16,7 +16,7 @@ describe("generated parser API", function() {
     it("throws an exception on syntax error", function() {
       let parser = peg.generate('start = "a"');
 
-      expect(function() { parser.parse("b"); }).toThrow();
+      expect(() => { parser.parse("b"); }).toThrow();
     });
 
     describe("start rule", function() {
@@ -41,9 +41,7 @@ describe("generated parser API", function() {
 
       describe("when |startRule| is set to a disallowed start rule", function() {
         it("throws an exception", function() {
-          expect(
-            function() { parser.parse("x", { startRule: "a" }); }
-          ).toThrow();
+          expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();
         });
       });
     });

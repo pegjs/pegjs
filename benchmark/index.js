@@ -3,7 +3,7 @@
 let benchmarks = require("./benchmarks.js"),
     Runner     = require("./runner.js");
 
-$("#run").click(function() {
+$("#run").click(() => {
   "use strict";
 
   /* Results Table Manipulation */
@@ -135,7 +135,7 @@ $("#run").click(function() {
 
 });
 
-$(document).ready(function() {
+$(document).ready(() => {
   "use strict";
 
   $("#run").focus();

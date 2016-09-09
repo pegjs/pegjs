@@ -100,8 +100,8 @@ function nextArg() {
 
 function readStream(inputStream, callback) {
   let input = "";
-  inputStream.on("data", function(data) { input += data; });
-  inputStream.on("end", function() { callback(input); });
+  inputStream.on("data", (data) => { input += data; });
+  inputStream.on("end", () => { callback(input); });
 }
 
 /* Main */
@@ -296,7 +296,7 @@ if (outputFile === null) {
 if (inputFile === "-") {
   process.stdin.resume();
   inputStream = process.stdin;
-  inputStream.on("error", function() {
+  inputStream.on("error", () => {
     abort("Can't read from file \"" + inputFile + "\".");
   });
 } else {
@@ -307,12 +307,12 @@ if (outputFile === "-") {
   outputStream = process.stdout;
 } else {
   outputStream = fs.createWriteStream(outputFile);
-  outputStream.on("error", function() {
+  outputStream.on("error", () => {
     abort("Can't write to file \"" + outputFile + "\".");
   });
 }
 
-readStream(inputStream, function(input) {
+readStream(inputStream, (input) => {
   let source;
 
   try {

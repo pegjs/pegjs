@@ -171,24 +171,22 @@ describe("PEG.js grammar parser", function() {
         try {
           result = peg.parser.parse(this.actual);
         } catch (e) {
-          this.message = function() {
-            return "Expected " + jasmine.pp(this.actual) + " "
-                 + "to parse as " + jasmine.pp(expected) + ", "
-                 + "but it failed to parse with message "
-                 + jasmine.pp(e.message) + ".";
-          };
+          this.message = () =>
+            "Expected " + jasmine.pp(this.actual) + " "
+              + "to parse as " + jasmine.pp(expected) + ", "
+              + "but it failed to parse with message "
+              + jasmine.pp(e.message) + ".";
 
           return false;
         }
 
         stripLocation(result);
 
-        this.message = function() {
-          return "Expected " + jasmine.pp(this.actual) + " "
-               + (this.isNot ? "not " : "")
-               + "to parse as " + jasmine.pp(expected) + ", "
-               + "but it parsed as " + jasmine.pp(result) + ".";
-        };
+        this.message = () =>
+          "Expected " + jasmine.pp(this.actual) + " "
+            + (this.isNot ? "not " : "")
+            + "to parse as " + jasmine.pp(expected) + ", "
+            + "but it parsed as " + jasmine.pp(result) + ".";
 
         return this.env.equals_(result, expected);
       },
@@ -200,22 +198,20 @@ describe("PEG.js grammar parser", function() {
           result = peg.parser.parse(this.actual);
         } catch (e) {
           if (this.isNot) {
-            this.message = function() {
-              return "Expected " + jasmine.pp(this.actual) + " to parse, "
-                   + "but it failed with message "
-                   + jasmine.pp(e.message) + ".";
-            };
+            this.message = () =>
+              "Expected " + jasmine.pp(this.actual) + " to parse, "
+                + "but it failed with message "
+                + jasmine.pp(e.message) + ".";
           } else {
             if (details) {
               for (let key in details) {
                 if (details.hasOwnProperty(key)) {
                   if (!this.env.equals_(e[key], details[key])) {
-                    this.message = function() {
-                      return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
-                           + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                           + "but " + jasmine.pp(key) + " "
-                           + "is " + jasmine.pp(e[key]) + ".";
-                    };
+                    this.message = () =>
+                      "Expected " + jasmine.pp(this.actual) + " to fail to parse"
+                        + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                        + "but " + jasmine.pp(key) + " "
+                        + "is " + jasmine.pp(e[key]) + ".";
 
                     return false;
                   }
@@ -229,11 +225,10 @@ describe("PEG.js grammar parser", function() {
 
         stripLocation(result);
 
-        this.message = function() {
-          return "Expected " + jasmine.pp(this.actual) + " to fail to parse"
-               + (details ? " with details " + jasmine.pp(details) : "") + ", "
-               + "but it parsed as " + jasmine.pp(result) + ".";
-        };
+        this.message = () =>
+          "Expected " + jasmine.pp(this.actual) + " to fail to parse"
+            + (details ? " with details " + jasmine.pp(details) : "") + ", "
+            + "but it parsed as " + jasmine.pp(result) + ".";
 
         return false;
       }

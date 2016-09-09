@@ -6,31 +6,28 @@ describe("plugin API", function() {
   beforeEach(function() {
     this.addMatchers({
       toBeObject: function() {
-        this.message = function() {
-          return "Expected " + jasmine.pp(this.actual) + " "
-               + (this.isNot ? "not " : "")
-               + "to be an object.";
-        };
+        this.message = () =>
+          "Expected " + jasmine.pp(this.actual) + " "
+            + (this.isNot ? "not " : "")
+            + "to be an object.";
 
         return this.actual !== null && typeof this.actual === "object";
       },
 
       toBeArray: function() {
-        this.message = function() {
-          return "Expected " + jasmine.pp(this.actual) + " "
-               + (this.isNot ? "not " : "")
-               + "to be an array.";
-        };
+        this.message = () =>
+          "Expected " + jasmine.pp(this.actual) + " "
+            + (this.isNot ? "not " : "")
+            + "to be an array.";
 
         return Object.prototype.toString.apply(this.actual) === "[object Array]";
       },
 
       toBeFunction: function() {
-        this.message = function() {
-          return "Expected " + jasmine.pp(this.actual) + " "
-               + (this.isNot ? "not " : "")
-               + "to be a function.";
-        };
+        this.message = () =>
+          "Expected " + jasmine.pp(this.actual) + " "
+            + (this.isNot ? "not " : "")
+            + "to be a function.";
 
         return typeof this.actual === "function";
       }
@@ -64,17 +61,17 @@ describe("plugin API", function() {
               expect(config.passes).toBeObject();
 
               expect(config.passes.check).toBeArray();
-              config.passes.check.forEach(function(pass) {
+              config.passes.check.forEach(pass => {
                 expect(pass).toBeFunction();
               });
 
               expect(config.passes.transform).toBeArray();
-              config.passes.transform.forEach(function(pass) {
+              config.passes.transform.forEach(pass => {
                 expect(pass).toBeFunction();
               });
 
               expect(config.passes.generate).toBeArray();
-              config.passes.generate.forEach(function(pass) {
+              config.passes.generate.forEach(pass => {
                 expect(pass).toBeFunction();
               });
             }
@@ -123,7 +120,7 @@ describe("plugin API", function() {
     it("can change compiler passes", function() {
       let plugin = {
             use: function(config) {
-              let pass = function(ast) {
+              let pass = ast => {
                     ast.code = '({ parse: function() { return 42; } })';
                   };
 
@@ -151,7 +148,7 @@ describe("plugin API", function() {
             plugins:           [plugin]
           });
 
-      expect(function() { parser.parse("x", { startRule: "a" }); }).toThrow();
+      expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();
       expect(parser.parse("x", { startRule: "b" })).toBe("x");
       expect(parser.parse("x", { startRule: "c" })).toBe("x");
     });

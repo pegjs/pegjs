@@ -30,7 +30,7 @@ describe("generated parser behavior", function() {
           { cache: true,  optimize: "size",  trace: true  }
         ];
 
-    optionsVariants.forEach(function(variant) {
+    optionsVariants.forEach(variant => {
       describe(
         "with options " + jasmine.pp(variant),
         function() { block(clone(variant)); }
@@ -48,25 +48,23 @@ describe("generated parser behavior", function() {
         try {
           result = this.actual.parse(input, options);
         } catch (e) {
-          this.message = function() {
-            return "Expected " + jasmine.pp(input) + " "
-                 + "with options " + jasmine.pp(options) + " "
-                 + "to parse" + (expected !== undefined ? " as " + jasmine.pp(expected) : "") + ", "
-                 + "but it failed to parse with message "
-                 + jasmine.pp(e.message) + ".";
-          };
+          this.message = () =>
+            "Expected " + jasmine.pp(input) + " "
+              + "with options " + jasmine.pp(options) + " "
+              + "to parse" + (expected !== undefined ? " as " + jasmine.pp(expected) : "") + ", "
+              + "but it failed to parse with message "
+              + jasmine.pp(e.message) + ".";
 
           return false;
         }
 
         if (expected !== undefined) {
-          this.message = function() {
-            return "Expected " + jasmine.pp(input) + " "
-                 + "with options " + jasmine.pp(options) + " "
-                 + (this.isNot ? "not " : "")
-                 + "to parse as " + jasmine.pp(expected) + ", "
-                 + "but it parsed as " + jasmine.pp(result) + ".";
-          };
+          this.message = () =>
+            "Expected " + jasmine.pp(input) + " "
+              + "with options " + jasmine.pp(options) + " "
+              + (this.isNot ? "not " : "")
+              + "to parse as " + jasmine.pp(expected) + ", "
+              + "but it parsed as " + jasmine.pp(result) + ".";
 
           return this.env.equals_(result, expected);
         } else {
@@ -83,26 +81,24 @@ describe("generated parser behavior", function() {
           result = this.actual.parse(input, options);
         } catch (e) {
           if (this.isNot) {
-            this.message = function() {
-              return "Expected " + jasmine.pp(input)
-                   + "with options " + jasmine.pp(options) + " "
-                   + "to parse, "
-                   + "but it failed with message "
-                   + jasmine.pp(e.message) + ".";
-            };
+            this.message = () =>
+              "Expected " + jasmine.pp(input)
+                + "with options " + jasmine.pp(options) + " "
+                + "to parse, "
+                + "but it failed with message "
+                + jasmine.pp(e.message) + ".";
           } else {
             if (details) {
               for (let key in details) {
                 if (details.hasOwnProperty(key)) {
                   if (!this.env.equals_(e[key], details[key])) {
-                    this.message = function() {
-                      return "Expected " + jasmine.pp(input) + " "
-                           + "with options " + jasmine.pp(options) + " "
-                           + "to fail to parse"
-                           + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                           + "but " + jasmine.pp(key) + " "
-                           + "is " + jasmine.pp(e[key]) + ".";
-                    };
+                    this.message = () =>
+                      "Expected " + jasmine.pp(input) + " "
+                        + "with options " + jasmine.pp(options) + " "
+                        + "to fail to parse"
+                        + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                        + "but " + jasmine.pp(key) + " "
+                        + "is " + jasmine.pp(e[key]) + ".";
 
                     return false;
                   }
@@ -114,13 +110,12 @@ describe("generated parser behavior", function() {
           return true;
         }
 
-        this.message = function() {
-          return "Expected " + jasmine.pp(input) + " "
-               + "with options " + jasmine.pp(options) + " "
-               + "to fail to parse"
-               + (details ? " with details " + jasmine.pp(details) : "") + ", "
-               + "but it parsed as " + jasmine.pp(result) + ".";
-        };
+        this.message = () =>
+          "Expected " + jasmine.pp(input) + " "
+            + "with options " + jasmine.pp(options) + " "
+            + "to fail to parse"
+            + (details ? " with details " + jasmine.pp(details) : "") + ", "
+            + "but it parsed as " + jasmine.pp(result) + ".";
 
         return false;
       }
@@ -515,7 +510,7 @@ describe("generated parser behavior", function() {
                 ],
                 parser;
 
-            testcases.forEach(function(testcase) {
+            testcases.forEach(testcase => {
               parser = peg.generate(testcase.grammar, options);
               expect(parser).toFailToParse(testcase.input);
             });
@@ -711,7 +706,7 @@ describe("generated parser behavior", function() {
                 ],
                 parser;
 
-            testcases.forEach(function(testcase) {
+            testcases.forEach(testcase => {
               parser = peg.generate(testcase.grammar, options);
               expect(parser).toFailToParse(testcase.input);
             });
@@ -1080,7 +1075,7 @@ describe("generated parser behavior", function() {
                   ],
                   parser;
 
-              testcases.forEach(function(testcase) {
+              testcases.forEach(testcase => {
                 parser = peg.generate(testcase.grammar, options);
                 expect(parser).toFailToParse(testcase.input);
               });
