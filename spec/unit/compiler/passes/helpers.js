@@ -16,13 +16,11 @@ beforeEach(function() {
           return value !== null && typeof value === "object";
         }
 
-        let i, key;
-
         if (isArray(details)) {
           if (!isArray(value)) { return false; }
 
           if (value.length !== details.length) { return false; }
-          for (i = 0; i < details.length; i++) {
+          for (let i = 0; i < details.length; i++) {
             if (!matchDetails(value[i], details[i])) { return false; }
           }
 
@@ -30,7 +28,7 @@ beforeEach(function() {
         } else if (isObject(details)) {
           if (!isObject(value)) { return false; }
 
-          for (key in details) {
+          for (let key in details) {
             if (details.hasOwnProperty(key)) {
               if (!(key in value)) { return false; }
 
@@ -61,8 +59,7 @@ beforeEach(function() {
     },
 
     toReportError: function(grammar, details) {
-      let ast = peg.parser.parse(grammar),
-          key;
+      let ast = peg.parser.parse(grammar);
 
       try {
         this.actual(ast);
@@ -75,7 +72,7 @@ beforeEach(function() {
           };
         } else {
           if (details) {
-            for (key in details) {
+            for (let key in details) {
               if (details.hasOwnProperty(key)) {
                 if (!this.env.equals_(e[key], details[key])) {
                   this.message = function() {

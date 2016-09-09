@@ -68,19 +68,17 @@ let Runner = {
 
     function testRunner(benchmark, test) {
       return function() {
-        let input, parseTime, averageParseTime, i, t;
-
         callbacks.testStart(benchmark, test);
 
-        input = callbacks.readFile(benchmark.id + "/" + test.file);
+        let input = callbacks.readFile(benchmark.id + "/" + test.file);
 
-        parseTime = 0;
-        for (i = 0; i < runCount; i++) {
-          t = (new Date()).getTime();
+        let parseTime = 0;
+        for (let i = 0; i < runCount; i++) {
+          let t = (new Date()).getTime();
           state.parser.parse(input);
           parseTime += (new Date()).getTime() - t;
         }
-        averageParseTime = parseTime / runCount;
+        let averageParseTime = parseTime / runCount;
 
         callbacks.testFinish(benchmark, test, input.length, averageParseTime);
 

@@ -8,9 +8,9 @@ let peg = require("../../lib/peg");
 describe("generated parser behavior", function() {
   function varyOptimizationOptions(block) {
     function clone(object) {
-      let result = {}, key;
+      let result = {};
 
-      for (key in object) {
+      for (let key in object) {
         if (object.hasOwnProperty(key)) {
           result[key] = object[key];
         }
@@ -77,7 +77,7 @@ describe("generated parser behavior", function() {
       toFailToParse: function(input, details, options) {
         options = options !== undefined ? options : {};
 
-        let result, key;
+        let result;
 
         try {
           result = this.actual.parse(input, options);
@@ -92,7 +92,7 @@ describe("generated parser behavior", function() {
             };
           } else {
             if (details) {
-              for (key in details) {
+              for (let key in details) {
                 if (details.hasOwnProperty(key)) {
                   if (!this.env.equals_(e[key], details[key])) {
                     this.message = function() {

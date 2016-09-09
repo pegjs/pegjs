@@ -194,7 +194,7 @@ describe("PEG.js grammar parser", function() {
       },
 
       toFailToParse: function(details) {
-        let result, key;
+        let result;
 
         try {
           result = peg.parser.parse(this.actual);
@@ -207,7 +207,7 @@ describe("PEG.js grammar parser", function() {
             };
           } else {
             if (details) {
-              for (key in details) {
+              for (let key in details) {
                 if (details.hasOwnProperty(key)) {
                   if (!this.env.equals_(e[key], details[key])) {
                     this.message = function() {
