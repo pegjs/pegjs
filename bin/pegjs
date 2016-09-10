@@ -2,52 +2,21 @@
 
 "use strict";
 
-let fs      = require("fs");
-let path    = require("path");
-let peg     = require("../lib/peg");
+let fs = require("fs");
+let path = require("path");
+let yargs = require("yargs");
+
+let arrays = require("../lib/utils/arrays");
+let peg = require("../lib/peg");
 
 /* Helpers */
 
-function printVersion() {
-  console.log("PEG.js " + peg.VERSION);
-}
-
-function printHelp() {
-  console.log("Usage: pegjs [options] [--] [<input_file>]");
-  console.log("");
-  console.log("Options:");
-  console.log("      --allowed-start-rules <rules>  comma-separated list of rules the generated");
-  console.log("                                     parser will be allowed to start parsing");
-  console.log("                                     from (default: the first rule in the");
-  console.log("                                     grammar)");
-  console.log("      --cache                        make generated parser cache results");
-  console.log("  -d, --dependency <dependency>      use specified dependency (can be specified");
-  console.log("                                     multiple times)");
-  console.log("  -e, --export-var <variable>        name of a global variable into which the");
-  console.log("                                     parser object is assigned to when no module");
-  console.log("                                     loader is detected");
-  console.log("      --extra-options <options>      additional options (in JSON format) to pass");
-  console.log("                                     to peg.generate");
-  console.log("      --extra-options-file <file>    file with additional options (in JSON");
-  console.log("                                     format) to pass to peg.generate");
-  console.log("      --format <format>              format of the generated parser: amd,");
-  console.log("                                     commonjs, globals, umd (default: commonjs)");
-  console.log("  -h, --help                         print help and exit");
-  console.log("  -O, --optimize <goal>              select optimization for speed or size");
-  console.log("                                     (default: speed)");
-  console.log("  -o, --output <file>                output file");
-  console.log("      --plugin <plugin>              use a specified plugin (can be specified");
-  console.log("                                     multiple times)");
-  console.log("      --trace                        enable tracing in generated parser");
-  console.log("  -v, --version                      print version information and exit");
-}
-
-function exitSuccess() {
-  process.exit(0);
+function getVersionDescription() {
+  return "PEG.js " + peg.VERSION;
 }
 
 function exitFailure() {
-  process.exit(1);
+  process.exit(0);
 }
 
 function abort(message) {
@@ -55,45 +24,80 @@ function abort(message) {
   exitFailure();
 }
 
-function addExtraOptions(options, json) {
+function parseExtraOptions(options) {
   let extraOptions;
 
   try {
-    extraOptions = JSON.parse(json);
+    extraOptions = JSON.parse(options);
   } catch (e) {
     if (!(e instanceof SyntaxError)) { throw e; }
 
     abort("Error parsing JSON: " + e.message);
   }
+
   if (typeof extraOptions !== "object") {
     abort("The JSON with extra options has to represent an object.");
   }
 
-  for (let key in extraOptions) {
-    if (extraOptions.hasOwnProperty(key)) {
-      options[key] = extraOptions[key];
-    }
+  return extraOptions;
+}
+
+function parseExtraOptionsFile(optionsFileName) {
+  try {
+    return parseExtraOptions(fs.readFileSync(optionsFileName));
+  } catch(e) {
+    abort("Can't read from file \"" + optionsFileName + "\".");
   }
 }
 
-/*
- * Extracted into a function just to silence JSHint complaining about creating
- * functions in a loop.
- */
-function trim(s) {
-  return s.trim();
+function parseDependencyArray(dependencyArray) {
+  if (!dependencyArray) return {};
+  if (!Array.isArray(dependencyArray)) {
+    dependencyArray = [dependencyArray];
+  }
+  return dependencyArray.reduce(function(dependencies, dependency) {
+    if (dependency.indexOf(":") !== -1) {
+      let parts = dependency.split(":");
+      dependencies[parts[0]] = parts[1];
+    } else {
+      dependencies[dependency] = dependency;
+    }
+    return dependencies;
+  }, {});
 }
 
-/* Arguments */
+function parsePluginArray(pluginArray) {
+  if (!pluginArray) return [];
+  if (!Array.isArray(pluginArray)) {
+    pluginArray = [pluginArray];
+  }
+  return pluginArray.map(function(plugin) {
+    let id = /^(\.\/|\.\.\/)/.test(plugin) ? path.resolve(plugin) : plugin;
+    let mod;
+    try {
+      mod = require(id);
+    } catch (e) {
+      if (e.code !== "MODULE_NOT_FOUND") { throw e; }
 
-let args = process.argv.slice(2); // Trim "node" and the script path.
-
-function isOption(arg) {
-  return (/^-.+/).test(arg);
+      abort("Can't load module \"" + id + "\".");
+    }
+    return mod;
+  });
 }
 
-function nextArg() {
-  args.shift();
+// Takes the last value from maybeArray if present
+function takeLast(maybeArray) {
+  if (!Array.isArray(maybeArray)) return maybeArray;
+  return maybeArray[maybeArray.length - 1];
+}
+
+// Removes keys with undefined values from object
+function filterUndefined(object) {
+  Object.keys(object).forEach(function(key) {
+    if (typeof object[key] === "undefined") {
+      delete object[key];
+    }
+  });
 }
 
 /* Files */
@@ -104,181 +108,168 @@ function readStream(inputStream, callback) {
   inputStream.on("end", function() { callback(input); });
 }
 
-/* Main */
+/* Parsing helpers */
 
-let inputFile = null;
-let outputFile = null;
+// Using a function like this gives more flexibility than the
+// requiresArg option in yargs
+function requireArg(optionDesc, coerceFunc) {
+  return function(arg) {
+    if (typeof arg === 'undefined') {
+      throw new Error("Missing parameter of the " + optionDesc + " option.")
+    }
+    if (coerceFunc) return coerceFunc(arg);
+    return arg;
+  }
+}
 
-let options = {
-  cache:        false,
-  dependencies: {},
-  exportVar:    null,
-  format:       "commonjs",
-  optimize:     "speed",
-  output:       "source",
-  plugins:      [],
-  trace:        false
+/* Default options */
+
+let defaultOptions = {
+  cache: false,
+  format: "commonjs",
+  optimize: "speed",
+  output: "source",
+  trace: false
 };
 
-while (args.length > 0 && isOption(args[0])) {
-  let json, id, mod;
+/* Options parsing */
 
-  switch (args[0]) {
-    case "--allowed-start-rules":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -e/--allowed-start-rules option.");
+let argv = yargs
+  // Cause parsing to fail on unknown options
+  .strict()
+  // Stop help message from showing on parsing errors to preserve
+  // the behaviour of previous versions
+  .showHelpOnFail(false)
+  .usage("Usage: $0 [options] [--] [<input_file>]")
+  .option("allowed-start-rules", {
+    type: "string",
+    description: "comma-separated list of rules the generated parser will be allowed " +
+                 "to start parsing from (default: the first rule in the grammar)",
+    // Split the comma-separated rules into an array
+    coerce: requireArg("--allowed-start-rules", function(rules) {
+      function trim(str) {
+        return str.trim();
       }
-      options.allowedStartRules = args[0]
-        .split(",")
-        .map(trim);
-      break;
+      return rules.split(",").map(trim);
+    })
+  })
+  .option("cache", {
+    type: "boolean",
+    description: "make generated parser cache results (default: " + defaultOptions.cache + ")"
+  })
+  .option("d", {
+    alias: "dependency",
+    type: "string",
+    description: "use specified dependency (can be specified multiple times)",
+    coerce: requireArg("-d/--dependency")
+  })
+  .option("e", {
+    alias: "export-var",
+    type: "string",
+    description: "name of a global variable into which the parser object is assigned " +
+                 "to when no module loader is detected",
+    coerce: requireArg("-e/--export-var")
+  })
+  .option("extra-options", {
+    type: "string",
+    description: "additional options (in JSON format) to pass to peg.generate",
+    coerce: requireArg("--extra-options", parseExtraOptions)
+  })
+  .option("extra-options-file", {
+    type: "string",
+    description: "file with additional options (in JSON format) to pass to peg.generate",
+    coerce: requireArg("--extra-options-file", parseExtraOptionsFile)
+  })
+  .option("format", {
+    type: "string",
+    description: "format of the generated parser (default: \"" + defaultOptions.format + "\")",
+    choices: [
+      "amd",
+      "commonjs",
+      "globals",
+      "umd"
+    ],
+    coerce: requireArg("--format")
+  })
+  .help("h", "print help and exit")
+  .alias("h", "help")
+  .option("O", {
+    alias: "optimize",
+    type: "string",
+    description: "select optimization for speed or size (default: \"" + defaultOptions.optimize + "\")",
+    choices: [
+      "speed",
+      "size"
+    ],
+    coerce: requireArg("-O/--optimize")
+  })
+  .option("o", {
+    alias: "output",
+    type: "string",
+    description: "output file",
+    requiresArg: true,
+    nargs: 1
+  })
+  .option("plugin", {
+    type: "string",
+    description: "use a specified plugin (can be specified multiple times)",
+    requiresArg: true,
+    nargs: 1
+  })
+  .option("trace", {
+    type: "boolean",
+    description: "enable tracing in the generated parser (default: " + defaultOptions.trace + ")"
+  })
+  .version("version", "print version information and exit", getVersionDescription)
+  .alias("v", "version")
+  .argv;
 
-    case "--cache":
-      options.cache = true;
-      break;
+/* Options resolution */
 
-    case "-d":
-    case "--dependency":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -d/--dependency option.");
-      }
-      if (args[0].indexOf(":") !== -1) {
-        let parts = args[0].split(":");
-        options.dependencies[parts[0]] = parts[1];
-      } else {
-        options.dependencies[args[0]] = args[0];
-      }
-      break;
+let cliOptions = {
+  cache: argv.cache,
+  dependencies: parseDependencyArray(argv.dependency),
+  exportVar: takeLast(argv.exportVar),
+  format: takeLast(argv.format),
+  optimize: takeLast(argv.optimize),
+  output: "source",
+  plugins: parsePluginArray(argv.plugin),
+  trace: argv.trace
+};
 
-    case "-e":
-    case "--export-var":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -e/--export-var option.");
-      }
-      options.exportVar = args[0];
-      break;
+filterUndefined(cliOptions);
 
-    case "--extra-options":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --extra-options option.");
-      }
-      addExtraOptions(options, args[0]);
-      break;
+let options = Object.assign({},
+  // Start with the default options
+  defaultOptions,
+  // Apply extra options file if present
+  argv.extraOptionsFile || {},
+  // Apply extra options JSON string if present
+  argv.extraOptions || {},
+  // Apply command line arguments on top
+  cliOptions
+);
 
-    case "--extra-options-file":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --extra-options-file option.");
-      }
-      try {
-        json = fs.readFileSync(args[0]);
-      } catch(e) {
-        abort("Can't read from file \"" + args[0] + "\".");
-      }
-      addExtraOptions(options, json);
-      break;
-
-    case "--format":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --format option.");
-      }
-      if (args[0] !== "amd" && args[0] !== "commonjs" && args[0] !== "globals" && args[0] !== "umd") {
-        abort("Module format must be one of \"amd\", \"commonjs\", \"globals\", and \"umd\".");
-      }
-      options.format = args[0];
-      break;
-
-    case "-h":
-    case "--help":
-      printHelp();
-      exitSuccess();
-      break;
-
-    case "-O":
-    case "--optimize":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -O/--optimize option.");
-      }
-      if (args[0] !== "speed" && args[0] !== "size") {
-        abort("Optimization goal must be either \"speed\" or \"size\".");
-      }
-      options.optimize = args[0];
-      break;
-
-    case "-o":
-    case "--output":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the -o/--output option.");
-      }
-      outputFile = args[0];
-      break;
-
-    case "--plugin":
-      nextArg();
-      if (args.length === 0) {
-        abort("Missing parameter of the --plugin option.");
-      }
-      id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
-      mod;
-      try {
-        mod = require(id);
-      } catch (e) {
-        if (e.code !== "MODULE_NOT_FOUND") { throw e; }
-
-        abort("Can't load module \"" + id + "\".");
-      }
-      options.plugins.push(mod);
-      break;
-
-    case "--trace":
-      options.trace = true;
-      break;
-
-    case "-v":
-    case "--version":
-      printVersion();
-      exitSuccess();
-      break;
-
-    case "--":
-      nextArg();
-      break;
-
-    default:
-      abort("Unknown option: " + args[0] + ".");
-  }
-  nextArg();
+if (
+  Object.keys(options.dependencies).length > 0 &&
+  !arrays.contains(["amd", "commonjs", "umd"], options.format)
+) {
+  abort("Can't use the -d/--dependency option with the \"" + options.format + "\" module format");
 }
 
-if (Object.keys(options.dependencies).length > 0) {
-  if (options.format !== "amd" && options.format !== "commonjs" && options.format !== "umd") {
-      abort("Can't use the -d/--dependency option with the \"" + options.format + "\" module format.");
-  }
-}
-
-if (options.exportVar !== null) {
-  if (options.format !== "globals" && options.format !== "umd") {
-      abort("Can't use the -e/--export-var option with the \"" + options.format + "\" module format.");
-  }
-}
+let inputFile = null;
+let outputFile = argv.output || null;
 
 let inputStream;
 let outputStream;
 
-switch (args.length) {
+switch (argv._.length) {
   case 0:
     inputFile = "-";
     break;
 
   case 1:
-    inputFile = args[0];
+    inputFile = argv._[0];
     break;
 
   default:
@@ -311,6 +302,8 @@ if (outputFile === "-") {
     abort("Can't write to file \"" + outputFile + "\".");
   });
 }
+
+/* Main */
 
 readStream(inputStream, function(input) {
   let source;
