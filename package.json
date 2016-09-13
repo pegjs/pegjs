@@ -37,7 +37,6 @@
     "lib/parser.js",
     "lib/peg.js",
     "lib/utils/arrays.js",
-    "lib/utils/classes.js",
     "lib/utils/objects.js",
     "package.json"
   ],
