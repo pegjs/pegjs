@@ -10,11 +10,9 @@ describe("generated parser behavior", function() {
     function clone(object) {
       let result = {};
 
-      for (let key in object) {
-        if (object.hasOwnProperty(key)) {
-          result[key] = object[key];
-        }
-      }
+      Object.keys(object).forEach(key => {
+        result[key] = object[key];
+      });
 
       return result;
     }
@@ -89,19 +87,20 @@ describe("generated parser behavior", function() {
                 + jasmine.pp(e.message) + ".";
           } else {
             if (details) {
-              for (let key in details) {
-                if (details.hasOwnProperty(key)) {
-                  if (!this.env.equals_(e[key], details[key])) {
-                    this.message = () =>
-                      "Expected " + jasmine.pp(input) + " "
-                        + "with options " + jasmine.pp(options) + " "
-                        + "to fail to parse"
-                        + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                        + "but " + jasmine.pp(key) + " "
-                        + "is " + jasmine.pp(e[key]) + ".";
+              let keys = Object.keys(details);
+              for (let i = 0; i < keys.length; i++) {
+                let key = keys[i];
 
-                    return false;
-                  }
+                if (!this.env.equals_(e[key], details[key])) {
+                  this.message = () =>
+                    "Expected " + jasmine.pp(input) + " "
+                      + "with options " + jasmine.pp(options) + " "
+                      + "to fail to parse"
+                      + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                      + "but " + jasmine.pp(key) + " "
+                      + "is " + jasmine.pp(e[key]) + ".";
+
+                  return false;
                 }
               }
             }

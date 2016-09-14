@@ -204,17 +204,18 @@ describe("PEG.js grammar parser", function() {
                 + jasmine.pp(e.message) + ".";
           } else {
             if (details) {
-              for (let key in details) {
-                if (details.hasOwnProperty(key)) {
-                  if (!this.env.equals_(e[key], details[key])) {
-                    this.message = () =>
-                      "Expected " + jasmine.pp(this.actual) + " to fail to parse"
-                        + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                        + "but " + jasmine.pp(key) + " "
-                        + "is " + jasmine.pp(e[key]) + ".";
+              let keys = Object.keys(details);
+              for (let i = 0; i < keys.length; i++) {
+                let key = keys[i];
 
-                    return false;
-                  }
+                if (!this.env.equals_(e[key], details[key])) {
+                  this.message = () =>
+                    "Expected " + jasmine.pp(this.actual) + " to fail to parse"
+                      + (details ? " with details " + jasmine.pp(details) : "") + ", "
+                      + "but " + jasmine.pp(key) + " "
+                      + "is " + jasmine.pp(e[key]) + ".";
+
+                  return false;
                 }
               }
             }

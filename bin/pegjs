@@ -69,11 +69,9 @@ function addExtraOptions(options, json) {
     abort("The JSON with extra options has to represent an object.");
   }
 
-  for (let key in extraOptions) {
-    if (extraOptions.hasOwnProperty(key)) {
-      options[key] = extraOptions[key];
-    }
-  }
+  Object.keys(extraOptions).forEach(key => {
+    options[key] = extraOptions[key];
+  });
 }
 
 /*

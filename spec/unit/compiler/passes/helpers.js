@@ -28,12 +28,13 @@ beforeEach(function() {
         } else if (isObject(details)) {
           if (!isObject(value)) { return false; }
 
-          for (let key in details) {
-            if (details.hasOwnProperty(key)) {
-              if (!(key in value)) { return false; }
+          let keys = Object.keys(details);
+          for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
 
-              if (!matchDetails(value[key], details[key])) { return false; }
-            }
+            if (!(key in value)) { return false; }
+
+            if (!matchDetails(value[key], details[key])) { return false; }
           }
 
           return true;
@@ -70,18 +71,19 @@ beforeEach(function() {
               + "but it did.";
         } else {
           if (details) {
-            for (let key in details) {
-              if (details.hasOwnProperty(key)) {
-                if (!this.env.equals_(e[key], details[key])) {
-                  this.message = () =>
-                    "Expected the pass to report an error "
-                      + "with details " + jasmine.pp(details) + " "
-                      + "for grammar " + jasmine.pp(grammar) + ", "
-                      + "but " + jasmine.pp(key) + " "
-                      + "is " + jasmine.pp(e[key]) + ".";
+            let keys = Object.keys(details);
+            for (let i = 0; i < keys.length; i++) {
+              let key = keys[i];
 
-                  return false;
-                }
+              if (!this.env.equals_(e[key], details[key])) {
+                this.message = () =>
+                  "Expected the pass to report an error "
+                    + "with details " + jasmine.pp(details) + " "
+                    + "for grammar " + jasmine.pp(grammar) + ", "
+                    + "but " + jasmine.pp(key) + " "
+                    + "is " + jasmine.pp(e[key]) + ".";
+
+                return false;
               }
             }
           }
