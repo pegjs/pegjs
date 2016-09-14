@@ -3,6 +3,8 @@
 /* eslint-env node */
 /* eslint no-console: 0 */
 
+"use strict";
+
 /*
  * Small server whose main purpose is to ensure that both the benchmarked code
  * and the benchmark get passed through Babel & Browserify before they are
