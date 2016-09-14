@@ -36,7 +36,6 @@
     "lib/grammar-error.js",
     "lib/parser.js",
     "lib/peg.js",
-    "lib/utils/objects.js",
     "package.json"
   ],
   "main": "lib/peg",
