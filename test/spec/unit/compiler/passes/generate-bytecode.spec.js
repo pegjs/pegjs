@@ -213,7 +213,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [ "\"a\"" ],
                     [],
                     [ "peg$literalExpectation(\"a\", false)" ],
-                    [ "function() { code }" ]
+                    [ { predicate: false, params: [], body: " code " } ]
                 ) );
 
             } );
@@ -243,7 +243,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [ "\"a\"" ],
                     [],
                     [ "peg$literalExpectation(\"a\", false)" ],
-                    [ "function(a) { code }" ]
+                    [ { predicate: false, params: [ "a" ], body: " code " } ]
                 ) );
 
             } );
@@ -289,7 +289,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         "peg$literalExpectation(\"b\", false)",
                         "peg$literalExpectation(\"c\", false)"
                     ],
-                    [ "function(a, b, c) { code }" ]
+                    [ { predicate: false, params: [ "a", "b", "c" ], body: " code " } ]
                 ) );
 
             } );
@@ -584,7 +584,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 expect( pass ).to.changeAST(
                     grammar,
-                    constsDetails( [], [], [], [ "function() { code }" ] )
+                    constsDetails( [], [], [], [ { predicate: true, params: [], body: " code " } ] )
                 );
 
             } );
@@ -641,7 +641,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         "peg$literalExpectation(\"b\", false)",
                         "peg$literalExpectation(\"c\", false)"
                     ],
-                    [ "function(a, b, c) { code }" ]
+                    [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ]
                 ) );
 
             } );
@@ -674,7 +674,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 expect( pass ).to.changeAST(
                     grammar,
-                    constsDetails( [], [], [], [ "function() { code }" ] )
+                    constsDetails( [], [], [], [ { predicate: true, params: [], body: " code " } ] )
                 );
 
             } );
@@ -731,7 +731,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         "peg$literalExpectation(\"b\", false)",
                         "peg$literalExpectation(\"c\", false)"
                     ],
-                    [ "function(a, b, c) { code }" ]
+                    [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ]
                 ) );
 
             } );
