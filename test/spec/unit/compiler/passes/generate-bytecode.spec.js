@@ -127,7 +127,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 ) );
                 expect( pass ).to.changeAST( grammar3, constsDetails(
                     [],
-                    [ "/^[a]/" ],
+                    [ { value: [ "a" ], inverted: false, ignoreCase: false } ],
                     [ { type: "rule", value: "start" } ],
                     []
                 ) );
@@ -161,7 +161,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [ "\"a\"" ], [], [], []
                 ), {}, { reportFailures: false } );
                 expect( pass ).to.changeAST( grammar3, constsDetails(
-                    [], [ "/^[a]/" ], [], []
+                    [], [ { value: [ "a" ], inverted: false, ignoreCase: false } ], [], []
                 ), {}, { reportFailures: false } );
 
             } );
@@ -937,7 +937,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                     expect( pass ).to.changeAST( "start = [a]", constsDetails(
                         [],
-                        [ "/^[a]/" ],
+                        [ { value: [ "a" ], inverted: false, ignoreCase: false } ],
                         [ { type: "class", value: [ "a" ], inverted: false, ignoreCase: false } ],
                         []
                     ) );
@@ -952,7 +952,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                     expect( pass ).to.changeAST( "start = [^a]", constsDetails(
                         [],
-                        [ "/^[^a]/" ],
+                        [ { value: [ "a" ], inverted: true, ignoreCase: false } ],
                         [ { type: "class", value: [ "a" ], inverted: true, ignoreCase: false } ],
                         []
                     ) );
@@ -967,7 +967,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                     expect( pass ).to.changeAST( "start = [a]i", constsDetails(
                         [],
-                        [ "/^[a]/i" ],
+                        [ { value: [ "a" ], inverted: false, ignoreCase: true } ],
                         [ { type: "class", value: [ "a" ], inverted: false, ignoreCase: true } ],
                         []
                     ) );
@@ -982,7 +982,13 @@ describe( "compiler pass |generateBytecode|", function () {
 
                     expect( pass ).to.changeAST( "start = [ab-def-hij-l]", constsDetails(
                         [],
-                        [ "/^[ab-def-hij-l]/" ],
+                        [
+                            {
+                                value: [ "a", [ "b", "d" ], "e", [ "f", "h" ], "i", [ "j", "l" ] ],
+                                inverted: false,
+                                ignoreCase: false
+                            }
+                        ],
                         [
                             {
                                 type: "class",
@@ -1017,7 +1023,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( "start = [a]", constsDetails(
-                        [], [ "/^[a]/" ], [], []
+                        [], [ { value: [ "a" ], inverted: false, ignoreCase: false } ], [], []
                     ), {}, { reportFailures: false } );
 
                 } );
@@ -1029,7 +1035,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( "start = [^a]", constsDetails(
-                        [], [ "/^[^a]/" ], [], []
+                        [], [ { value: [ "a" ], inverted: true, ignoreCase: false } ], [], []
                     ), {}, { reportFailures: false } );
 
                 } );
@@ -1041,7 +1047,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( "start = [a]i", constsDetails(
-                        [], [ "/^[a]/i" ], [], []
+                        [], [ { value: [ "a" ], inverted: false, ignoreCase: true } ], [], []
                     ), {}, { reportFailures: false } );
 
                 } );
@@ -1053,7 +1059,16 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( "start = [ab-def-hij-l]", constsDetails(
-                        [], [ "/^[ab-def-hij-l]/" ], [], []
+                        [],
+                        [
+                            {
+                                value: [ "a", [ "b", "d" ], "e", [ "f", "h" ], "i", [ "j", "l" ] ],
+                                inverted: false,
+                                ignoreCase: false
+                            }
+                        ],
+                        [],
+                        []
                     ), {}, { reportFailures: false } );
 
                 } );
