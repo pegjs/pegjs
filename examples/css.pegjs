@@ -1,23 +1,21 @@
-/*
- * CSS Grammar
- * ===========
- *
- * Based on grammar from CSS 2.1 specification [1] (including the errata [2]).
- * Generated parser builds a syntax tree composed of nested JavaScript objects,
- * vaguely inspired by CSS DOM [3]. The CSS DOM itself wasn't used as it is not
- * expressive enough (e.g. selectors are reflected as text, not structured
- * objects) and somewhat cumbersome.
- *
- * Limitations:
- *
- *   * Many errors which should be recovered from according to the specification
- *     (e.g. malformed declarations or unexpected end of stylesheet) are fatal.
- *     This is a result of straightforward rewrite of the CSS grammar to PEG.js.
- *
- * [1] http://www.w3.org/TR/2011/REC-CSS2-20110607
- * [2] http://www.w3.org/Style/css2-updates/REC-CSS2-20110607-errata.html
- * [3] http://www.w3.org/TR/DOM-Level-2-Style/css.html
- */
+// CSS Grammar
+// ===========
+//
+// Based on grammar from CSS 2.1 specification [1] (including the errata [2]).
+// Generated parser builds a syntax tree composed of nested JavaScript objects,
+// vaguely inspired by CSS DOM [3]. The CSS DOM itself wasn't used as it is not
+// expressive enough (e.g. selectors are reflected as text, not structured
+// objects) and somewhat cumbersome.
+//
+// Limitations:
+//
+//   * Many errors which should be recovered from according to the specification
+//     (e.g. malformed declarations or unexpected end of stylesheet) are fatal.
+//     This is a result of straightforward rewrite of the CSS grammar to PEG.js.
+//
+// [1] http://www.w3.org/TR/2011/REC-CSS2-20110607
+// [2] http://www.w3.org/Style/css2-updates/REC-CSS2-20110607-errata.html
+// [3] http://www.w3.org/TR/DOM-Level-2-Style/css.html
 
 {
   function extractOptional(optional, index) {
@@ -49,7 +47,7 @@
 start
   = stylesheet:stylesheet comment* { return stylesheet; }
 
-/* ----- G.1 Grammar ----- */
+// ----- G.1 Grammar -----
 
 stylesheet
   = charset:(CHARSET_SYM STRING ";")? (S / CDO / CDC)*
@@ -244,9 +242,9 @@ function
 hexcolor
   = value:HASH S* { return { type: "Hexcolor", value: value }; }
 
-/* ----- G.2 Lexical scanner ----- */
+// ----- G.2 Lexical scanner -----
 
-/* Macros */
+// Macros
 
 h
   = [0-9a-f]i
@@ -338,7 +336,7 @@ U  = "u"i / "\\" "0"? "0"? "0"? "0"? [\x55\x75] ("\r\n" / [ \t\r\n\f])? / "\\u"i
 X  = "x"i / "\\" "0"? "0"? "0"? "0"? [\x58\x78] ("\r\n" / [ \t\r\n\f])? / "\\x"i { return "x"; }
 Z  = "z"i / "\\" "0"? "0"? "0"? "0"? [\x5a\x7a] ("\r\n" / [ \t\r\n\f])? / "\\z"i { return "z"; }
 
-/* Tokens */
+// Tokens
 
 S "whitespace"
   = comment* s
@@ -376,7 +374,7 @@ MEDIA_SYM "@media"
 CHARSET_SYM "@charset"
   = comment* "@charset "
 
-/* We use |s| instead of |w| here to avoid infinite recursion. */
+// We use |s| instead of |w| here to avoid infinite recursion.
 IMPORTANT_SYM "!important"
   = comment* "!" (s / comment)* I M P O R T A N T
 

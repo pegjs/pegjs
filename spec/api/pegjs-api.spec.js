@@ -26,10 +26,8 @@ describe("PEG.js API", function() {
             'c = "x"'
           ].join("\n");
 
-      /*
-       * The |allowedStartRules| option is implemented separately for each
-       * optimization mode, so we need to test it in both.
-       */
+      // The |allowedStartRules| option is implemented separately for each
+      // optimization mode, so we need to test it in both.
 
       describe("when optimizing for parsing speed", function() {
         describe("when |allowedStartRules| is not set", function() {
@@ -151,10 +149,8 @@ describe("PEG.js API", function() {
       });
     });
 
-    /*
-     * The |optimize| option isn't tested because there is no meaningful way to
-     * write the specs without turning this into a performance test.
-     */
+    // The |optimize| option isn't tested because there is no meaningful way to
+    // write the specs without turning this into a performance test.
 
     describe("output", function() {
       let grammar = 'start = "a"';
@@ -187,13 +183,11 @@ describe("PEG.js API", function() {
       });
     });
 
-    /*
-     * The |format|, |exportVars|, and |dependencies| options are not tested
-     * becasue there is no meaningful way to thest their effects without turning
-     * this into an integration test.
-     */
+    // The |format|, |exportVars|, and |dependencies| options are not tested
+    // becasue there is no meaningful way to thest their effects without turning
+    // this into an integration test.
 
-    /* The |plugins| option is tested in plugin API specs. */
+    // The |plugins| option is tested in plugin API specs.
 
     it("accepts custom options", function() {
       peg.generate('start = "a"', { foo: 42 });

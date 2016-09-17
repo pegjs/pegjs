@@ -5,11 +5,9 @@
 
 "use strict";
 
-/*
- * Small server whose main purpose is to ensure that both the specced code and
- * the specs get passed through Babel & Browserify before they are served to the
- * browser.
- */
+// Small server whose main purpose is to ensure that both the specced code and
+// the specs get passed through Babel & Browserify before they are served to the
+// browser.
 
 let express    = require("express");
 let logger     = require("morgan");

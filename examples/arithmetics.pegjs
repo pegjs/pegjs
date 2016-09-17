@@ -1,9 +1,7 @@
-/*
- * Simple Arithmetics Grammar
- * ==========================
- *
- * Accepts expressions like "2 * (3 + 4)" and computes their value.
- */
+// Simple Arithmetics Grammar
+// ==========================
+//
+// Accepts expressions like "2 * (3 + 4)" and computes their value.
 
 Expression
   = head:Term tail:(_ ("+" / "-") _ Term)* {

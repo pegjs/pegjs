@@ -39,7 +39,7 @@ describe("compiler pass |reportInfiniteRecursion|", function() {
       expect(pass).not.toReportError('start = "" "" "a" start');
     });
 
-    /* Regression test for #359. */
+    // Regression test for #359.
     it("reports left recursion when rule reference is wrapped in an expression", function() {
       expect(pass).toReportError('start = "" start?');
     });

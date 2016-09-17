@@ -10,7 +10,7 @@ let fs  = require("fs");
 let benchmarks = require("./benchmarks.js");
 let Runner = require("./runner.js");
 
-/* Results Table Manipulation */
+// Results Table Manipulation
 
 function dup(text, count) {
   let result = "";
@@ -70,7 +70,7 @@ function writeTableFooter() {
   console.log("└─────────────────────────────────────┴───────────┴────────────┴──────────────┘");
 }
 
-/* Helpers */
+// Helpers
 
 function printHelp() {
   console.log("Usage: run [options]");
@@ -97,7 +97,7 @@ function abort(message) {
   exitFailure();
 }
 
-/* Arguments */
+// Arguments
 
 let args = process.argv.slice(2); // Trim "node" and the script path.
 
@@ -109,7 +109,7 @@ function nextArg() {
   args.shift();
 }
 
-/* Main */
+// Main
 
 let runCount = 10;
 let options = {
@@ -169,7 +169,7 @@ Runner.run(benchmarks, runCount, options, {
   },
 
   testStart: function() {
-    /* Nothing to do. */
+    // Nothing to do.
   },
 
   testFinish: function(benchmark, test, inputSize, parseTime) {

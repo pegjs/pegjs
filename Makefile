@@ -68,14 +68,12 @@ browser:
 	rm -f $(BROWSER_FILE_DEV)
 	rm -f $(BROWSER_FILE_MIN)
 
-	echo '/*'                                                                          >> $(BROWSER_FILE_DEV)
-	echo " * PEG.js $(PEGJS_VERSION)"                                                  >> $(BROWSER_FILE_DEV)
-	echo ' *'                                                                          >> $(BROWSER_FILE_DEV)
-	echo ' * http://pegjs.org/'                                                        >> $(BROWSER_FILE_DEV)
-	echo ' *'                                                                          >> $(BROWSER_FILE_DEV)
-	echo ' * Copyright (c) 2010-2016 David Majda'                                      >> $(BROWSER_FILE_DEV)
-	echo ' * Licensed under the MIT license.'                                          >> $(BROWSER_FILE_DEV)
-	echo ' */'                                                                         >> $(BROWSER_FILE_DEV)
+	echo "// PEG.js $(PEGJS_VERSION)"                                                  >> $(BROWSER_FILE_DEV)
+	echo '//'                                                                          >> $(BROWSER_FILE_DEV)
+	echo '// http://pegjs.org/'                                                        >> $(BROWSER_FILE_DEV)
+	echo '//'                                                                          >> $(BROWSER_FILE_DEV)
+	echo '// Copyright (c) 2010-2016 David Majda'                                      >> $(BROWSER_FILE_DEV)
+	echo '// Licensed under the MIT license.'                                          >> $(BROWSER_FILE_DEV)
 
 	$(BROWSERIFY)                                                   \
 		--standalone peg                                              \

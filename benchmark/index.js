@@ -6,7 +6,7 @@ let Runner     = require("./runner.js");
 $("#run").click(() => {
   "use strict";
 
-  /* Results Table Manipulation */
+  // Results Table Manipulation
 
   let resultsTable = $("#results-table");
 
@@ -49,18 +49,16 @@ $("#run").click(() => {
     );
   }
 
-  /* Main */
+  // Main
 
-  /*
-   * Each input is parsed multiple times and the results are averaged. We
-   * do this for two reasons:
-   *
-   *   1. To warm up the interpreter (PEG.js-generated parsers will be
-   *      most likely used repeatedly, so it makes sense to measure
-   *      performance after warming up).
-   *
-   *   2. To minimize random errors.
-   */
+  // Each input is parsed multiple times and the results are averaged. We
+  // do this for two reasons:
+  //
+  //   1. To warm up the interpreter (PEG.js-generated parsers will be
+  //      most likely used repeatedly, so it makes sense to measure
+  //      performance after warming up).
+  //
+  //   2. To minimize random errors.
 
   let runCount = parseInt($("#run-count").val(), 10);
   let options  = {
@@ -84,7 +82,7 @@ $("#run").click(() => {
     },
 
     testStart: function() {
-      /* Nothing to do. */
+      // Nothing to do.
     },
 
     testFinish: function(benchmark, test, inputSize, parseTime) {

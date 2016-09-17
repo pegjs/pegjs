@@ -120,10 +120,8 @@ describe("generated parser behavior", function() {
       }
     });
 
-    /*
-     * Stub out |console.log| so that the default tracer doesn't clutter
-     * test output.
-     */
+    // Stub out |console.log| so that the default tracer doesn't clutter
+    // test output.
     if (typeof console === "object") {
       spyOn(console, "log");
     }
@@ -412,11 +410,9 @@ describe("generated parser behavior", function() {
     describe("positive semantic predicate", function() {
       describe("when the code returns a truthy value", function() {
         it("returns |undefined|", function() {
-          /*
-           * The |""| is needed so that the parser doesn't return just
-           * |undefined| which we can't compare against in |toParse| due to the
-           * way optional parameters work.
-           */
+          // The |""| is needed so that the parser doesn't return just
+          // |undefined| which we can't compare against in |toParse| due to the
+          // way optional parameters work.
           let parser = peg.generate('start = &{ return true; } ""', options);
 
           expect(parser).toParse("", [undefined, ""]);
@@ -592,7 +588,7 @@ describe("generated parser behavior", function() {
             end:   { offset: 13, line: 7, column: 5 }
           });
 
-          /* Newline representations */
+          // Newline representations
           expect(parser).toParse("1\nx", {     // Unix
             start: { offset: 2, line: 2, column: 1 },
             end:   { offset: 2, line: 2, column: 1 }
@@ -608,11 +604,9 @@ describe("generated parser behavior", function() {
     describe("negative semantic predicate", function() {
       describe("when the code returns a falsey value", function() {
         it("returns |undefined|", function() {
-          /*
-           * The |""| is needed so that the parser doesn't return just
-           * |undefined| which we can't compare against in |toParse| due to the
-           * way optional parameters work.
-           */
+          // The |""| is needed so that the parser doesn't return just
+          // |undefined| which we can't compare against in |toParse| due to the
+          // way optional parameters work.
           let parser = peg.generate('start = !{ return false; } ""', options);
 
           expect(parser).toParse("", [undefined, ""]);
@@ -788,7 +782,7 @@ describe("generated parser behavior", function() {
             end:   { offset: 13, line: 7, column: 5 }
           });
 
-          /* Newline representations */
+          // Newline representations
           expect(parser).toParse("1\nx", {     // Unix
             start: { offset: 2, line: 2, column: 1 },
             end:   { offset: 2, line: 2, column: 1 }
@@ -1166,7 +1160,7 @@ describe("generated parser behavior", function() {
               end:   { offset: 14, line: 7, column: 6 }
             });
 
-            /* Newline representations */
+            // Newline representations
             expect(parser).toParse("1\nx", {     // Unix
               start: { offset: 2, line: 2, column: 1 },
               end:   { offset: 3, line: 2, column: 2 }
@@ -1460,7 +1454,7 @@ describe("generated parser behavior", function() {
             }
           });
 
-          /* Newline representations */
+          // Newline representations
           expect(parser).toFailToParse("1\nx", {     // Old Mac
             location: {
               start: { offset: 2, line: 2, column: 1 },
@@ -1477,18 +1471,14 @@ describe("generated parser behavior", function() {
       });
     });
 
-    /*
-     * Following examples are from Wikipedia, see
-     * http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
-     */
+    // Following examples are from Wikipedia, see
+    // http://en.wikipedia.org/w/index.php?title=Parsing_expression_grammar&oldid=335106938.
     describe("complex examples", function() {
       it("handles arithmetics example correctly", function() {
-        /*
-         * Value   ← [0-9]+ / '(' Expr ')'
-         * Product ← Value (('*' / '/') Value)*
-         * Sum     ← Product (('+' / '-') Product)*
-         * Expr    ← Sum
-         */
+        // Value   ← [0-9]+ / '(' Expr ')'
+        // Product ← Value (('*' / '/') Value)*
+        // Sum     ← Product (('+' / '-') Product)*
+        // Expr    ← Sum
         let parser = peg.generate([
               'Expr    = Sum',
               'Sum     = head:Product tail:(("+" / "-") Product)* {',
@@ -1507,40 +1497,39 @@ describe("generated parser behavior", function() {
               '        / "(" expr:Expr ")" { return expr; }'
             ].join("\n"), options);
 
-        /* The "value" rule */
+        // The "value" rule
         expect(parser).toParse("0",       0);
         expect(parser).toParse("123",     123);
         expect(parser).toParse("(42+43)", 42+43);
 
-        /* The "product" rule */
+        // The "product" rule
         expect(parser).toParse("42",          42);
         expect(parser).toParse("42*43",       42*43);
         expect(parser).toParse("42*43*44*45", 42*43*44*45);
         expect(parser).toParse("42/43",       42/43);
         expect(parser).toParse("42/43/44/45", 42/43/44/45);
 
-        /* The "sum" rule */
+        // The "sum" rule
         expect(parser).toParse("42*43",                   42*43);
         expect(parser).toParse("42*43+44*45",             42*43+44*45);
         expect(parser).toParse("42*43+44*45+46*47+48*49", 42*43+44*45+46*47+48*49);
         expect(parser).toParse("42*43-44*45",             42*43-44*45);
         expect(parser).toParse("42*43-44*45-46*47-48*49", 42*43-44*45-46*47-48*49);
 
-        /* The "expr" rule */
+        // The "expr" rule
         expect(parser).toParse("42+43", 42+43);
 
-        /* Complex test */
+        // Complex test
         expect(parser).toParse("(1+2)*(3+4)", (1+2)*(3+4));
       });
 
       it("handles non-context-free language correctly", function() {
-        /* The following parsing expression grammar describes the classic
-         * non-context-free language { a^n b^n c^n : n >= 1 }:
-         *
-         * S ← &(A c) a+ B !(a/b/c)
-         * A ← a A? b
-         * B ← b B? c
-         */
+        // The following parsing expression grammar describes the classic
+        // non-context-free language { a^n b^n c^n : n >= 1 }:
+        //
+        // S ← &(A c) a+ B !(a/b/c)
+        // A ← a A? b
+        // B ← b B? c
         let parser = peg.generate([
               'S = &(A "c") a:"a"+ B:B !("a" / "b" / "c") { return a.join("") + B; }',
               'A = a:"a" A:A? b:"b" { return [a, A, b].join(""); }',
@@ -1558,13 +1547,11 @@ describe("generated parser behavior", function() {
       });
 
       it("handles nested comments example correctly", function() {
-        /*
-         * Begin ← "(*"
-         * End ← "*)"
-         * C ← Begin N* End
-         * N ← C / (!Begin !End Z)
-         * Z ← any single character
-         */
+        // Begin ← "(*"
+        // End ← "*)"
+        // C ← Begin N* End
+        // N ← C / (!Begin !End Z)
+        // Z ← any single character
         let parser = peg.generate([
               'C     = begin:Begin ns:N* end:End { return begin + ns.join("") + end; }',
               'N     = C',

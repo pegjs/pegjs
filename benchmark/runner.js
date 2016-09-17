@@ -7,7 +7,7 @@ let peg = require("../lib/peg");
 let Runner = {
   run: function(benchmarks, runCount, options, callbacks) {
 
-    /* Queue */
+    // Queue
 
     let Q = {
           functions: [],
@@ -20,29 +20,25 @@ let Runner = {
             if (this.functions.length > 0) {
               this.functions.shift()();
 
-              /*
-               * We can't use |arguments.callee| here because |this| would get
-               * messed-up in that case.
-               */
+              // We can't use |arguments.callee| here because |this| would get
+              // messed-up in that case.
               setTimeout(() => { Q.run(); }, 0);
             }
           }
         };
 
-    /*
-     * The benchmark itself is factored out into several functions (some of them
-     * generated), which are enqueued and run one by one using |setTimeout|. We
-     * do this for two reasons:
-     *
-     *   1. To avoid bowser mechanism for interrupting long-running scripts to
-     *      kick-in (or at least to not kick-in that often).
-     *
-     *   2. To ensure progressive rendering of results in the browser (some
-     *      browsers do not render at all when running JavaScript code).
-     *
-     * The enqueued functions share state, which is all stored in the properties
-     * of the |state| object.
-     */
+    // The benchmark itself is factored out into several functions (some of them
+    // generated), which are enqueued and run one by one using |setTimeout|. We
+    // do this for two reasons:
+    //
+    //   1. To avoid bowser mechanism for interrupting long-running scripts to
+    //      kick-in (or at least to not kick-in that often).
+    //
+    //   2. To ensure progressive rendering of results in the browser (some
+    //      browsers do not render at all when running JavaScript code).
+    //
+    // The enqueued functions share state, which is all stored in the properties
+    // of the |state| object.
 
     let state = {};
 
@@ -104,7 +100,7 @@ let Runner = {
       callbacks.finish(state.totalInputSize, state.totalParseTime);
     }
 
-    /* Main */
+    // Main
 
     Q.add(initialize);
     benchmarks.forEach(benchmark => {

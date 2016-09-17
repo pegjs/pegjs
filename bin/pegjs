@@ -6,7 +6,7 @@ let fs      = require("fs");
 let path    = require("path");
 let peg     = require("../lib/peg");
 
-/* Helpers */
+// Helpers
 
 function printVersion() {
   console.log("PEG.js " + peg.VERSION);
@@ -74,15 +74,13 @@ function addExtraOptions(options, json) {
   });
 }
 
-/*
- * Extracted into a function just to silence JSHint complaining about creating
- * functions in a loop.
- */
+// Extracted into a function just to silence JSHint complaining about creating
+// functions in a loop.
 function trim(s) {
   return s.trim();
 }
 
-/* Arguments */
+// Arguments
 
 let args = process.argv.slice(2); // Trim "node" and the script path.
 
@@ -94,7 +92,7 @@ function nextArg() {
   args.shift();
 }
 
-/* Files */
+// Files
 
 function readStream(inputStream, callback) {
   let input = "";
@@ -102,7 +100,7 @@ function readStream(inputStream, callback) {
   inputStream.on("end", () => { callback(input); });
 }
 
-/* Main */
+// Main
 
 let inputFile = null;
 let outputFile = null;
