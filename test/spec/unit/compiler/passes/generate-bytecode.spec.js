@@ -54,7 +54,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 "b = 'b'",
                 "c = 'c'"
             ].join( "\n" ), constsDetails(
-                [ "\"a\"", "\"b\"", "\"c\"" ],
+                [ "a", "b", "c" ],
                 [],
                 [
                     { type: "literal", value: "a", ignoreCase: false },
@@ -120,7 +120,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     []
                 ) );
                 expect( pass ).to.changeAST( grammar2, constsDetails(
-                    [ "\"a\"" ],
+                    [ "a" ],
                     [],
                     [ { type: "rule", value: "start" } ],
                     []
@@ -158,7 +158,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [], [], [], []
                 ), {}, { reportFailures: false } );
                 expect( pass ).to.changeAST( grammar2, constsDetails(
-                    [ "\"a\"" ], [], [], []
+                    [ "a" ], [], [], []
                 ), {}, { reportFailures: false } );
                 expect( pass ).to.changeAST( grammar3, constsDetails(
                     [], [ { value: [ "a" ], inverted: false, ignoreCase: false } ], [], []
@@ -210,7 +210,7 @@ describe( "compiler pass |generateBytecode|", function () {
             it( "defines correct constants", function () {
 
                 expect( pass ).to.changeAST( grammar, constsDetails(
-                    [ "\"a\"" ],
+                    [ "a" ],
                     [],
                     [ { type: "literal", value: "a", ignoreCase: false } ],
                     [ { predicate: false, params: [], body: " code " } ]
@@ -240,7 +240,7 @@ describe( "compiler pass |generateBytecode|", function () {
             it( "defines correct constants", function () {
 
                 expect( pass ).to.changeAST( grammar, constsDetails(
-                    [ "\"a\"" ],
+                    [ "a" ],
                     [],
                     [ { type: "literal", value: "a", ignoreCase: false } ],
                     [ { predicate: false, params: [ "a" ], body: " code " } ]
@@ -282,7 +282,7 @@ describe( "compiler pass |generateBytecode|", function () {
             it( "defines correct constants", function () {
 
                 expect( pass ).to.changeAST( grammar, constsDetails(
-                    [ "\"a\"", "\"b\"", "\"c\"" ],
+                    [ "a", "b", "c" ],
                     [],
                     [
                         { type: "literal", value: "a", ignoreCase: false },
@@ -330,7 +330,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "defines correct constants", function () {
 
             expect( pass ).to.changeAST( grammar, constsDetails(
-                [ "\"a\"", "\"b\"", "\"c\"" ],
+                [ "a", "b", "c" ],
                 [],
                 [
                     { type: "literal", value: "a", ignoreCase: false },
@@ -398,7 +398,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "defines correct constants", function () {
 
             expect( pass ).to.changeAST( grammar, constsDetails(
-                [ "\"a\"" ],
+                [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
                 []
@@ -433,7 +433,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "defines correct constants", function () {
 
             expect( pass ).to.changeAST( grammar, constsDetails(
-                [ "\"a\"" ],
+                [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
                 []
@@ -461,7 +461,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "defines correct constants", function () {
 
             expect( pass ).to.changeAST( grammar, constsDetails(
-                [ "\"a\"" ],
+                [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
                 []
@@ -491,7 +491,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "defines correct constants", function () {
 
             expect( pass ).to.changeAST( grammar, constsDetails(
-                [ "\"a\"" ],
+                [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
                 []
@@ -525,7 +525,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "defines correct constants", function () {
 
             expect( pass ).to.changeAST( grammar, constsDetails(
-                [ "\"a\"" ],
+                [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
                 []
@@ -550,7 +550,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "defines correct constants", function () {
 
             expect( pass ).to.changeAST( grammar, constsDetails(
-                [ "\"a\"" ],
+                [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
                 []
@@ -634,7 +634,7 @@ describe( "compiler pass |generateBytecode|", function () {
             it( "defines correct constants", function () {
 
                 expect( pass ).to.changeAST( grammar, constsDetails(
-                    [ "\"a\"", "\"b\"", "\"c\"" ],
+                    [ "a", "b", "c" ],
                     [],
                     [
                         { type: "literal", value: "a", ignoreCase: false },
@@ -724,7 +724,7 @@ describe( "compiler pass |generateBytecode|", function () {
             it( "defines correct constants", function () {
 
                 expect( pass ).to.changeAST( grammar, constsDetails(
-                    [ "\"a\"", "\"b\"", "\"c\"" ],
+                    [ "a", "b", "c" ],
                     [],
                     [
                         { type: "literal", value: "a", ignoreCase: false },
@@ -778,7 +778,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 it( "defines correct constants", function () {
 
-                    expect( pass ).to.changeAST( grammar, constsDetails( [ "\"\"" ], [], [], [] ) );
+                    expect( pass ).to.changeAST( grammar, constsDetails( [ "" ], [], [], [] ) );
 
                 } );
 
@@ -802,7 +802,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( grammar, constsDetails(
-                        [ "\"a\"" ],
+                        [ "a" ],
                         [],
                         [ { type: "literal", value: "a", ignoreCase: false } ],
                         []
@@ -830,7 +830,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( grammar, constsDetails(
-                        [ "\"a\"" ],
+                        [ "a" ],
                         [],
                         [ { type: "literal", value: "A", ignoreCase: true } ],
                         []
@@ -858,7 +858,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 it( "defines correct constants", function () {
 
-                    expect( pass ).to.changeAST( grammar, constsDetails( [ "\"\"" ], [], [], [] ), {}, { reportFailures: false } );
+                    expect( pass ).to.changeAST( grammar, constsDetails( [ "" ], [], [], [] ), {}, { reportFailures: false } );
 
                 } );
 
@@ -881,7 +881,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( grammar, constsDetails(
-                        [ "\"a\"" ], [], [], []
+                        [ "a" ], [], [], []
                     ), {}, { reportFailures: false } );
 
                 } );
@@ -905,7 +905,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "defines correct constants", function () {
 
                     expect( pass ).to.changeAST( grammar, constsDetails(
-                        [ "\"a\"" ], [], [], []
+                        [ "a" ], [], [], []
                     ), {}, { reportFailures: false } );
 
                 } );
