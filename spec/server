@@ -11,11 +11,11 @@
  * browser.
  */
 
-let express    = require("express"),
-    logger     = require("morgan"),
-    glob       = require("glob"),
-    browserify = require("browserify"),
-    babelify   = require("babelify");
+let express    = require("express");
+let logger     = require("morgan");
+let glob       = require("glob");
+let browserify = require("browserify");
+let babelify   = require("babelify");
 
 let app = express();
 

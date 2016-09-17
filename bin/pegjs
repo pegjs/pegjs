@@ -267,8 +267,7 @@ if (options.exportVar !== null) {
   }
 }
 
-let inputStream;
-let outputStream;
+let inputStream, outputStream;
 
 switch (args.length) {
   case 0:

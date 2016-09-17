@@ -506,8 +506,8 @@ describe("generated parser behavior", function() {
                     grammar: 'start = ("a" / b:"b" / "c") &{ return b === "b"; }',
                     input:   "b"
                   }
-                ],
-                parser;
+                ];
+            let parser;
 
             testcases.forEach(testcase => {
               parser = peg.generate(testcase.grammar, options);
@@ -702,8 +702,8 @@ describe("generated parser behavior", function() {
                     grammar: 'start = ("a" / b:"b" / "c") !{ return b !== "b"; }',
                     input:   "b"
                   }
-                ],
-                parser;
+                ];
+            let parser;
 
             testcases.forEach(testcase => {
               parser = peg.generate(testcase.grammar, options);
@@ -1071,8 +1071,8 @@ describe("generated parser behavior", function() {
                       grammar: 'start = ("a" / b:"b" / "c") { return b; }',
                       input:   "b"
                     }
-                  ],
-                  parser;
+                  ];
+              let parser;
 
               testcases.forEach(testcase => {
                 parser = peg.generate(testcase.grammar, options);

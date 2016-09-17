@@ -119,8 +119,8 @@ describe("PEG.js API", function() {
 
       describe("when |trace| is not set", function() {
         it("generated parser doesn't trace", function() {
-          let parser = peg.generate(grammar),
-              tracer = jasmine.createSpyObj("tracer", ["trace"]);
+          let parser = peg.generate(grammar);
+          let tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
           parser.parse("a", { tracer: tracer });
 
@@ -130,8 +130,8 @@ describe("PEG.js API", function() {
 
       describe("when |trace| is set to |false|", function() {
         it("generated parser doesn't trace", function() {
-          let parser = peg.generate(grammar, { trace: false }),
-              tracer = jasmine.createSpyObj("tracer", ["trace"]);
+          let parser = peg.generate(grammar, { trace: false });
+          let tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
           parser.parse("a", { tracer: tracer });
 
@@ -141,8 +141,8 @@ describe("PEG.js API", function() {
 
       describe("when |trace| is set to |true|", function() {
         it("generated parser traces", function() {
-          let parser = peg.generate(grammar, { trace: true }),
-              tracer = jasmine.createSpyObj("tracer", ["trace"]);
+          let parser = peg.generate(grammar, { trace: true });
+          let tracer = jasmine.createSpyObj("tracer", ["trace"]);
 
           parser.parse("a", { tracer: tracer });
 

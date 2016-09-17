@@ -38,8 +38,8 @@ describe("plugin API", function() {
     let grammar = 'start = "a"';
 
     it("is called for each plugin", function() {
-      let pluginsUsed = [false, false, false],
-          plugins     = [
+      let pluginsUsed = [false, false, false];
+      let plugins     = [
             { use: function() { pluginsUsed[0] = true; } },
             { use: function() { pluginsUsed[1] = true; } },
             { use: function() { pluginsUsed[2] = true; } }
@@ -85,8 +85,8 @@ describe("plugin API", function() {
             use: function(config, options) {
               expect(options).toEqual(generateOptions);
             }
-          },
-          generateOptions = { plugins: [plugin], foo: 42 };
+          };
+      let generateOptions = { plugins: [plugin], foo: 42 };
 
       peg.generate(grammar, generateOptions);
     });
@@ -111,8 +111,8 @@ describe("plugin API", function() {
 
               config.parser = parser;
             }
-          },
-          parser = peg.generate('a', { plugins: [plugin] });
+          };
+      let parser = peg.generate('a', { plugins: [plugin] });
 
       expect(parser.parse("a")).toBe("a");
     });
@@ -126,8 +126,8 @@ describe("plugin API", function() {
 
               config.passes.generate = [pass];
             }
-          },
-          parser = peg.generate(grammar, { plugins: [plugin] });
+          };
+      let parser = peg.generate(grammar, { plugins: [plugin] });
 
       expect(parser.parse("a")).toBe(42);
     });
@@ -137,13 +137,13 @@ describe("plugin API", function() {
             'a = "x"',
             'b = "x"',
             'c = "x"'
-          ].join("\n"),
-          plugin  = {
+          ].join("\n");
+      let plugin  = {
             use: function(config, options) {
               options.allowedStartRules = ["b", "c"];
             }
-          },
-          parser  = peg.generate(grammar, {
+          };
+      let parser  = peg.generate(grammar, {
             allowedStartRules: ["a"],
             plugins:           [plugin]
           });

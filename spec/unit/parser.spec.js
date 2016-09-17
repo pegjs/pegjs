@@ -3,61 +3,61 @@
 let peg = require("../../lib/peg");
 
 describe("PEG.js grammar parser", function() {
-  let literalAbcd       = { type: "literal",      value: "abcd", ignoreCase: false },
-      literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false },
-      literalIjkl       = { type: "literal",      value: "ijkl", ignoreCase: false },
-      literalMnop       = { type: "literal",      value: "mnop", ignoreCase: false },
-      semanticAnd       = { type: "semantic_and", code: " code " },
-      semanticNot       = { type: "semantic_not", code: " code " },
-      optional          = { type: "optional",     expression: literalAbcd },
-      zeroOrMore        = { type: "zero_or_more", expression: literalAbcd },
-      oneOrMore         = { type: "one_or_more",  expression: literalAbcd },
-      textOptional      = { type: "text",         expression: optional    },
-      simpleNotAbcd     = { type: "simple_not",   expression: literalAbcd },
-      simpleAndOptional = { type: "simple_and",   expression: optional    },
-      simpleNotOptional = { type: "simple_not",   expression: optional    },
-      labeledAbcd       = { type: "labeled",      label: "a", expression: literalAbcd   },
-      labeledEfgh       = { type: "labeled",      label: "b", expression: literalEfgh   },
-      labeledIjkl       = { type: "labeled",      label: "c", expression: literalIjkl   },
-      labeledMnop       = { type: "labeled",      label: "d", expression: literalMnop   },
-      labeledSimpleNot  = { type: "labeled",      label: "a", expression: simpleNotAbcd },
-      sequence          = {
+  let literalAbcd       = { type: "literal",      value: "abcd", ignoreCase: false };
+  let literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false };
+  let literalIjkl       = { type: "literal",      value: "ijkl", ignoreCase: false };
+  let literalMnop       = { type: "literal",      value: "mnop", ignoreCase: false };
+  let semanticAnd       = { type: "semantic_and", code: " code " };
+  let semanticNot       = { type: "semantic_not", code: " code " };
+  let optional          = { type: "optional",     expression: literalAbcd };
+  let zeroOrMore        = { type: "zero_or_more", expression: literalAbcd };
+  let oneOrMore         = { type: "one_or_more",  expression: literalAbcd };
+  let textOptional      = { type: "text",         expression: optional    };
+  let simpleNotAbcd     = { type: "simple_not",   expression: literalAbcd };
+  let simpleAndOptional = { type: "simple_and",   expression: optional    };
+  let simpleNotOptional = { type: "simple_not",   expression: optional    };
+  let labeledAbcd       = { type: "labeled",      label: "a", expression: literalAbcd   };
+  let labeledEfgh       = { type: "labeled",      label: "b", expression: literalEfgh   };
+  let labeledIjkl       = { type: "labeled",      label: "c", expression: literalIjkl   };
+  let labeledMnop       = { type: "labeled",      label: "d", expression: literalMnop   };
+  let labeledSimpleNot  = { type: "labeled",      label: "a", expression: simpleNotAbcd };
+  let sequence          = {
         type:     "sequence",
         elements: [literalAbcd, literalEfgh, literalIjkl]
-      },
-      sequence2         = {
+      };
+  let sequence2         = {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh]
-      },
-      sequence4         = {
+      };
+  let sequence4         = {
         type:     "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
-      },
-      groupLabeled      = { type: "group",  expression: labeledAbcd },
-      groupSequence     = { type: "group",  expression: sequence    },
-      actionAbcd        = { type: "action", expression: literalAbcd, code: " code " },
-      actionEfgh        = { type: "action", expression: literalEfgh, code: " code " },
-      actionIjkl        = { type: "action", expression: literalIjkl, code: " code " },
-      actionMnop        = { type: "action", expression: literalMnop, code: " code " },
-      actionSequence    = { type: "action", expression: sequence,    code: " code " },
-      choice            = {
+      };
+  let groupLabeled      = { type: "group",  expression: labeledAbcd };
+  let groupSequence     = { type: "group",  expression: sequence    };
+  let actionAbcd        = { type: "action", expression: literalAbcd, code: " code " };
+  let actionEfgh        = { type: "action", expression: literalEfgh, code: " code " };
+  let actionIjkl        = { type: "action", expression: literalIjkl, code: " code " };
+  let actionMnop        = { type: "action", expression: literalMnop, code: " code " };
+  let actionSequence    = { type: "action", expression: sequence,    code: " code " };
+  let choice            = {
         type:         "choice",
         alternatives: [literalAbcd, literalEfgh, literalIjkl]
-      },
-      choice2           = {
+      };
+  let choice2           = {
         type:         "choice",
         alternatives: [actionAbcd, actionEfgh]
-      },
-      choice4           = {
+      };
+  let choice4           = {
         type:         "choice",
         alternatives: [actionAbcd, actionEfgh, actionIjkl, actionMnop]
-      },
-      named             = { type: "named",       name: "start rule", expression: literalAbcd },
-      ruleA             = { type: "rule",        name: "a",          expression: literalAbcd },
-      ruleB             = { type: "rule",        name: "b",          expression: literalEfgh },
-      ruleC             = { type: "rule",        name: "c",          expression: literalIjkl },
-      ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd },
-      initializer       = { type: "initializer", code: " code " };
+      };
+  let named             = { type: "named",       name: "start rule", expression: literalAbcd };
+  let ruleA             = { type: "rule",        name: "a",          expression: literalAbcd };
+  let ruleB             = { type: "rule",        name: "b",          expression: literalEfgh };
+  let ruleC             = { type: "rule",        name: "c",          expression: literalIjkl };
+  let ruleStart         = { type: "rule",        name: "start",      expression: literalAbcd };
+  let initializer       = { type: "initializer", code: " code " };
 
   function oneRuleGrammar(expression) {
     return {
@@ -96,8 +96,8 @@ describe("PEG.js grammar parser", function() {
     return oneRuleGrammar({ type: "rule_ref", name: name });
   }
 
-  let trivialGrammar = literalGrammar("abcd", false),
-      twoRuleGrammar = {
+  let trivialGrammar = literalGrammar("abcd", false);
+  let twoRuleGrammar = {
         type:        "grammar",
         initializer: null,
         rules:       [ruleA, ruleB]
