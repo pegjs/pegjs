@@ -35,7 +35,7 @@ describe("plugin API", function() {
   });
 
   describe("use", function() {
-    let grammar = 'start = "a"';
+    let grammar = "start = 'a'";
 
     it("is called for each plugin", function() {
       let pluginsUsed = [false, false, false];
@@ -56,7 +56,7 @@ describe("plugin API", function() {
               expect(config).toBeObject();
 
               expect(config.parser).toBeObject();
-              expect(config.parser.parse('start = "a"')).toBeObject();
+              expect(config.parser.parse("start = 'a'")).toBeObject();
 
               expect(config.passes).toBeObject();
 
@@ -95,24 +95,24 @@ describe("plugin API", function() {
       let plugin = {
             use: function(config) {
               let parser = peg.generate([
-                    'start = .* {',
-                    '  return {',
-                    '    type:  "grammar",',
-                    '    rules: [',
-                    '      {',
-                    '        type:       "rule",',
-                    '        name:       "start",',
-                    '        expression: { type: "literal",  value: text(), ignoreCase: false }',
-                    '      }',
-                    '    ]',
-                    '  };',
-                    '}'
+                    "start = .* {",
+                    "  return {",
+                    "    type:  'grammar',",
+                    "    rules: [",
+                    "      {",
+                    "        type:       'rule',",
+                    "        name:       'start',",
+                    "        expression: { type: 'literal',  value: text(), ignoreCase: false }",
+                    "      }",
+                    "    ]",
+                    "  };",
+                    "}"
                   ].join("\n"));
 
               config.parser = parser;
             }
           };
-      let parser = peg.generate('a', { plugins: [plugin] });
+      let parser = peg.generate("a", { plugins: [plugin] });
 
       expect(parser.parse("a")).toBe("a");
     });
@@ -121,7 +121,7 @@ describe("plugin API", function() {
       let plugin = {
             use: function(config) {
               let pass = ast => {
-                    ast.code = '({ parse: function() { return 42; } })';
+                    ast.code = "({ parse: function() { return 42; } })";
                   };
 
               config.passes.generate = [pass];
@@ -134,9 +134,9 @@ describe("plugin API", function() {
 
     it("can change options", function() {
       let grammar = [
-            'a = "x"',
-            'b = "x"',
-            'c = "x"'
+            "a = 'x'",
+            "b = 'x'",
+            "c = 'x'"
           ].join("\n");
       let plugin  = {
             use: function(config, options) {

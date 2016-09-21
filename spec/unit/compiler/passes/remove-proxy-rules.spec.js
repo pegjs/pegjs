@@ -9,9 +9,9 @@ describe("compiler pass |removeProxyRules|", function() {
     it("updates references and removes it", function() {
       expect(pass).toChangeAST(
         [
-          'start = proxy',
-          'proxy = proxied',
-          'proxied = "a"'
+          "start = proxy",
+          "proxy = proxied",
+          "proxied = 'a'"
         ].join("\n"),
         {
           rules: [
@@ -31,9 +31,9 @@ describe("compiler pass |removeProxyRules|", function() {
     it("updates references but doesn't remove it", function() {
       expect(pass).toChangeAST(
         [
-          'start = proxy',
-          'proxy = proxied',
-          'proxied = "a"'
+          "start = proxy",
+          "proxy = proxied",
+          "proxied = 'a'"
         ].join("\n"),
         {
           rules: [

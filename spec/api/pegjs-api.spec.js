@@ -5,25 +5,25 @@ let peg = require("../../lib/peg");
 describe("PEG.js API", function() {
   describe("generate", function() {
     it("generates a parser", function() {
-      let parser = peg.generate('start = "a"');
+      let parser = peg.generate("start = 'a'");
 
       expect(typeof parser).toBe("object");
       expect(parser.parse("a")).toBe("a");
     });
 
     it("throws an exception on syntax error", function() {
-      expect(() => { peg.generate('start = @'); }).toThrow();
+      expect(() => { peg.generate("start = @"); }).toThrow();
     });
 
     it("throws an exception on semantic error", function() {
-      expect(() => { peg.generate('start = undefined'); }).toThrow();
+      expect(() => { peg.generate("start = undefined"); }).toThrow();
     });
 
     describe("allowed start rules", function() {
       let grammar = [
-            'a = "x"',
-            'b = "x"',
-            'c = "x"'
+            "a = 'x'",
+            "b = 'x'",
+            "c = 'x'"
           ].join("\n");
 
       // The |allowedStartRules| option is implemented separately for each
@@ -82,9 +82,9 @@ describe("PEG.js API", function() {
 
     describe("intermediate results caching", function() {
       let grammar = [
-            '{ var n = 0; }',
-            'start = (a "b") / (a "c") { return n; }',
-            'a     = "a" { n++; }'
+            "{ var n = 0; }",
+            "start = (a 'b') / (a 'c') { return n; }",
+            "a     = 'a' { n++; }"
           ].join("\n");
 
       describe("when |cache| is not set", function() {
@@ -113,7 +113,7 @@ describe("PEG.js API", function() {
     });
 
     describe("tracing", function() {
-      let grammar = 'start = "a"';
+      let grammar = "start = 'a'";
 
       describe("when |trace| is not set", function() {
         it("generated parser doesn't trace", function() {
@@ -153,7 +153,7 @@ describe("PEG.js API", function() {
     // write the specs without turning this into a performance test.
 
     describe("output", function() {
-      let grammar = 'start = "a"';
+      let grammar = "start = 'a'";
 
       describe("when |output| is not set", function() {
         it("returns generated parser object", function() {
@@ -190,7 +190,7 @@ describe("PEG.js API", function() {
     // The |plugins| option is tested in plugin API specs.
 
     it("accepts custom options", function() {
-      peg.generate('start = "a"', { foo: 42 });
+      peg.generate("start = 'a'", { foo: 42 });
     });
   });
 });

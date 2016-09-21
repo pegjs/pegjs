@@ -16,9 +16,9 @@ describe("compiler pass |generateBytecode|", function() {
   describe("for grammar", function() {
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST([
-        'a = "a"',
-        'b = "b"',
-        'c = "c"'
+        "a = 'a'",
+        "b = 'b'",
+        "c = 'c'"
       ].join("\n"), {
         rules: [
           { bytecode: [18, 0, 2, 2, 22, 0, 23, 1] },
@@ -30,30 +30,30 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST([
-        'a = "a"',
-        'b = "b"',
-        'c = "c"'
+        "a = 'a'",
+        "b = 'b'",
+        "c = 'c'"
       ].join("\n"), constsDetails([
-        '"a"',
-        'peg$literalExpectation("a", false)',
-        '"b"',
-        'peg$literalExpectation("b", false)',
-        '"c"',
-        'peg$literalExpectation("c", false)'
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)",
+        "\"b\"",
+        "peg$literalExpectation(\"b\", false)",
+        "\"c\"",
+        "peg$literalExpectation(\"c\", false)"
       ]));
     });
   });
 
   describe("for rule", function() {
     it("generates correct bytecode", function() {
-      expect(pass).toChangeAST('start = "a"', bytecodeDetails([
+      expect(pass).toChangeAST("start = 'a'", bytecodeDetails([
         18, 0, 2, 2, 22, 0, 23, 1   // <expression>
       ]));
     });
   });
 
   describe("for named", function() {
-    let grammar = 'start "start" = "a"';
+    let grammar = "start 'start' = 'a'";
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -67,16 +67,16 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        'peg$otherExpectation("start")',
-        '"a"',
-        'peg$literalExpectation("a", false)'
+        "peg$otherExpectation(\"start\")",
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)"
       ]));
     });
   });
 
   describe("for choice", function() {
     it("generates correct bytecode", function() {
-      expect(pass).toChangeAST('start = "a" / "b" / "c"', bytecodeDetails([
+      expect(pass).toChangeAST("start = 'a' / 'b' / 'c'", bytecodeDetails([
         18, 0, 2, 2, 22, 0, 23, 1,   // <alternatives[0]>
         14, 21, 0,                   // IF_ERROR
         6,                           //   * POP
@@ -90,7 +90,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for action", function() {
     describe("without labels", function() {
-      let grammar = 'start = "a" { code }';
+      let grammar = "start = 'a' { code }";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -105,15 +105,15 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          'peg$literalExpectation("a", false)',
-          'function() { code }'
+          "\"a\"",
+          "peg$literalExpectation(\"a\", false)",
+          "function() { code }"
         ]));
       });
     });
 
     describe("with one label", function() {
-      let grammar = 'start = a:"a" { code }';
+      let grammar = "start = a:'a' { code }";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -128,15 +128,15 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          'peg$literalExpectation("a", false)',
-          'function(a) { code }'
+          "\"a\"",
+          "peg$literalExpectation(\"a\", false)",
+          "function(a) { code }"
         ]));
       });
     });
 
     describe("with multiple labels", function() {
-      let grammar = 'start = a:"a" b:"b" c:"c" { code }';
+      let grammar = "start = a:'a' b:'b' c:'c' { code }";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -164,20 +164,20 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          'peg$literalExpectation("a", false)',
-          '"b"',
-          'peg$literalExpectation("b", false)',
-          '"c"',
-          'peg$literalExpectation("c", false)',
-          'function(a, b, c) { code }'
+          "\"a\"",
+          "peg$literalExpectation(\"a\", false)",
+          "\"b\"",
+          "peg$literalExpectation(\"b\", false)",
+          "\"c\"",
+          "peg$literalExpectation(\"c\", false)",
+          "function(a, b, c) { code }"
         ]));
       });
     });
   });
 
   describe("for sequence", function() {
-    let grammar = 'start = "a" "b" "c"';
+    let grammar = "start = 'a' 'b' 'c'";
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -204,19 +204,19 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        'peg$literalExpectation("a", false)',
-        '"b"',
-        'peg$literalExpectation("b", false)',
-        '"c"',
-        'peg$literalExpectation("c", false)'
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)",
+        "\"b\"",
+        "peg$literalExpectation(\"b\", false)",
+        "\"c\"",
+        "peg$literalExpectation(\"c\", false)"
       ]));
     });
   });
 
   describe("for labeled", function() {
     it("generates correct bytecode", function() {
-      expect(pass).toChangeAST('start = a:"a"', bytecodeDetails([
+      expect(pass).toChangeAST("start = a:'a'", bytecodeDetails([
         18, 0, 2, 2, 22, 0, 23, 1   // <expression>
       ]));
     });
@@ -224,7 +224,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for text", function() {
     it("generates correct bytecode", function() {
-      expect(pass).toChangeAST('start = $"a"', bytecodeDetails([
+      expect(pass).toChangeAST("start = $'a'", bytecodeDetails([
         5,                           // PUSH_CURR_POS
         18, 0, 2, 2, 22, 0, 23, 1,   // <expression>
         15, 2, 1,                    // IF_NOT_ERROR
@@ -236,7 +236,7 @@ describe("compiler pass |generateBytecode|", function() {
   });
 
   describe("for simple_and", function() {
-    let grammar = 'start = &"a"';
+    let grammar = "start = &'a'";
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -256,14 +256,14 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        'peg$literalExpectation("a", false)'
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)"
       ]));
     });
   });
 
   describe("for simple_not", function() {
-    let grammar = 'start = !"a"';
+    let grammar = "start = !'a'";
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -283,14 +283,14 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        'peg$literalExpectation("a", false)'
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)"
       ]));
     });
   });
 
   describe("for optional", function() {
-    let grammar = 'start = "a"?';
+    let grammar = "start = 'a'?";
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -303,14 +303,14 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        'peg$literalExpectation("a", false)'
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)"
       ]));
     });
   });
 
   describe("for zero_or_more", function() {
-    let grammar = 'start = "a"*';
+    let grammar = "start = 'a'*";
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -325,14 +325,14 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        'peg$literalExpectation("a", false)'
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)"
       ]));
     });
   });
 
   describe("for one_or_more", function() {
-    let grammar = 'start = "a"+';
+    let grammar = "start = 'a'+";
 
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -351,15 +351,15 @@ describe("compiler pass |generateBytecode|", function() {
 
     it("defines correct constants", function() {
       expect(pass).toChangeAST(grammar, constsDetails([
-        '"a"',
-        'peg$literalExpectation("a", false)'
+        "\"a\"",
+        "peg$literalExpectation(\"a\", false)"
       ]));
     });
   });
 
   describe("for group", function() {
     it("generates correct bytecode", function() {
-      expect(pass).toChangeAST('start = ("a")', bytecodeDetails([
+      expect(pass).toChangeAST("start = ('a')", bytecodeDetails([
         18, 0, 2, 2, 22, 0, 23, 1   // <expression>
       ]));
     });
@@ -367,7 +367,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for semantic_and", function() {
     describe("without labels", function() {
-      let grammar = 'start = &{ code }';
+      let grammar = "start = &{ code }";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -384,13 +384,13 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }'])
+          constsDetails(["function() { code }"])
         );
       });
     });
 
     describe("with labels", function() {
-      let grammar = 'start = a:"a" b:"b" c:"c" &{ code }';
+      let grammar = "start = a:'a' b:'b' c:'c' &{ code }";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -428,13 +428,13 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          'peg$literalExpectation("a", false)',
-          '"b"',
-          'peg$literalExpectation("b", false)',
-          '"c"',
-          'peg$literalExpectation("c", false)',
-          'function(a, b, c) { code }'
+          "\"a\"",
+          "peg$literalExpectation(\"a\", false)",
+          "\"b\"",
+          "peg$literalExpectation(\"b\", false)",
+          "\"c\"",
+          "peg$literalExpectation(\"c\", false)",
+          "function(a, b, c) { code }"
         ]));
       });
     });
@@ -442,7 +442,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for semantic_not", function() {
     describe("without labels", function() {
-      let grammar = 'start = !{ code }';
+      let grammar = "start = !{ code }";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -459,13 +459,13 @@ describe("compiler pass |generateBytecode|", function() {
       it("defines correct constants", function() {
         expect(pass).toChangeAST(
           grammar,
-          constsDetails(['function() { code }'])
+          constsDetails(["function() { code }"])
         );
       });
     });
 
     describe("with labels", function() {
-      let grammar = 'start = a:"a" b:"b" c:"c" !{ code }';
+      let grammar = "start = a:'a' b:'b' c:'c' !{ code }";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -503,13 +503,13 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          'peg$literalExpectation("a", false)',
-          '"b"',
-          'peg$literalExpectation("b", false)',
-          '"c"',
-          'peg$literalExpectation("c", false)',
-          'function(a, b, c) { code }'
+          "\"a\"",
+          "peg$literalExpectation(\"a\", false)",
+          "\"b\"",
+          "peg$literalExpectation(\"b\", false)",
+          "\"c\"",
+          "peg$literalExpectation(\"c\", false)",
+          "function(a, b, c) { code }"
         ]));
       });
     });
@@ -518,8 +518,8 @@ describe("compiler pass |generateBytecode|", function() {
   describe("for rule_ref", function() {
     it("generates correct bytecode", function() {
       expect(pass).toChangeAST([
-        'start = other',
-        'other = "other"'
+        "start = other",
+        "other = 'other'"
       ].join("\n"), {
         rules: [
           {
@@ -533,7 +533,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for literal", function() {
     describe("empty", function() {
-      let grammar = 'start = ""';
+      let grammar = "start = ''";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -542,12 +542,12 @@ describe("compiler pass |generateBytecode|", function() {
       });
 
       it("defines correct constants", function() {
-        expect(pass).toChangeAST(grammar, constsDetails(['""']));
+        expect(pass).toChangeAST(grammar, constsDetails(["\"\""]));
       });
     });
 
     describe("non-empty case-sensitive", function() {
-      let grammar = 'start = "a"';
+      let grammar = "start = 'a'";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -559,14 +559,14 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          'peg$literalExpectation("a", false)'
+          "\"a\"",
+          "peg$literalExpectation(\"a\", false)"
         ]));
       });
     });
 
     describe("non-empty case-insensitive", function() {
-      let grammar = 'start = "A"i';
+      let grammar = "start = 'A'i";
 
       it("generates correct bytecode", function() {
         expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -578,8 +578,8 @@ describe("compiler pass |generateBytecode|", function() {
 
       it("defines correct constants", function() {
         expect(pass).toChangeAST(grammar, constsDetails([
-          '"a"',
-          'peg$literalExpectation("A", true)'
+          "\"a\"",
+          "peg$literalExpectation(\"A\", true)"
         ]));
       });
     });
@@ -587,7 +587,7 @@ describe("compiler pass |generateBytecode|", function() {
 
   describe("for class", function() {
     it("generates correct bytecode", function() {
-      expect(pass).toChangeAST('start = [a]', bytecodeDetails([
+      expect(pass).toChangeAST("start = [a]", bytecodeDetails([
         20, 0, 2, 2,   // MATCH_REGEXP
         21, 1,         //   * ACCEPT_N
         23, 1          //   * FAIL
@@ -596,43 +596,43 @@ describe("compiler pass |generateBytecode|", function() {
 
     describe("non-inverted case-sensitive", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST('start = [a]', constsDetails([
-          '/^[a]/',
-          'peg$classExpectation(["a"], false, false)'
+        expect(pass).toChangeAST("start = [a]", constsDetails([
+          "/^[a]/",
+          "peg$classExpectation([\"a\"], false, false)"
         ]));
       });
     });
 
     describe("inverted case-sensitive", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST('start = [^a]', constsDetails([
-          '/^[^a]/',
-          'peg$classExpectation(["a"], true, false)'
+        expect(pass).toChangeAST("start = [^a]", constsDetails([
+          "/^[^a]/",
+          "peg$classExpectation([\"a\"], true, false)"
         ]));
       });
     });
 
     describe("non-inverted case-insensitive", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST('start = [a]i', constsDetails([
-          '/^[a]/i',
-          'peg$classExpectation(["a"], false, true)'
+        expect(pass).toChangeAST("start = [a]i", constsDetails([
+          "/^[a]/i",
+          "peg$classExpectation([\"a\"], false, true)"
         ]));
       });
     });
 
     describe("complex", function() {
       it("defines correct constants", function() {
-        expect(pass).toChangeAST('start = [ab-def-hij-l]', constsDetails([
-          '/^[ab-def-hij-l]/',
-          'peg$classExpectation(["a", ["b", "d"], "e", ["f", "h"], "i", ["j", "l"]], false, false)'
+        expect(pass).toChangeAST("start = [ab-def-hij-l]", constsDetails([
+          "/^[ab-def-hij-l]/",
+          "peg$classExpectation([\"a\", [\"b\", \"d\"], \"e\", [\"f\", \"h\"], \"i\", [\"j\", \"l\"]], false, false)"
         ]));
       });
     });
   });
 
   describe("for any", function() {
-    let grammar = 'start = .';
+    let grammar = "start = .";
 
     it("generates bytecode", function() {
       expect(pass).toChangeAST(grammar, bytecodeDetails([
@@ -645,7 +645,7 @@ describe("compiler pass |generateBytecode|", function() {
     it("defines correct constants", function() {
       expect(pass).toChangeAST(
         grammar,
-        constsDetails(['peg$anyExpectation()'])
+        constsDetails(["peg$anyExpectation()"])
       );
     });
   });

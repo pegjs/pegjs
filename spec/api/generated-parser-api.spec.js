@@ -8,22 +8,22 @@ let peg = require("../../lib/peg");
 describe("generated parser API", function() {
   describe("parse", function() {
     it("parses input", function() {
-      let parser = peg.generate('start = "a"');
+      let parser = peg.generate("start = 'a'");
 
       expect(parser.parse("a")).toBe("a");
     });
 
     it("throws an exception on syntax error", function() {
-      let parser = peg.generate('start = "a"');
+      let parser = peg.generate("start = 'a'");
 
       expect(() => { parser.parse("b"); }).toThrow();
     });
 
     describe("start rule", function() {
       let parser = peg.generate([
-            'a = "x" { return "a"; }',
-            'b = "x" { return "b"; }',
-            'c = "x" { return "c"; }'
+            "a = 'x' { return 'a'; }",
+            "b = 'x' { return 'b'; }",
+            "c = 'x' { return 'c'; }"
           ].join("\n"), { allowedStartRules: ["b", "c"] });
 
       describe("when |startRule| is not set", function() {
@@ -48,9 +48,9 @@ describe("generated parser API", function() {
 
     describe("tracing", function() {
       let parser = peg.generate([
-            'start = a / b',
-            'a = "a"',
-            'b = "b"'
+            "start = a / b",
+            "a = 'a'",
+            "b = 'b'"
           ].join("\n"), { trace: true });
 
       describe("default tracer", function() {
@@ -135,7 +135,7 @@ describe("generated parser API", function() {
     });
 
     it("accepts custom options", function() {
-      let parser = peg.generate('start = "a"');
+      let parser = peg.generate("start = 'a'");
 
       parser.parse("a", { foo: 42 });
     });
