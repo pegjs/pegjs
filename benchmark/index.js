@@ -2,8 +2,8 @@
 
 /* eslint-env browser, jquery */
 
-let benchmarks = require("./benchmarks.js");
 let Runner = require("./runner.js");
+let benchmarks = require("./benchmarks.js");
 
 $("#run").click(() => {
   // Results Table Manipulation

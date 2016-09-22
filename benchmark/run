@@ -5,10 +5,9 @@
 /* eslint-env node */
 /* eslint no-console: 0*/
 
-let fs = require("fs");
-
-let benchmarks = require("./benchmarks.js");
 let Runner = require("./runner.js");
+let benchmarks = require("./benchmarks.js");
+let fs = require("fs");
 
 // Results Table Manipulation
 
