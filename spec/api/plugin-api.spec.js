@@ -97,11 +97,11 @@ describe("plugin API", function() {
               let parser = peg.generate([
                     "start = .* {",
                     "  return {",
-                    "    type:  'grammar',",
+                    "    type: 'grammar',",
                     "    rules: [",
                     "      {",
-                    "        type:       'rule',",
-                    "        name:       'start',",
+                    "        type: 'rule',",
+                    "        name: 'start',",
                     "        expression: { type: 'literal',  value: text(), ignoreCase: false }",
                     "      }",
                     "    ]",
@@ -145,7 +145,7 @@ describe("plugin API", function() {
           };
       let parser  = peg.generate(grammar, {
             allowedStartRules: ["a"],
-            plugins:           [plugin]
+            plugins: [plugin]
           });
 
       expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();

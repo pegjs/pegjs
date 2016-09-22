@@ -62,7 +62,7 @@ $("#run").click(() => {
 
   let runCount = parseInt($("#run-count").val(), 10);
   let options  = {
-        cache:    $("#cache").is(":checked"),
+        cache: $("#cache").is(":checked"),
         optimize: $("#optimize").val()
       };
 
@@ -74,10 +74,10 @@ $("#run").click(() => {
   Runner.run(benchmarks, runCount, options, {
     readFile: function(file) {
       return $.ajax({
-        type:     "GET",
-        url:      file,
+        type: "GET",
+        url: file,
         dataType: "text",
-        async:    false
+        async: false
       }).responseText;
     },
 

@@ -2,8 +2,8 @@
 
 let benchmarks = [
   {
-    id:          "json",
-    title:       "JSON",
+    id: "json",
+    title: "JSON",
     tests: [
       { file: "example1.json", title: "Example 1" },
       { file: "example2.json", title: "Example 2" },
@@ -13,8 +13,8 @@ let benchmarks = [
     ]
   },
   {
-    id:          "css",
-    title:       "CSS",
+    id: "css",
+    title: "CSS",
     tests: [
       { file: "blueprint/src/reset.css",      title: "Blueprint - reset.css (source)"      },
       { file: "blueprint/src/typography.css", title: "Blueprint - typography.css (source)" },

@@ -16,7 +16,7 @@ describe("compiler pass |removeProxyRules|", function() {
         {
           rules: [
             {
-              name:       "start",
+              name: "start",
               expression: { type: "rule_ref", name: "proxied" }
             },
             { name: "proxied" }
@@ -38,11 +38,11 @@ describe("compiler pass |removeProxyRules|", function() {
         {
           rules: [
             {
-              name:       "start",
+              name: "start",
               expression: { type: "rule_ref", name: "proxied" }
             },
             {
-              name:       "proxy",
+              name: "proxy",
               expression: { type: "rule_ref", name: "proxied" }
             },
             { name: "proxied" }

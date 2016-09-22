@@ -57,10 +57,10 @@
 Grammar
   = __ initializer:(Initializer __)? rules:(Rule __)+ {
       return {
-        type:        "grammar",
+        type: "grammar",
         initializer: extractOptional(initializer, 0),
-        rules:       extractList(rules, 0),
-        location:    location()
+        rules: extractList(rules, 0),
+        location: location()
       };
     }
 
@@ -76,17 +76,17 @@ Rule
     expression:Expression EOS
     {
       return {
-        type:        "rule",
-        name:        name,
-        expression:  displayName !== null
+        type: "rule",
+        name: name,
+        expression: displayName !== null
           ? {
-              type:       "named",
-              name:       displayName[0],
+              type: "named",
+              name: displayName[0],
               expression: expression,
-              location:   location()
+              location: location()
             }
           : expression,
-        location:    location()
+        location: location()
       };
     }
 
@@ -97,9 +97,9 @@ ChoiceExpression
   = head:ActionExpression tail:(__ "/" __ ActionExpression)* {
       return tail.length > 0
         ? {
-            type:         "choice",
+            type: "choice",
             alternatives: buildList(head, tail, 3),
-            location:     location()
+            location: location()
           }
         : head;
     }
@@ -108,10 +108,10 @@ ActionExpression
   = expression:SequenceExpression code:(__ CodeBlock)? {
       return code !== null
         ? {
-            type:       "action",
+            type: "action",
             expression: expression,
-            code:       code[1],
-            location:   location()
+            code: code[1],
+            location: location()
           }
         : expression;
     }
@@ -120,7 +120,7 @@ SequenceExpression
   = head:LabeledExpression tail:(__ LabeledExpression)* {
       return tail.length > 0
         ? {
-            type:     "sequence",
+            type: "sequence",
             elements: buildList(head, tail, 1),
             location: location()
           }
@@ -130,10 +130,10 @@ SequenceExpression
 LabeledExpression
   = label:Identifier __ ":" __ expression:PrefixedExpression {
       return {
-        type:       "labeled",
-        label:      label,
+        type: "labeled",
+        label: label,
         expression: expression,
-        location:   location()
+        location: location()
       };
     }
   / PrefixedExpression
@@ -141,9 +141,9 @@ LabeledExpression
 PrefixedExpression
   = operator:PrefixedOperator __ expression:SuffixedExpression {
       return {
-        type:       OPS_TO_PREFIXED_TYPES[operator],
+        type: OPS_TO_PREFIXED_TYPES[operator],
         expression: expression,
-        location:   location()
+        location: location()
       };
     }
   / SuffixedExpression
@@ -156,9 +156,9 @@ PrefixedOperator
 SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
       return {
-        type:       OPS_TO_SUFFIXED_TYPES[operator],
+        type: OPS_TO_SUFFIXED_TYPES[operator],
         expression: expression,
-        location:   location()
+        location: location()
       };
     }
   / PrimaryExpression
@@ -192,8 +192,8 @@ RuleReferenceExpression
 SemanticPredicateExpression
   = operator:SemanticPredicateOperator __ code:CodeBlock {
       return {
-        type:     OPS_TO_SEMANTIC_PREDICATE_TYPES[operator],
-        code:     code,
+        type: OPS_TO_SEMANTIC_PREDICATE_TYPES[operator],
+        code: code,
         location: location()
       };
     }
@@ -330,10 +330,10 @@ BooleanLiteral
 LiteralMatcher "literal"
   = value:StringLiteral ignoreCase:"i"? {
       return {
-        type:       "literal",
-        value:      value,
+        type: "literal",
+        value: value,
         ignoreCase: ignoreCase !== null,
-        location:   location()
+        location: location()
       };
     }
 
@@ -359,11 +359,11 @@ CharacterClassMatcher "character class"
     ignoreCase:"i"?
     {
       return {
-        type:       "class",
-        parts:      parts.filter(part => part !== ""),
-        inverted:   inverted !== null,
+        type: "class",
+        parts: parts.filter(part => part !== ""),
+        inverted: inverted !== null,
         ignoreCase: ignoreCase !== null,
-        location:   location()
+        location: location()
       };
     }
 

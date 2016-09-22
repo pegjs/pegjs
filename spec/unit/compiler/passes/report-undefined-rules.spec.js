@@ -7,10 +7,10 @@ describe("compiler pass |reportUndefinedRules|", function() {
 
   it("reports undefined rules", function() {
     expect(pass).toReportError("start = undefined", {
-      message:  "Rule \"undefined\" is not defined.",
+      message: "Rule \"undefined\" is not defined.",
       location: {
-        start: { offset:  8, line: 1, column:  9 },
-        end:   { offset: 17, line: 1, column: 18 }
+        start: { offset: 8, line: 1, column: 9 },
+        end: { offset: 17, line: 1, column: 18 }
       }
     });
   });

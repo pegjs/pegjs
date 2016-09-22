@@ -106,14 +106,14 @@ let inputFile = null;
 let outputFile = null;
 
 let options = {
-  cache:        false,
+  cache: false,
   dependencies: {},
-  exportVar:    null,
-  format:       "commonjs",
-  optimize:     "speed",
-  output:       "source",
-  plugins:      [],
-  trace:        false
+  exportVar: null,
+  format: "commonjs",
+  optimize: "speed",
+  output: "source",
+  plugins: [],
+  trace: false
 };
 
 while (args.length > 0 && isOption(args[0])) {

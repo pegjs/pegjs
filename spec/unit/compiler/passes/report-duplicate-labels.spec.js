@@ -8,10 +8,10 @@ describe("compiler pass |reportDuplicateLabels|", function() {
   describe("in a sequence", function() {
     it("reports labels duplicate with labels of preceding elements", function() {
       expect(pass).toReportError("start = a:'a' a:'a'", {
-        message:  "Label \"a\" is already defined at line 1, column 9.",
+        message: "Label \"a\" is already defined at line 1, column 9.",
         location: {
           start: { offset: 14, line: 1, column: 15 },
-          end:   { offset: 19, line: 1, column: 20 }
+          end: { offset: 19, line: 1, column: 20 }
         }
       });
     });
@@ -40,10 +40,10 @@ describe("compiler pass |reportDuplicateLabels|", function() {
   describe("in outer sequence", function() {
     it("reports labels duplicate with labels of preceding elements", function() {
       expect(pass).toReportError("start = a:'a' (a:'a')", {
-        message:  "Label \"a\" is already defined at line 1, column 9.",
+        message: "Label \"a\" is already defined at line 1, column 9.",
         location: {
           start: { offset: 15, line: 1, column: 16 },
-          end:   { offset: 20, line: 1, column: 21 }
+          end: { offset: 20, line: 1, column: 21 }
         }
       });
     });

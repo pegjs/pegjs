@@ -371,7 +371,7 @@ The code inside the predicate can also access location information using the
 ```javascript
 {
   start: { offset: 23, line: 5, column: 6 },
-  end:   { offset: 23, line: 5, column: 6 }
+  end: { offset: 23, line: 5, column: 6 }
 }
 ```
 
@@ -402,7 +402,7 @@ The code inside the predicate can also access location information using the
 ```javascript
 {
   start: { offset: 23, line: 5, column: 6 },
-  end:   { offset: 23, line: 5, column: 6 }
+  end: { offset: 23, line: 5, column: 6 }
 }
 ```
 
@@ -469,7 +469,7 @@ The code inside the action can also access location information using the
 ```javascript
 {
   start: { offset: 23, line: 5, column: 6 },
-  end:   { offset: 25, line: 5, column: 8 }
+  end: { offset: 25, line: 5, column: 8 }
 }
 ```
 

@@ -43,7 +43,7 @@ describe("PEG.js API", function() {
         describe("when |allowedStartRules| is set", function() {
           it("generated parser can start only from specified rules", function() {
             let parser = peg.generate(grammar, {
-              optimize:          "speed",
+              optimize: "speed",
               allowedStartRules: ["b", "c"]
             });
 
@@ -68,7 +68,7 @@ describe("PEG.js API", function() {
         describe("when |allowedStartRules| is set", function() {
           it("generated parser can start only from specified rules", function() {
             let parser = peg.generate(grammar, {
-              optimize:          "size",
+              optimize: "size",
               allowedStartRules: ["b", "c"]
             });
 

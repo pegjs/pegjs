@@ -460,47 +460,47 @@ describe("generated parser behavior", function() {
             let testcases = [
                   {
                     grammar: "start = (a:'a') &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = (a:'a')? &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = (a:'a')* &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = (a:'a')+ &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = $(a:'a') &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = &(a:'a') 'a' &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = !(a:'a') 'b' &{ return a === 'a'; }",
-                    input:   "b"
+                    input: "b"
                   },
                   {
                     grammar: "start = b:(a:'a') &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = ('a' b:'b' 'c') &{ return b === 'b'; }",
-                    input:   "abc"
+                    input: "abc"
                   },
                   {
                     grammar: "start = (a:'a' { return a; }) &{ return a === 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = ('a' / b:'b' / 'c') &{ return b === 'b'; }",
-                    input:   "b"
+                    input: "b"
                   }
                 ];
             let parser;
@@ -585,17 +585,17 @@ describe("generated parser behavior", function() {
 
           expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
             start: { offset: 13, line: 7, column: 5 },
-            end:   { offset: 13, line: 7, column: 5 }
+            end: { offset: 13, line: 7, column: 5 }
           });
 
           // Newline representations
           expect(parser).toParse("1\nx", {     // Unix
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 }
+            end: { offset: 2, line: 2, column: 1 }
           });
           expect(parser).toParse("1\r\nx", {   // Windows
             start: { offset: 3, line: 2, column: 1 },
-            end:   { offset: 3, line: 2, column: 1 }
+            end: { offset: 3, line: 2, column: 1 }
           });
         });
       });
@@ -654,47 +654,47 @@ describe("generated parser behavior", function() {
             let testcases = [
                   {
                     grammar: "start = (a:'a') !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = (a:'a')? !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = (a:'a')* !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = (a:'a')+ !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = $(a:'a') !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = &(a:'a') 'a' !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = !(a:'a') 'b' !{ return a !== 'a'; }",
-                    input:   "b"
+                    input: "b"
                   },
                   {
                     grammar: "start = b:(a:'a') !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = ('a' b:'b' 'c') !{ return b !== 'b'; }",
-                    input:   "abc"
+                    input: "abc"
                   },
                   {
                     grammar: "start = (a:'a' { return a; }) !{ return a !== 'a'; }",
-                    input:   "a"
+                    input: "a"
                   },
                   {
                     grammar: "start = ('a' / b:'b' / 'c') !{ return b !== 'b'; }",
-                    input:   "b"
+                    input: "b"
                   }
                 ];
             let parser;
@@ -779,17 +779,17 @@ describe("generated parser behavior", function() {
 
           expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
             start: { offset: 13, line: 7, column: 5 },
-            end:   { offset: 13, line: 7, column: 5 }
+            end: { offset: 13, line: 7, column: 5 }
           });
 
           // Newline representations
           expect(parser).toParse("1\nx", {     // Unix
             start: { offset: 2, line: 2, column: 1 },
-            end:   { offset: 2, line: 2, column: 1 }
+            end: { offset: 2, line: 2, column: 1 }
           });
           expect(parser).toParse("1\r\nx", {   // Windows
             start: { offset: 3, line: 2, column: 1 },
-            end:   { offset: 3, line: 2, column: 1 }
+            end: { offset: 3, line: 2, column: 1 }
           });
         });
       });
@@ -1023,47 +1023,47 @@ describe("generated parser behavior", function() {
               let testcases = [
                     {
                       grammar: "start = (a:'a') { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = (a:'a')? { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = (a:'a')* { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = (a:'a')+ { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = $(a:'a') { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = &(a:'a') 'a' { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = !(a:'a') 'b' { return a; }",
-                      input:   "b"
+                      input: "b"
                     },
                     {
                       grammar: "start = b:(a:'a') { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = ('a' b:'b' 'c') { return b; }",
-                      input:   "abc"
+                      input: "abc"
                     },
                     {
                       grammar: "start = (a:'a' { return a; }) { return a; }",
-                      input:   "a"
+                      input: "a"
                     },
                     {
                       grammar: "start = ('a' / b:'b' / 'c') { return b; }",
-                      input:   "b"
+                      input: "b"
                     }
                   ];
               let parser;
@@ -1157,17 +1157,17 @@ describe("generated parser behavior", function() {
 
             expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
               start: { offset: 13, line: 7, column: 5 },
-              end:   { offset: 14, line: 7, column: 6 }
+              end: { offset: 14, line: 7, column: 6 }
             });
 
             // Newline representations
             expect(parser).toParse("1\nx", {     // Unix
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 }
+              end: { offset: 3, line: 2, column: 2 }
             });
             expect(parser).toParse("1\r\nx", {   // Windows
               start: { offset: 3, line: 2, column: 1 },
-              end:   { offset: 4, line: 2, column: 2 }
+              end: { offset: 4, line: 2, column: 2 }
             });
           });
 
@@ -1179,12 +1179,12 @@ describe("generated parser behavior", function() {
                   );
 
               expect(parser).toFailToParse("a", {
-                message:  "Expected a but \"a\" found.",
+                message: "Expected a but \"a\" found.",
                 expected: [{ type: "other", description: "a" }],
-                found:    "a",
+                found: "a",
                 location: {
                   start: { offset: 0, line: 1, column: 1 },
-                  end:   { offset: 1, line: 1, column: 2 }
+                  end: { offset: 1, line: 1, column: 2 }
                 }
               });
             });
@@ -1194,18 +1194,18 @@ describe("generated parser behavior", function() {
                     "start = 'a' {",
                     "  expected('a', {",
                     "    start: { offset: 1, line: 1, column: 2 },",
-                    "    end:   { offset: 2, line: 1, column: 3 }",
+                    "    end: { offset: 2, line: 1, column: 3 }",
                     "  });",
                     "}"
                   ].join("\n"), options);
 
               expect(parser).toFailToParse("a", {
-                message:  "Expected a but \"a\" found.",
+                message: "Expected a but \"a\" found.",
                 expected: [{ type: "other", description: "a" }],
-                found:    "a",
+                found: "a",
                 location: {
                   start: { offset: 1, line: 1, column: 2 },
-                  end:   { offset: 2, line: 1, column: 3 }
+                  end: { offset: 2, line: 1, column: 3 }
                 }
               });
             });
@@ -1219,12 +1219,12 @@ describe("generated parser behavior", function() {
                   );
 
               expect(parser).toFailToParse("a", {
-                message:  "a",
-                found:    null,
+                message: "a",
+                found: null,
                 expected: null,
                 location: {
                   start: { offset: 0, line: 1, column: 1 },
-                  end:   { offset: 1, line: 1, column: 2 }
+                  end: { offset: 1, line: 1, column: 2 }
                 }
               });
             });
@@ -1234,18 +1234,18 @@ describe("generated parser behavior", function() {
                     "start = 'a' {",
                     "  error('a', {",
                     "    start: { offset: 1, line: 1, column: 2 },",
-                    "    end:   { offset: 2, line: 1, column: 3 }",
+                    "    end: { offset: 2, line: 1, column: 3 }",
                     "  });",
                     "}"
                   ].join("\n"), options);
 
               expect(parser).toFailToParse("a", {
-                message:  "a",
+                message: "a",
                 expected: null,
-                found:    null,
+                found: null,
                 location: {
                   start: { offset: 1, line: 1, column: 2 },
-                  end:   { offset: 2, line: 1, column: 3 }
+                  end: { offset: 2, line: 1, column: 3 }
                 }
               });
             });
@@ -1412,7 +1412,7 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("", {
             location: {
               start: { offset: 0, line: 1, column: 1 },
-              end:   { offset: 0, line: 1, column: 1 }
+              end: { offset: 0, line: 1, column: 1 }
             }
           });
         });
@@ -1423,7 +1423,7 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("b", {
             location: {
               start: { offset: 0, line: 1, column: 1 },
-              end:   { offset: 1, line: 1, column: 2 }
+              end: { offset: 1, line: 1, column: 2 }
             }
           });
         });
@@ -1434,7 +1434,7 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("aa", {
             location: {
               start: { offset: 1, line: 1, column: 2 },
-              end:   { offset: 2, line: 1, column: 3 }
+              end: { offset: 2, line: 1, column: 3 }
             }
           });
         });
@@ -1450,7 +1450,7 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("1\n2\n\n3\n\n\n4 5 x", {
             location: {
               start: { offset: 13, line: 7, column: 5 },
-              end:   { offset: 14, line: 7, column: 6 }
+              end: { offset: 14, line: 7, column: 6 }
             }
           });
 
@@ -1458,13 +1458,13 @@ describe("generated parser behavior", function() {
           expect(parser).toFailToParse("1\nx", {     // Old Mac
             location: {
               start: { offset: 2, line: 2, column: 1 },
-              end:   { offset: 3, line: 2, column: 2 }
+              end: { offset: 3, line: 2, column: 2 }
             }
           });
           expect(parser).toFailToParse("1\r\nx", {   // Windows
             location: {
               start: { offset: 3, line: 2, column: 1 },
-              end:   { offset: 4, line: 2, column: 2 }
+              end: { offset: 4, line: 2, column: 2 }
             }
           });
         });

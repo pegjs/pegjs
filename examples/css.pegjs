@@ -35,10 +35,10 @@
   function buildExpression(head, tail) {
     return tail.reduce(function(result, element) {
       return {
-        type:     "Expression",
+        type: "Expression",
         operator: element[0],
-        left:     result,
-        right:    element[1]
+        left: result,
+        right: element[1]
       };
     }, head);
   }
@@ -55,18 +55,18 @@ stylesheet
     rules:((ruleset / media / page) (CDO S* / CDC S*)*)*
     {
       return {
-        type:    "StyleSheet",
+        type: "StyleSheet",
         charset: extractOptional(charset, 1),
         imports: extractList(imports, 0),
-        rules:   extractList(rules, 0)
+        rules: extractList(rules, 0)
       };
     }
 
 import
   = IMPORT_SYM S* href:(STRING / URI) S* media:media_list? ";" S* {
       return {
-        type:  "ImportRule",
-        href:  href,
+        type: "ImportRule",
+        href: href,
         media: media !== null ? media : []
       };
     }
@@ -94,8 +94,8 @@ page
     "}" S*
     {
       return {
-        type:         "PageRule",
-        selector:     selector,
+        type: "PageRule",
+        selector: selector,
         declarations: buildList(declarationsHead, declarationsTail, 2)
       };
     }
@@ -123,8 +123,8 @@ ruleset
     "}" S*
     {
       return {
-        type:         "RuleSet",
-        selectors:    buildList(selectorsHead, selectorsTail, 2),
+        type: "RuleSet",
+        selectors: buildList(selectorsHead, selectorsTail, 2),
         declarations: buildList(declarationsHead, declarationsTail, 2)
       };
     }
@@ -132,18 +132,18 @@ ruleset
 selector
   = left:simple_selector S* combinator:combinator right:selector {
       return {
-        type:       "Selector",
+        type: "Selector",
         combinator: combinator,
-        left:       left,
-        right:      right
+        left: left,
+        right: right
       };
     }
   / left:simple_selector S+ right:selector {
       return {
-        type:       "Selector",
+        type: "Selector",
         combinator: " ",
-        left:       left,
-        right:      right
+        left: left,
+        right: right
       };
     }
   / selector:simple_selector S* { return selector; }
@@ -151,15 +151,15 @@ selector
 simple_selector
   = element:element_name qualifiers:(id / class / attrib / pseudo)* {
       return {
-        type:       "SimpleSelector",
-        element:    element,
+        type: "SimpleSelector",
+        element: element,
         qualifiers: qualifiers
       };
     }
   / qualifiers:(id / class / attrib / pseudo)+ {
       return {
-        type:       "SimpleSelector",
-        element:    "*",
+        type: "SimpleSelector",
+        element: "*",
         qualifiers: qualifiers
       };
     }
@@ -181,10 +181,10 @@ attrib
     "]"
     {
       return {
-        type:      "AttributeSelector",
+        type: "AttributeSelector",
         attribute: attribute,
-        operator:  extractOptional(operatorAndValue, 0),
-        value:     extractOptional(operatorAndValue, 2)
+        operator: extractOptional(operatorAndValue, 0),
+        value: extractOptional(operatorAndValue, 2)
       };
     }
 
@@ -193,8 +193,8 @@ pseudo
     value:(
         name:FUNCTION S* params:(IDENT S*)? ")" {
           return {
-            type:   "Function",
-            name:   name,
+            type: "Function",
+            name: name,
             params: params !== null ? [params[0]] : []
           };
         }
@@ -205,9 +205,9 @@ pseudo
 declaration
   = name:property ':' S* value:expr prio:prio? {
       return {
-        type:      "Declaration",
-        name:      name,
-        value:     value,
+        type: "Declaration",
+        name: name,
+        value: value,
         important: prio !== null
       };
     }
@@ -223,9 +223,9 @@ term
     S*
     {
       return {
-        type:  "Quantity",
+        type: "Quantity",
         value: quantity.value,
-        unit:  quantity.unit
+        unit: quantity.unit
       };
     }
   / value:STRING S* { return { type: "String", value: value }; }

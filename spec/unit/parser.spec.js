@@ -22,15 +22,15 @@ describe("PEG.js grammar parser", function() {
   let labeledMnop       = { type: "labeled",      label: "d", expression: literalMnop   };
   let labeledSimpleNot  = { type: "labeled",      label: "a", expression: simpleNotAbcd };
   let sequence          = {
-        type:     "sequence",
+        type: "sequence",
         elements: [literalAbcd, literalEfgh, literalIjkl]
       };
   let sequence2         = {
-        type:     "sequence",
+        type: "sequence",
         elements: [labeledAbcd, labeledEfgh]
       };
   let sequence4         = {
-        type:     "sequence",
+        type: "sequence",
         elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
       };
   let groupLabeled      = { type: "group",  expression: labeledAbcd };
@@ -41,15 +41,15 @@ describe("PEG.js grammar parser", function() {
   let actionMnop        = { type: "action", expression: literalMnop, code: " code " };
   let actionSequence    = { type: "action", expression: sequence,    code: " code " };
   let choice            = {
-        type:         "choice",
+        type: "choice",
         alternatives: [literalAbcd, literalEfgh, literalIjkl]
       };
   let choice2           = {
-        type:         "choice",
+        type: "choice",
         alternatives: [actionAbcd, actionEfgh]
       };
   let choice4           = {
-        type:         "choice",
+        type: "choice",
         alternatives: [actionAbcd, actionEfgh, actionIjkl, actionMnop]
       };
   let named             = { type: "named",       name: "start rule", expression: literalAbcd };
@@ -61,9 +61,9 @@ describe("PEG.js grammar parser", function() {
 
   function oneRuleGrammar(expression) {
     return {
-      type:        "grammar",
+      type: "grammar",
       initializer: null,
-      rules:       [{ type: "rule", name: "start", expression: expression }]
+      rules: [{ type: "rule", name: "start", expression: expression }]
     };
   }
 
@@ -81,9 +81,9 @@ describe("PEG.js grammar parser", function() {
 
   function classGrammar(parts, inverted, ignoreCase) {
     return oneRuleGrammar({
-      type:       "class",
-      parts:      parts,
-      inverted:   inverted,
+      type: "class",
+      parts: parts,
+      inverted: inverted,
       ignoreCase: ignoreCase
     });
   }
@@ -98,9 +98,9 @@ describe("PEG.js grammar parser", function() {
 
   let trivialGrammar = literalGrammar("abcd", false);
   let twoRuleGrammar = {
-        type:        "grammar",
+        type: "grammar",
         initializer: null,
-        rules:       [ruleA, ruleB]
+        rules: [ruleA, ruleB]
       };
 
   let stripLocation = (function() {
@@ -138,26 +138,26 @@ describe("PEG.js grammar parser", function() {
         node.rules.forEach(strip);
       },
 
-      initializer:  stripLeaf,
-      rule:         stripExpression,
-      named:        stripExpression,
-      choice:       stripChildren("alternatives"),
-      action:       stripExpression,
-      sequence:     stripChildren("elements"),
-      labeled:      stripExpression,
-      text:         stripExpression,
-      simple_and:   stripExpression,
-      simple_not:   stripExpression,
-      optional:     stripExpression,
+      initializer: stripLeaf,
+      rule: stripExpression,
+      named: stripExpression,
+      choice: stripChildren("alternatives"),
+      action: stripExpression,
+      sequence: stripChildren("elements"),
+      labeled: stripExpression,
+      text: stripExpression,
+      simple_and: stripExpression,
+      simple_not: stripExpression,
+      optional: stripExpression,
       zero_or_more: stripExpression,
-      one_or_more:  stripExpression,
-      group:        stripExpression,
+      one_or_more: stripExpression,
+      group: stripExpression,
       semantic_and: stripLeaf,
       semantic_not: stripLeaf,
-      rule_ref:     stripLeaf,
-      literal:      stripLeaf,
-      "class":      stripLeaf,
-      any:          stripLeaf
+      rule_ref: stripLeaf,
+      literal: stripLeaf,
+      "class": stripLeaf,
+      any: stripLeaf
     });
 
     return strip;
@@ -165,7 +165,7 @@ describe("PEG.js grammar parser", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toParseAs:     function(expected) {
+      toParseAs: function(expected) {
         let result;
 
         try {

@@ -113,7 +113,7 @@ function nextArg() {
 
 let runCount = 10;
 let options = {
-  cache:    false,
+  cache: false,
   optimize: "speed"
 };
 
