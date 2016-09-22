@@ -2,9 +2,9 @@
 
 "use strict";
 
-let fs      = require("fs");
-let path    = require("path");
-let peg     = require("../lib/peg");
+let fs = require("fs");
+let path = require("path");
+let peg = require("../lib/peg");
 
 // Helpers
 

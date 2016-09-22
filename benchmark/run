@@ -5,7 +5,7 @@
 
 "use strict";
 
-let fs  = require("fs");
+let fs = require("fs");
 
 let benchmarks = require("./benchmarks.js");
 let Runner = require("./runner.js");
@@ -47,7 +47,7 @@ function writeHeading(heading) {
 }
 
 function writeResult(title, inputSize, parseTime) {
-  const KB      = 1024;
+  const KB = 1024;
   const MS_IN_S = 1000;
 
   console.log("│ "

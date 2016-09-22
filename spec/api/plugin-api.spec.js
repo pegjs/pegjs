@@ -39,7 +39,7 @@ describe("plugin API", function() {
 
     it("is called for each plugin", function() {
       let pluginsUsed = [false, false, false];
-      let plugins     = [
+      let plugins = [
             { use: function() { pluginsUsed[0] = true; } },
             { use: function() { pluginsUsed[1] = true; } },
             { use: function() { pluginsUsed[2] = true; } }
@@ -81,7 +81,7 @@ describe("plugin API", function() {
     });
 
     it("receives options", function() {
-      let plugin             = {
+      let plugin = {
             use: function(config, options) {
               expect(options).toEqual(generateOptions);
             }
@@ -138,12 +138,12 @@ describe("plugin API", function() {
             "b = 'x'",
             "c = 'x'"
           ].join("\n");
-      let plugin  = {
+      let plugin = {
             use: function(config, options) {
               options.allowedStartRules = ["b", "c"];
             }
           };
-      let parser  = peg.generate(grammar, {
+      let parser = peg.generate(grammar, {
             allowedStartRules: ["a"],
             plugins: [plugin]
           });

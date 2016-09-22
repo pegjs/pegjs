@@ -18,12 +18,12 @@ describe("compiler pass |reportInfiniteRecursion|", function() {
   it("reports indirect left recursion", function() {
     expect(pass).toReportError([
       "start = stop",
-      "stop  = start"
+      "stop = start"
     ].join("\n"), {
       message: "Possible infinite loop when parsing (left recursion: start -> stop -> start).",
       location: {
-        start: { offset: 21, line: 2, column: 9 },
-        end: { offset: 26, line: 2, column: 14 }
+        start: { offset: 20, line: 2, column: 8 },
+        end: { offset: 25, line: 2, column: 13 }
       }
     });
   });

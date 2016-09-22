@@ -9,11 +9,11 @@
 // the specs get passed through Babel & Browserify before they are served to the
 // browser.
 
-let express    = require("express");
-let logger     = require("morgan");
-let glob       = require("glob");
+let express = require("express");
+let logger = require("morgan");
+let glob = require("glob");
 let browserify = require("browserify");
-let babelify   = require("babelify");
+let babelify = require("babelify");
 
 let app = express();
 

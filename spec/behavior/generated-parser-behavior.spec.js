@@ -575,12 +575,12 @@ describe("generated parser behavior", function() {
         it("|location| returns current location info", function() {
           let parser = peg.generate([
                 "{ var result; }",
-                "start  = line (nl+ line)* { return result; }",
-                "line   = thing (' '+ thing)*",
-                "thing  = digit / mark",
-                "digit  = [0-9]",
-                "mark   = &{ result = location(); return true; } 'x'",
-                "nl     = '\\r'? '\\n'"
+                "start = line (nl+ line)* { return result; }",
+                "line = thing (' '+ thing)*",
+                "thing = digit / mark",
+                "digit = [0-9]",
+                "mark = &{ result = location(); return true; } 'x'",
+                "nl = '\\r'? '\\n'"
               ].join("\n"), options);
 
           expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
@@ -769,12 +769,12 @@ describe("generated parser behavior", function() {
         it("|location| returns current location info", function() {
           let parser = peg.generate([
                 "{ var result; }",
-                "start  = line (nl+ line)* { return result; }",
-                "line   = thing (' '+ thing)*",
-                "thing  = digit / mark",
-                "digit  = [0-9]",
-                "mark   = !{ result = location(); return false; } 'x'",
-                "nl     = '\\r'? '\\n'"
+                "start = line (nl+ line)* { return result; }",
+                "line = thing (' '+ thing)*",
+                "thing = digit / mark",
+                "digit = [0-9]",
+                "mark = !{ result = location(); return false; } 'x'",
+                "nl = '\\r'? '\\n'"
               ].join("\n"), options);
 
           expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
@@ -1147,12 +1147,12 @@ describe("generated parser behavior", function() {
           it("|location| returns location info of the expression", function() {
             let parser = peg.generate([
                   "{ var result; }",
-                  "start  = line (nl+ line)* { return result; }",
-                  "line   = thing (' '+ thing)*",
-                  "thing  = digit / mark",
-                  "digit  = [0-9]",
-                  "mark   = 'x' { result = location(); }",
-                  "nl     = '\\r'? '\\n'"
+                  "start = line (nl+ line)* { return result; }",
+                  "line = thing (' '+ thing)*",
+                  "thing = digit / mark",
+                  "digit = [0-9]",
+                  "mark = 'x' { result = location(); }",
+                  "nl = '\\r'? '\\n'"
                 ].join("\n"), options);
 
             expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
@@ -1441,10 +1441,10 @@ describe("generated parser behavior", function() {
 
         it("reports position correctly in complex cases", function() {
           let parser = peg.generate([
-                "start  = line (nl+ line)*",
-                "line   = digit (' '+ digit)*",
-                "digit  = [0-9]",
-                "nl     = '\\r'? '\\n'"
+                "start = line (nl+ line)*",
+                "line = digit (' '+ digit)*",
+                "digit = [0-9]",
+                "nl = '\\r'? '\\n'"
               ].join("\n"), options);
 
           expect(parser).toFailToParse("1\n2\n\n3\n\n\n4 5 x", {
@@ -1480,21 +1480,21 @@ describe("generated parser behavior", function() {
         // Sum     ← Product (('+' / '-') Product)*
         // Expr    ← Sum
         let parser = peg.generate([
-              "Expr    = Sum",
-              "Sum     = head:Product tail:(('+' / '-') Product)* {",
-              "            return tail.reduce(function(result, element) {",
-              "              if (element[0] === '+') { return result + element[1]; }",
-              "              if (element[0] === '-') { return result - element[1]; }",
-              "            }, head);",
-              "          }",
+              "Expr = Sum",
+              "Sum = head:Product tail:(('+' / '-') Product)* {",
+              "        return tail.reduce(function(result, element) {",
+              "          if (element[0] === '+') { return result + element[1]; }",
+              "          if (element[0] === '-') { return result - element[1]; }",
+              "        }, head);",
+              "      }",
               "Product = head:Value tail:(('*' / '/') Value)* {",
               "            return tail.reduce(function(result, element) {",
               "              if (element[0] === '*') { return result * element[1]; }",
               "              if (element[0] === '/') { return result / element[1]; }",
               "            }, head);",
               "          }",
-              "Value   = digits:[0-9]+     { return parseInt(digits.join(''), 10); }",
-              "        / '(' expr:Expr ')' { return expr; }"
+              "Value = digits:[0-9]+     { return parseInt(digits.join(''), 10); }",
+              "      / '(' expr:Expr ')' { return expr; }"
             ].join("\n"), options);
 
         // The "value" rule
@@ -1553,12 +1553,12 @@ describe("generated parser behavior", function() {
         // N ← C / (!Begin !End Z)
         // Z ← any single character
         let parser = peg.generate([
-              "C     = begin:Begin ns:N* end:End { return begin + ns.join('') + end; }",
-              "N     = C",
-              "      / !Begin !End z:Z { return z; }",
-              "Z     = .",
+              "C = begin:Begin ns:N* end:End { return begin + ns.join('') + end; }",
+              "N = C",
+              "  / !Begin !End z:Z { return z; }",
+              "Z = .",
               "Begin = '(*'",
-              "End   = '*)'"
+              "End = '*)'"
             ].join("\n"), options);
 
         expect(parser).toParse("(**)",     "(**)");

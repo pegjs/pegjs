@@ -1,7 +1,7 @@
 /* eslint-env browser, jquery */
 
 let benchmarks = require("./benchmarks.js");
-let Runner     = require("./runner.js");
+let Runner = require("./runner.js");
 
 $("#run").click(() => {
   "use strict";
@@ -17,7 +17,7 @@ $("#run").click(() => {
   }
 
   function appendResult(klass, title, url, inputSize, parseTime) {
-    const KB      = 1024;
+    const KB = 1024;
     const MS_IN_S = 1000;
 
     resultsTable.append(
@@ -61,7 +61,7 @@ $("#run").click(() => {
   //   2. To minimize random errors.
 
   let runCount = parseInt($("#run-count").val(), 10);
-  let options  = {
+  let options = {
         cache: $("#cache").is(":checked"),
         optimize: $("#optimize").val()
       };
