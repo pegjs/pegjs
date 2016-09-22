@@ -3,7 +3,7 @@
 "use strict";
 
 /* eslint-env node */
-/* eslint no-console: 0*/
+/* eslint-disable no-console */
 
 let Runner = require("./runner.js");
 let benchmarks = require("./benchmarks.js");
