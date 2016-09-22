@@ -21,8 +21,8 @@ app.use(logger("dev"));
 app.use(express.static(__dirname));
 
 app.get("/bundle.js", (req, res) => {
-  let files = glob.sync(__dirname + "/**/*.js", {
-    ignore: __dirname + "/vendor/**/*"
+  let files = glob.sync(`${__dirname}/**/*.js`, {
+    ignore: `${__dirname}/vendor/**/*`
   });
 
   browserify(files)
