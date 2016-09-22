@@ -35,4 +35,3 @@ app.get("/bundle.js", (req, res) => {
 app.listen(8000, () => {
   console.log("Benchmark server running at http://localhost:8000...");
 });
-
