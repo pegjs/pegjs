@@ -1,7 +1,7 @@
+"use strict";
+
 /* eslint no-console: 0 */
 /* global console */
-
-"use strict";
 
 let peg = require("../../lib/peg");
 

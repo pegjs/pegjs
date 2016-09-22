@@ -1,11 +1,11 @@
+"use strict";
+
 /* eslint-env browser, jquery */
 
 let benchmarks = require("./benchmarks.js");
 let Runner = require("./runner.js");
 
 $("#run").click(() => {
-  "use strict";
-
   // Results Table Manipulation
 
   let resultsTable = $("#results-table");
@@ -134,7 +134,5 @@ $("#run").click(() => {
 });
 
 $(document).ready(() => {
-  "use strict";
-
   $("#run").focus();
 });
