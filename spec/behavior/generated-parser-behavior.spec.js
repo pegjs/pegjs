@@ -503,10 +503,9 @@ describe("generated parser behavior", function() {
                     input: "b"
                   }
                 ];
-            let parser;
 
             testcases.forEach(testcase => {
-              parser = peg.generate(testcase.grammar, options);
+              let parser = peg.generate(testcase.grammar, options);
               expect(parser).toFailToParse(testcase.input);
             });
           });
@@ -697,10 +696,9 @@ describe("generated parser behavior", function() {
                     input: "b"
                   }
                 ];
-            let parser;
 
             testcases.forEach(testcase => {
-              parser = peg.generate(testcase.grammar, options);
+              let parser = peg.generate(testcase.grammar, options);
               expect(parser).toFailToParse(testcase.input);
             });
           });
@@ -1066,10 +1064,9 @@ describe("generated parser behavior", function() {
                       input: "b"
                     }
                   ];
-              let parser;
 
               testcases.forEach(testcase => {
-                parser = peg.generate(testcase.grammar, options);
+                let parser = peg.generate(testcase.grammar, options);
                 expect(parser).toFailToParse(testcase.input);
               });
             });
