@@ -239,13 +239,13 @@ describe("PEG.js grammar parser", function() {
   // Canonical Grammar is "a = 'abcd'; b = 'efgh'; c = 'ijkl';".
   it("parses Grammar", function() {
     expect("\na = 'abcd';\n").toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA] }
+      { type: "grammar", initializer: null, rules: [ruleA] }
     );
     expect("\na = 'abcd';\nb = 'efgh';\nc = 'ijkl';\n").toParseAs(
-      { type:  "grammar", initializer: null, rules: [ruleA, ruleB, ruleC] }
+      { type: "grammar", initializer: null, rules: [ruleA, ruleB, ruleC] }
     );
     expect("\n{ code };\na = 'abcd';\n").toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleA] }
+      { type: "grammar", initializer: initializer, rules: [ruleA] }
     );
   });
 
