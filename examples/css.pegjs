@@ -23,13 +23,12 @@
   }
 
   function extractList(list, index) {
-    return list
-      .map(function(element) { return element[index]; })
-      .filter(function(element) { return element !== null; });
+    return list.map(function(element) { return element[index]; });
   }
 
   function buildList(head, tail, index) {
-    return (head !== null ? [head] : []).concat(extractList(tail, index));
+    return [head].concat(extractList(tail, index))
+      .filter(function(element) { return element !== null; });
   }
 
   function buildExpression(head, tail) {
