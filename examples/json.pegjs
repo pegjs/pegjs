@@ -84,15 +84,32 @@ array
 number "number"
   = minus? int frac? exp? { return parseFloat(text()); }
 
-decimal_point = "."
-digit1_9      = [1-9]
-e             = [eE]
-exp           = e (minus / plus)? DIGIT+
-frac          = decimal_point DIGIT+
-int           = zero / (digit1_9 DIGIT*)
-minus         = "-"
-plus          = "+"
-zero          = "0"
+decimal_point
+  = "."
+
+digit1_9
+  = [1-9]
+
+e
+  = [eE]
+
+exp
+  = e (minus / plus)? DIGIT+
+
+frac
+  = decimal_point DIGIT+
+
+int
+  = zero / (digit1_9 DIGIT*)
+
+minus
+  = "-"
+
+plus
+  = "+"
+
+zero
+  = "0"
 
 // ----- 7. Strings -----
 
@@ -117,9 +134,14 @@ char
     )
     { return sequence; }
 
-escape         = "\\"
-quotation_mark = '"'
-unescaped      = [^\0-\x1F\x22\x5C]
+escape
+  = "\\"
+
+quotation_mark
+  = '"'
+
+unescaped
+  = [^\0-\x1F\x22\x5C]
 
 // ----- Core ABNF Rules -----
 
