@@ -222,7 +222,6 @@ while (args.length > 0 && isOption(args[0])) {
         abort("Missing parameter of the --plugin option.");
       }
       id = /^(\.\/|\.\.\/)/.test(args[0]) ? path.resolve(args[0]) : args[0];
-      mod;
       try {
         mod = require(id);
       } catch (e) {
