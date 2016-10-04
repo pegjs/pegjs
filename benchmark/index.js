@@ -130,7 +130,6 @@ $("#run").click(() => {
       $("#run-count, #cache, #run").removeAttr("disabled");
     }
   });
-
 });
 
 $(document).ready(() => {

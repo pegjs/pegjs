@@ -6,7 +6,6 @@ let peg = require("../lib/peg");
 
 let Runner = {
   run: function(benchmarks, runCount, options, callbacks) {
-
     // Queue
 
     let Q = {

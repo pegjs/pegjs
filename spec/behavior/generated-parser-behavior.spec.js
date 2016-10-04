@@ -1399,7 +1399,6 @@ describe("generated parser behavior", function() {
             message: "Expected \"a\", \"b\", or \"c\" but \"d\" found."
           });
         });
-
       });
 
       describe("position reporting", function() {
