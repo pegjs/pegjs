@@ -21,10 +21,10 @@ describe("generated parser API", function() {
 
     describe("start rule", function() {
       let parser = peg.generate([
-            "a = 'x' { return 'a'; }",
-            "b = 'x' { return 'b'; }",
-            "c = 'x' { return 'c'; }"
-          ].join("\n"), { allowedStartRules: ["b", "c"] });
+        "a = 'x' { return 'a'; }",
+        "b = 'x' { return 'b'; }",
+        "c = 'x' { return 'c'; }"
+      ].join("\n"), { allowedStartRules: ["b", "c"] });
 
       describe("when |startRule| is not set", function() {
         it("starts parsing from the first allowed rule", function() {
@@ -48,10 +48,10 @@ describe("generated parser API", function() {
 
     describe("tracing", function() {
       let parser = peg.generate([
-            "start = a / b",
-            "a = 'a'",
-            "b = 'b'"
-          ].join("\n"), { trace: true });
+        "start = a / b",
+        "a = 'a'",
+        "b = 'b'"
+      ].join("\n"), { trace: true });
 
       describe("default tracer", function() {
         it("traces using console.log (if console is defined)", function() {

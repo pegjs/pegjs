@@ -62,9 +62,9 @@ $("#run").click(() => {
 
   let runCount = parseInt($("#run-count").val(), 10);
   let options = {
-        cache: $("#cache").is(":checked"),
-        optimize: $("#optimize").val()
-      };
+    cache: $("#cache").is(":checked"),
+    optimize: $("#optimize").val()
+  };
 
   if (isNaN(runCount) || runCount <= 0) {
     alert("Number of runs must be a positive integer.");

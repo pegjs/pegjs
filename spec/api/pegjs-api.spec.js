@@ -21,10 +21,10 @@ describe("PEG.js API", function() {
 
     describe("allowed start rules", function() {
       let grammar = [
-            "a = 'x'",
-            "b = 'x'",
-            "c = 'x'"
-          ].join("\n");
+        "a = 'x'",
+        "b = 'x'",
+        "c = 'x'"
+      ].join("\n");
 
       // The |allowedStartRules| option is implemented separately for each
       // optimization mode, so we need to test it in both.
@@ -82,10 +82,10 @@ describe("PEG.js API", function() {
 
     describe("intermediate results caching", function() {
       let grammar = [
-            "{ var n = 0; }",
-            "start = (a 'b') / (a 'c') { return n; }",
-            "a = 'a' { n++; }"
-          ].join("\n");
+        "{ var n = 0; }",
+        "start = (a 'b') / (a 'c') { return n; }",
+        "a = 'a' { n++; }"
+      ].join("\n");
 
       describe("when |cache| is not set", function() {
         it("generated parser doesn't cache intermediate parse results", function() {

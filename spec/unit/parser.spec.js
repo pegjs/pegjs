@@ -22,17 +22,17 @@ describe("PEG.js grammar parser", function() {
   let labeledMnop       = { type: "labeled",      label: "d", expression: literalMnop   };
   let labeledSimpleNot  = { type: "labeled",      label: "a", expression: simpleNotAbcd };
   let sequence          = {
-        type: "sequence",
-        elements: [literalAbcd, literalEfgh, literalIjkl]
-      };
+    type: "sequence",
+    elements: [literalAbcd, literalEfgh, literalIjkl]
+  };
   let sequence2         = {
-        type: "sequence",
-        elements: [labeledAbcd, labeledEfgh]
-      };
+    type: "sequence",
+    elements: [labeledAbcd, labeledEfgh]
+  };
   let sequence4         = {
-        type: "sequence",
-        elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
-      };
+    type: "sequence",
+    elements: [labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop]
+  };
   let groupLabeled      = { type: "group",  expression: labeledAbcd };
   let groupSequence     = { type: "group",  expression: sequence    };
   let actionAbcd        = { type: "action", expression: literalAbcd, code: " code " };
@@ -41,17 +41,17 @@ describe("PEG.js grammar parser", function() {
   let actionMnop        = { type: "action", expression: literalMnop, code: " code " };
   let actionSequence    = { type: "action", expression: sequence,    code: " code " };
   let choice            = {
-        type: "choice",
-        alternatives: [literalAbcd, literalEfgh, literalIjkl]
-      };
+    type: "choice",
+    alternatives: [literalAbcd, literalEfgh, literalIjkl]
+  };
   let choice2           = {
-        type: "choice",
-        alternatives: [actionAbcd, actionEfgh]
-      };
+    type: "choice",
+    alternatives: [actionAbcd, actionEfgh]
+  };
   let choice4           = {
-        type: "choice",
-        alternatives: [actionAbcd, actionEfgh, actionIjkl, actionMnop]
-      };
+    type: "choice",
+    alternatives: [actionAbcd, actionEfgh, actionIjkl, actionMnop]
+  };
   let named             = { type: "named",       name: "start rule", expression: literalAbcd };
   let ruleA             = { type: "rule",        name: "a",          expression: literalAbcd };
   let ruleB             = { type: "rule",        name: "b",          expression: literalEfgh };
@@ -98,10 +98,10 @@ describe("PEG.js grammar parser", function() {
 
   let trivialGrammar = literalGrammar("abcd", false);
   let twoRuleGrammar = {
-        type: "grammar",
-        initializer: null,
-        rules: [ruleA, ruleB]
-      };
+    type: "grammar",
+    initializer: null,
+    rules: [ruleA, ruleB]
+  };
 
   let stripLocation = (function() {
     function buildVisitor(functions) {

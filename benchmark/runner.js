@@ -10,22 +10,22 @@ let Runner = {
     // Queue
 
     let Q = {
-          functions: [],
+      functions: [],
 
-          add: function(f) {
-            this.functions.push(f);
-          },
+      add: function(f) {
+        this.functions.push(f);
+      },
 
-          run: function() {
-            if (this.functions.length > 0) {
-              this.functions.shift()();
+      run: function() {
+        if (this.functions.length > 0) {
+          this.functions.shift()();
 
-              // We can't use |arguments.callee| here because |this| would get
-              // messed-up in that case.
-              setTimeout(() => { Q.run(); }, 0);
-            }
-          }
-        };
+          // We can't use |arguments.callee| here because |this| would get
+          // messed-up in that case.
+          setTimeout(() => { Q.run(); }, 0);
+        }
+      }
+    };
 
     // The benchmark itself is factored out into several functions (some of them
     // generated), which are enqueued and run one by one using |setTimeout|. We
