@@ -96,7 +96,7 @@ function nextArg() {
 
 function readStream(inputStream, callback) {
   let input = "";
-  inputStream.on("data", (data) => { input += data; });
+  inputStream.on("data", data => { input += data; });
   inputStream.on("end", () => { callback(input); });
 }
 
@@ -306,7 +306,7 @@ if (outputFile === "-") {
   });
 }
 
-readStream(inputStream, (input) => {
+readStream(inputStream, input => {
   let source;
 
   try {
