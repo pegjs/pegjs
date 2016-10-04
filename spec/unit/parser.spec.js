@@ -252,7 +252,7 @@ describe("PEG.js grammar parser", function() {
   // Canonical Initializer is "{ code }".
   it("parses Initializer", function() {
     expect("{ code };start = 'abcd'").toParseAs(
-      { type:  "grammar", initializer: initializer, rules: [ruleStart] }
+      { type: "grammar", initializer: initializer, rules: [ruleStart] }
     );
   });
 

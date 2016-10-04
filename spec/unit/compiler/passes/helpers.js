@@ -94,7 +94,7 @@ beforeEach(function() {
 
       this.message = () =>
         "Expected the pass to report an error "
-          + (details ? "with details " + jasmine.pp(details) + " ": "")
+          + (details ? "with details " + jasmine.pp(details) + " " : "")
           + "for grammar " + jasmine.pp(grammar) + ", "
           + "but it didn't.";
 
