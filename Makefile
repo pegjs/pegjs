@@ -17,9 +17,8 @@ NODE_MODULES_BIN_DIR = $(NODE_MODULES_DIR)/.bin
 
 MAIN_FILE = $(LIB_DIR)/peg.js
 
-PARSER_SRC_FILE     = $(SRC_DIR)/parser.pegjs
-PARSER_OUT_FILE     = $(LIB_DIR)/parser.js
-PARSER_OUT_FILE_NEW = $(LIB_DIR)/parser.js.new
+PARSER_SRC_FILE = $(SRC_DIR)/parser.pegjs
+PARSER_OUT_FILE = $(LIB_DIR)/parser.js
 
 BROWSER_FILE_DEV = $(BROWSER_DIR)/peg.js
 BROWSER_FILE_MIN = $(BROWSER_DIR)/peg.min.js
@@ -45,20 +44,7 @@ all: browser
 
 # Generate the grammar parser
 parser:
-	# We need to prepend ESLint header to the generated parser file because we
-	# don't want the various unused variables there to get reported. This is a bit
-	# tricky because the file is used when generating its own new version, which
-	# means we can't start writing the header there until we call $(PEGJS).
-
-	$(PEGJS) -o $(PARSER_OUT_FILE_NEW) $(PARSER_SRC_FILE)
-
-	rm -f $(PARSER_OUT_FILE)
-
-	echo '/* eslint-disable no-unused-vars */' >> $(PARSER_OUT_FILE)
-	echo                                       >> $(PARSER_OUT_FILE)
-	cat $(PARSER_OUT_FILE_NEW)                 >> $(PARSER_OUT_FILE)
-
-	rm $(PARSER_OUT_FILE_NEW)
+	$(PEGJS) -o $(PARSER_OUT_FILE) $(PARSER_SRC_FILE)
 
 # Build the browser version of the library
 browser:
@@ -101,7 +87,7 @@ benchmark:
 # Run ESLint on the source
 lint:
 	$(ESLINT)                                                                \
-	  `find $(LIB_DIR) -name '*.js'`                                         \
+	  `find $(LIB_DIR) -name '*.js' -and -not -path '$(PARSER_OUT_FILE)'`    \
 	  `find $(SPEC_DIR) -name '*.js' -and -not -path '$(SPEC_DIR)/vendor/*'` \
 	  $(SPEC_SERVER_FILE)                                                    \
 	  $(BENCHMARK_DIR)/*.js                                                  \
