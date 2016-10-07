@@ -129,7 +129,7 @@ describe("PEG.js grammar parser", function() {
     }
 
     let strip = buildVisitor({
-      grammar: function(node) {
+      grammar(node) {
         delete node.location;
 
         if (node.initializer) {
@@ -165,7 +165,7 @@ describe("PEG.js grammar parser", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toParseAs: function(expected) {
+      toParseAs(expected) {
         let result;
 
         try {
@@ -191,7 +191,7 @@ describe("PEG.js grammar parser", function() {
         return this.env.equals_(result, expected);
       },
 
-      toFailToParse: function(details) {
+      toFailToParse(details) {
         let result;
 
         try {

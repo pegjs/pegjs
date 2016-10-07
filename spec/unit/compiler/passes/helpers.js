@@ -4,7 +4,7 @@ let peg = require("../../../../lib/peg");
 
 beforeEach(function() {
   this.addMatchers({
-    toChangeAST: function(grammar, details, options) {
+    toChangeAST(grammar, details, options) {
       options = options !== undefined ? options : {};
 
       function matchDetails(value, details) {
@@ -58,7 +58,7 @@ beforeEach(function() {
       return matchDetails(ast, details);
     },
 
-    toReportError: function(grammar, details) {
+    toReportError(grammar, details) {
       let ast = peg.parser.parse(grammar);
 
       try {

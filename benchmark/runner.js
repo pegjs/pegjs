@@ -5,17 +5,17 @@
 let peg = require("../lib/peg");
 
 let Runner = {
-  run: function(benchmarks, runCount, options, callbacks) {
+  run(benchmarks, runCount, options, callbacks) {
     // Queue
 
     let Q = {
       functions: [],
 
-      add: function(f) {
+      add(f) {
         this.functions.push(f);
       },
 
-      run: function() {
+      run() {
         if (this.functions.length > 0) {
           this.functions.shift()();
 

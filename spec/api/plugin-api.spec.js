@@ -5,7 +5,7 @@ let peg = require("../../lib/peg");
 describe("plugin API", function() {
   beforeEach(function() {
     this.addMatchers({
-      toBeObject: function() {
+      toBeObject() {
         this.message = () =>
           "Expected " + jasmine.pp(this.actual) + " "
             + (this.isNot ? "not " : "")
@@ -14,7 +14,7 @@ describe("plugin API", function() {
         return this.actual !== null && typeof this.actual === "object";
       },
 
-      toBeArray: function() {
+      toBeArray() {
         this.message = () =>
           "Expected " + jasmine.pp(this.actual) + " "
             + (this.isNot ? "not " : "")
@@ -23,7 +23,7 @@ describe("plugin API", function() {
         return Object.prototype.toString.apply(this.actual) === "[object Array]";
       },
 
-      toBeFunction: function() {
+      toBeFunction() {
         this.message = () =>
           "Expected " + jasmine.pp(this.actual) + " "
             + (this.isNot ? "not " : "")
@@ -40,9 +40,9 @@ describe("plugin API", function() {
     it("is called for each plugin", function() {
       let pluginsUsed = [false, false, false];
       let plugins = [
-        { use: function() { pluginsUsed[0] = true; } },
-        { use: function() { pluginsUsed[1] = true; } },
-        { use: function() { pluginsUsed[2] = true; } }
+        { use() { pluginsUsed[0] = true; } },
+        { use() { pluginsUsed[1] = true; } },
+        { use() { pluginsUsed[2] = true; } }
       ];
 
       peg.generate(grammar, { plugins: plugins });
@@ -52,7 +52,7 @@ describe("plugin API", function() {
 
     it("receives configuration", function() {
       let plugin = {
-        use: function(config) {
+        use(config) {
           expect(config).toBeObject();
 
           expect(config.parser).toBeObject();
@@ -82,7 +82,7 @@ describe("plugin API", function() {
 
     it("receives options", function() {
       let plugin = {
-        use: function(config, options) {
+        use(config, options) {
           expect(options).toEqual(generateOptions);
         }
       };
@@ -93,7 +93,7 @@ describe("plugin API", function() {
 
     it("can replace parser", function() {
       let plugin = {
-        use: function(config) {
+        use(config) {
           let parser = peg.generate([
             "start = .* {",
             "  return {",
@@ -119,7 +119,7 @@ describe("plugin API", function() {
 
     it("can change compiler passes", function() {
       let plugin = {
-        use: function(config) {
+        use(config) {
           let pass = ast => {
             ast.code = "({ parse: function() { return 42; } })";
           };
@@ -139,7 +139,7 @@ describe("plugin API", function() {
         "c = 'x'"
       ].join("\n");
       let plugin = {
-        use: function(config, options) {
+        use(config, options) {
           options.allowedStartRules = ["b", "c"];
         }
       };

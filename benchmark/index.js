@@ -72,7 +72,7 @@ $("#run").click(() => {
   }
 
   Runner.run(benchmarks, runCount, options, {
-    readFile: function(file) {
+    readFile(file) {
       return $.ajax({
         type: "GET",
         url: file,
@@ -81,11 +81,11 @@ $("#run").click(() => {
       }).responseText;
     },
 
-    testStart: function() {
+    testStart() {
       // Nothing to do.
     },
 
-    testFinish: function(benchmark, test, inputSize, parseTime) {
+    testFinish(benchmark, test, inputSize, parseTime) {
       appendResult(
         "individual",
         test.title,
@@ -95,11 +95,11 @@ $("#run").click(() => {
       );
     },
 
-    benchmarkStart: function(benchmark) {
+    benchmarkStart(benchmark) {
       appendHeading(benchmark.title);
     },
 
-    benchmarkFinish: function(benchmark, inputSize, parseTime) {
+    benchmarkFinish(benchmark, inputSize, parseTime) {
       appendResult(
         "benchmark-total",
         benchmark.title + " total",
@@ -109,14 +109,14 @@ $("#run").click(() => {
       );
     },
 
-    start: function() {
+    start() {
       $("#run-count, #cache, #run").attr("disabled", "disabled");
 
       resultsTable.show();
       $("#results-table tr").slice(1).remove();
     },
 
-    finish: function(inputSize, parseTime) {
+    finish(inputSize, parseTime) {
       appendResult(
         "total",
         "Total",

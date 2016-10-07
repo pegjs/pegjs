@@ -163,32 +163,32 @@ if (args.length > 0) {
 }
 
 Runner.run(benchmarks, runCount, options, {
-  readFile: function(file) {
+  readFile(file) {
     return fs.readFileSync(__dirname + "/" + file, "utf8");
   },
 
-  testStart: function() {
+  testStart() {
     // Nothing to do.
   },
 
-  testFinish: function(benchmark, test, inputSize, parseTime) {
+  testFinish(benchmark, test, inputSize, parseTime) {
     writeResult(test.title, inputSize, parseTime);
   },
 
-  benchmarkStart: function(benchmark) {
+  benchmarkStart(benchmark) {
     writeHeading(benchmark.title);
   },
 
-  benchmarkFinish: function(benchmark, inputSize, parseTime) {
+  benchmarkFinish(benchmark, inputSize, parseTime) {
     writeSeparator();
     writeResult(benchmark.title + " total", inputSize, parseTime);
   },
 
-  start: function() {
+  start() {
     writeTableHeader();
   },
 
-  finish: function(inputSize, parseTime) {
+  finish(inputSize, parseTime) {
     writeSeparator();
     writeResult("Total", inputSize, parseTime);
     writeTableFooter();

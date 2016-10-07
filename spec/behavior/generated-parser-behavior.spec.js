@@ -38,7 +38,7 @@ describe("generated parser behavior", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toParse: function(input, expected, options) {
+      toParse(input, expected, options) {
         options = options !== undefined ? options : {};
 
         let result;
@@ -70,7 +70,7 @@ describe("generated parser behavior", function() {
         }
       },
 
-      toFailToParse: function(input, details, options) {
+      toFailToParse(input, details, options) {
         options = options !== undefined ? options : {};
 
         let result;
