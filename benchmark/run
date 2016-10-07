@@ -13,9 +13,11 @@ let fs = require("fs");
 
 function dup(text, count) {
   let result = "";
+
   for (let i = 1; i <= count; i++) {
     result += text;
   }
+
   return result;
 }
 
@@ -29,6 +31,7 @@ function padRight(text, length) {
 
 function center(text, length) {
   let padLength = (length - text.length) / 2;
+
   return dup(" ", Math.floor(padLength))
     + text
     + dup(" ", Math.ceil(padLength));
