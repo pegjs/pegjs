@@ -3,7 +3,6 @@
 "use strict";
 
 /* eslint-env node */
-/* eslint-disable no-console */
 
 // Small server whose main purpose is to ensure that both the specced code and
 // the specs get passed through Babel & Browserify before they are served to the
