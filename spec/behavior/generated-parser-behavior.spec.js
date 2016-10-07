@@ -1496,27 +1496,27 @@ describe("generated parser behavior", function() {
         // The "value" rule
         expect(parser).toParse("0",       0);
         expect(parser).toParse("123",     123);
-        expect(parser).toParse("(42+43)", 42+43);
+        expect(parser).toParse("(42+43)", 42 + 43);
 
         // The "product" rule
         expect(parser).toParse("42",          42);
-        expect(parser).toParse("42*43",       42*43);
-        expect(parser).toParse("42*43*44*45", 42*43*44*45);
-        expect(parser).toParse("42/43",       42/43);
-        expect(parser).toParse("42/43/44/45", 42/43/44/45);
+        expect(parser).toParse("42*43",       42 * 43);
+        expect(parser).toParse("42*43*44*45", 42 * 43 * 44 * 45);
+        expect(parser).toParse("42/43",       42 / 43);
+        expect(parser).toParse("42/43/44/45", 42 / 43 / 44 / 45);
 
         // The "sum" rule
-        expect(parser).toParse("42*43",                   42*43);
-        expect(parser).toParse("42*43+44*45",             42*43+44*45);
-        expect(parser).toParse("42*43+44*45+46*47+48*49", 42*43+44*45+46*47+48*49);
-        expect(parser).toParse("42*43-44*45",             42*43-44*45);
-        expect(parser).toParse("42*43-44*45-46*47-48*49", 42*43-44*45-46*47-48*49);
+        expect(parser).toParse("42*43",                   42 * 43);
+        expect(parser).toParse("42*43+44*45",             42 * 43 + 44 * 45);
+        expect(parser).toParse("42*43+44*45+46*47+48*49", 42 * 43 + 44 * 45 + 46 * 47 + 48 * 49);
+        expect(parser).toParse("42*43-44*45",             42 * 43 - 44 * 45);
+        expect(parser).toParse("42*43-44*45-46*47-48*49", 42 * 43 - 44 * 45 - 46 * 47 - 48 * 49);
 
         // The "expr" rule
-        expect(parser).toParse("42+43", 42+43);
+        expect(parser).toParse("42+43", 42 + 43);
 
         // Complex test
-        expect(parser).toParse("(1+2)*(3+4)", (1+2)*(3+4));
+        expect(parser).toParse("(1+2)*(3+4)", (1 + 2) * (3 + 4));
       });
 
       it("handles non-context-free language correctly", function() {
