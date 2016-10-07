@@ -120,9 +120,9 @@ describe("plugin API", function() {
     it("can change compiler passes", function() {
       let plugin = {
         use(config) {
-          let pass = ast => {
+          function pass(ast) {
             ast.code = "({ parse: function() { return 42; } })";
-          };
+          }
 
           config.passes.generate = [pass];
         }
