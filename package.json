@@ -14,7 +14,6 @@
     "CHANGELOG.md",
     "LICENSE",
     "README.md",
-    "VERSION",
     "bin/pegjs",
     "examples/arithmetics.pegjs",
     "examples/css.pegjs",
