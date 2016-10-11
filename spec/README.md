@@ -19,7 +19,7 @@ All commands in the following steps need to be executed in PEG.js root directory
   2. Execute the spec suite:
 
      ```console
-     $ make spec
+     $ gulp spec
      ```
 
   3. Watch the specs pass (or fail).

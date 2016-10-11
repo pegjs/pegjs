@@ -46,8 +46,8 @@ see good examples.
 
 When appropriate, add documentation and tests.
 
-Before submitting, make sure your change passes the specs (`make spec`) and
-ESLint checks (`make lint`).
+Before submitting, make sure your change passes the specs (`gulp spec`) and
+ESLint checks (`gulp lint`).
 
 [issues]: https://github.com/pegjs/pegjs/issues
 [issues-search-bugs]: https://github.com/pegjs/pegjs/issues?q=is%3Aopen+is%3Aissue+label%3ABug

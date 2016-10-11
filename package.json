@@ -42,19 +42,26 @@
   "bin": "bin/pegjs",
   "repository": "pegjs/pegjs",
   "scripts": {
-    "test": "make lint && make spec"
+    "test": "gulp"
   },
   "devDependencies": {
     "babel-preset-es2015": "6.14.0",
     "babelify": "7.3.0",
     "browserify": "13.1.0",
-    "eslint": "3.7.1",
+    "del": "2.2.2",
     "eslint-config-dmajda": "1.0.0",
     "express": "4.14.0",
     "glob": "7.0.6",
-    "jasmine-node": "1.14.5",
+    "gulp": "3.9.1",
+    "gulp-eslint": "3.0.1",
+    "gulp-header": "1.8.8",
+    "gulp-jasmine": "0.2.0",
+    "gulp-rename": "1.2.2",
+    "gulp-transform": "1.0.8",
+    "gulp-uglify": "2.0.0",
     "morgan": "1.7.0",
-    "uglify-js": "2.7.0"
+    "vinyl-buffer": "1.0.0",
+    "vinyl-source-stream": "1.1.0"
   },
   "engines": {
     "node": ">=4"
