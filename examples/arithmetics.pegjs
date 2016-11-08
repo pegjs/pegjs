@@ -4,7 +4,7 @@
 // Accepts expressions like "2 * (3 + 4)" and computes their value.
 
 Expression
-  = head:Term tail:(_ ("+" / "-") _ Term)* {
+  = _ head:Term tail:(_ ("+" / "-") _ Term)* _ {
       return tail.reduce(function(result, element) {
         if (element[1] === "+") { return result + element[3]; }
         if (element[1] === "-") { return result - element[3]; }
