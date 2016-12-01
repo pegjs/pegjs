@@ -13,6 +13,7 @@ let jasmine = require("gulp-jasmine");
 let package_ = require("./package");
 let peg = require("./lib/peg");
 let rename = require("gulp-rename");
+let runSequence = require("run-sequence");
 let source = require("vinyl-source-stream");
 let spawn = require("child_process").spawn;
 let transform = require("gulp-transform");
@@ -102,4 +103,6 @@ gulp.task("parser", () =>
 );
 
 // Default task.
-gulp.task("default", ["lint", "spec"]);
+gulp.task("default", cb =>
+  runSequence("lint", "spec", cb)
+);
