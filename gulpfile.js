@@ -22,7 +22,7 @@ let uglify = require("gulp-uglify");
 const HEADER = [
   "// PEG.js " + package_.version,
   "//",
-  "// http://pegjs.org/",
+  "// https://pegjs.org/",
   "//",
   "// Copyright (c) 2010-2016 David Majda",
   "// Licensed under the MIT License.",

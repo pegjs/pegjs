@@ -20,13 +20,13 @@ Features
   * Based on [parsing expression
     grammar](http://en.wikipedia.org/wiki/Parsing_expression_grammar) formalism
     — more powerful than traditional LL(*k*) and LR(*k*) parsers
-  * Usable [from your browser](http://pegjs.org/online), from the command line,
+  * Usable [from your browser](https://pegjs.org/online), from the command line,
     or via JavaScript API
 
 Getting Started
 ---------------
 
-[Online version](http://pegjs.org/online) is the easiest way to generate a
+[Online version](https://pegjs.org/online) is the easiest way to generate a
 parser. Just enter your grammar, try parsing few inputs, and download generated
 parser code.
 
@@ -52,7 +52,7 @@ ways.
 
 ### Browser
 
-[Download](http://pegjs.org/#download) the PEG.js library (regular or minified
+[Download](https://pegjs.org/#download) the PEG.js library (regular or minified
 version) or install it using Bower:
 
 ```console
@@ -506,7 +506,7 @@ environments:
 Development
 -----------
 
-  * [Project website](http://pegjs.org/)
+  * [Project website](https://pegjs.org/)
   * [Wiki](https://github.com/pegjs/pegjs/wiki)
   * [Source code](https://github.com/pegjs/pegjs)
   * [Issue tracker](https://github.com/pegjs/pegjs/issues)
