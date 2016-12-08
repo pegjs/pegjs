@@ -513,7 +513,7 @@ Development
   * [Google Group](http://groups.google.com/group/pegjs)
   * [Twitter](http://twitter.com/peg_js)
 
-PEG.js is developed by [David Majda](http://majda.cz/)
+PEG.js is developed by [David Majda](https://majda.cz/)
 ([@dmajda](http://twitter.com/dmajda)). The [Bower
 package](https://github.com/pegjs/bower) is maintained by [Michel
 Krämer](http://www.michel-kraemer.com/)
