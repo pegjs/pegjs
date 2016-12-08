@@ -2,7 +2,11 @@
 
 /* global console */
 
+let chai = require("chai");
 let peg = require("../../lib/peg");
+let sinon = require("sinon");
+
+let expect = chai.expect;
 
 describe("generated parser behavior", function() {
   function varyOptimizationOptions(block) {
@@ -29,101 +33,84 @@ describe("generated parser behavior", function() {
 
     optionsVariants.forEach(variant => {
       describe(
-        "with options " + jasmine.pp(variant),
+        "with options " + chai.util.inspect(variant),
         function() { block(clone(variant)); }
       );
     });
   }
 
-  beforeEach(function() {
-    this.addMatchers({
-      toParse(input, expected, options) {
-        options = options !== undefined ? options : {};
+  function withConsoleStub(block) {
+    if (typeof console === "object") {
+      sinon.stub(console, "log");
+    }
 
-        let result;
+    try {
+      return block();
+    } finally {
+      if (typeof console === "object") {
+        console.log.restore();
+      }
+    }
+  }
 
-        try {
-          result = this.actual.parse(input, options);
-        } catch (e) {
-          this.message = () =>
-            "Expected " + jasmine.pp(input) + " "
-              + "with options " + jasmine.pp(options) + " "
-              + "to parse" + (expected !== undefined ? " as " + jasmine.pp(expected) : "") + ", "
-              + "but it failed to parse with message "
-              + jasmine.pp(e.message) + ".";
+  function helpers(chai, utils) {
+    let Assertion = chai.Assertion;
 
-          return false;
-        }
+    Assertion.addMethod("parse", function(input, expected, options) {
+      options = options !== undefined ? options : {};
 
-        if (expected !== undefined) {
-          this.message = () =>
-            "Expected " + jasmine.pp(input) + " "
-              + "with options " + jasmine.pp(options) + " "
-              + (this.isNot ? "not " : "")
-              + "to parse as " + jasmine.pp(expected) + ", "
-              + "but it parsed as " + jasmine.pp(result) + ".";
+      let result = withConsoleStub(() =>
+        utils.flag(this, "object").parse(input, options)
+      );
 
-          return this.env.equals_(result, expected);
-        } else {
-          return true;
-        }
-      },
-
-      toFailToParse(input, details, options) {
-        options = options !== undefined ? options : {};
-
-        let result;
-
-        try {
-          result = this.actual.parse(input, options);
-        } catch (e) {
-          if (this.isNot) {
-            this.message = () =>
-              "Expected " + jasmine.pp(input)
-                + "with options " + jasmine.pp(options) + " "
-                + "to parse, "
-                + "but it failed with message "
-                + jasmine.pp(e.message) + ".";
-          } else {
-            if (details) {
-              let keys = Object.keys(details);
-              for (let i = 0; i < keys.length; i++) {
-                let key = keys[i];
-
-                if (!this.env.equals_(e[key], details[key])) {
-                  this.message = () =>
-                    "Expected " + jasmine.pp(input) + " "
-                      + "with options " + jasmine.pp(options) + " "
-                      + "to fail to parse"
-                      + (details ? " with details " + jasmine.pp(details) : "") + ", "
-                      + "but " + jasmine.pp(key) + " "
-                      + "is " + jasmine.pp(e[key]) + ".";
-
-                  return false;
-                }
-              }
-            }
-          }
-
-          return true;
-        }
-
-        this.message = () =>
-          "Expected " + jasmine.pp(input) + " "
-            + "with options " + jasmine.pp(options) + " "
-            + "to fail to parse"
-            + (details ? " with details " + jasmine.pp(details) : "") + ", "
-            + "but it parsed as " + jasmine.pp(result) + ".";
-
-        return false;
+      if (expected !== undefined) {
+        this.assert(
+          utils.eql(result, expected),
+          "expected #{this} to parse input as #{exp} but got #{act}",
+          "expected #{this} to not parse input as #{exp}",
+          expected,
+          result,
+          !utils.flag(this, "negate")
+        );
       }
     });
 
-    // Stub out |console.log| so that the default tracer doesn't clutter
-    // test output.
-    if (typeof console === "object") {
-      spyOn(console, "log");
-    }
+    Assertion.addMethod("failToParse", function(input, props, options) {
+      options = options !== undefined ? options : {};
+
+      let passed, result;
+
+      try {
+        result = withConsoleStub(() =>
+          utils.flag(this, "object").parse(input, options)
+        );
+        passed = true;
+      } catch (e) {
+        result = e;
+        passed = false;
+      }
+
+      this.assert(
+        !passed,
+        "expected #{this} to fail to parse input but got #{act}",
+        "expected #{this} to not fail to parse input but #{act} was thrown",
+        null,
+        result
+      );
+
+      if (!passed && props !== undefined) {
+        Object.keys(props).forEach(key => {
+          new Assertion(result).to.have.property(key)
+            .that.is.deep.equal(props[key]);
+        });
+      }
+    });
+  }
+
+  // Helper activation needs to put inside a |beforeEach| block because the
+  // helpers conflict with the ones in spec/unit/parser.spec.js.
+  beforeEach(function() {
+    chai.use(helpers);
   });
 
   varyOptimizationOptions(function(options) {
@@ -134,7 +121,7 @@ describe("generated parser behavior", function() {
           "start = 'a' { return result; }"
         ].join("\n"), options);
 
-        expect(parser).toParse("a", 42);
+        expect(parser).to.parse("a", 42);
       });
 
       describe("available variables and functions", function() {
@@ -144,7 +131,7 @@ describe("generated parser behavior", function() {
             "start = 'a' { return result; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("a", { a: 42 }, { a: 42 });
+          expect(parser).to.parse("a", { a: 42 }, { a: 42 });
         });
       });
     });
@@ -158,7 +145,7 @@ describe("generated parser behavior", function() {
             "a = 'a' { n++; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("ac", 1);
+          expect(parser).to.parse("ac", 1);
         });
       } else {
         it("doesn't cache rule match results", function() {
@@ -168,7 +155,7 @@ describe("generated parser behavior", function() {
             "a = 'a' { n++; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("ac", 2);
+          expect(parser).to.parse("ac", 2);
         });
       }
 
@@ -176,7 +163,7 @@ describe("generated parser behavior", function() {
         it("returns its match result", function() {
           let parser = peg.generate("start = 'a'");
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
       });
 
@@ -185,7 +172,7 @@ describe("generated parser behavior", function() {
           it("reports match failure and doesn't record any expectation", function() {
             let parser = peg.generate("start = 'a'");
 
-            expect(parser).toFailToParse("b", {
+            expect(parser).to.failToParse("b", {
               expected: [{ type: "literal", text: "a", ignoreCase: false }]
             });
           });
@@ -195,7 +182,7 @@ describe("generated parser behavior", function() {
           it("reports match failure and records an expectation of type \"other\"", function() {
             let parser = peg.generate("start 'start' = 'a'");
 
-            expect(parser).toFailToParse("b", {
+            expect(parser).to.failToParse("b", {
               expected: [{ type: "other", description: "start" }]
             });
           });
@@ -203,7 +190,7 @@ describe("generated parser behavior", function() {
           it("discards any expectations recorded when matching the expression", function() {
             let parser = peg.generate("start 'start' = 'a'");
 
-            expect(parser).toFailToParse("b", {
+            expect(parser).to.failToParse("b", {
               expected: [{ type: "other", description: "start" }]
             });
           });
@@ -216,35 +203,35 @@ describe("generated parser behavior", function() {
         it("matches empty literals", function() {
           let parser = peg.generate("start = ''", options);
 
-          expect(parser).toParse("");
+          expect(parser).to.parse("");
         });
 
         it("matches one-character literals", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toFailToParse("b");
+          expect(parser).to.parse("a");
+          expect(parser).to.failToParse("b");
         });
 
         it("matches multi-character literals", function() {
           let parser = peg.generate("start = 'abcd'", options);
 
-          expect(parser).toParse("abcd");
-          expect(parser).toFailToParse("efgh");
+          expect(parser).to.parse("abcd");
+          expect(parser).to.failToParse("efgh");
         });
 
         it("is case sensitive without the \"i\" flag", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toFailToParse("A");
+          expect(parser).to.parse("a");
+          expect(parser).to.failToParse("A");
         });
 
         it("is case insensitive with the \"i\" flag", function() {
           let parser = peg.generate("start = 'a'i", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toParse("A");
+          expect(parser).to.parse("a");
+          expect(parser).to.parse("A");
         });
       });
 
@@ -252,13 +239,13 @@ describe("generated parser behavior", function() {
         it("returns the matched text", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
 
         it("consumes the matched text", function() {
           let parser = peg.generate("start = 'a' .", options);
 
-          expect(parser).toParse("ab");
+          expect(parser).to.parse("ab");
         });
       });
 
@@ -266,7 +253,7 @@ describe("generated parser behavior", function() {
         it("reports match failure and records an expectation of type \"literal\"", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             expected: [{ type: "literal", text: "a", ignoreCase: false }]
           });
         });
@@ -278,46 +265,46 @@ describe("generated parser behavior", function() {
         it("matches empty classes", function() {
           let parser = peg.generate("start = []", options);
 
-          expect(parser).toFailToParse("a");
+          expect(parser).to.failToParse("a");
         });
 
         it("matches classes with a character list", function() {
           let parser = peg.generate("start = [abc]", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toParse("b");
-          expect(parser).toParse("c");
-          expect(parser).toFailToParse("d");
+          expect(parser).to.parse("a");
+          expect(parser).to.parse("b");
+          expect(parser).to.parse("c");
+          expect(parser).to.failToParse("d");
         });
 
         it("matches classes with a character range", function() {
           let parser = peg.generate("start = [a-c]", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toParse("b");
-          expect(parser).toParse("c");
-          expect(parser).toFailToParse("d");
+          expect(parser).to.parse("a");
+          expect(parser).to.parse("b");
+          expect(parser).to.parse("c");
+          expect(parser).to.failToParse("d");
         });
 
         it("matches inverted classes", function() {
           let parser = peg.generate("start = [^a]", options);
 
-          expect(parser).toFailToParse("a");
-          expect(parser).toParse("b");
+          expect(parser).to.failToParse("a");
+          expect(parser).to.parse("b");
         });
 
         it("is case sensitive without the \"i\" flag", function() {
           let parser = peg.generate("start = [a]", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toFailToParse("A");
+          expect(parser).to.parse("a");
+          expect(parser).to.failToParse("A");
         });
 
         it("is case insensitive with the \"i\" flag", function() {
           let parser = peg.generate("start = [a]i", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toParse("A");
+          expect(parser).to.parse("a");
+          expect(parser).to.parse("A");
         });
       });
 
@@ -325,13 +312,13 @@ describe("generated parser behavior", function() {
         it("returns the matched character", function() {
           let parser = peg.generate("start = [a]", options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
 
         it("consumes the matched character", function() {
           let parser = peg.generate("start = [a] .", options);
 
-          expect(parser).toParse("ab");
+          expect(parser).to.parse("ab");
         });
       });
 
@@ -339,7 +326,7 @@ describe("generated parser behavior", function() {
         it("reports match failure and records an expectation of type \"class\"", function() {
           let parser = peg.generate("start = [a]", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             expected: [{ type: "class", parts: ["a"], inverted: false, ignoreCase: false }]
           });
         });
@@ -351,9 +338,9 @@ describe("generated parser behavior", function() {
         it("matches any character", function() {
           let parser = peg.generate("start = .", options);
 
-          expect(parser).toParse("a");
-          expect(parser).toParse("b");
-          expect(parser).toParse("c");
+          expect(parser).to.parse("a");
+          expect(parser).to.parse("b");
+          expect(parser).to.parse("c");
         });
       });
 
@@ -361,13 +348,13 @@ describe("generated parser behavior", function() {
         it("returns the matched character", function() {
           let parser = peg.generate("start = .", options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
 
         it("consumes the matched character", function() {
           let parser = peg.generate("start = . .", options);
 
-          expect(parser).toParse("ab");
+          expect(parser).to.parse("ab");
         });
       });
 
@@ -375,7 +362,7 @@ describe("generated parser behavior", function() {
         it("reports match failure and records an expectation of type \"any\"", function() {
           let parser = peg.generate("start = .", options);
 
-          expect(parser).toFailToParse("", {
+          expect(parser).to.failToParse("", {
             expected: [{ type: "any" }]
           });
         });
@@ -390,7 +377,7 @@ describe("generated parser behavior", function() {
             "a = 'a'"
           ].join("\n"), options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
       });
 
@@ -401,7 +388,7 @@ describe("generated parser behavior", function() {
             "a = 'a'"
           ].join("\n"), options);
 
-          expect(parser).toFailToParse("b");
+          expect(parser).to.failToParse("b");
         });
       });
     });
@@ -414,7 +401,7 @@ describe("generated parser behavior", function() {
           // way optional parameters work.
           let parser = peg.generate("start = &{ return true; } ''", options);
 
-          expect(parser).toParse("", [undefined, ""]);
+          expect(parser).to.parse("", [undefined, ""]);
         });
       });
 
@@ -422,7 +409,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = &{ return false; }", options);
 
-          expect(parser).toFailToParse("");
+          expect(parser).to.failToParse("");
         });
       });
 
@@ -434,7 +421,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toParse("a");
+            expect(parser).to.parse("a");
           });
 
           it("cannot access variable defined by labeled predicate element", function() {
@@ -443,7 +430,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("ac");
+            expect(parser).to.failToParse("ac");
           });
 
           it("cannot access variables defined by following labeled elements", function() {
@@ -452,7 +439,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("a");
+            expect(parser).to.failToParse("a");
           });
 
           it("cannot access variables defined by subexpressions", function() {
@@ -505,7 +492,7 @@ describe("generated parser behavior", function() {
 
             testcases.forEach(testcase => {
               let parser = peg.generate(testcase.grammar, options);
-              expect(parser).toFailToParse(testcase.input);
+              expect(parser).to.failToParse(testcase.input);
             });
           });
         });
@@ -517,7 +504,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toParse("ab");
+            expect(parser).to.parse("ab");
           });
 
           it("cannot access variable defined by labeled predicate element", function() {
@@ -526,7 +513,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("abc");
+            expect(parser).to.failToParse("abc");
           });
 
           it("cannot access variables defined by following labeled elements", function() {
@@ -535,7 +522,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("ab");
+            expect(parser).to.failToParse("ab");
           });
         });
       });
@@ -547,7 +534,7 @@ describe("generated parser behavior", function() {
             "start = &{ return v === 42; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("");
+          expect(parser).to.parse("");
         });
 
         it("can access functions defined in the initializer", function() {
@@ -556,7 +543,7 @@ describe("generated parser behavior", function() {
             "start = &{ return f() === 42; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("");
+          expect(parser).to.parse("");
         });
       });
 
@@ -567,7 +554,7 @@ describe("generated parser behavior", function() {
             "start = &{ result = options; return true; } { return result; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("", { a: 42 }, { a: 42 });
+          expect(parser).to.parse("", { a: 42 }, { a: 42 });
         });
 
         it("|location| returns current location info", function() {
@@ -581,17 +568,17 @@ describe("generated parser behavior", function() {
             "nl = '\\r'? '\\n'"
           ].join("\n"), options);
 
-          expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
+          expect(parser).to.parse("1\n2\n\n3\n\n\n4 5 x", {
             start: { offset: 13, line: 7, column: 5 },
             end: { offset: 13, line: 7, column: 5 }
           });
 
           // Newline representations
-          expect(parser).toParse("1\nx", {     // Unix
+          expect(parser).to.parse("1\nx", {     // Unix
             start: { offset: 2, line: 2, column: 1 },
             end: { offset: 2, line: 2, column: 1 }
           });
-          expect(parser).toParse("1\r\nx", {   // Windows
+          expect(parser).to.parse("1\r\nx", {   // Windows
             start: { offset: 3, line: 2, column: 1 },
             end: { offset: 3, line: 2, column: 1 }
           });
@@ -607,7 +594,7 @@ describe("generated parser behavior", function() {
           // way optional parameters work.
           let parser = peg.generate("start = !{ return false; } ''", options);
 
-          expect(parser).toParse("", [undefined, ""]);
+          expect(parser).to.parse("", [undefined, ""]);
         });
       });
 
@@ -615,7 +602,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = !{ return true; }", options);
 
-          expect(parser).toFailToParse("");
+          expect(parser).to.failToParse("");
         });
       });
 
@@ -627,7 +614,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toParse("a");
+            expect(parser).to.parse("a");
           });
 
           it("cannot access variable defined by labeled predicate element", function() {
@@ -636,7 +623,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("ac");
+            expect(parser).to.failToParse("ac");
           });
 
           it("cannot access variables defined by following labeled elements", function() {
@@ -645,7 +632,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("a");
+            expect(parser).to.failToParse("a");
           });
 
           it("cannot access variables defined by subexpressions", function() {
@@ -698,7 +685,7 @@ describe("generated parser behavior", function() {
 
             testcases.forEach(testcase => {
               let parser = peg.generate(testcase.grammar, options);
-              expect(parser).toFailToParse(testcase.input);
+              expect(parser).to.failToParse(testcase.input);
             });
           });
         });
@@ -710,7 +697,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toParse("ab");
+            expect(parser).to.parse("ab");
           });
 
           it("cannot access variable defined by labeled predicate element", function() {
@@ -719,7 +706,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("abc");
+            expect(parser).to.failToParse("abc");
           });
 
           it("cannot access variables defined by following labeled elements", function() {
@@ -728,7 +715,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toFailToParse("ab");
+            expect(parser).to.failToParse("ab");
           });
         });
       });
@@ -740,7 +727,7 @@ describe("generated parser behavior", function() {
             "start = !{ return v !== 42; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("");
+          expect(parser).to.parse("");
         });
 
         it("can access functions defined in the initializer", function() {
@@ -749,7 +736,7 @@ describe("generated parser behavior", function() {
             "start = !{ return f() !== 42; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("");
+          expect(parser).to.parse("");
         });
       });
 
@@ -760,7 +747,7 @@ describe("generated parser behavior", function() {
             "start = !{ result = options; return false; } { return result; }"
           ].join("\n"), options);
 
-          expect(parser).toParse("", { a: 42 }, { a: 42 });
+          expect(parser).to.parse("", { a: 42 }, { a: 42 });
         });
 
         it("|location| returns current location info", function() {
@@ -774,17 +761,17 @@ describe("generated parser behavior", function() {
             "nl = '\\r'? '\\n'"
           ].join("\n"), options);
 
-          expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
+          expect(parser).to.parse("1\n2\n\n3\n\n\n4 5 x", {
             start: { offset: 13, line: 7, column: 5 },
             end: { offset: 13, line: 7, column: 5 }
           });
 
           // Newline representations
-          expect(parser).toParse("1\nx", {     // Unix
+          expect(parser).to.parse("1\nx", {     // Unix
             start: { offset: 2, line: 2, column: 1 },
             end: { offset: 2, line: 2, column: 1 }
           });
-          expect(parser).toParse("1\r\nx", {   // Windows
+          expect(parser).to.parse("1\r\nx", {   // Windows
             start: { offset: 3, line: 2, column: 1 },
             end: { offset: 3, line: 2, column: 1 }
           });
@@ -797,7 +784,7 @@ describe("generated parser behavior", function() {
         it("returns its match result", function() {
           let parser = peg.generate("start = ('a')", options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
       });
 
@@ -805,7 +792,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = ('a')", options);
 
-          expect(parser).toFailToParse("b");
+          expect(parser).to.failToParse("b");
         });
       });
     });
@@ -815,7 +802,7 @@ describe("generated parser behavior", function() {
         it("returns its match result", function() {
           let parser = peg.generate("start = 'a'?", options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
       });
 
@@ -823,7 +810,7 @@ describe("generated parser behavior", function() {
         it("returns |null|", function() {
           let parser = peg.generate("start = 'a'?", options);
 
-          expect(parser).toParse("", null);
+          expect(parser).to.parse("", null);
         });
       });
     });
@@ -833,9 +820,9 @@ describe("generated parser behavior", function() {
         it("returns an array of its match results", function() {
           let parser = peg.generate("start = 'a'*", options);
 
-          expect(parser).toParse("",    []);
-          expect(parser).toParse("a",   ["a"]);
-          expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).to.parse("",    []);
+          expect(parser).to.parse("a",   ["a"]);
+          expect(parser).to.parse("aaa", ["a", "a", "a"]);
         });
       });
     });
@@ -845,8 +832,8 @@ describe("generated parser behavior", function() {
         it("returns an array of its match results", function() {
           let parser = peg.generate("start = 'a'+", options);
 
-          expect(parser).toParse("a",   ["a"]);
-          expect(parser).toParse("aaa", ["a", "a", "a"]);
+          expect(parser).to.parse("a",   ["a"]);
+          expect(parser).to.parse("aaa", ["a", "a", "a"]);
         });
       });
 
@@ -854,7 +841,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = 'a'+", options);
 
-          expect(parser).toFailToParse("");
+          expect(parser).to.failToParse("");
         });
       });
     });
@@ -864,7 +851,7 @@ describe("generated parser behavior", function() {
         it("returns the matched text", function() {
           let parser = peg.generate("start = $('a' 'b' 'c')", options);
 
-          expect(parser).toParse("abc", "abc");
+          expect(parser).to.parse("abc", "abc");
         });
       });
 
@@ -872,7 +859,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = $('a')", options);
 
-          expect(parser).toFailToParse("b");
+          expect(parser).to.failToParse("b");
         });
       });
     });
@@ -882,13 +869,13 @@ describe("generated parser behavior", function() {
         it("returns |undefined|", function() {
           let parser = peg.generate("start = &'a' 'a'", options);
 
-          expect(parser).toParse("a", [undefined, "a"]);
+          expect(parser).to.parse("a", [undefined, "a"]);
         });
 
         it("resets parse position", function() {
           let parser = peg.generate("start = &'a' 'a'", options);
 
-          expect(parser).toParse("a");
+          expect(parser).to.parse("a");
         });
       });
 
@@ -896,13 +883,13 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = &'a'", options);
 
-          expect(parser).toFailToParse("b");
+          expect(parser).to.failToParse("b");
         });
 
         it("discards any expectations recorded when matching the expression", function() {
           let parser = peg.generate("start = 'a' / &'b' / 'c'", options);
 
-          expect(parser).toFailToParse("d", {
+          expect(parser).to.failToParse("d", {
             expected: [
               { type: "literal", text: "a", ignoreCase: false },
               { type: "literal", text: "c", ignoreCase: false }
@@ -917,7 +904,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = !'a'", options);
 
-          expect(parser).toFailToParse("a");
+          expect(parser).to.failToParse("a");
         });
       });
 
@@ -925,19 +912,19 @@ describe("generated parser behavior", function() {
         it("returns |undefined|", function() {
           let parser = peg.generate("start = !'a' 'b'", options);
 
-          expect(parser).toParse("b", [undefined, "b"]);
+          expect(parser).to.parse("b", [undefined, "b"]);
         });
 
         it("resets parse position", function() {
           let parser = peg.generate("start = !'a' 'b'", options);
 
-          expect(parser).toParse("b");
+          expect(parser).to.parse("b");
         });
 
         it("discards any expectations recorded when matching the expression", function() {
           let parser = peg.generate("start = 'a' / !'b' / 'c'", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             expected: [
               { type: "literal", text: "a", ignoreCase: false },
               { type: "literal", text: "c", ignoreCase: false }
@@ -952,7 +939,7 @@ describe("generated parser behavior", function() {
         it("returns its match result", function() {
           let parser = peg.generate("start = a:'a'", options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
       });
 
@@ -960,7 +947,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = a:'a'", options);
 
-          expect(parser).toFailToParse("b");
+          expect(parser).to.failToParse("b");
         });
       });
     });
@@ -970,7 +957,7 @@ describe("generated parser behavior", function() {
         it("returns an array of their match results", function() {
           let parser = peg.generate("start = 'a' 'b' 'c'", options);
 
-          expect(parser).toParse("abc", ["a", "b", "c"]);
+          expect(parser).to.parse("abc", ["a", "b", "c"]);
         });
       });
 
@@ -978,15 +965,15 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = 'a' 'b' 'c'", options);
 
-          expect(parser).toFailToParse("dbc");
-          expect(parser).toFailToParse("adc");
-          expect(parser).toFailToParse("abd");
+          expect(parser).to.failToParse("dbc");
+          expect(parser).to.failToParse("adc");
+          expect(parser).to.failToParse("abd");
         });
 
         it("resets parse position", function() {
           let parser = peg.generate("start = 'a' 'b' / 'a'", options);
 
-          expect(parser).toParse("a", "a");
+          expect(parser).to.parse("a", "a");
         });
       });
     });
@@ -996,7 +983,7 @@ describe("generated parser behavior", function() {
         it("returns the value returned by the code", function() {
           let parser = peg.generate("start = 'a' { return 42; }", options);
 
-          expect(parser).toParse("a", 42);
+          expect(parser).to.parse("a", 42);
         });
 
         describe("label variables", function() {
@@ -1004,7 +991,7 @@ describe("generated parser behavior", function() {
             it("can access variable defined by labeled expression", function() {
               let parser = peg.generate("start = a:'a' { return a; }", options);
 
-              expect(parser).toParse("a", "a");
+              expect(parser).to.parse("a", "a");
             });
 
             it("can access variables defined by labeled sequence elements", function() {
@@ -1013,7 +1000,7 @@ describe("generated parser behavior", function() {
                 options
               );
 
-              expect(parser).toParse("abc", ["a", "b", "c"]);
+              expect(parser).to.parse("abc", ["a", "b", "c"]);
             });
 
             it("cannot access variables defined by subexpressions", function() {
@@ -1066,7 +1053,7 @@ describe("generated parser behavior", function() {
 
               testcases.forEach(testcase => {
                 let parser = peg.generate(testcase.grammar, options);
-                expect(parser).toFailToParse(testcase.input);
+                expect(parser).to.failToParse(testcase.input);
               });
             });
           });
@@ -1078,7 +1065,7 @@ describe("generated parser behavior", function() {
                 options
               );
 
-              expect(parser).toParse("ab", ["a", "a"]);
+              expect(parser).to.parse("ab", ["a", "a"]);
             });
 
             it("cannot access variable defined by labeled action element", function() {
@@ -1087,7 +1074,7 @@ describe("generated parser behavior", function() {
                 options
               );
 
-              expect(parser).toFailToParse("abc");
+              expect(parser).to.failToParse("abc");
             });
 
             it("cannot access variables defined by following labeled elements", function() {
@@ -1096,7 +1083,7 @@ describe("generated parser behavior", function() {
                 options
               );
 
-              expect(parser).toFailToParse("ab");
+              expect(parser).to.failToParse("ab");
             });
           });
         });
@@ -1108,7 +1095,7 @@ describe("generated parser behavior", function() {
               "start = 'a' { return v; }"
             ].join("\n"), options);
 
-            expect(parser).toParse("a", 42);
+            expect(parser).to.parse("a", 42);
           });
 
           it("can access functions defined in the initializer", function() {
@@ -1117,7 +1104,7 @@ describe("generated parser behavior", function() {
               "start = 'a' { return f(); }"
             ].join("\n"), options);
 
-            expect(parser).toParse("a", 42);
+            expect(parser).to.parse("a", 42);
           });
         });
 
@@ -1128,7 +1115,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toParse("a", { a: 42 }, { a: 42 });
+            expect(parser).to.parse("a", { a: 42 }, { a: 42 });
           });
 
           it("|text| returns text matched by the expression", function() {
@@ -1137,7 +1124,7 @@ describe("generated parser behavior", function() {
               options
             );
 
-            expect(parser).toParse("a", "a");
+            expect(parser).to.parse("a", "a");
           });
 
           it("|location| returns location info of the expression", function() {
@@ -1151,17 +1138,17 @@ describe("generated parser behavior", function() {
               "nl = '\\r'? '\\n'"
             ].join("\n"), options);
 
-            expect(parser).toParse("1\n2\n\n3\n\n\n4 5 x", {
+            expect(parser).to.parse("1\n2\n\n3\n\n\n4 5 x", {
               start: { offset: 13, line: 7, column: 5 },
               end: { offset: 14, line: 7, column: 6 }
             });
 
             // Newline representations
-            expect(parser).toParse("1\nx", {     // Unix
+            expect(parser).to.parse("1\nx", {     // Unix
               start: { offset: 2, line: 2, column: 1 },
               end: { offset: 3, line: 2, column: 2 }
             });
-            expect(parser).toParse("1\r\nx", {   // Windows
+            expect(parser).to.parse("1\r\nx", {   // Windows
               start: { offset: 3, line: 2, column: 1 },
               end: { offset: 4, line: 2, column: 2 }
             });
@@ -1174,7 +1161,7 @@ describe("generated parser behavior", function() {
                 options
               );
 
-              expect(parser).toFailToParse("a", {
+              expect(parser).to.failToParse("a", {
                 message: "Expected a but \"a\" found.",
                 expected: [{ type: "other", description: "a" }],
                 found: "a",
@@ -1195,7 +1182,7 @@ describe("generated parser behavior", function() {
                 "}"
               ].join("\n"), options);
 
-              expect(parser).toFailToParse("a", {
+              expect(parser).to.failToParse("a", {
                 message: "Expected a but \"a\" found.",
                 expected: [{ type: "other", description: "a" }],
                 found: "a",
@@ -1214,7 +1201,7 @@ describe("generated parser behavior", function() {
                 options
               );
 
-              expect(parser).toFailToParse("a", {
+              expect(parser).to.failToParse("a", {
                 message: "a",
                 found: null,
                 expected: null,
@@ -1235,7 +1222,7 @@ describe("generated parser behavior", function() {
                 "}"
               ].join("\n"), options);
 
-              expect(parser).toFailToParse("a", {
+              expect(parser).to.failToParse("a", {
                 message: "a",
                 expected: null,
                 found: null,
@@ -1253,7 +1240,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = 'a' { return 42; }", options);
 
-          expect(parser).toFailToParse("b");
+          expect(parser).to.failToParse("b");
         });
 
         it("doesn't execute the code", function() {
@@ -1262,7 +1249,7 @@ describe("generated parser behavior", function() {
             options
           );
 
-          expect(parser).toParse("b");
+          expect(parser).to.parse("b");
         });
       });
     });
@@ -1272,9 +1259,9 @@ describe("generated parser behavior", function() {
         it("returns its match result", function() {
           let parser = peg.generate("start = 'a' / 'b' / 'c'", options);
 
-          expect(parser).toParse("a", "a");
-          expect(parser).toParse("b", "b");
-          expect(parser).toParse("c", "c");
+          expect(parser).to.parse("a", "a");
+          expect(parser).to.parse("b", "b");
+          expect(parser).to.parse("c", "c");
         });
       });
 
@@ -1282,7 +1269,7 @@ describe("generated parser behavior", function() {
         it("reports match failure", function() {
           let parser = peg.generate("start = 'a' / 'b' / 'c'", options);
 
-          expect(parser).toFailToParse("d");
+          expect(parser).to.failToParse("d");
         });
       });
     });
@@ -1292,7 +1279,7 @@ describe("generated parser behavior", function() {
         it("reports only the rightmost error", function() {
           let parser = peg.generate("start = 'a' 'b' / 'a' 'c' 'd'", options);
 
-          expect(parser).toFailToParse("ace", {
+          expect(parser).to.failToParse("ace", {
             expected: [{ type: "literal", text: "d", ignoreCase: false }]
           });
         });
@@ -1302,7 +1289,7 @@ describe("generated parser behavior", function() {
         it("reports expectations correctly with no alternative", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("ab", {
+          expect(parser).to.failToParse("ab", {
             expected: [{ type: "end" }]
           });
         });
@@ -1310,7 +1297,7 @@ describe("generated parser behavior", function() {
         it("reports expectations correctly with one alternative", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             expected: [{ type: "literal", text: "a", ignoreCase: false }]
           });
         });
@@ -1318,7 +1305,7 @@ describe("generated parser behavior", function() {
         it("reports expectations correctly with multiple alternatives", function() {
           let parser = peg.generate("start = 'a' / 'b' / 'c'", options);
 
-          expect(parser).toFailToParse("d", {
+          expect(parser).to.failToParse("d", {
             expected: [
               { type: "literal", text: "a", ignoreCase: false },
               { type: "literal", text: "b", ignoreCase: false },
@@ -1332,13 +1319,13 @@ describe("generated parser behavior", function() {
         it("reports found string correctly at the end of input", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("", { found: null });
+          expect(parser).to.failToParse("", { found: null });
         });
 
         it("reports found string correctly in the middle of input", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("b", { found: "b" });
+          expect(parser).to.failToParse("b", { found: "b" });
         });
       });
 
@@ -1346,7 +1333,7 @@ describe("generated parser behavior", function() {
         it("builds message correctly with no alternative", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("ab", {
+          expect(parser).to.failToParse("ab", {
             message: "Expected end of input but \"b\" found."
           });
         });
@@ -1354,7 +1341,7 @@ describe("generated parser behavior", function() {
         it("builds message correctly with one alternative", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             message: "Expected \"a\" but \"b\" found."
           });
         });
@@ -1362,7 +1349,7 @@ describe("generated parser behavior", function() {
         it("builds message correctly with multiple alternatives", function() {
           let parser = peg.generate("start = 'a' / 'b' / 'c'", options);
 
-          expect(parser).toFailToParse("d", {
+          expect(parser).to.failToParse("d", {
             message: "Expected \"a\", \"b\", or \"c\" but \"d\" found."
           });
         });
@@ -1370,7 +1357,7 @@ describe("generated parser behavior", function() {
         it("builds message correctly at the end of input", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("", {
+          expect(parser).to.failToParse("", {
             message: "Expected \"a\" but end of input found."
           });
         });
@@ -1378,7 +1365,7 @@ describe("generated parser behavior", function() {
         it("builds message correctly in the middle of input", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             message: "Expected \"a\" but \"b\" found."
           });
         });
@@ -1386,7 +1373,7 @@ describe("generated parser behavior", function() {
         it("removes duplicates from expectations", function() {
           let parser = peg.generate("start = 'a' / 'a'", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             message: "Expected \"a\" but \"b\" found."
           });
         });
@@ -1394,7 +1381,7 @@ describe("generated parser behavior", function() {
         it("sorts expectations", function() {
           let parser = peg.generate("start = 'c' / 'b' / 'a'", options);
 
-          expect(parser).toFailToParse("d", {
+          expect(parser).to.failToParse("d", {
             message: "Expected \"a\", \"b\", or \"c\" but \"d\" found."
           });
         });
@@ -1404,7 +1391,7 @@ describe("generated parser behavior", function() {
         it("reports position correctly at the end of input", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("", {
+          expect(parser).to.failToParse("", {
             location: {
               start: { offset: 0, line: 1, column: 1 },
               end: { offset: 0, line: 1, column: 1 }
@@ -1415,7 +1402,7 @@ describe("generated parser behavior", function() {
         it("reports position correctly in the middle of input", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("b", {
+          expect(parser).to.failToParse("b", {
             location: {
               start: { offset: 0, line: 1, column: 1 },
               end: { offset: 1, line: 1, column: 2 }
@@ -1426,7 +1413,7 @@ describe("generated parser behavior", function() {
         it("reports position correctly with trailing input", function() {
           let parser = peg.generate("start = 'a'", options);
 
-          expect(parser).toFailToParse("aa", {
+          expect(parser).to.failToParse("aa", {
             location: {
               start: { offset: 1, line: 1, column: 2 },
               end: { offset: 2, line: 1, column: 3 }
@@ -1442,7 +1429,7 @@ describe("generated parser behavior", function() {
             "nl = '\\r'? '\\n'"
           ].join("\n"), options);
 
-          expect(parser).toFailToParse("1\n2\n\n3\n\n\n4 5 x", {
+          expect(parser).to.failToParse("1\n2\n\n3\n\n\n4 5 x", {
             location: {
               start: { offset: 13, line: 7, column: 5 },
               end: { offset: 14, line: 7, column: 6 }
@@ -1450,13 +1437,13 @@ describe("generated parser behavior", function() {
           });
 
           // Newline representations
-          expect(parser).toFailToParse("1\nx", {     // Old Mac
+          expect(parser).to.failToParse("1\nx", {     // Old Mac
             location: {
               start: { offset: 2, line: 2, column: 1 },
               end: { offset: 3, line: 2, column: 2 }
             }
           });
-          expect(parser).toFailToParse("1\r\nx", {   // Windows
+          expect(parser).to.failToParse("1\r\nx", {   // Windows
             location: {
               start: { offset: 3, line: 2, column: 1 },
               end: { offset: 4, line: 2, column: 2 }
@@ -1493,29 +1480,29 @@ describe("generated parser behavior", function() {
         ].join("\n"), options);
 
         // The "value" rule
-        expect(parser).toParse("0",       0);
-        expect(parser).toParse("123",     123);
-        expect(parser).toParse("(42+43)", 42 + 43);
+        expect(parser).to.parse("0",       0);
+        expect(parser).to.parse("123",     123);
+        expect(parser).to.parse("(42+43)", 42 + 43);
 
         // The "product" rule
-        expect(parser).toParse("42",          42);
-        expect(parser).toParse("42*43",       42 * 43);
-        expect(parser).toParse("42*43*44*45", 42 * 43 * 44 * 45);
-        expect(parser).toParse("42/43",       42 / 43);
-        expect(parser).toParse("42/43/44/45", 42 / 43 / 44 / 45);
+        expect(parser).to.parse("42",          42);
+        expect(parser).to.parse("42*43",       42 * 43);
+        expect(parser).to.parse("42*43*44*45", 42 * 43 * 44 * 45);
+        expect(parser).to.parse("42/43",       42 / 43);
+        expect(parser).to.parse("42/43/44/45", 42 / 43 / 44 / 45);
 
         // The "sum" rule
-        expect(parser).toParse("42*43",                   42 * 43);
-        expect(parser).toParse("42*43+44*45",             42 * 43 + 44 * 45);
-        expect(parser).toParse("42*43+44*45+46*47+48*49", 42 * 43 + 44 * 45 + 46 * 47 + 48 * 49);
-        expect(parser).toParse("42*43-44*45",             42 * 43 - 44 * 45);
-        expect(parser).toParse("42*43-44*45-46*47-48*49", 42 * 43 - 44 * 45 - 46 * 47 - 48 * 49);
+        expect(parser).to.parse("42*43",                   42 * 43);
+        expect(parser).to.parse("42*43+44*45",             42 * 43 + 44 * 45);
+        expect(parser).to.parse("42*43+44*45+46*47+48*49", 42 * 43 + 44 * 45 + 46 * 47 + 48 * 49);
+        expect(parser).to.parse("42*43-44*45",             42 * 43 - 44 * 45);
+        expect(parser).to.parse("42*43-44*45-46*47-48*49", 42 * 43 - 44 * 45 - 46 * 47 - 48 * 49);
 
         // The "expr" rule
-        expect(parser).toParse("42+43", 42 + 43);
+        expect(parser).to.parse("42+43", 42 + 43);
 
         // Complex test
-        expect(parser).toParse("(1+2)*(3+4)", (1 + 2) * (3 + 4));
+        expect(parser).to.parse("(1+2)*(3+4)", (1 + 2) * (3 + 4));
       });
 
       it("handles non-context-free language correctly", function() {
@@ -1531,14 +1518,14 @@ describe("generated parser behavior", function() {
           "B = b:'b' B:B? c:'c' { return [b, B, c].join(''); }"
         ].join("\n"), options);
 
-        expect(parser).toParse("abc",       "abc");
-        expect(parser).toParse("aaabbbccc", "aaabbbccc");
-        expect(parser).toFailToParse("aabbbccc");
-        expect(parser).toFailToParse("aaaabbbccc");
-        expect(parser).toFailToParse("aaabbccc");
-        expect(parser).toFailToParse("aaabbbbccc");
-        expect(parser).toFailToParse("aaabbbcc");
-        expect(parser).toFailToParse("aaabbbcccc");
+        expect(parser).to.parse("abc",       "abc");
+        expect(parser).to.parse("aaabbbccc", "aaabbbccc");
+        expect(parser).to.failToParse("aabbbccc");
+        expect(parser).to.failToParse("aaaabbbccc");
+        expect(parser).to.failToParse("aaabbccc");
+        expect(parser).to.failToParse("aaabbbbccc");
+        expect(parser).to.failToParse("aaabbbcc");
+        expect(parser).to.failToParse("aaabbbcccc");
       });
 
       it("handles nested comments example correctly", function() {
@@ -1556,10 +1543,10 @@ describe("generated parser behavior", function() {
           "End = '*)'"
         ].join("\n"), options);
 
-        expect(parser).toParse("(**)",     "(**)");
-        expect(parser).toParse("(*abc*)",  "(*abc*)");
-        expect(parser).toParse("(*(**)*)", "(*(**)*)");
-        expect(parser).toParse(
+        expect(parser).to.parse("(**)",     "(**)");
+        expect(parser).to.parse("(*abc*)",  "(*abc*)");
+        expect(parser).to.parse("(*(**)*)", "(*(**)*)");
+        expect(parser).to.parse(
           "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)",
           "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)"
         );

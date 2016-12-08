@@ -2,103 +2,87 @@
 
 let peg = require("../../../../lib/peg");
 
-beforeEach(function() {
-  this.addMatchers({
-    toChangeAST(grammar, details, options) {
-      options = options !== undefined ? options : {};
+module.exports = function(chai, utils) {
+  let Assertion = chai.Assertion;
 
-      function matchDetails(value, details) {
-        function isArray(value) {
-          return Object.prototype.toString.apply(value) === "[object Array]";
-        }
+  Assertion.addMethod("changeAST", function(grammar, props, options) {
+    options = options !== undefined ? options : {};
 
-        function isObject(value) {
-          return value !== null && typeof value === "object";
-        }
-
-        if (isArray(details)) {
-          if (!isArray(value)) { return false; }
-
-          if (value.length !== details.length) { return false; }
-          for (let i = 0; i < details.length; i++) {
-            if (!matchDetails(value[i], details[i])) { return false; }
-          }
-
-          return true;
-        } else if (isObject(details)) {
-          if (!isObject(value)) { return false; }
-
-          let keys = Object.keys(details);
-          for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-
-            if (!(key in value)) { return false; }
-
-            if (!matchDetails(value[key], details[key])) { return false; }
-          }
-
-          return true;
-        } else {
-          return value === details;
-        }
+    function matchProps(value, props) {
+      function isArray(value) {
+        return Object.prototype.toString.apply(value) === "[object Array]";
       }
 
-      let ast = peg.parser.parse(grammar);
+      function isObject(value) {
+        return value !== null && typeof value === "object";
+      }
 
-      this.actual(ast, options);
+      if (isArray(props)) {
+        if (!isArray(value)) { return false; }
 
-      this.message = () =>
-        "Expected the pass "
-          + "with options " + jasmine.pp(options) + " "
-          + (this.isNot ? "not " : "")
-          + "to change the AST " + jasmine.pp(ast) + " "
-          + "to match " + jasmine.pp(details) + ", "
-          + "but it " + (this.isNot ? "did" : "didn't") + ".";
-
-      return matchDetails(ast, details);
-    },
-
-    toReportError(grammar, details) {
-      let ast = peg.parser.parse(grammar);
-
-      try {
-        this.actual(ast);
-      } catch (e) {
-        if (this.isNot) {
-          this.message = () =>
-            "Expected the pass not to report an error "
-              + "for grammar " + jasmine.pp(grammar) + ", "
-              + "but it did.";
-        } else {
-          if (details) {
-            let keys = Object.keys(details);
-            for (let i = 0; i < keys.length; i++) {
-              let key = keys[i];
-
-              if (!this.env.equals_(e[key], details[key])) {
-                this.message = () =>
-                  "Expected the pass to report an error "
-                    + "with details " + jasmine.pp(details) + " "
-                    + "for grammar " + jasmine.pp(grammar) + ", "
-                    + "but " + jasmine.pp(key) + " "
-                    + "is " + jasmine.pp(e[key]) + ".";
-
-                return false;
-              }
-            }
-          }
+        if (value.length !== props.length) { return false; }
+        for (let i = 0; i < props.length; i++) {
+          if (!matchProps(value[i], props[i])) { return false; }
         }
 
         return true;
+      } else if (isObject(props)) {
+        if (!isObject(value)) { return false; }
+
+        let keys = Object.keys(props);
+        for (let i = 0; i < keys.length; i++) {
+          let key = keys[i];
+
+          if (!(key in value)) { return false; }
+
+          if (!matchProps(value[key], props[key])) { return false; }
+        }
+
+        return true;
+      } else {
+        return value === props;
       }
+    }
 
-      this.message = () =>
-        "Expected the pass to report an error "
-          + (details ? "with details " + jasmine.pp(details) + " " : "")
-          + "for grammar " + jasmine.pp(grammar) + ", "
-          + "but it didn't.";
+    let ast = peg.parser.parse(grammar);
 
-      return false;
+    utils.flag(this, "object")(ast, options);
+
+    this.assert(
+      matchProps(ast, props),
+      "expected #{this} to change the AST to match #{exp}",
+      "expected #{this} to not change the AST to match #{exp}",
+      props,
+      ast
+    );
+  });
+
+  Assertion.addMethod("reportError", function(grammar, props) {
+    let ast = peg.parser.parse(grammar);
+
+    let passed, result;
+
+    try {
+      utils.flag(this, "object")(ast);
+      passed = true;
+    } catch (e) {
+      result = e;
+      passed = false;
+    }
+
+    this.assert(
+      !passed,
+      "expected #{this} to report an error but it didn't",
+      "expected #{this} to not report an error but #{act} was reported",
+      null,
+      result
+    );
+
+    if (!passed && props !== undefined) {
+      Object.keys(props).forEach(key => {
+        new Assertion(result).to.have.property(key)
+          .that.is.deep.equal(props[key]);
+      });
     }
   });
-});
+};

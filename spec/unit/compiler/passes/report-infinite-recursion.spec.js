@@ -1,12 +1,18 @@
 "use strict";
 
+let chai = require("chai");
+let helpers = require("./helpers");
 let peg = require("../../../../lib/peg");
+
+chai.use(helpers);
+
+let expect = chai.expect;
 
 describe("compiler pass |reportInfiniteRecursion|", function() {
   let pass = peg.compiler.passes.check.reportInfiniteRecursion;
 
   it("reports direct left recursion", function() {
-    expect(pass).toReportError("start = start", {
+    expect(pass).to.reportError("start = start", {
       message: "Possible infinite loop when parsing (left recursion: start -> start).",
       location: {
         start: { offset: 8, line: 1, column: 9 },
@@ -16,7 +22,7 @@ describe("compiler pass |reportInfiniteRecursion|", function() {
   });
 
   it("reports indirect left recursion", function() {
-    expect(pass).toReportError([
+    expect(pass).to.reportError([
       "start = stop",
       "stop = start"
     ].join("\n"), {
@@ -30,86 +36,86 @@ describe("compiler pass |reportInfiniteRecursion|", function() {
 
   describe("in sequences", function() {
     it("reports left recursion if all preceding elements match empty string", function() {
-      expect(pass).toReportError("start = '' '' '' start");
+      expect(pass).to.reportError("start = '' '' '' start");
     });
 
     it("doesn't report left recursion if some preceding element doesn't match empty string", function() {
-      expect(pass).not.toReportError("start = 'a' '' '' start");
-      expect(pass).not.toReportError("start = '' 'a' '' start");
-      expect(pass).not.toReportError("start = '' '' 'a' start");
+      expect(pass).to.not.reportError("start = 'a' '' '' start");
+      expect(pass).to.not.reportError("start = '' 'a' '' start");
+      expect(pass).to.not.reportError("start = '' '' 'a' start");
     });
 
     // Regression test for #359.
     it("reports left recursion when rule reference is wrapped in an expression", function() {
-      expect(pass).toReportError("start = '' start?");
+      expect(pass).to.reportError("start = '' start?");
     });
 
     it("computes expressions that always consume input on success correctly", function() {
-      expect(pass).toReportError([
+      expect(pass).to.reportError([
         "start = a start",
         "a 'a' = ''"
       ].join("\n"));
-      expect(pass).not.toReportError([
+      expect(pass).to.not.reportError([
         "start = a start",
         "a 'a' = 'a'"
       ].join("\n"));
 
-      expect(pass).toReportError("start = ('' / 'a' / 'b') start");
-      expect(pass).toReportError("start = ('a' / '' / 'b') start");
-      expect(pass).toReportError("start = ('a' / 'b' / '') start");
-      expect(pass).not.toReportError("start = ('a' / 'b' / 'c') start");
+      expect(pass).to.reportError("start = ('' / 'a' / 'b') start");
+      expect(pass).to.reportError("start = ('a' / '' / 'b') start");
+      expect(pass).to.reportError("start = ('a' / 'b' / '') start");
+      expect(pass).to.not.reportError("start = ('a' / 'b' / 'c') start");
 
-      expect(pass).toReportError("start = ('' { }) start");
-      expect(pass).not.toReportError("start = ('a' { }) start");
+      expect(pass).to.reportError("start = ('' { }) start");
+      expect(pass).to.not.reportError("start = ('a' { }) start");
 
-      expect(pass).toReportError("start = ('' '' '') start");
-      expect(pass).not.toReportError("start = ('a' '' '') start");
-      expect(pass).not.toReportError("start = ('' 'a' '') start");
-      expect(pass).not.toReportError("start = ('' '' 'a') start");
+      expect(pass).to.reportError("start = ('' '' '') start");
+      expect(pass).to.not.reportError("start = ('a' '' '') start");
+      expect(pass).to.not.reportError("start = ('' 'a' '') start");
+      expect(pass).to.not.reportError("start = ('' '' 'a') start");
 
-      expect(pass).toReportError("start = a:'' start");
-      expect(pass).not.toReportError("start = a:'a' start");
+      expect(pass).to.reportError("start = a:'' start");
+      expect(pass).to.not.reportError("start = a:'a' start");
 
-      expect(pass).toReportError("start = $'' start");
-      expect(pass).not.toReportError("start = $'a' start");
+      expect(pass).to.reportError("start = $'' start");
+      expect(pass).to.not.reportError("start = $'a' start");
 
-      expect(pass).toReportError("start = &'' start");
-      expect(pass).toReportError("start = &'a' start");
+      expect(pass).to.reportError("start = &'' start");
+      expect(pass).to.reportError("start = &'a' start");
 
-      expect(pass).toReportError("start = !'' start");
-      expect(pass).toReportError("start = !'a' start");
+      expect(pass).to.reportError("start = !'' start");
+      expect(pass).to.reportError("start = !'a' start");
 
-      expect(pass).toReportError("start = ''? start");
-      expect(pass).toReportError("start = 'a'? start");
+      expect(pass).to.reportError("start = ''? start");
+      expect(pass).to.reportError("start = 'a'? start");
 
-      expect(pass).toReportError("start = ''* start");
-      expect(pass).toReportError("start = 'a'* start");
+      expect(pass).to.reportError("start = ''* start");
+      expect(pass).to.reportError("start = 'a'* start");
 
-      expect(pass).toReportError("start = ''+ start");
-      expect(pass).not.toReportError("start = 'a'+ start");
+      expect(pass).to.reportError("start = ''+ start");
+      expect(pass).to.not.reportError("start = 'a'+ start");
 
-      expect(pass).toReportError("start = ('') start");
-      expect(pass).not.toReportError("start = ('a') start");
+      expect(pass).to.reportError("start = ('') start");
+      expect(pass).to.not.reportError("start = ('a') start");
 
-      expect(pass).toReportError("start = &{ } start");
+      expect(pass).to.reportError("start = &{ } start");
 
-      expect(pass).toReportError("start = !{ } start");
+      expect(pass).to.reportError("start = !{ } start");
 
-      expect(pass).toReportError([
+      expect(pass).to.reportError([
         "start = a start",
         "a = ''"
       ].join("\n"));
-      expect(pass).not.toReportError([
+      expect(pass).to.not.reportError([
         "start = a start",
         "a = 'a'"
       ].join("\n"));
 
-      expect(pass).toReportError("start = '' start");
-      expect(pass).not.toReportError("start = 'a' start");
+      expect(pass).to.reportError("start = '' start");
+      expect(pass).to.not.reportError("start = 'a' start");
 
-      expect(pass).not.toReportError("start = [a-d] start");
+      expect(pass).to.not.reportError("start = [a-d] start");
 
-      expect(pass).not.toReportError("start = . start");
+      expect(pass).to.not.reportError("start = . start");
     });
   });
 });

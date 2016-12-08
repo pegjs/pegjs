@@ -1,39 +1,11 @@
 "use strict";
 
+let chai = require("chai");
 let peg = require("../../lib/peg");
 
+let expect = chai.expect;
+
 describe("plugin API", function() {
-  beforeEach(function() {
-    this.addMatchers({
-      toBeObject() {
-        this.message = () =>
-          "Expected " + jasmine.pp(this.actual) + " "
-            + (this.isNot ? "not " : "")
-            + "to be an object.";
-
-        return this.actual !== null && typeof this.actual === "object";
-      },
-
-      toBeArray() {
-        this.message = () =>
-          "Expected " + jasmine.pp(this.actual) + " "
-            + (this.isNot ? "not " : "")
-            + "to be an array.";
-
-        return Object.prototype.toString.apply(this.actual) === "[object Array]";
-      },
-
-      toBeFunction() {
-        this.message = () =>
-          "Expected " + jasmine.pp(this.actual) + " "
-            + (this.isNot ? "not " : "")
-            + "to be a function.";
-
-        return typeof this.actual === "function";
-      }
-    });
-  });
-
   describe("use", function() {
     let grammar = "start = 'a'";
 
@@ -47,32 +19,32 @@ describe("plugin API", function() {
 
       peg.generate(grammar, { plugins: plugins });
 
-      expect(pluginsUsed).toEqual([true, true, true]);
+      expect(pluginsUsed).to.deep.equal([true, true, true]);
     });
 
     it("receives configuration", function() {
       let plugin = {
         use(config) {
-          expect(config).toBeObject();
+          expect(config).to.be.an("object");
 
-          expect(config.parser).toBeObject();
-          expect(config.parser.parse("start = 'a'")).toBeObject();
+          expect(config.parser).to.be.an("object");
+          expect(config.parser.parse("start = 'a'")).to.be.an("object");
 
-          expect(config.passes).toBeObject();
+          expect(config.passes).to.be.an("object");
 
-          expect(config.passes.check).toBeArray();
+          expect(config.passes.check).to.be.an("array");
           config.passes.check.forEach(pass => {
-            expect(pass).toBeFunction();
+            expect(pass).to.be.a("function");
           });
 
-          expect(config.passes.transform).toBeArray();
+          expect(config.passes.transform).to.be.an("array");
           config.passes.transform.forEach(pass => {
-            expect(pass).toBeFunction();
+            expect(pass).to.be.a("function");
           });
 
-          expect(config.passes.generate).toBeArray();
+          expect(config.passes.generate).to.be.an("array");
           config.passes.generate.forEach(pass => {
-            expect(pass).toBeFunction();
+            expect(pass).to.be.a("function");
           });
         }
       };
@@ -83,7 +55,7 @@ describe("plugin API", function() {
     it("receives options", function() {
       let plugin = {
         use(config, options) {
-          expect(options).toEqual(generateOptions);
+          expect(options).to.equal(generateOptions);
         }
       };
       let generateOptions = { plugins: [plugin], foo: 42 };
@@ -114,7 +86,7 @@ describe("plugin API", function() {
       };
       let parser = peg.generate("a", { plugins: [plugin] });
 
-      expect(parser.parse("a")).toBe("a");
+      expect(parser.parse("a")).to.equal("a");
     });
 
     it("can change compiler passes", function() {
@@ -129,7 +101,7 @@ describe("plugin API", function() {
       };
       let parser = peg.generate(grammar, { plugins: [plugin] });
 
-      expect(parser.parse("a")).toBe(42);
+      expect(parser.parse("a")).to.equal(42);
     });
 
     it("can change options", function() {
@@ -148,9 +120,9 @@ describe("plugin API", function() {
         plugins: [plugin]
       });
 
-      expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();
-      expect(parser.parse("x", { startRule: "b" })).toBe("x");
-      expect(parser.parse("x", { startRule: "c" })).toBe("x");
+      expect(() => { parser.parse("x", { startRule: "a" }); }).to.throw();
+      expect(parser.parse("x", { startRule: "b" })).to.equal("x");
+      expect(parser.parse("x", { startRule: "c" })).to.equal("x");
     });
   });
 });

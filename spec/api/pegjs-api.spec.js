@@ -1,22 +1,26 @@
 "use strict";
 
+let chai = require("chai");
 let peg = require("../../lib/peg");
+let sinon = require("sinon");
+
+let expect = chai.expect;
 
 describe("PEG.js API", function() {
   describe("generate", function() {
     it("generates a parser", function() {
       let parser = peg.generate("start = 'a'");
 
-      expect(typeof parser).toBe("object");
-      expect(parser.parse("a")).toBe("a");
+      expect(typeof parser).to.equal("object");
+      expect(parser.parse("a")).to.equal("a");
     });
 
     it("throws an exception on syntax error", function() {
-      expect(() => { peg.generate("start = @"); }).toThrow();
+      expect(() => { peg.generate("start = @"); }).to.throw();
     });
 
     it("throws an exception on semantic error", function() {
-      expect(() => { peg.generate("start = undefined"); }).toThrow();
+      expect(() => { peg.generate("start = undefined"); }).to.throw();
     });
 
     describe("allowed start rules", function() {
@@ -34,9 +38,9 @@ describe("PEG.js API", function() {
           it("generated parser can start only from the first rule", function() {
             let parser = peg.generate(grammar, { optimize: "speed" });
 
-            expect(parser.parse("x", { startRule: "a" })).toBe("x");
-            expect(() => { parser.parse("x", { startRule: "b" }); }).toThrow();
-            expect(() => { parser.parse("x", { startRule: "c" }); }).toThrow();
+            expect(parser.parse("x", { startRule: "a" })).to.equal("x");
+            expect(() => { parser.parse("x", { startRule: "b" }); }).to.throw();
+            expect(() => { parser.parse("x", { startRule: "c" }); }).to.throw();
           });
         });
 
@@ -47,9 +51,9 @@ describe("PEG.js API", function() {
               allowedStartRules: ["b", "c"]
             });
 
-            expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();
-            expect(parser.parse("x", { startRule: "b" })).toBe("x");
-            expect(parser.parse("x", { startRule: "c" })).toBe("x");
+            expect(() => { parser.parse("x", { startRule: "a" }); }).to.throw();
+            expect(parser.parse("x", { startRule: "b" })).to.equal("x");
+            expect(parser.parse("x", { startRule: "c" })).to.equal("x");
           });
         });
       });
@@ -59,9 +63,9 @@ describe("PEG.js API", function() {
           it("generated parser can start only from the first rule", function() {
             let parser = peg.generate(grammar, { optimize: "size" });
 
-            expect(parser.parse("x", { startRule: "a" })).toBe("x");
-            expect(() => { parser.parse("x", { startRule: "b" }); }).toThrow();
-            expect(() => { parser.parse("x", { startRule: "c" }); }).toThrow();
+            expect(parser.parse("x", { startRule: "a" })).to.equal("x");
+            expect(() => { parser.parse("x", { startRule: "b" }); }).to.throw();
+            expect(() => { parser.parse("x", { startRule: "c" }); }).to.throw();
           });
         });
 
@@ -72,9 +76,9 @@ describe("PEG.js API", function() {
               allowedStartRules: ["b", "c"]
             });
 
-            expect(() => { parser.parse("x", { startRule: "a" }); }).toThrow();
-            expect(parser.parse("x", { startRule: "b" })).toBe("x");
-            expect(parser.parse("x", { startRule: "c" })).toBe("x");
+            expect(() => { parser.parse("x", { startRule: "a" }); }).to.throw();
+            expect(parser.parse("x", { startRule: "b" })).to.equal("x");
+            expect(parser.parse("x", { startRule: "c" })).to.equal("x");
           });
         });
       });
@@ -91,7 +95,7 @@ describe("PEG.js API", function() {
         it("generated parser doesn't cache intermediate parse results", function() {
           let parser = peg.generate(grammar);
 
-          expect(parser.parse("ac")).toBe(2);
+          expect(parser.parse("ac")).to.equal(2);
         });
       });
 
@@ -99,7 +103,7 @@ describe("PEG.js API", function() {
         it("generated parser doesn't cache intermediate parse results", function() {
           let parser = peg.generate(grammar, { cache: false });
 
-          expect(parser.parse("ac")).toBe(2);
+          expect(parser.parse("ac")).to.equal(2);
         });
       });
 
@@ -107,7 +111,7 @@ describe("PEG.js API", function() {
         it("generated parser caches intermediate parse results", function() {
           let parser = peg.generate(grammar, { cache: true });
 
-          expect(parser.parse("ac")).toBe(1);
+          expect(parser.parse("ac")).to.equal(1);
         });
       });
     });
@@ -118,33 +122,33 @@ describe("PEG.js API", function() {
       describe("when |trace| is not set", function() {
         it("generated parser doesn't trace", function() {
           let parser = peg.generate(grammar);
-          let tracer = jasmine.createSpyObj("tracer", ["trace"]);
+          let tracer = { trace: sinon.spy() };
 
           parser.parse("a", { tracer: tracer });
 
-          expect(tracer.trace).not.toHaveBeenCalled();
+          expect(tracer.trace.called).to.equal(false);
         });
       });
 
       describe("when |trace| is set to |false|", function() {
         it("generated parser doesn't trace", function() {
           let parser = peg.generate(grammar, { trace: false });
-          let tracer = jasmine.createSpyObj("tracer", ["trace"]);
+          let tracer = { trace: sinon.spy() };
 
           parser.parse("a", { tracer: tracer });
 
-          expect(tracer.trace).not.toHaveBeenCalled();
+          expect(tracer.trace.called).to.equal(false);
         });
       });
 
       describe("when |trace| is set to |true|", function() {
         it("generated parser traces", function() {
           let parser = peg.generate(grammar, { trace: true });
-          let tracer = jasmine.createSpyObj("tracer", ["trace"]);
+          let tracer = { trace: sinon.spy() };
 
           parser.parse("a", { tracer: tracer });
 
-          expect(tracer.trace).toHaveBeenCalled();
+          expect(tracer.trace.called).to.equal(true);
         });
       });
     });
@@ -159,8 +163,8 @@ describe("PEG.js API", function() {
         it("returns generated parser object", function() {
           let parser = peg.generate(grammar);
 
-          expect(typeof parser).toBe("object");
-          expect(parser.parse("a")).toBe("a");
+          expect(typeof parser).to.equal("object");
+          expect(parser.parse("a")).to.equal("a");
         });
       });
 
@@ -168,8 +172,8 @@ describe("PEG.js API", function() {
         it("returns generated parser object", function() {
           let parser = peg.generate(grammar, { output: "parser" });
 
-          expect(typeof parser).toBe("object");
-          expect(parser.parse("a")).toBe("a");
+          expect(typeof parser).to.equal("object");
+          expect(parser.parse("a")).to.equal("a");
         });
       });
 
@@ -177,8 +181,8 @@ describe("PEG.js API", function() {
         it("returns generated parser source code", function() {
           let source = peg.generate(grammar, { output: "source" });
 
-          expect(typeof source).toBe("string");
-          expect(eval(source).parse("a")).toBe("a");
+          expect(typeof source).to.equal("string");
+          expect(eval(source).parse("a")).to.equal("a");
         });
       });
     });

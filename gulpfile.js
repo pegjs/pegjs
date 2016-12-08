@@ -9,7 +9,7 @@ let del = require("del");
 let eslint = require("gulp-eslint");
 let gulp = require("gulp");
 let header = require("gulp-header");
-let jasmine = require("gulp-jasmine");
+let mocha = require("gulp-mocha");
 let package_ = require("./package");
 let peg = require("./lib/peg");
 let rename = require("gulp-rename");
@@ -65,8 +65,8 @@ gulp.task("lint", () =>
 
 // Run specs.
 gulp.task("spec", () =>
-  gulp.src(SPEC_FILES)
-    .pipe(jasmine())
+  gulp.src(SPEC_FILES, { read: false })
+    .pipe(mocha())
 );
 
 // Run benchmarks.
