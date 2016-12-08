@@ -60,7 +60,7 @@
     "gulp-transform": "1.0.8",
     "gulp-uglify": "2.0.0",
     "morgan": "1.7.0",
-    "run-sequence": "^1.2.2",
+    "run-sequence": "1.2.2",
     "sinon": "1.17.6",
     "vinyl-buffer": "1.0.0",
     "vinyl-source-stream": "1.1.0"
