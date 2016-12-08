@@ -6,6 +6,7 @@ node_js:
   - "4.0"
   - "5.0"
   - "6.0"
+  - "7.0"
 
 before_script:
   - npm install -g gulp
