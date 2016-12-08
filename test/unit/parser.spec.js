@@ -218,7 +218,7 @@ describe("PEG.js grammar parser", function() {
 
   // Helper activation needs to put inside a |beforeEach| block because the
   // helpers conflict with the ones in
-  // spec/behavior/generated-parser-behavior.spec.js.
+  // test/behavior/generated-parser-behavior.spec.js.
   beforeEach(function() {
     chai.use(helpers);
   });

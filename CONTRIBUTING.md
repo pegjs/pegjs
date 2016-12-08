@@ -46,7 +46,7 @@ see good examples.
 
 When appropriate, add documentation and tests.
 
-Before submitting, make sure your change passes the specs (`gulp spec`) and
+Before submitting, make sure your change passes the tests (`gulp test`) and
 ESLint checks (`gulp lint`).
 
 [issues]: https://github.com/pegjs/pegjs/issues

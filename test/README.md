@@ -1,7 +1,7 @@
-PEG.js Spec Suite
+PEG.js Test Suite
 =================
 
-This is the PEG.js spec suite. It ensures PEG.js works correctly. All specs
+This is the PEG.js test suite. It ensures PEG.js works correctly. All tests
 should always pass on all supported platforms.
 
 Running in Node.js
@@ -16,13 +16,13 @@ All commands in the following steps need to be executed in PEG.js root directory
      $ npm install
      ```
 
-  2. Execute the spec suite:
+  2. Execute the test suite:
 
      ```console
-     $ gulp spec
+     $ gulp test
      ```
 
-  3. Watch the specs pass (or fail).
+  3. Watch the tests pass (or fail).
 
 Running in the Browser
 ----------------------
@@ -38,12 +38,12 @@ All commands in the following steps need to be executed in PEG.js root directory
      $ npm install
      ```
 
-  3. Serve the spec suite using a web server:
+  3. Serve the test suite using a web server:
 
      ```console
-     $ spec/server
+     $ test/server
      ```
 
-  4. Point your browser to the [spec suite](http://localhost:8000/).
+  4. Point your browser to the [test suite](http://localhost:8000/).
 
-  5. Watch the specs pass (or fail).
+  5. Watch the tests pass (or fail).

@@ -154,7 +154,7 @@ describe("PEG.js API", function() {
     });
 
     // The |optimize| option isn't tested because there is no meaningful way to
-    // write the specs without turning this into a performance test.
+    // write the tests without turning this into a performance test.
 
     describe("output", function() {
       let grammar = "start = 'a'";
@@ -191,7 +191,7 @@ describe("PEG.js API", function() {
     // becasue there is no meaningful way to thest their effects without turning
     // this into an integration test.
 
-    // The |plugins| option is tested in plugin API specs.
+    // The |plugins| option is tested in plugin API tests.
 
     it("accepts custom options", function() {
       peg.generate("start = 'a'", { foo: 42 });

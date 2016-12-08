@@ -32,9 +32,9 @@ const HEADER = [
 const JS_FILES = [
   "lib/**/*.js",
   "!lib/parser.js",
-  "spec/**/*.js",
-  "spec/server",
-  "!spec/vendor/**/*",
+  "test/**/*.js",
+  "test/server",
+  "!test/vendor/**/*",
   "benchmark/**/*.js",
   "benchmark/run",
   "benchmark/server",
@@ -43,9 +43,9 @@ const JS_FILES = [
   "gulpfile.js"
 ];
 
-const SPEC_FILES = [
-  "spec/**/*.js",
-  "!spec/vendor/**/*"
+const TEST_FILES = [
+  "test/**/*.js",
+  "!test/vendor/**/*"
 ];
 
 function generate(contents) {
@@ -63,9 +63,9 @@ gulp.task("lint", () =>
     .pipe(eslint.failAfterError())
 );
 
-// Run specs.
-gulp.task("spec", () =>
-  gulp.src(SPEC_FILES, { read: false })
+// Run tests.
+gulp.task("test", () =>
+  gulp.src(TEST_FILES, { read: false })
     .pipe(mocha())
 );
 
@@ -104,5 +104,5 @@ gulp.task("parser", () =>
 
 // Default task.
 gulp.task("default", cb =>
-  runSequence("lint", "spec", cb)
+  runSequence("lint", "test", cb)
 );

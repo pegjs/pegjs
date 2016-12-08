@@ -4,8 +4,8 @@
 
 /* eslint-env node */
 
-// Small server whose main purpose is to ensure that both the specced code and
-// the specs get passed through Babel & Browserify before they are served to the
+// Small server whose main purpose is to ensure that both the tested code and
+// the tests get passed through Babel & Browserify before they are served to the
 // browser.
 
 let babelify = require("babelify");

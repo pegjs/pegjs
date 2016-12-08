@@ -108,7 +108,7 @@ describe("generated parser behavior", function() {
   }
 
   // Helper activation needs to put inside a |beforeEach| block because the
-  // helpers conflict with the ones in spec/unit/parser.spec.js.
+  // helpers conflict with the ones in test/unit/parser.spec.js.
   beforeEach(function() {
     chai.use(helpers);
   });
