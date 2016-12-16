@@ -1,6 +1,6 @@
 "use strict";
 
-let peg = require("../../../../lib/peg");
+let parser = require("../../../../lib/parser");
 
 module.exports = function(chai, utils) {
   let Assertion = chai.Assertion;
@@ -44,7 +44,7 @@ module.exports = function(chai, utils) {
       }
     }
 
-    let ast = peg.parser.parse(grammar);
+    let ast = parser.parse(grammar);
 
     utils.flag(this, "object")(ast, options);
 
@@ -58,7 +58,7 @@ module.exports = function(chai, utils) {
   });
 
   Assertion.addMethod("reportError", function(grammar, props) {
-    let ast = peg.parser.parse(grammar);
+    let ast = parser.parse(grammar);
 
     let passed, result;
 

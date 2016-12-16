@@ -2,15 +2,13 @@
 
 let chai = require("chai");
 let helpers = require("./helpers");
-let peg = require("../../../../lib/peg");
+let pass = require("../../../../lib/compiler/passes/report-infinite-repetition");
 
 chai.use(helpers);
 
 let expect = chai.expect;
 
 describe("compiler pass |reportInfiniteRepetition|", function() {
-  let pass = peg.compiler.passes.check.reportInfiniteRepetition;
-
   it("reports infinite loops for zero_or_more", function() {
     expect(pass).to.reportError("start = ('')*", {
       message: "Possible infinite loop when parsing (repetition used with an expression that may not consume any input).",

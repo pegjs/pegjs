@@ -2,15 +2,13 @@
 
 let chai = require("chai");
 let helpers = require("./helpers");
-let peg = require("../../../../lib/peg");
+let pass = require("../../../../lib/compiler/passes/generate-bytecode");
 
 chai.use(helpers);
 
 let expect = chai.expect;
 
 describe("compiler pass |generateBytecode|", function() {
-  let pass = peg.compiler.passes.generate.generateBytecode;
-
   function bytecodeDetails(bytecode) {
     return {
       rules: [{ bytecode: bytecode }]

@@ -2,15 +2,13 @@
 
 let chai = require("chai");
 let helpers = require("./helpers");
-let peg = require("../../../../lib/peg");
+let pass = require("../../../../lib/compiler/passes/report-duplicate-labels");
 
 chai.use(helpers);
 
 let expect = chai.expect;
 
 describe("compiler pass |reportDuplicateLabels|", function() {
-  let pass = peg.compiler.passes.check.reportDuplicateLabels;
-
   describe("in a sequence", function() {
     it("reports labels duplicate with labels of preceding elements", function() {
       expect(pass).to.reportError("start = a:'a' a:'a'", {

@@ -1,7 +1,7 @@
 "use strict";
 
 let chai = require("chai");
-let peg = require("../../lib/peg");
+let parser = require("../../lib/parser");
 
 let expect = chai.expect;
 
@@ -170,7 +170,7 @@ describe("PEG.js grammar parser", function() {
     let Assertion = chai.Assertion;
 
     Assertion.addMethod("parseAs", function(expected) {
-      let result = peg.parser.parse(utils.flag(this, "object"));
+      let result = parser.parse(utils.flag(this, "object"));
 
       stripLocation(result);
 
@@ -188,7 +188,7 @@ describe("PEG.js grammar parser", function() {
       let passed, result;
 
       try {
-        result = peg.parser.parse(utils.flag(this, "object"));
+        result = parser.parse(utils.flag(this, "object"));
         passed = true;
       } catch (e) {
         result = e;

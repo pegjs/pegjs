@@ -2,15 +2,13 @@
 
 let chai = require("chai");
 let helpers = require("./helpers");
-let peg = require("../../../../lib/peg");
+let pass = require("../../../../lib/compiler/passes/report-duplicate-rules");
 
 chai.use(helpers);
 
 let expect = chai.expect;
 
 describe("compiler pass |reportDuplicateRules|", function() {
-  let pass = peg.compiler.passes.check.reportDuplicateRules;
-
   it("reports duplicate rules", function() {
     expect(pass).to.reportError([
       "start = 'a'",
