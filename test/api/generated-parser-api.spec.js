@@ -58,6 +58,15 @@ describe("generated parser API", function() {
 
       describe("default tracer", function() {
         it("traces using console.log (if console is defined)", function() {
+          let messages = [
+            "1:1-1:1 rule.enter start",
+            "1:1-1:1 rule.enter   a",
+            "1:1-1:1 rule.fail    a",
+            "1:1-1:1 rule.enter   b",
+            "1:1-1:2 rule.match   b",
+            "1:1-1:2 rule.match start"
+          ];
+
           if (typeof console === "object") {
             sinon.stub(console, "log");
           }
@@ -66,12 +75,9 @@ describe("generated parser API", function() {
             parser.parse("b");
 
             if (typeof console === "object") {
-              expect(console.log.calledWithExactly("1:1-1:1 rule.enter start")).to.equal(true);
-              expect(console.log.calledWithExactly("1:1-1:1 rule.enter   a")).to.equal(true);
-              expect(console.log.calledWithExactly("1:1-1:1 rule.fail    a")).to.equal(true);
-              expect(console.log.calledWithExactly("1:1-1:1 rule.enter   b")).to.equal(true);
-              expect(console.log.calledWithExactly("1:1-1:2 rule.match   b")).to.equal(true);
-              expect(console.log.calledWithExactly("1:1-1:2 rule.match start")).to.equal(true);
+              messages.forEach(message => {
+                expect(console.log.calledWithExactly(message)).to.equal(true);
+              });
             }
           } finally {
             if (typeof console === "object") {
@@ -84,60 +90,66 @@ describe("generated parser API", function() {
       describe("custom tracers", function() {
         describe("trace", function() {
           it("receives tracing events", function() {
+            let events = [
+              {
+                type: "rule.enter",
+                rule: "start",
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end: { offset: 0, line: 1, column: 1 }
+                }
+              },
+              {
+                type: "rule.enter",
+                rule: "a",
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end: { offset: 0, line: 1, column: 1 }
+                }
+              },
+              {
+                type: "rule.fail",
+                rule: "a",
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end: { offset: 0, line: 1, column: 1 }
+                }
+              },
+              {
+                type: "rule.enter",
+                rule: "b",
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end: { offset: 0, line: 1, column: 1 }
+                }
+              },
+              {
+                type: "rule.match",
+                rule: "b",
+                result: "b",
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end: { offset: 1, line: 1, column: 2 }
+                }
+              },
+              {
+                type: "rule.match",
+                rule: "start",
+                result: "b",
+                location: {
+                  start: { offset: 0, line: 1, column: 1 },
+                  end: { offset: 1, line: 1, column: 2 }
+                }
+              }
+            ];
+
             let tracer = { trace: sinon.spy() };
 
             parser.parse("b", { tracer: tracer });
 
-            expect(tracer.trace.calledWithExactly({
-              type: "rule.enter",
-              rule: "start",
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end: { offset: 0, line: 1, column: 1 }
-              }
-            })).to.equal(true);
-            expect(tracer.trace.calledWithExactly({
-              type: "rule.enter",
-              rule: "a",
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end: { offset: 0, line: 1, column: 1 }
-              }
-            })).to.equal(true);
-            expect(tracer.trace.calledWithExactly({
-              type: "rule.fail",
-              rule: "a",
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end: { offset: 0, line: 1, column: 1 }
-              }
-            })).to.equal(true);
-            expect(tracer.trace.calledWithExactly({
-              type: "rule.enter",
-              rule: "b",
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end: { offset: 0, line: 1, column: 1 }
-              }
-            })).to.equal(true);
-            expect(tracer.trace.calledWithExactly({
-              type: "rule.match",
-              rule: "b",
-              result: "b",
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end: { offset: 1, line: 1, column: 2 }
-              }
-            })).to.equal(true);
-            expect(tracer.trace.calledWithExactly({
-              type: "rule.match",
-              rule: "start",
-              result: "b",
-              location: {
-                start: { offset: 0, line: 1, column: 1 },
-                end: { offset: 1, line: 1, column: 2 }
-              }
-            })).to.equal(true);
+            events.forEach(event => {
+              expect(tracer.trace.calledWithExactly(event)).to.equal(true);
+            });
           });
         });
       });
