@@ -11,7 +11,7 @@ describe("PEG.js API", function() {
     it("generates a parser", function() {
       let parser = peg.generate("start = 'a'");
 
-      expect(typeof parser).to.equal("object");
+      expect(parser).to.be.an("object");
       expect(parser.parse("a")).to.equal("a");
     });
 
@@ -163,7 +163,7 @@ describe("PEG.js API", function() {
         it("returns generated parser object", function() {
           let parser = peg.generate(grammar);
 
-          expect(typeof parser).to.equal("object");
+          expect(parser).to.be.an("object");
           expect(parser.parse("a")).to.equal("a");
         });
       });
@@ -172,7 +172,7 @@ describe("PEG.js API", function() {
         it("returns generated parser object", function() {
           let parser = peg.generate(grammar, { output: "parser" });
 
-          expect(typeof parser).to.equal("object");
+          expect(parser).to.be.an("object");
           expect(parser.parse("a")).to.equal("a");
         });
       });
@@ -181,7 +181,7 @@ describe("PEG.js API", function() {
         it("returns generated parser source code", function() {
           let source = peg.generate(grammar, { output: "source" });
 
-          expect(typeof source).to.equal("string");
+          expect(source).to.be.a("string");
           expect(eval(source).parse("a")).to.equal("a");
         });
       });
