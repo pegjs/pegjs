@@ -31,5 +31,5 @@ app.get("/bundle.js", (req, res) => {
 });
 
 app.listen(8000, () => {
-  console.log("Spec server running at http://localhost:8000...");
+  console.log("Test server running at http://localhost:8000...");
 });
