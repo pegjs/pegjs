@@ -75,8 +75,10 @@ describe("generated parser API", function() {
             parser.parse("b");
 
             if (typeof console === "object") {
-              messages.forEach(message => {
-                expect(console.log.calledWithExactly(message)).to.equal(true);
+              expect(console.log.callCount).to.equal(messages.length);
+              messages.forEach((message, index) => {
+                let call = console.log.getCall(index);
+                expect(call.calledWithExactly(message)).to.equal(true);
               });
             }
           } finally {
@@ -147,8 +149,10 @@ describe("generated parser API", function() {
 
             parser.parse("b", { tracer: tracer });
 
-            events.forEach(event => {
-              expect(tracer.trace.calledWithExactly(event)).to.equal(true);
+            expect(tracer.trace.callCount).to.equal(events.length);
+            events.forEach((event, index) => {
+              let call = tracer.trace.getCall(index);
+              expect(call.calledWithExactly(event)).to.equal(true);
             });
           });
         });
