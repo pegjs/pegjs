@@ -100,8 +100,8 @@ You can tweak the generated parser with several options:
     `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
     pass to `peg.generate`
-  * `--format` — format of the generated parser: `amd`, `commonjs`, `globals`,
-    `umd` (default: `commonjs`)
+  * `--format` — format of the generated parser: `amd`, `commonjs`, `es`,
+    `globals`, `umd` (default: `commonjs`)
   * `--optimize` — selects between optimizing the generated parser for parsing
     speed (`speed`) or code size (`size`) (default: `speed`)
   * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
@@ -142,14 +142,14 @@ object to `peg.generate`. The following options are supported:
     `false`)
   * `dependencies` — parser dependencies, the value is an object which maps
     variables used to access the dependencies in the parser to module IDs used
-    to load them; valid only when `format` is set to `"amd"`, `"commonjs"`, or
-    `"umd"` (default: `{}`)
+    to load them; valid only when `format` is set to `"amd"`, `"commonjs"`,
+    `"es"`, or `"umd"` (default: `{}`)
   * `exportVar` — name of a global variable into which the parser object is
     assigned to when no module loader is detected; valid only when `format` is
     set to `"globals"` or `"umd"` (default: `null`)
   * `format` — format of the generated parser (`"amd"`, `"bare"`, `"commonjs"`,
-    `"globals"`, or `"umd"`); valid only when `output` is set to `"source"`
-    (default: `"bare"`)
+    `"es"`, `"globals"`, or `"umd"`); valid only when `output` is set to
+    `"source"` (default: `"bare"`)
   * `optimize`— selects between optimizing the generated parser for parsing
     speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
   * `output` — if set to `"parser"`, the method will return generated parser
