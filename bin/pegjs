@@ -183,8 +183,8 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the --format option.");
       }
-      if (args[0] !== "amd" && args[0] !== "commonjs" && args[0] !== "esm" && args[0] !== "globals" && args[0] !== "umd") {
-        abort("Module format must be one of \"amd\", \"commonjs\", \"esm\", \"globals\", and \"umd\".");
+      if (args[0] !== "amd" && args[0] !== "commonjs" && args[0] !== "es" && args[0] !== "globals" && args[0] !== "umd") {
+        abort("Module format must be one of \"amd\", \"commonjs\", \"es\", \"globals\", and \"umd\".");
       }
       options.format = args[0];
       break;
@@ -253,7 +253,7 @@ while (args.length > 0 && isOption(args[0])) {
 }
 
 if (Object.keys(options.dependencies).length > 0) {
-  if (options.format !== "amd" && options.format !== "commonjs" && options.format !== "esm" && options.format !== "umd") {
+  if (options.format !== "amd" && options.format !== "commonjs" && options.format !== "es" && options.format !== "umd") {
     abort("Can't use the -d/--dependency option with the \"" + options.format + "\" module format.");
   }
 }
