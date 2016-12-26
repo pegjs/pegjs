@@ -116,6 +116,9 @@ let options = {
   trace: false
 };
 
+const MODULE_FORMATS = ["amd", "commonjs", "es", "globals", "umd"];
+const MODULE_FORMATS_WITH_DEPS = ["amd", "commonjs", "es", "umd"];
+
 while (args.length > 0 && isOption(args[0])) {
   let json, id, mod;
 
@@ -183,8 +186,8 @@ while (args.length > 0 && isOption(args[0])) {
       if (args.length === 0) {
         abort("Missing parameter of the --format option.");
       }
-      if (args[0] !== "amd" && args[0] !== "commonjs" && args[0] !== "es" && args[0] !== "globals" && args[0] !== "umd") {
-        abort("Module format must be one of \"amd\", \"commonjs\", \"es\", \"globals\", and \"umd\".");
+      if (MODULE_FORMATS.indexOf(args[0]) === -1) {
+        abort("Module format must be one of " + MODULE_FORMATS.map(format => `"${format}"`).join(", ") + ".");
       }
       options.format = args[0];
       break;
@@ -253,7 +256,7 @@ while (args.length > 0 && isOption(args[0])) {
 }
 
 if (Object.keys(options.dependencies).length > 0) {
-  if (options.format !== "amd" && options.format !== "commonjs" && options.format !== "es" && options.format !== "umd") {
+  if (MODULE_FORMATS_WITH_DEPS.indexOf(options.format) === -1) {
     abort("Can't use the -d/--dependency option with the \"" + options.format + "\" module format.");
   }
 }
