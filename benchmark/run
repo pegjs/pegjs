@@ -1,23 +1,22 @@
 #!/usr/bin/env node
 
-/* eslint-env node */
-/* eslint no-console: 0*/
-
 "use strict";
 
-var fs  = require("fs");
-var peg = require("../lib/peg");
+/* eslint-env node */
 
-var benchmarks = require("./benchmarks.js");
-var Runner = require("./runner.js")(peg);
+let Runner = require("./runner.js");
+let benchmarks = require("./benchmarks.js");
+let fs = require("fs");
 
-/* Results Table Manipulation */
+// Results Table Manipulation
 
 function dup(text, count) {
-  var result = "";
-  for (var i = 1; i <= count; i++) {
+  let result = "";
+
+  for (let i = 1; i <= count; i++) {
     result += text;
   }
+
   return result;
 }
 
@@ -30,7 +29,8 @@ function padRight(text, length) {
 }
 
 function center(text, length) {
-  var padLength = (length - text.length) / 2;
+  let padLength = (length - text.length) / 2;
+
   return dup(" ", Math.floor(padLength))
     + text
     + dup(" ", Math.ceil(padLength));
@@ -48,8 +48,8 @@ function writeHeading(heading) {
 }
 
 function writeResult(title, inputSize, parseTime) {
-  var KB      = 1024;
-  var MS_IN_S = 1000;
+  const KB = 1024;
+  const MS_IN_S = 1000;
 
   console.log("│ "
     + padRight(title, 35)
@@ -71,7 +71,7 @@ function writeTableFooter() {
   console.log("└─────────────────────────────────────┴───────────┴────────────┴──────────────┘");
 }
 
-/* Helpers */
+// Helpers
 
 function printHelp() {
   console.log("Usage: run [options]");
@@ -98,9 +98,9 @@ function abort(message) {
   exitFailure();
 }
 
-/* Arguments */
+// Arguments
 
-var args = process.argv.slice(2); // Trim "node" and the script path.
+let args = process.argv.slice(2); // Trim "node" and the script path.
 
 function isOption(arg) {
   return (/^-/).test(arg);
@@ -110,11 +110,11 @@ function nextArg() {
   args.shift();
 }
 
-/* Main */
+// Main
 
-var runCount = 10;
-var options = {
-  cache:    false,
+let runCount = 10;
+let options = {
+  cache: false,
   optimize: "speed"
 };
 
@@ -165,32 +165,32 @@ if (args.length > 0) {
 }
 
 Runner.run(benchmarks, runCount, options, {
-  readFile: function(file) {
+  readFile(file) {
     return fs.readFileSync(__dirname + "/" + file, "utf8");
   },
 
-  testStart: function() {
-    /* Nothing to do. */
+  testStart() {
+    // Nothing to do.
   },
 
-  testFinish: function(benchmark, test, inputSize, parseTime) {
+  testFinish(benchmark, test, inputSize, parseTime) {
     writeResult(test.title, inputSize, parseTime);
   },
 
-  benchmarkStart: function(benchmark) {
+  benchmarkStart(benchmark) {
     writeHeading(benchmark.title);
   },
 
-  benchmarkFinish: function(benchmark, inputSize, parseTime) {
+  benchmarkFinish(benchmark, inputSize, parseTime) {
     writeSeparator();
     writeResult(benchmark.title + " total", inputSize, parseTime);
   },
 
-  start: function() {
+  start() {
     writeTableHeader();
   },
 
-  finish: function(inputSize, parseTime) {
+  finish(inputSize, parseTime) {
     writeSeparator();
     writeResult("Total", inputSize, parseTime);
     writeTableFooter();
