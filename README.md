@@ -147,7 +147,7 @@ object to `peg.generate`. The following options are supported:
   * `exportVar` — name of a global variable into which the parser object is
     assigned to when no module loader is detected; valid only when `format` is
     set to `"globals"` or `"umd"` (default: `null`)
-  * `format` — format of the genreated parser (`"amd"`, `"bare"`, `"commonjs"`,
+  * `format` — format of the generated parser (`"amd"`, `"bare"`, `"commonjs"`,
     `"globals"`, or `"umd"`); valid only when `output` is set to `"source"`
     (default: `"bare"`)
   * `optimize`— selects between optimizing the generated parser for parsing
