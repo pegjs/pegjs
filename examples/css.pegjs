@@ -1,23 +1,21 @@
-/*
- * CSS Grammar
- * ===========
- *
- * Based on grammar from CSS 2.1 specification [1] (including the errata [2]).
- * Generated parser builds a syntax tree composed of nested JavaScript objects,
- * vaguely inspired by CSS DOM [3]. The CSS DOM itself wasn't used as it is not
- * expressive enough (e.g. selectors are reflected as text, not structured
- * objects) and somewhat cumbersome.
- *
- * Limitations:
- *
- *   * Many errors which should be recovered from according to the specification
- *     (e.g. malformed declarations or unexpected end of stylesheet) are fatal.
- *     This is a result of straightforward rewrite of the CSS grammar to PEG.js.
- *
- * [1] http://www.w3.org/TR/2011/REC-CSS2-20110607
- * [2] http://www.w3.org/Style/css2-updates/REC-CSS2-20110607-errata.html
- * [3] http://www.w3.org/TR/DOM-Level-2-Style/css.html
- */
+// CSS Grammar
+// ===========
+//
+// Based on grammar from CSS 2.1 specification [1] (including the errata [2]).
+// Generated parser builds a syntax tree composed of nested JavaScript objects,
+// vaguely inspired by CSS DOM [3]. The CSS DOM itself wasn't used as it is not
+// expressive enough (e.g. selectors are reflected as text, not structured
+// objects) and somewhat cumbersome.
+//
+// Limitations:
+//
+//   * Many errors which should be recovered from according to the specification
+//     (e.g. malformed declarations or unexpected end of stylesheet) are fatal.
+//     This is a result of straightforward rewrite of the CSS grammar to PEG.js.
+//
+// [1] http://www.w3.org/TR/2011/REC-CSS2-20110607
+// [2] http://www.w3.org/Style/css2-updates/REC-CSS2-20110607-errata.html
+// [3] http://www.w3.org/TR/DOM-Level-2-Style/css.html
 
 {
   function extractOptional(optional, index) {
@@ -25,41 +23,30 @@
   }
 
   function extractList(list, index) {
-    var result = [], i;
-
-    for (i = 0; i < list.length; i++) {
-      if (list[i][index] !== null) {
-        result.push(list[i][index]);
-      }
-    }
-
-    return result;
+    return list.map(function(element) { return element[index]; });
   }
 
   function buildList(head, tail, index) {
-    return (head !== null ? [head] : []).concat(extractList(tail, index));
+    return [head].concat(extractList(tail, index))
+      .filter(function(element) { return element !== null; });
   }
 
   function buildExpression(head, tail) {
-    var result = head, i;
-
-    for (i = 0; i < tail.length; i++) {
-      result = {
-        type:     "Expression",
-        operator: tail[i][0],
-        left:     result,
-        right:    tail[i][1]
+    return tail.reduce(function(result, element) {
+      return {
+        type: "Expression",
+        operator: element[0],
+        left: result,
+        right: element[1]
       };
-    }
-
-    return result;
+    }, head);
   }
 }
 
 start
   = stylesheet:stylesheet comment* { return stylesheet; }
 
-/* ----- G.1 Grammar ----- */
+// ----- G.1 Grammar -----
 
 stylesheet
   = charset:(CHARSET_SYM STRING ";")? (S / CDO / CDC)*
@@ -67,18 +54,18 @@ stylesheet
     rules:((ruleset / media / page) (CDO S* / CDC S*)*)*
     {
       return {
-        type:    "StyleSheet",
+        type: "StyleSheet",
         charset: extractOptional(charset, 1),
         imports: extractList(imports, 0),
-        rules:   extractList(rules, 0)
+        rules: extractList(rules, 0)
       };
     }
 
 import
   = IMPORT_SYM S* href:(STRING / URI) S* media:media_list? ";" S* {
       return {
-        type:  "ImportRule",
-        href:  href,
+        type: "ImportRule",
+        href: href,
         media: media !== null ? media : []
       };
     }
@@ -101,14 +88,14 @@ medium
 page
   = PAGE_SYM S* selector:pseudo_page?
     "{" S*
-    declarationsFirst:declaration?
-    declarationsRest:(";" S* declaration?)*
+    declarationsHead:declaration?
+    declarationsTail:(";" S* declaration?)*
     "}" S*
     {
       return {
-        type:         "PageRule",
-        selector:     selector,
-        declarations: buildList(declarationsFirst, declarationsRest, 2)
+        type: "PageRule",
+        selector: selector,
+        declarations: buildList(declarationsHead, declarationsTail, 2)
       };
     }
 
@@ -127,35 +114,35 @@ property
   = name:IDENT S* { return name; }
 
 ruleset
-  = selectorsFirst:selector
-    selectorsRest:("," S* selector)*
+  = selectorsHead:selector
+    selectorsTail:("," S* selector)*
     "{" S*
-    declarationsFirst:declaration?
-    declarationsRest:(";" S* declaration?)*
+    declarationsHead:declaration?
+    declarationsTail:(";" S* declaration?)*
     "}" S*
     {
       return {
-        type:         "RuleSet",
-        selectors:    buildList(selectorsFirst, selectorsRest, 2),
-        declarations: buildList(declarationsFirst, declarationsRest, 2)
+        type: "RuleSet",
+        selectors: buildList(selectorsHead, selectorsTail, 2),
+        declarations: buildList(declarationsHead, declarationsTail, 2)
       };
     }
 
 selector
   = left:simple_selector S* combinator:combinator right:selector {
       return {
-        type:       "Selector",
+        type: "Selector",
         combinator: combinator,
-        left:       left,
-        right:      right
+        left: left,
+        right: right
       };
     }
   / left:simple_selector S+ right:selector {
       return {
-        type:       "Selector",
+        type: "Selector",
         combinator: " ",
-        left:       left,
-        right:      right
+        left: left,
+        right: right
       };
     }
   / selector:simple_selector S* { return selector; }
@@ -163,15 +150,15 @@ selector
 simple_selector
   = element:element_name qualifiers:(id / class / attrib / pseudo)* {
       return {
-        type:       "SimpleSelector",
-        element:    element,
+        type: "SimpleSelector",
+        element: element,
         qualifiers: qualifiers
       };
     }
   / qualifiers:(id / class / attrib / pseudo)+ {
       return {
-        type:       "SimpleSelector",
-        element:    "*",
+        type: "SimpleSelector",
+        element: "*",
         qualifiers: qualifiers
       };
     }
@@ -193,10 +180,10 @@ attrib
     "]"
     {
       return {
-        type:      "AttributeSelector",
+        type: "AttributeSelector",
         attribute: attribute,
-        operator:  extractOptional(operatorAndValue, 0),
-        value:     extractOptional(operatorAndValue, 2)
+        operator: extractOptional(operatorAndValue, 0),
+        value: extractOptional(operatorAndValue, 2)
       };
     }
 
@@ -205,8 +192,8 @@ pseudo
     value:(
         name:FUNCTION S* params:(IDENT S*)? ")" {
           return {
-            type:   "Function",
-            name:   name,
+            type: "Function",
+            name: name,
             params: params !== null ? [params[0]] : []
           };
         }
@@ -217,9 +204,9 @@ pseudo
 declaration
   = name:property ':' S* value:expr prio:prio? {
       return {
-        type:      "Declaration",
-        name:      name,
-        value:     value,
+        type: "Declaration",
+        name: name,
+        value: value,
         important: prio !== null
       };
     }
@@ -235,9 +222,9 @@ term
     S*
     {
       return {
-        type:  "Quantity",
+        type: "Quantity",
         value: quantity.value,
-        unit:  quantity.unit
+        unit: quantity.unit
       };
     }
   / value:STRING S* { return { type: "String", value: value }; }
@@ -254,9 +241,9 @@ function
 hexcolor
   = value:HASH S* { return { type: "Hexcolor", value: value }; }
 
-/* ----- G.2 Lexical scanner ----- */
+// ----- G.2 Lexical scanner -----
 
-/* Macros */
+// Macros
 
 h
   = [0-9a-f]i
@@ -348,7 +335,7 @@ U  = "u"i / "\\" "0"? "0"? "0"? "0"? [\x55\x75] ("\r\n" / [ \t\r\n\f])? / "\\u"i
 X  = "x"i / "\\" "0"? "0"? "0"? "0"? [\x58\x78] ("\r\n" / [ \t\r\n\f])? / "\\x"i { return "x"; }
 Z  = "z"i / "\\" "0"? "0"? "0"? "0"? [\x5a\x7a] ("\r\n" / [ \t\r\n\f])? / "\\z"i { return "z"; }
 
-/* Tokens */
+// Tokens
 
 S "whitespace"
   = comment* s
@@ -386,7 +373,7 @@ MEDIA_SYM "@media"
 CHARSET_SYM "@charset"
   = comment* "@charset "
 
-/* We use |s| instead of |w| here to avoid infinite recursion. */
+// We use |s| instead of |w| here to avoid infinite recursion.
 IMPORTANT_SYM "!important"
   = comment* "!" (s / comment)* I M P O R T A N T
 

@@ -20,7 +20,7 @@ All commands in the following steps need to be executed in PEG.js root directory
   2. Execute the benchmark suite:
 
      ```console
-     $ make spec
+     $ gulp benchmark
      ```
 
   3. Wait for results.
@@ -39,18 +39,12 @@ All commands in the following steps need to be executed in PEG.js root directory
      $ npm install
      ```
 
-  3. Build browser version of PEG.js:
+  3. Serve the benchmark suite using a web server:
 
      ```console
-     $ make browser
+     $ benchmark/server
      ```
 
-  4. Serve PEG.js root directory using a web server:
+  4. Point your browser to the [benchmark suite](http://localhost:8000/).
 
-     ```console
-     $ node_modules/.bin/http-server
-     ```
-
-  5. Point your browser to the [benchmark suite](http://localhost:8080/benchmark/index.html).
-
-  6. Click the **Run** button and wait for results.
+  5. Click the **Run** button and wait for results.

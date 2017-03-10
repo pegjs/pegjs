@@ -20,13 +20,13 @@ Features
   * Based on [parsing expression
     grammar](http://en.wikipedia.org/wiki/Parsing_expression_grammar) formalism
     — more powerful than traditional LL(*k*) and LR(*k*) parsers
-  * Usable [from your browser](http://pegjs.org/online), from the command line,
+  * Usable [from your browser](https://pegjs.org/online), from the command line,
     or via JavaScript API
 
 Getting Started
 ---------------
 
-[Online version](http://pegjs.org/online) is the easiest way to generate a
+[Online version](https://pegjs.org/online) is the easiest way to generate a
 parser. Just enter your grammar, try parsing few inputs, and download generated
 parser code.
 
@@ -52,7 +52,7 @@ ways.
 
 ### Browser
 
-[Download](http://pegjs.org/#download) the PEG.js library (regular or minified
+[Download](https://pegjs.org/#download) the PEG.js library (regular or minified
 version) or install it using Bower:
 
 ```console
@@ -78,28 +78,34 @@ This writes parser source code into a file with the same name as the grammar
 file but with “.js” extension. You can also specify the output file explicitly:
 
 ```console
-$ pegjs arithmetics.pegjs arithmetics-parser.js
+$ pegjs -o arithmetics-parser.js arithmetics.pegjs
 ```
 
 If you omit both input and output file, standard input and output are used.
 
-The generated parser is in the [UMD](https://github.com/umdjs/umd) format, which
-means it works as a Node.js or AMD module. You can also use the
-`-e`/`--export-var` option to define a global variable into which the parser
-object is assigned to when no module loader is detected.
+By default, the generated parser is in the Node.js module format. You can
+override this using the `--format` option.
 
 You can tweak the generated parser with several options:
 
-  * `--cache` — makes the parser cache results, avoiding exponential parsing
-    time in pathological cases but making the parser slower
   * `--allowed-start-rules` — comma-separated list of rules the parser will be
     allowed to start parsing from (default: the first rule in the grammar)
-  * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
-    times)
+  * `--cache` — makes the parser cache results, avoiding exponential parsing
+    time in pathological cases but making the parser slower
+  * `--dependency` — makes the parser require a specified dependency (can be
+    specified multiple times)
+  * `--export-var` — name of a global variable into which the parser object is
+    assigned to when no module loader is detected
   * `--extra-options` — additional options (in JSON format) to pass to
     `peg.generate`
   * `--extra-options-file` — file with additional options (in JSON format) to
     pass to `peg.generate`
+  * `--format` — format of the generated parser: `amd`, `commonjs`, `globals`,
+    `umd` (default: `commonjs`)
+  * `--optimize` — selects between optimizing the generated parser for parsing
+    speed (`speed`) or code size (`size`) (default: `speed`)
+  * `--plugin` — makes PEG.js use a specified plugin (can be specified multiple
+    times)
   * `--trace` — makes the parser trace its progress
 
 ### JavaScript API
@@ -129,25 +135,28 @@ property with more details about the error.
 You can tweak the generated parser by passing a second parameter with an options
 object to `peg.generate`. The following options are supported:
 
+  * `allowedStartRules` — rules the parser will be allowed to start parsing from
+    (default: the first rule in the grammar)
   * `cache` — if `true`, makes the parser cache results, avoiding exponential
     parsing time in pathological cases but making the parser slower (default:
     `false`)
-  * `allowedStartRules` — rules the parser will be allowed to start parsing from
-    (default: the first rule in the grammar)
   * `dependencies` — parser dependencies, the value is an object which maps
     variables used to access the dependencies in the parser to module IDs used
-    to load them; valid only when `format` is set to `"umd"` (default: `{}`)
+    to load them; valid only when `format` is set to `"amd"`, `"commonjs"`, or
+    `"umd"` (default: `{}`)
   * `exportVar` — name of a global variable into which the parser object is
     assigned to when no module loader is detected; valid only when `format` is
-    set to `"umd"` (default: `null`)
-  * `format` — format of the genreated parser (`"bare"` or `"umd"`); valid only
-    when `output` is set to `"source"` (default: `"bare"`)
+    set to `"globals"` or `"umd"` (default: `null`)
+  * `format` — format of the genreated parser (`"amd"`, `"bare"`, `"commonjs"`,
+    `"globals"`, or `"umd"`); valid only when `output` is set to `"source"`
+    (default: `"bare"`)
+  * `optimize`— selects between optimizing the generated parser for parsing
+    speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
   * `output` — if set to `"parser"`, the method will return generated parser
     object; if set to `"source"`, it will return parser source code as a string
     (default: `"parser"`)
-  * `optimize`— selects between optimizing the generated parser for parsing
-    speed (`"speed"`) or code size (`"size"`) (default: `"speed"`)
   * `plugins` — plugins to use
+  * `trace` — makes the parser trace its progress (default: `false`)
 
 Using the Parser
 ----------------
@@ -155,8 +164,8 @@ Using the Parser
 Using the generated parser is simple — just call its `parse` method and pass an
 input string as a parameter. The method will return a parse result (the exact
 value depends on the grammar used to generate the parser) or throw an exception
-if the input is invalid. The exception will contain `location`, `expected` and
-`message` properties with more details about the error.
+if the input is invalid. The exception will contain `location`, `expected`,
+`found`,  and `message` properties with more details about the error.
 
 ```javascript
 parser.parse("abba"); // returns ["a", "b", "b", "a"]
@@ -222,10 +231,9 @@ The first rule can be preceded by an *initializer* — a piece of JavaScript cod
 in curly braces (“{” and “}”). This code is executed before the generated parser
 starts parsing. All variables and functions defined in the initializer are
 accessible in rule actions and semantic predicates. The code inside the
-initializer can access the parser object using the `parser` variable and options
-passed to the parser using the `options` variable. Curly braces in the
-initializer code must be balanced. Let's look at the example grammar from above
-using a simple initializer.
+initializer can access options passed to the parser using the `options`
+variable. Curly braces in the initializer code must be balanced. Let's look at
+the example grammar from above using a simple initializer.
 
 ```pegjs
 {
@@ -363,7 +371,7 @@ The code inside the predicate can also access location information using the
 ```javascript
 {
   start: { offset: 23, line: 5, column: 6 },
-  end:   { offset: 23, line: 5, column: 6 }
+  end: { offset: 23, line: 5, column: 6 }
 }
 ```
 
@@ -371,8 +379,8 @@ The `start` and `end` properties both refer to the current parse position. The
 `offset` property contains an offset as a zero-based index and `line` and
 `column` properties contain a line and a column as one-based indices.
 
-The code inside the predicate can also access the parser object using the
-`parser` variable and options passed to the parser using the `options` variable.
+The code inside the predicate can also access options passed to the parser using
+the `options` variable.
 
 Note that curly braces in the predicate code must be balanced.
 
@@ -394,7 +402,7 @@ The code inside the predicate can also access location information using the
 ```javascript
 {
   start: { offset: 23, line: 5, column: 6 },
-  end:   { offset: 23, line: 5, column: 6 }
+  end: { offset: 23, line: 5, column: 6 }
 }
 ```
 
@@ -402,8 +410,8 @@ The `start` and `end` properties both refer to the current parse position. The
 `offset` property contains an offset as a zero-based index and `line` and
 `column` properties contain a line and a column as one-based indices.
 
-The code inside the predicate can also access the parser object using the
-`parser` variable and options passed to the parser using the `options` variable.
+The code inside the predicate can also access options passed to the parser using
+the `options` variable.
 
 Note that curly braces in the predicate code must be balanced.
 
@@ -461,7 +469,7 @@ The code inside the action can also access location information using the
 ```javascript
 {
   start: { offset: 23, line: 5, column: 6 },
-  end:   { offset: 25, line: 5, column: 8 }
+  end: { offset: 25, line: 5, column: 8 }
 }
 ```
 
@@ -470,8 +478,8 @@ the `end` property refers to position after the end of the expression. The
 `offset` property contains an offset as a zero-based index and `line` and
 `column` properties contain a line and a column as one-based indices.
 
-The code inside the action can also access the parser object using the `parser`
-variable and options passed to the parser using the `options` variable.
+The code inside the action can also access options passed to the parser using
+the `options` variable.
 
 Note that curly braces in the action code must be balanced.
 
@@ -487,9 +495,8 @@ Compatibility
 Both the parser generator and generated parsers should run well in the following
 environments:
 
-  * Node.js 0.10.0+
-  * io.js
-  * Internet Explorer 8+
+  * Node.js 4+
+  * Internet Explorer 9+
   * Edge
   * Firefox
   * Chrome
@@ -499,14 +506,14 @@ environments:
 Development
 -----------
 
-  * [Project website](http://pegjs.org/)
+  * [Project website](https://pegjs.org/)
   * [Wiki](https://github.com/pegjs/pegjs/wiki)
   * [Source code](https://github.com/pegjs/pegjs)
   * [Issue tracker](https://github.com/pegjs/pegjs/issues)
   * [Google Group](http://groups.google.com/group/pegjs)
   * [Twitter](http://twitter.com/peg_js)
 
-PEG.js is developed by [David Majda](http://majda.cz/)
+PEG.js is developed by [David Majda](https://majda.cz/)
 ([@dmajda](http://twitter.com/dmajda)). The [Bower
 package](https://github.com/pegjs/bower) is maintained by [Michel
 Krämer](http://www.michel-kraemer.com/)

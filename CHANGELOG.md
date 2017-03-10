@@ -4,6 +4,116 @@ Change Log
 This file documents all notable changes to PEG.js. The releases follow [semantic
 versioning](http://semver.org/).
 
+0.10.0
+------
+
+Released: August 19, 2016
+
+### Major Changes
+
+  * **Parsers can be generated in multiple module formats.** The available
+    formats are: CommonJS (the default), AMD, UMD, globals, and bare (not
+    available from the command-line).
+
+    The format can be specified using the `format` option of the `peg.generate`
+    function or the `--format` option on the command-line.
+
+    It is also possible to specify parser dependencies using the `dependencies`
+    option of the `peg.generate` function or the `--dependency`/`-d` option on
+    the command-line. This is mainly useful for the UMD format, where the
+    dependencies are translated into both AMD dependencies and CommonJS
+    `require` calls.
+
+  * **Browser version of PEG.js is now in the UMD format.** This means it will try
+    to detect AMD or Node.js/CommonJS module loader and define itself as a
+    module. If no loader is found, it will export itself using a global
+    variable.
+
+  * **API polishing.** The `peg.buildParser` function was renamed to
+    `peg.generate`. The global variable the browser version of PEG.js is
+    available in when no loader is detected was renamed from `PEG` to `peg`.
+
+  * **CLI improvements.** There is new `--output`/`-o` command-line option which
+    allows to specify the output file. The old way of specifying the output file
+    using a second argument was removed. To make room for the new `-o` option
+    the old one (a shortcut for `--optimize`) was renamed to `-O`. All these
+    changes make PEG.js conform to traditional compiler command-line interface.
+
+    It is now also possible to use `-` as a file name on the command-line (with
+    the usual meaning of standard input/output).
+
+  * **Improved error messages.** Both messages produced by PEG.js and generated
+    parsers were improved.
+
+  * **Duplicate rule definitions are reported as errors.**
+
+  * **Duplicate labels are reported as errors.**
+
+### Minor Changes
+
+  * Exposed the AST node visitor builder as `peg.compiler.visitor`. This is
+    useful mainly for plugins which manipulate the AST.
+
+  * Exposed the function which builds messages of exceptions produced by
+    generated parsers as `SyntaxError.buildMessage`. This is useful mainly for
+    customizing these error messages.
+
+  * The `error` and `expected` functions now accept an optional `location`
+    parameter. This allows to customize the location in which the resulting
+    syntax error is reported.
+
+  * Refactored expectations reported in the `expected` property of exceptions
+    produced by generated parsers. They are no longer de-duplicated and sorted,
+    their format changed to be more machine-readable, and they no longer contain
+    human-readable descriptions.
+
+  * The `found` property of exceptions produced by the `error` function is now
+    set to `null`.
+
+  * Removed access to the parser object in parser code via the `parser`
+    variable.
+
+  * Made handling of optional parameters consistent with ES 2015. Specifically,
+    passing `undefined` as a parameter value is now equivalent to not passing
+    the parameter at all.
+
+  * Renamed several compiler passes.
+
+  * Generated parsers no longer consider `\r`, `\u2028`, and `\u2029` as
+    newlines (only `\n` and `\r\n`).
+
+  * Simplified the arithmetics example grammar.
+
+  * Switched from `first`/`rest` to `head`/`tail` in PEG.js grammar and example
+    grammars.
+
+  * Started using ESLint instead of JSHint and fixed various problems it found.
+
+  * Added [contribution
+    guidelines](https://github.com/pegjs/pegjs/blob/master/CONTRIBUTING.md).
+
+  * Removed support for io.js.
+
+### Bug Fixes
+
+  * Fixed `bin/pegjs` so that invoking it with one non-option argument which is
+    an extension-less file doesn’t cause that file to be overwritten.
+
+  * Fixed label scoping so that labels in expressions like `(a:"a")` or `(a:"a"
+    b:"b" c:"c")` aren’t visible from the outside.
+
+  * Fixed escaping of generated JavaScript strings & regexps to also escape DEL
+    (U+007F).
+
+  * Fixed the JSON example grammar to correctly handle characters with code
+    points above U+10FF in strings.
+
+  * Fixed multiple compatibility issues of `tools/impact` on OS X.
+
+  * Fixed slow deduplication of expectation descriptions.
+
+[Complete set of changes](https://github.com/pegjs/pegjs/compare/v0.9.0...v0.10.0)
+
 0.9.0
 -----
 
