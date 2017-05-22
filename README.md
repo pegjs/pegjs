@@ -6,8 +6,6 @@
 PEG.js
 ======
 
-**PEG.js is [looking for a new maintainer](https://github.com/pegjs/pegjs/issues/503).**
-
 PEG.js is a simple parser generator for JavaScript that produces fast parsers
 with excellent error reporting. You can use it to process complex data or
 computer languages and build transformers, interpreters, compilers and other
