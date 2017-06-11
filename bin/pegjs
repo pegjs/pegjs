@@ -30,8 +30,8 @@ function printHelp() {
   console.log("                                     to peg.generate");
   console.log("      --extra-options-file <file>    file with additional options (in JSON");
   console.log("                                     format) to pass to peg.generate");
-  console.log("      --format <format>              format of the generated parser: amd,");
-  console.log("                                     commonjs, globals, umd (default: commonjs)");
+  console.log("      --format <format>              format of the generated parser: amd, commonjs");
+  console.log("                                     es, globals, umd (default: commonjs)");
   console.log("  -h, --help                         print help and exit");
   console.log("  -O, --optimize <goal>              select optimization for speed or size");
   console.log("                                     (default: speed)");
