@@ -557,11 +557,9 @@ Development
   * [Google Group](http://groups.google.com/group/pegjs)
   * [Twitter](http://twitter.com/peg_js)
 
-PEG.js is developed by [David Majda](https://majda.cz/)
-([@dmajda](http://twitter.com/dmajda)). The [Bower
-package](https://github.com/pegjs/bower) is maintained by [Michel
-Krämer](http://www.michel-kraemer.com/)
-([@michelkraemer](https://twitter.com/michelkraemer)).
+PEG.js is currently maintained by [Futago-za Ryuu](https://github.com/futagoza). Since it's [inception](https://www.google.com/search?q=inception+meaning) in 2010, PEG.js was maintained by [David Majda](https://majda.cz/) ([@dmajda](http://twitter.com/dmajda)), until [May 2017](https://github.com/pegjs/pegjs/issues/503).
+
+The [Bower package](https://github.com/pegjs/bower) is maintained by [Michel Krämer](http://www.michel-kraemer.com/) ([@michelkraemer](https://twitter.com/michelkraemer)).
 
 You are welcome to contribute code.  Unless your contribution is really trivial
 you should get in touch with me first — this can prevent wasted effort on both
