@@ -3,8 +3,24 @@
 [![Bower version](https://img.shields.io/bower/v/pegjs.svg)](https://github.com/pegjs/bower)
 [![License](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 
-PEG.js
-======
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-Started)
+- [Installation](#installation)
+  * [Node.js](#nodejs)
+  * [Browser](#browser)
+- [Generating a Parser](#generating-a-parser)
+  * [Command Line](#command-line)
+  * [JavaScript API](#javascript-api)
+- [Using the Parser](#using-the-parser)
+- [Grammar Syntax and Semantics](#grammar-syntax-and-semantics)
+- [Parsing Expression Types](#parsing-expression-types)
+- [Error Messages](#error-messages)
+- [Compatibility](#compatibility)
+- [Development](#development)
+
+Introduction
+============
 
 PEG.js is a simple parser generator for JavaScript that produces fast parsers
 with excellent error reporting. You can use it to process complex data or
@@ -295,6 +311,23 @@ number and converts it to a JavaScript `number` object.
 
 There are several types of parsing expressions, some of them containing
 subexpressions and thus forming a recursive structure:
+
+  * ["literal"](#literalliteral)
+  * [[characters]](#characters)
+  * [rule](#rule)
+  * [( expression )](#-expression-)
+  * [expression *](#expression-)
+  * [expression +](#expression--1)
+  * [expression ?](#expression--2)
+  * [& expression](#-expression)
+  * [! expression](#-expression-1)
+  * [& { predicate }](#--predicate-)
+  * [! { predicate }](#--predicate--1)
+  * [$ expression](#-expression-2)
+  * [label : expression](#label--expression)
+  * [expression1 expression2 ... expressionN](#expression1-expression2---expressionn)
+  * [expression { action }](#expression--action-)
+  * [expression1 / expression2 / ... / expressionN](#expression1--expression2----expressionn)
 
 #### "*literal*"<br>'*literal*'
 
