@@ -1,3 +1,6 @@
 {
-  "extends": "dmajda"
+  "extends": "dmajda",
+  "rules": {
+    "linebreak-style": 0
+  }
 }
