@@ -2,11 +2,31 @@
 
 const chai = require( "chai" );
 const parser = require( "pegjs-dev" ).parser;
+const util = require( "pegjs-dev" ).util;
 
 const expect = chai.expect;
 
 // better diagnostics for deep eq failure
 chai.config.truncateThreshold = 0;
+
+function varyParserOptions( block ) {
+
+    const optionsVariants = [
+        { },
+        { extractComments: false },
+        { extractComments: true }
+    ];
+
+    optionsVariants.forEach( variant => {
+
+        describe(
+            "with options " + chai.util.inspect( variant ),
+            () => block( variant )
+        );
+
+    } );
+
+}
 
 describe( "PEG.js grammar parser", function () {
 
@@ -71,6 +91,7 @@ describe( "PEG.js grammar parser", function () {
         return {
             type: "grammar",
             initializer: null,
+            comments: null,
             rules: [ { type: "rule", name: "start", expression: expression } ]
         };
 
@@ -115,10 +136,30 @@ describe( "PEG.js grammar parser", function () {
 
     }
 
+    function commented( grammar, comments, options ) {
+
+        function toObject( result, comment ) {
+
+            result[ comment.offset ] = {
+                text: comment.text,
+                multiline: comment.multiline
+            };
+
+            return result;
+
+        }
+
+        grammar = util.clone( grammar );
+        grammar.comments = options.extractComments ? comments.reduce( toObject, {} ) : null;
+        return grammar;
+
+    }
+
     const trivialGrammar = literalGrammar( "abcd", false );
     const twoRuleGrammar = {
         type: "grammar",
         initializer: null,
+        comments: null,
         rules: [ ruleA, ruleB ]
     };
 
@@ -172,6 +213,11 @@ describe( "PEG.js grammar parser", function () {
                     strip( node.initializer );
 
                 }
+                if ( node.comments ) {
+
+                    util.each( node.comments, stripLeaf );
+
+                }
                 node.rules.forEach( strip );
 
             },
@@ -206,9 +252,11 @@ describe( "PEG.js grammar parser", function () {
 
         const Assertion = chai.Assertion;
 
-        Assertion.addMethod( "parseAs", function ( expected ) {
+        Assertion.addMethod( "parseAs", function ( expected, options ) {
 
-            const result = parser.parse( utils.flag( this, "object" ) );
+            options = typeof options === "undefined" ? {} : options;
+
+            const result = parser.parse( utils.flag( this, "object" ), options );
 
             stripLocation( result );
 
@@ -298,13 +346,13 @@ describe( "PEG.js grammar parser", function () {
     it( "parses Grammar", function () {
 
         expect( "\na = 'abcd';\n" ).to.parseAs(
-            { type: "grammar", initializer: null, rules: [ ruleA ] }
+            { type: "grammar", comments: null, initializer: null, rules: [ ruleA ] }
         );
         expect( "\na = 'abcd';\nb = 'efgh';\nc = 'ijkl';\n" ).to.parseAs(
-            { type: "grammar", initializer: null, rules: [ ruleA, ruleB, ruleC ] }
+            { type: "grammar", comments: null, initializer: null, rules: [ ruleA, ruleB, ruleC ] }
         );
         expect( "\n{ code };\na = 'abcd';\n" ).to.parseAs(
-            { type: "grammar", initializer: initializer, rules: [ ruleA ] }
+            { type: "grammar", comments: null, initializer: initializer, rules: [ ruleA ] }
         );
 
     } );
@@ -313,7 +361,7 @@ describe( "PEG.js grammar parser", function () {
     it( "parses Initializer", function () {
 
         expect( "{ code };start = 'abcd'" ).to.parseAs(
-            { type: "grammar", initializer: initializer, rules: [ ruleStart ] }
+            { type: "grammar", comments: null, initializer: initializer, rules: [ ruleStart ] }
         );
 
     } );
@@ -501,45 +549,71 @@ describe( "PEG.js grammar parser", function () {
 
     } );
 
-    // Canonical Comment is "/* comment */".
-    it( "parses Comment", function () {
+    varyParserOptions( function ( options ) {
 
-        expect( "start =// comment\n'abcd'" ).to.parseAs( trivialGrammar );
-        expect( "start =/* comment */'abcd'" ).to.parseAs( trivialGrammar );
+        // Canonical Comment is "/* comment */".
+        it( "parses Comment", function () {
 
-    } );
+            expect( "start =// comment\n'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: " comment", multiline: false } ], options
+            ), options );
+            expect( "start =/* comment */'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: " comment ", multiline: true } ], options
+            ), options );
 
-    // Canonical MultiLineComment is "/* comment */".
-    it( "parses MultiLineComment", function () {
+        } );
 
-        expect( "start =/**/'abcd'" ).to.parseAs( trivialGrammar );
-        expect( "start =/*a*/'abcd'" ).to.parseAs( trivialGrammar );
-        expect( "start =/*abc*/'abcd'" ).to.parseAs( trivialGrammar );
+        // Canonical MultiLineComment is "/* comment */".
+        it( "parses MultiLineComment", function () {
 
-        expect( "start =/**/*/'abcd'" ).to.failToParse();
+            expect( "start =/**/'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: "", multiline: true } ], options
+            ), options );
+            expect( "start =/*a*/'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: "a", multiline: true } ], options
+            ), options );
+            expect( "start =/*abc*/'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: "abc", multiline: true } ], options
+            ), options );
 
-    } );
+            expect( "start =/**/*/'abcd'" ).to.failToParse();
 
-    // Canonical MultiLineCommentNoLineTerminator is "/* comment */".
-    it( "parses MultiLineCommentNoLineTerminator", function () {
+        } );
 
-        expect( "a = 'abcd'/**/\r\nb = 'efgh'" ).to.parseAs( twoRuleGrammar );
-        expect( "a = 'abcd'/*a*/\r\nb = 'efgh'" ).to.parseAs( twoRuleGrammar );
-        expect( "a = 'abcd'/*abc*/\r\nb = 'efgh'" ).to.parseAs( twoRuleGrammar );
+        // Canonical MultiLineCommentNoLineTerminator is "/* comment */".
+        it( "parses MultiLineCommentNoLineTerminator", function () {
 
-        expect( "a = 'abcd'/**/*/\r\nb = 'efgh'" ).to.failToParse();
-        expect( "a = 'abcd'/*\n*/\r\nb = 'efgh'" ).to.failToParse();
+            expect( "a = 'abcd'/**/\r\nb = 'efgh'" ).to.parseAs( commented(
+                twoRuleGrammar, [ { offset: 10, text: "", multiline: true } ], options
+            ), options );
+            expect( "a = 'abcd'/*a*/\r\nb = 'efgh'" ).to.parseAs( commented(
+                twoRuleGrammar, [ { offset: 10, text: "a", multiline: true } ], options
+            ), options );
+            expect( "a = 'abcd'/*abc*/\r\nb = 'efgh'" ).to.parseAs( commented(
+                twoRuleGrammar, [ { offset: 10, text: "abc", multiline: true } ], options
+            ), options );
 
-    } );
+            expect( "a = 'abcd'/**/*/\r\nb = 'efgh'" ).to.failToParse();
+            expect( "a = 'abcd'/*\n*/\r\nb = 'efgh'" ).to.failToParse();
 
-    // Canonical SingleLineComment is "// comment".
-    it( "parses SingleLineComment", function () {
+        } );
 
-        expect( "start =//\n'abcd'" ).to.parseAs( trivialGrammar );
-        expect( "start =//a\n'abcd'" ).to.parseAs( trivialGrammar );
-        expect( "start =//abc\n'abcd'" ).to.parseAs( trivialGrammar );
+        // Canonical SingleLineComment is "// comment".
+        it( "parses SingleLineComment", function () {
 
-        expect( "start =//\n@\n'abcd'" ).to.failToParse();
+            expect( "start =//\n'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: "", multiline: false } ], options
+            ), options );
+            expect( "start =//a\n'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: "a", multiline: false } ], options
+            ), options );
+            expect( "start =//abc\n'abcd'" ).to.parseAs( commented(
+                trivialGrammar, [ { offset: 7, text: "abc", multiline: false } ], options
+            ), options );
+
+            expect( "start =//\n@\n'abcd'" ).to.failToParse();
+
+        } );
 
     } );
 
