@@ -180,7 +180,7 @@ PrimaryExpression
       // nodes that already isolate label scope themselves. This leaves us with
       // "labeled" and "sequence".
       return expression.type === "labeled" || expression.type === "sequence"
-          ? { type: "group", expression: expression }
+          ? { type: "group", expression: expression, location: location() }
           : expression;
     }
 
