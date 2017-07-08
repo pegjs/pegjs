@@ -1,0 +1,276 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+
+  "type": "object",
+  "properties": {
+    "type": { "enum": ["grammar"] },
+    "location": { "$ref": "#/definitions/location" },
+    "initializer": {
+      "oneOf": [
+        { "$ref": "#/definitions/initializer" },
+        { "type": "null" }
+      ]
+    },
+    "rules": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/rule" }
+    }
+  },
+  "required": ["type", "rules"],
+
+  "definitions": {
+    "position":  {
+      "type": "object",
+      "properties": {
+        "offset": { "type": "integer", "minimum": 0 },
+        "line":   { "type": "integer", "minimum": 1 },
+        "column": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["offset", "line", "column"]
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "start": { "$ref": "#/definitions/position" },
+        "end":   { "$ref": "#/definitions/position" }
+      },
+      "required": ["start", "end"]
+    },
+
+    "char": { "type": "string", "minLength": 1, "maxLength": 1 },
+    "chars": { "type": "array", "items": { "$ref": "#/definitions/char" } },
+
+    "expression": {
+      "oneOf": [
+        { "$ref": "#/definitions/choice" },
+        { "$ref": "#/definitions/action" },
+        { "$ref": "#/definitions/sequence" },
+        { "$ref": "#/definitions/labeled" },
+        { "$ref": "#/definitions/text" },
+        { "$ref": "#/definitions/simple_and" },
+        { "$ref": "#/definitions/simple_not" },
+        { "$ref": "#/definitions/optional" },
+        { "$ref": "#/definitions/zero_or_more" },
+        { "$ref": "#/definitions/one_or_more" },
+        { "$ref": "#/definitions/group" },
+        { "$ref": "#/definitions/semantic_and" },
+        { "$ref": "#/definitions/semantic_not" },
+        { "$ref": "#/definitions/rule_ref" },
+        { "$ref": "#/definitions/literal" },
+        { "$ref": "#/definitions/class" },
+        { "$ref": "#/definitions/any" }
+      ]
+    },
+
+    "initializer": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["initializer"] },
+        "location": { "$ref": "#/definitions/location" },
+        "code": { "type": "string" }
+      },
+      "required": ["type", "code"]
+    },
+    "rule": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["rule"] },
+        "location": { "$ref": "#/definitions/location" },
+        "name": { "type": "string" },
+        "expression": {
+          "oneOf": [
+            { "$ref": "#/definitions/named" },
+            { "$ref": "#/definitions/expression" }
+          ]
+        }
+      },
+      "required": ["type", "name", "expression"]
+    },
+    "named": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["named"] },
+        "location": { "$ref": "#/definitions/location" },
+        "name": { "type": "string" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "name", "expression"]
+    },
+
+    "choice": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["choice"] },
+        "location": { "$ref": "#/definitions/location" },
+        "alternatives": {
+          "type": "array",
+          "title": "Варианты разбора",
+          "items": { "$ref": "#/definitions/expression" }
+        }
+      },
+      "required": ["type", "alternatives"]
+    },
+    "action": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["action"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" },
+        "code": { "type": "string" }
+      },
+      "required": ["type", "expression", "code"]
+    },
+    "sequence": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["sequence"] },
+        "location": { "$ref": "#/definitions/location" },
+        "elements": {
+          "type": "array",
+          "title": "Варианты разбора",
+          "items": { "$ref": "#/definitions/expression" }
+        }
+      },
+      "required": ["type", "elements"]
+    },
+    "labeled": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["labeled"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" },
+        "label": { "type": "string" }
+      },
+      "required": ["type", "expression", "label"]
+    },
+    "text": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["text"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "expression"]
+    },
+    "simple_and": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["simple_and"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "expression"]
+    },
+    "simple_not": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["simple_not"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "expression"]
+    },
+    "optional": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["optional"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "expression"]
+    },
+    "zero_or_more": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["zero_or_more"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "expression"]
+    },
+    "one_or_more": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["one_or_more"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "expression"]
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["group"] },
+        "location": { "$ref": "#/definitions/location" },
+        "expression": { "$ref": "#/definitions/expression" }
+      },
+      "required": ["type", "expression"]
+    },
+    "semantic_and": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["semantic_and"] },
+        "location": { "$ref": "#/definitions/location" },
+        "code": { "type": "string" }
+      },
+      "required": ["type", "code"]
+    },
+    "semantic_not": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["semantic_not"] },
+        "location": { "$ref": "#/definitions/location" },
+        "code": { "type": "string" }
+      },
+      "required": ["type", "code"]
+    },
+    "rule_ref": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["rule_ref"] },
+        "location": { "$ref": "#/definitions/location" },
+        "name": { "type": "string" }
+      },
+      "required": ["type", "name"]
+    },
+    "literal": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["literal"] },
+        "location": { "$ref": "#/definitions/location" },
+        "value": { "type": "string" },
+        "ignoreCase": { "type": "boolean" },
+        "rawText": { "type": "string" }
+      },
+      "required": ["type", "value"]
+    },
+    "class": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["class"] },
+        "location": { "$ref": "#/definitions/location" },
+        "parts": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/char" },
+              { "$ref": "#/definitions/chars" }
+            ]
+          }
+        },
+        "inverted": { "type": "boolean" },
+        "ignoreCase": { "type": "boolean" },
+        "rawText": { "type": "string" }
+      },
+      "required": ["type", "parts"]
+    },
+    "any": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["any"] },
+        "location": { "$ref": "#/definitions/location" }
+      },
+      "required": ["type"]
+    }
+  }
+}

@@ -51,6 +51,7 @@
     "babelify": "7.3.0",
     "browserify": "13.1.0",
     "chai": "3.5.0",
+    "chai-json-schema": "^1.4.0",
     "del": "2.2.2",
     "eslint-config-dmajda": "1.0.0",
     "express": "4.14.0",
