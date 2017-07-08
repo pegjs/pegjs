@@ -2,6 +2,7 @@
 
 let chai = require("chai");
 let parser = require("../../lib/parser");
+let schema = require("../../src/ast.schema.json");
 
 let expect = chai.expect;
 
@@ -172,6 +173,8 @@ describe("PEG.js grammar parser", function() {
     Assertion.addMethod("parseAs", function(expected) {
       let result = parser.parse(utils.flag(this, "object"));
 
+      new Assertion(result).to.be.jsonSchema(schema);
+
       stripLocation(result);
 
       this.assert(
@@ -221,6 +224,7 @@ describe("PEG.js grammar parser", function() {
   // test/behavior/generated-parser-behavior.spec.js.
   beforeEach(function() {
     chai.use(helpers);
+    chai.use(require("chai-json-schema"));
   });
 
   // Canonical Grammar is "a = 'abcd'; b = 'efgh'; c = 'ijkl';".
