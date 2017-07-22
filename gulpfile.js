@@ -71,7 +71,7 @@ gulp.task("test", () =>
 
 // Run benchmarks.
 gulp.task("benchmark", () =>
-  spawn("benchmark/run", { stdio: "inherit" })
+  spawn("node", ["benchmark/run"], { stdio: "inherit" })
 );
 
 // Create the browser build.
