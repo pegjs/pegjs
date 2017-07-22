@@ -1,5 +1,9 @@
 {
   "extends": "dmajda",
+  "env": {
+    "commonjs": true
+  },
+  "root": true,
   "rules": {
     "linebreak-style": 0
   }
