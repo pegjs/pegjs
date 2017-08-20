@@ -44,7 +44,13 @@
   "bin": "bin/pegjs",
   "repository": "pegjs/pegjs",
   "scripts": {
-    "test": "gulp"
+    "lint": "gulp lint",
+    "spec": "gulp test",
+    "test": "gulp",
+    "benchmark": "gulp benchmark",
+    "browser:build": "gulp browser:build",
+    "browser:clean": "gulp browser:build",
+    "parser": "gulp parser"
   },
   "devDependencies": {
     "babel-preset-es2015": "6.14.0",
