@@ -1,31 +1,36 @@
-[![Build status](https://img.shields.io/travis/pegjs/pegjs.svg)](https://travis-ci.org/pegjs/pegjs)
-[![npm version](https://img.shields.io/npm/v/pegjs.svg)](https://www.npmjs.com/package/pegjs)
-[![Bower version](https://img.shields.io/bower/v/pegjs.svg)](https://github.com/pegjs/bower)
+[![Build status](https://img.shields.io/travis/pegjs/pegjs.svg?label=travis)](https://travis-ci.org/pegjs/pegjs)
+[![npm/pegjs version](https://img.shields.io/npm/v/pegjs.svg?label=npm/pegjs)](https://www.npmjs.com/package/pegjs)
+[![npm/pegjs-dev version](https://img.shields.io/npm/v/pegjs-dev.svg?label=npm/pegjs-dev)](https://www.npmjs.com/package/pegjs-dev)
+[![Bower version](https://img.shields.io/bower/v/pegjs.svg?label=bower/pegjs)](https://github.com/pegjs/bower)
 [![License](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 
-- [Introduction](#introduction)
+PEG.js is a simple parser generator for JavaScript that produces fast parsers with excellent error reporting. You can use it to
+process complex data or computer languages and build transformers, interpreters, compilers and other tools easily.
+
+> PEG.js is still very much work in progress. There are no compatibility guarantees until version 1.0
+
+Table of Contents
+-----------------
+
 - [Features](#features)
 - [Getting Started](#getting-Started)
 - [Installation](#installation)
   * [Node.js](#nodejs)
   * [Browser](#browser)
+  * [Latest](#latest)
 - [Generating a Parser](#generating-a-parser)
   * [Command Line](#command-line)
   * [JavaScript API](#javascript-api)
 - [Using the Parser](#using-the-parser)
 - [Grammar Syntax and Semantics](#grammar-syntax-and-semantics)
-- [Parsing Expression Types](#parsing-expression-types)
+  * [Case-insensitivity](#case-insensitivity)
+  * [Backtracking](#backtracking)
+  * [Parsing Expression Types](#parsing-expression-types)
 - [Error Messages](#error-messages)
 - [Compatibility](#compatibility)
 - [Development](#development)
-
-Introduction
-============
-
-PEG.js is a simple parser generator for JavaScript that produces fast parsers
-with excellent error reporting. You can use it to process complex data or
-computer languages and build transformers, interpreters, compilers and other
-tools easily.
+  * [Useful Links](#useful-links)
+  * [Contribution](#contribution)
 
 Features
 --------
@@ -73,6 +78,20 @@ version) or install it using Bower:
 
 ```console
 $ bower install pegjs
+```
+
+### Latest
+
+To use the latest features, fixes and changes of PEG.js, directly install from the repository:
+
+```console
+$ npm install pegjs/pegjs#master
+```
+
+Alternatively, you can use the most recently packaged version of the PEG.js code hosted on GitHub:
+
+```console
+$ npm install pegjs-dev
 ```
 
 Generating a Parser
@@ -307,12 +326,46 @@ takes the match result of the expression [0-9]+, which is an array of strings
 containing digits, as its parameter. It joins the digits together to form a
 number and converts it to a JavaScript `number` object.
 
+### Case-insensitivity
+
+Appending `i` right after either [a literal](#literalliteral) or a [a character set](#characters) makes the match
+case-insensitive. The rules shown in the following example all produce the same result:
+
+```pegjs
+a1 = "a" / "b" / "c" / "A" / "B" / "C"
+a2 = "a"i / "b"i / "c"i
+a3 = [a-cA-C]
+a4 = [a-c]i
+```
+
+### Backtracking
+
+Unlike in regular expressions, there is no backtracking in PEG.js expressions.
+
+For example, using the input "hi!":
+
+```pegjs
+
+// This will fail
+HI = "hi" / "hi!"
+
+// This will pass
+HI = "hi!" / "hi"
+
+// This will also pass
+HI = w:"hi" !"!" { return w } / "hi!"
+
+```
+
+For more information on backtracking in PEG, [checkout this excellent answer on Stack Overflow](https://stackoverflow.com/a/24809596/1518408).
+
 ### Parsing Expression Types
 
 There are several types of parsing expressions, some of them containing
 subexpressions and thus forming a recursive structure:
 
   * ["literal"](#literalliteral)
+  * [. (dot character)](#--dot-character-)
   * [[characters]](#characters)
   * [rule](#rule)
   * [( expression )](#-expression-)
@@ -335,7 +388,7 @@ Match exact literal string and return it. The string syntax is the same as in
 JavaScript. Appending `i` right after the literal makes the match
 case-insensitive.
 
-#### .
+#### . *(dot character)*
 
 Match exactly one character and return it as a string.
 
@@ -583,20 +636,40 @@ environments:
 Development
 -----------
 
+PEG.js is currently maintained by [Futago-za Ryuu](https://github.com/futagoza). Since it's [inception](https://www.google.com/search?q=inception+meaning) in 2010, PEG.js was maintained by [David Majda](https://majda.cz/) ([@dmajda](http://twitter.com/dmajda)), until [May 2017](https://github.com/pegjs/pegjs/issues/503).
+
+The [Bower package](https://github.com/pegjs/bower) is maintained by [Michel Krämer](http://www.michel-kraemer.com/) ([@michelkraemer](https://twitter.com/michelkraemer)).
+
+### Useful Links
+
   * [Project website](https://pegjs.org/)
   * [Wiki](https://github.com/pegjs/pegjs/wiki)
   * [Source code](https://github.com/pegjs/pegjs)
   * [Issue tracker](https://github.com/pegjs/pegjs/issues)
   * [Google Group](http://groups.google.com/group/pegjs)
+  * [Stack Overflow](https://stackoverflow.com/questions/tagged/pegjs)
   * [Twitter](http://twitter.com/peg_js)
 
-PEG.js is currently maintained by [Futago-za Ryuu](https://github.com/futagoza). Since it's [inception](https://www.google.com/search?q=inception+meaning) in 2010, PEG.js was maintained by [David Majda](https://majda.cz/) ([@dmajda](http://twitter.com/dmajda)), until [May 2017](https://github.com/pegjs/pegjs/issues/503).
+### Contribution
 
-The [Bower package](https://github.com/pegjs/bower) is maintained by [Michel Krämer](http://www.michel-kraemer.com/) ([@michelkraemer](https://twitter.com/michelkraemer)).
+You are welcome to contribute code using [GitHub pull requests](https://github.com/pegjs/pegjs/pulls).  Unless your contribution is really trivial you should get in touch with me first (preferably by creating a new issue on the [issue tracker](https://github.com/pegjs/pegjs/issues)) - this can prevent wasted effort on both sides.
 
-You are welcome to contribute code.  Unless your contribution is really trivial
-you should get in touch with me first — this can prevent wasted effort on both
-sides. You can send code both as a patch or a GitHub pull request.
+> Before submitting a pull request, please make sure you've checked out the [Contribution Guidelines](https://github.com/pegjs/pegjs/blob/master/CONTRIBUTING.md).
 
-Note that PEG.js is still very much work in progress. There are no compatibility
-guarantees until version 1.0.
+1. Create a fork of https://github.com/pegjs/pegjs
+2. Clone your fork, and optionally create a new branch
+3. Run the command `npm install` from the root of your clone
+4. Add and commit your changes
+5. Validate your changes:
+    - Lint the JavaScript changes (command line only, run `gulp lint` or `npm run lint`)
+    - Run tests to ensure nothing's broken: [see separate documentation](https://github.com/pegjs/pegjs/blob/master/test/README.md)
+    - Optionally, check benchmark results: [see separate documentation](https://github.com/pegjs/pegjs/blob/master/benchmark/README.md)
+    - Optionally, check commit impact (this is a bash script, run `tools/impact`)
+6. If validation fails: reverse your commit, fix the problem and then add/commit again
+7. Push the commits from your clone to the fork
+8. From your fork, start a new pull request
+
+It's also a good idea to check out the [gulpfile.js](https://github.com/pegjs/pegjs/blob/master/gulpfile.js) that defines
+various tasks that are commented with a description of each task.
+
+To see the list of contributors check out the [repository's contributors page](https://github.com/pegjs/pegjs/graphs/contributors).
