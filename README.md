@@ -365,7 +365,7 @@ There are several types of parsing expressions, some of them containing
 subexpressions and thus forming a recursive structure:
 
   * ["literal"](#literalliteral)
-  * [. (dot character)](#--dot-character-)
+  * [. (dot character)](#-dot-character)
   * [[characters]](#characters)
   * [rule](#rule)
   * [( expression )](#-expression-)
