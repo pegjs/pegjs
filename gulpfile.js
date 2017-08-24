@@ -39,7 +39,7 @@ const JS_FILES = [
   "benchmark/run",
   "benchmark/server",
   "!benchmark/vendor/**/*",
-  "bin/pegjs",
+  "bin/*.js",
   "gulpfile.js"
 ];
 
