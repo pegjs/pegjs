@@ -146,14 +146,13 @@ describe("compiler pass |generateBytecode|", function() {
         expect(pass).to.changeAST(grammar, bytecodeDetails([
           5,                           // PUSH_CURR_POS
           18, 0, 2, 2, 22, 0, 23, 1,   // <elements[0]>
-          15, 40, 3,                   // IF_NOT_ERROR
+          15, 39, 3,                   // IF_NOT_ERROR
           18, 2, 2, 2, 22, 2, 23, 3,   //   * <elements[1]>
-          15, 25, 4,                   //     IF_NOT_ERROR
+          15, 24, 4,                   //     IF_NOT_ERROR
           18, 4, 2, 2, 22, 4, 23, 5,   //       * <elements[2]>
-          15, 10, 4,                   //         IF_NOT_ERROR
+          15, 9, 4,                   //         IF_NOT_ERROR
           24, 3,                       //           * LOAD_SAVED_POS
-          26, 6, 3, 3, 2, 1, 0,        //             CALL
-          9,                           //             NIP
+          26, 6, 4, 3, 2, 1, 0,        //             CALL <6>
           8, 3,                        //           * POP_N
           7,                           //             POP_CURR_POS
           3,                           //             PUSH_FAILED
