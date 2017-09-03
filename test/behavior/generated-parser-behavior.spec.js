@@ -583,6 +583,24 @@ describe("generated parser behavior", function() {
             end: { offset: 3, line: 2, column: 1 }
           });
         });
+
+        it("|offset| returns current start offset", function() {
+          let parser = peg.generate([
+            "start = [0-9]+ val:mark { return val; }",
+            "mark = 'xx' { return offset(); }"
+          ].join("\n"), options);
+
+          expect(parser).to.parse("0123456xx", 7);
+        });
+
+        it("|offsetEnd| returns current end offset", function() {
+          let parser = peg.generate([
+            "start = [0-9]+ val:mark { return val; }",
+            "mark = 'xx' { return offsetEnd(); }"
+          ].join("\n"), options);
+
+          expect(parser).to.parse("0123456xx", 9);
+        });
       });
     });
 
