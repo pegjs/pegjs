@@ -593,13 +593,13 @@ describe("generated parser behavior", function() {
           expect(parser).to.parse("0123456xx", 7);
         });
 
-        it("|offsetEnd| returns current end offset", function() {
+        it("|range| returns current range", function() {
           let parser = peg.generate([
             "start = [0-9]+ val:mark { return val; }",
-            "mark = 'xx' { return offsetEnd(); }"
+            "mark = 'xx' { return range(); }"
           ].join("\n"), options);
 
-          expect(parser).to.parse("0123456xx", 9);
+          expect(parser).to.parse("0123456xx", [7, 9]);
         });
       });
     });

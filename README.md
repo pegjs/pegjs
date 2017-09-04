@@ -455,8 +455,8 @@ The `start` and `end` properties both refer to the current parse position. The
 `column` properties contain a line and a column as one-based indices.
 
 Line and column are somewhat expensive to compute, so if you just need the
-offset, there are also functions `offset` and `offsetEnd` that return the start
-and end offset.
+offset, there's also a function `offset` that returns just the start offset,
+and a function `range` that returns the array `[start, end]` offsets.
 
 The code inside the predicate can also access options passed to the parser using
 the `options` variable.
