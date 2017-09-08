@@ -17,7 +17,9 @@
     "CHANGELOG.md",
     "LICENSE",
     "README.md",
-    "bin/pegjs",
+    "bin/peg.js",
+    "bin/options.js",
+    "bin/usage.txt",
     "examples/arithmetics.pegjs",
     "examples/css.pegjs",
     "examples/javascript.pegjs",
@@ -41,7 +43,9 @@
     "package.json"
   ],
   "main": "lib/peg",
-  "bin": "bin/peg",
+  "bin": {
+    "peg": "bin/peg.js"
+  },
   "repository": "pegjs/pegjs",
   "scripts": {
     "lint": "gulp lint",
