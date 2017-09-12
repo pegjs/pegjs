@@ -18,4 +18,12 @@ describe("compiler pass |reportUndefinedRules|", function() {
       }
     });
   });
+
+  it("checks allowedStartRules", function() {
+    expect(pass).to.reportError("start = 'a'", {
+      message: "Start rule \"missing\" is not defined."
+    }, {
+      allowedStartRules: ["missing"]
+    });
+  });
 });
