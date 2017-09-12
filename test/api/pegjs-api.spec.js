@@ -30,6 +30,12 @@ describe("PEG.js API", function() {
         "c = 'x'"
       ].join("\n");
 
+      it("throws an error on missing rule", function() {
+        expect(() => peg.generate(grammar, {
+          allowedStartRules: ["missing"]
+        })).to.throw();
+      });
+
       // The |allowedStartRules| option is implemented separately for each
       // optimization mode, so we need to test it in both.
 

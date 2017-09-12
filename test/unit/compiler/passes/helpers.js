@@ -57,13 +57,15 @@ module.exports = function(chai, utils) {
     );
   });
 
-  Assertion.addMethod("reportError", function(grammar, props) {
+  Assertion.addMethod("reportError", function(grammar, props, options) {
+    options = options !== undefined ? options : {};
+
     let ast = parser.parse(grammar);
 
     let passed, result;
 
     try {
-      utils.flag(this, "object")(ast);
+      utils.flag(this, "object")(ast, options);
       passed = true;
     } catch (e) {
       result = e;
