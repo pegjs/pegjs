@@ -430,69 +430,31 @@ Try to match the expression. If the match does not succeed, just return
 
 #### & { *predicate* }
 
-The predicate is a piece of JavaScript code that is executed as if it was inside
-a function. It gets the match results of labeled expressions in preceding
-expression as its arguments. It should return some JavaScript value using the
-`return` statement. If the returned value evaluates to `true` in boolean
-context, just return `undefined` and do not consume any input; otherwise
-consider the match failed.
+This is a positive assertion. No input is consumed.
 
-The code inside the predicate can access all variables and functions defined in
-the initializer at the beginning of the grammar.
+The predicate should be JavaScript code, and it's executed as a
+function. Curly braces in the predicate must be balanced.
 
-The code inside the predicate can also access location information using the
-`location` function. It returns an object like this:
+The predicate should `return` a boolean value. If the result is
+truthy, the match result is `undefined`, otherwise the match is
+considered failed.
 
-```javascript
-{
-  start: { offset: 23, line: 5, column: 6 },
-  end: { offset: 23, line: 5, column: 6 }
-}
-```
-
-The `start` and `end` properties both refer to the current parse position. The
-`offset` property contains an offset as a zero-based index and `line` and
-`column` properties contain a line and a column as one-based indices.
-
-Line and column are somewhat expensive to compute, so if you just need the
-offset, there's also a function `offset` that returns just the start offset,
-and a function `range` that returns the array `[start, end]` offsets.
-
-The code inside the predicate can also access options passed to the parser using
-the `options` variable.
-
-Note that curly braces in the predicate code must be balanced.
+The predicate has access to all variables and functions in the
+[Action Execution Environment](#action-execution-environment).
 
 #### ! { *predicate* }
 
-The predicate is a piece of JavaScript code that is executed as if it was inside
-a function. It gets the match results of labeled expressions in preceding
-expression as its arguments. It should return some JavaScript value using the
-`return` statement. If the returned value evaluates to `false` in boolean
-context, just return `undefined` and do not consume any input; otherwise
-consider the match failed.
+This is a negative assertion. No input is consumed.
 
-The code inside the predicate can access all variables and functions defined in
-the initializer at the beginning of the grammar.
+The predicate should be JavaScript code, and it's executed as a
+function. Curly braces in the predicate must be balanced.
 
-The code inside the predicate can also access location information using the
-`location` function. It returns an object like this:
+The predicate should `return` a boolean value. If the result is
+falsy, the match result is `undefined`, otherwise the match is
+considered failed.
 
-```javascript
-{
-  start: { offset: 23, line: 5, column: 6 },
-  end: { offset: 23, line: 5, column: 6 }
-}
-```
-
-The `start` and `end` properties both refer to the current parse position. The
-`offset` property contains an offset as a zero-based index and `line` and
-`column` properties contain a line and a column as one-based indices.
-
-The code inside the predicate can also access options passed to the parser using
-the `options` variable.
-
-Note that curly braces in the predicate code must be balanced.
+The predicate has access to all variables and functions in the
+[Action Execution Environment](#action-execution-environment).
 
 #### $ *expression*
 
@@ -513,60 +475,74 @@ Match a sequence of expressions and return their match results in an array.
 
 #### *expression* { *action* }
 
-Match the expression. If the match is successful, run the action, otherwise
+If the expression matches successfully, run the action, otherwise
 consider the match failed.
 
-The action is a piece of JavaScript code that is executed as if it was inside a
-function. It gets the match results of labeled expressions in preceding
-expression as its arguments. The action should return some JavaScript value
-using the `return` statement. This value is considered match result of the
-preceding expression.
+The action shuuld be JavaScript code, and it's executed as a
+function. Curly braces in the action must be balanced.
 
-To indicate an error, the code inside the action can invoke the `expected`
-function, which makes the parser throw an exception. The function takes two
-parameters — a description of what was expected at the current position and
-optional location information (the default is what `location` would return — see
-below). The description will be used as part of a message of the thrown
-exception.
+The action should `return` some value, which will be used as the
+match result of the expression.
 
-The code inside an action can also invoke the `error` function, which also makes
-the parser throw an exception. The function takes two parameters — an error
-message and optional location information (the default is what `location` would
-return — see below). The message will be used by the thrown exception.
-
-The code inside the action can access all variables and functions defined in the
-initializer at the beginning of the grammar. Curly braces in the action code
-must be balanced.
-
-The code inside the action can also access the text matched by the expression
-using the `text` function.
-
-
-The code inside the action can also access location information using the
-`location` function. It returns an object like this:
-
-```javascript
-{
-  start: { offset: 23, line: 5, column: 6 },
-  end: { offset: 25, line: 5, column: 8 }
-}
-```
-
-The `start` property refers to the position at the beginning of the expression,
-the `end` property refers to position after the end of the expression. The
-`offset` property contains an offset as a zero-based index and `line` and
-`column` properties contain a line and a column as one-based indices.
-
-The code inside the action can also access options passed to the parser using
-the `options` variable.
-
-Note that curly braces in the action code must be balanced.
+The action has access to all variables and functions in the
+[Action Execution Environment](#action-execution-environment).
 
 #### *expression<sub>1</sub>* / *expression<sub>2</sub>* / ... / *expression<sub>n</sub>*
 
 Try to match the first expression, if it does not succeed, try the second one,
 etc. Return the match result of the first successfully matched expression. If no
 expression matches, consider the match failed.
+
+Action Execution Environment
+----------------------------
+
+Actions and predicates have these variables and functions
+available to them.
+
+* All variables and functions defined in the initializer at the
+  beginning of the grammar are available.
+
+* Labels in the preceding expression are available as local
+  variables, which will have the match result of the labelled
+  expressions.
+
+* `options` is a variable that contains the parser options.
+
+* `error(message, where)` will report an error and throw an
+  exception. `where` is optional; the default is the value of
+  `location()`.
+
+* `expected(message, where)` is similar to `error`, but reports
+  > Expected _message_ but "_other_" found.
+
+* `text()` returns the source text matched by the preceding
+  expression.
+
+* `location()` returns an object like this:
+
+  ```javascript
+  {
+    start: { offset: 23, line: 5, column: 6 },
+    end: { offset: 25, line: 5, column: 8 }
+  }
+  ```
+
+  `start` refers to the position at the beginning of the
+  preceding expression, and `end` refers to the position after
+  the end of the preceding expression.
+
+ `offset` is a 0-based character index within the source text.
+  `line` and `column` are 1-based indices.
+
+  Note that `line` and `column` are somewhat expensive to
+  compute, so if you need location frequently, you might want to
+  use `offset()` or `range()` instead.
+
+* `offset()` returns the start offset of the preceding
+  expression.
+
+* `range()` returns an array containing the start and end offsets
+  of the preceding expression, such as `[23, 25]`.
 
 Error Messages
 --------------
