@@ -26,6 +26,7 @@ Table of Contents
   * [Case-insensitivity](#case-insensitivity)
   * [Backtracking](#backtracking)
   * [Parsing Expression Types](#parsing-expression-types)
+  * [Action Execution Environment](#action-execution-environment)
 - [Error Messages](#error-messages)
 - [Compatibility](#compatibility)
 - [Development](#development)
@@ -493,8 +494,7 @@ Try to match the first expression, if it does not succeed, try the second one,
 etc. Return the match result of the first successfully matched expression. If no
 expression matches, consider the match failed.
 
-Action Execution Environment
-----------------------------
+### Action Execution Environment
 
 Actions and predicates have these variables and functions
 available to them.
@@ -531,7 +531,7 @@ available to them.
   preceding expression, and `end` refers to the position after
   the end of the preceding expression.
 
- `offset` is a 0-based character index within the source text.
+  `offset` is a 0-based character index within the source text.
   `line` and `column` are 1-based indices.
 
   Note that `line` and `column` are somewhat expensive to
