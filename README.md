@@ -502,9 +502,24 @@ available to them.
 * All variables and functions defined in the initializer at the
   beginning of the grammar are available.
 
-* Labels in the preceding expression are available as local
+* Labels from preceding expressions are available as local
   variables, which will have the match result of the labelled
   expressions.
+
+  A label is only available after its labelled expression is
+  matched:
+
+  ```pegjs
+  rule = A:('a' B:'b' { /* B is available, A is not */ } )
+  ```
+
+  A label in a sub-expression is only valid within the
+  sub-expression:
+
+  ```pegjs
+  rule = A:'a' (B: 'b') (C: 'b' { /* A and C are available, B is not */ })
+  ```
+
 
 * `options` is a variable that contains the parser options.
 
