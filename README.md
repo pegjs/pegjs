@@ -479,7 +479,7 @@ Match a sequence of expressions and return their match results in an array.
 If the expression matches successfully, run the action, otherwise
 consider the match failed.
 
-The action shuuld be JavaScript code, and it's executed as a
+The action should be JavaScript code, and it's executed as a
 function. Curly braces in the action must be balanced.
 
 The action should `return` some value, which will be used as the
@@ -515,9 +515,6 @@ available to them.
 * `expected(message, where)` is similar to `error`, but reports
   > Expected _message_ but "_other_" found.
 
-* `text()` returns the source text matched by the preceding
-  expression.
-
 * `location()` returns an object like this:
 
   ```javascript
@@ -527,9 +524,12 @@ available to them.
   }
   ```
 
-  `start` refers to the position at the beginning of the
-  preceding expression, and `end` refers to the position after
-  the end of the preceding expression.
+  For actions, `start` refers to the position at the beginning of
+  the preceding expression, and `end` refers to the position
+  after the end of the preceding expression.
+
+  For predicates, `start` and `end` are the same, the location
+  where the predicate is evaluated.
 
   `offset` is a 0-based character index within the source text.
   `line` and `column` are 1-based indices.
@@ -538,11 +538,13 @@ available to them.
   compute, so if you need location frequently, you might want to
   use `offset()` or `range()` instead.
 
-* `offset()` returns the start offset of the preceding
-  expression.
+* `offset()` returns the start offset.
 
-* `range()` returns an array containing the start and end offsets
-  of the preceding expression, such as `[23, 25]`.
+* `range()` returns an array containing the start and end
+  offsets, such as `[23, 25]`.
+
+* `text()` returns the source text between `start` and `end`
+  (which will be "" for predicates).
 
 Error Messages
 --------------
