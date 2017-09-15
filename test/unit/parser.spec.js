@@ -668,8 +668,8 @@ describe("PEG.js grammar parser", function() {
       end: { offset: 14, line: 2, column: 7 }
     };
     expect(() => parser.parse(text))
-      .to.throw('Unbalanced brace.')
-      .with.property('location')
+      .to.throw("Unbalanced brace.")
+      .with.property("location")
       .that.deep.equals(errorLocation);
   });
 });
