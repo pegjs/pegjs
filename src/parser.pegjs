@@ -440,7 +440,7 @@ CodeBlock "code block"
   / "{" { error("Unbalanced brace."); }
 
 Code
-  = $((![{}] SourceCharacter)+ / "{" Code "}" )*
+  = $((![{}] SourceCharacter)+ / "{" Code "}")*
 
 // Unicode Character Categories
 //
