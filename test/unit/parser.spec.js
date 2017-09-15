@@ -5,6 +5,9 @@ let parser = require("../../lib/parser");
 
 let expect = chai.expect;
 
+// better diagnostics for deep eq failure
+chai.config.truncateThreshold = 0;
+
 describe("PEG.js grammar parser", function() {
   let literalAbcd       = { type: "literal",      value: "abcd", ignoreCase: false };
   let literalEfgh       = { type: "literal",      value: "efgh", ignoreCase: false };
@@ -656,5 +659,17 @@ describe("PEG.js grammar parser", function() {
   // Canonical EOF is the end of input.
   it("parses EOF", function() {
     expect("start = 'abcd'\n").to.parseAs(trivialGrammar);
+  });
+
+  it("reports unmatched brace", function() {
+    const text = "rule = \n 'x' { y \n z";
+    const errorLocation = {
+      start: { offset: 13, line: 2, column: 6 },
+      end: { offset: 14, line: 2, column: 7 }
+    };
+    expect(() => parser.parse(text))
+      .to.throw('Unbalanced brace.')
+      .with.property('location')
+      .that.deep.equals(errorLocation);
   });
 });
