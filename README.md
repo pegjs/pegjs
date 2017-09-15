@@ -27,6 +27,7 @@ Table of Contents
   * [Backtracking](#backtracking)
   * [Parsing Expression Types](#parsing-expression-types)
   * [Action Execution Environment](#action-execution-environment)
+  * [Balanced Braces](#balanced-braces)
 - [Error Messages](#error-messages)
 - [Compatibility](#compatibility)
 - [Development](#development)
@@ -257,8 +258,8 @@ in curly braces (“{” and “}”). This code is executed before the generate
 starts parsing. All variables and functions defined in the initializer are
 accessible in rule actions and semantic predicates. The code inside the
 initializer can access options passed to the parser using the `options`
-variable. Curly braces in the initializer code must be balanced. Let's look at
-the example grammar from above using a simple initializer.
+variable. Curly braces in the initializer code must be [balanced](#balanced-braces).
+Let's look at the example grammar from above using a simple initializer.
 
 ```pegjs
 {
@@ -434,7 +435,7 @@ Try to match the expression. If the match does not succeed, just return
 This is a positive assertion. No input is consumed.
 
 The predicate should be JavaScript code, and it's executed as a
-function. Curly braces in the predicate must be balanced.
+function. Curly braces in the predicate must be [balanced](#balanced-braces).
 
 The predicate should `return` a boolean value. If the result is
 truthy, the match result is `undefined`, otherwise the match is
@@ -448,7 +449,7 @@ The predicate has access to all variables and functions in the
 This is a negative assertion. No input is consumed.
 
 The predicate should be JavaScript code, and it's executed as a
-function. Curly braces in the predicate must be balanced.
+function. Curly braces in the predicate must be [balanced](#balanced-braces).
 
 The predicate should `return` a boolean value. If the result is
 falsy, the match result is `undefined`, otherwise the match is
@@ -480,7 +481,7 @@ If the expression matches successfully, run the action, otherwise
 consider the match failed.
 
 The action should be JavaScript code, and it's executed as a
-function. Curly braces in the action must be balanced.
+function. Curly braces in the action must be [balanced](#balanced-braces).
 
 The action should `return` some value, which will be used as the
 match result of the expression.
@@ -519,7 +520,6 @@ available to them.
   ```pegjs
   rule = A:'a' (B: 'b') (C: 'b' { /* A and C are available, B is not */ })
   ```
-
 
 * `options` is a variable that contains the parser options.
 
@@ -560,6 +560,21 @@ available to them.
 
 * `text()` returns the source text between `start` and `end`
   (which will be "" for predicates).
+  
+### Balanced Braces
+
+Code fragments such as actions and predicates must have balanced curly braces,
+because pegjs doesn't parse the contents. It only looks at balanced braces to
+find the end of the code fragment.
+
+If your code fragment needs an unbalanced brace in a string literal, you
+can balance it in a comment. For example:
+
+```pegjs
+brace = [{}] {
+  return text() === "{" ? 1 : -1;  // } for balance
+}
+```
 
 Error Messages
 --------------
