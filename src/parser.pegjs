@@ -437,6 +437,7 @@ AnyMatcher
 
 CodeBlock "code block"
   = "{" code:Code "}" { return code; }
+  / "{" { error("Unbalanced brace."); }
 
 Code
   = $((![{}] SourceCharacter)+ / "{" Code "}")*
