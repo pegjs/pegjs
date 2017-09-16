@@ -43,7 +43,7 @@
     "package.json"
   ],
   "main": "lib/peg",
-  "bin": "bin/peg",
+  "bin": "bin/peg.js",
   "repository": "pegjs/pegjs",
   "scripts": {
     "lint": "gulp lint",
