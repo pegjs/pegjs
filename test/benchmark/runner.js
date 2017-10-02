@@ -2,7 +2,7 @@
 
 /* global setTimeout */
 
-let peg = require("../lib/peg");
+let peg = require("../../lib/peg");
 
 let Runner = {
   run(benchmarks, runCount, options, callbacks) {
@@ -53,7 +53,7 @@ let Runner = {
         callbacks.benchmarkStart(benchmark);
 
         state.parser = peg.generate(
-          callbacks.readFile("../examples/" + benchmark.id + ".pegjs"),
+          callbacks.readFile("../../examples/" + benchmark.id + ".pegjs"),
           options
         );
         state.benchmarkInputSize = 0;

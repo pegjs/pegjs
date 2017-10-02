@@ -3,7 +3,7 @@
 /* global console */
 
 let chai = require("chai");
-let peg = require("../../lib/peg");
+let peg = require("../../../lib/peg");
 let sinon = require("sinon");
 
 let expect = chai.expect;

@@ -1,6 +1,6 @@
 "use strict";
 
-let parser = require("../../../../lib/parser");
+let parser = require("../../../../../lib/parser");
 
 module.exports = function(chai, utils) {
   let Assertion = chai.Assertion;

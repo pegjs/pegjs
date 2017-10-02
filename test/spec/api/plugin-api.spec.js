@@ -1,7 +1,7 @@
 "use strict";
 
 let chai = require("chai");
-let peg = require("../../lib/peg");
+let peg = require("../../../lib/peg");
 
 let expect = chai.expect;
 

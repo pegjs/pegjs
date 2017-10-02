@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+"use strict";
+
+/* eslint-env node */
+
+let babelify = require("babelify");
+let browserify = require("browserify");
+let express = require("express");
+let glob = require("glob");
+let logger = require("morgan");
+
+let app = express();
+
+app.use(logger("dev"));
+app.use(express.static(__dirname));
+app.use("/benchmark", express.static(`${__dirname}/../benchmark`));
+app.use("/examples", express.static(`${__dirname}/../../examples`));
+
+app.get("/:dir/bundle.js", (req, res) => {
+  browserify(glob.sync(
+    `${__dirname}/../${req.params.dir}/**/*.js`
+  ))
+    .transform(babelify, {
+      presets: "es2015",
+      compact: false
+    })
+    .bundle()
+    .pipe(res);
+});
+
+app.listen(8000, () => {
+  console.log("Test server running at: http://localhost:8000/");
+});

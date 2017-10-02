@@ -49,6 +49,7 @@
     "lint": "gulp lint",
     "spec": "gulp test",
     "test": "gulp",
+    "test:server": "node test/server/run",
     "benchmark": "gulp benchmark",
     "browser:build": "gulp browser:build",
     "browser:clean": "gulp browser:build",

@@ -2,7 +2,7 @@
 
 let chai = require("chai");
 let helpers = require("./helpers");
-let pass = require("../../../../lib/compiler/passes/generate-bytecode");
+let pass = require("../../../../../lib/compiler/passes/generate-bytecode");
 
 chai.use(helpers);
 

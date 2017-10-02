@@ -2,7 +2,7 @@
 
 let chai = require("chai");
 let helpers = require("./helpers");
-let pass = require("../../../../lib/compiler/passes/report-duplicate-rules");
+let pass = require("../../../../../lib/compiler/passes/report-duplicate-rules");
 
 chai.use(helpers);
 

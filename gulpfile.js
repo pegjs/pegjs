@@ -32,20 +32,16 @@ const HEADER = [
 const JS_FILES = [
   "lib/**/*.js",
   "!lib/parser.js",
-  "test/**/*.js",
-  "test/server",
-  "!test/vendor/**/*",
-  "benchmark/**/*.js",
-  "benchmark/run",
-  "benchmark/server",
-  "!benchmark/vendor/**/*",
+  "test/benchmark/**/*.js",
+  "test/benchmark/run",
+  "test/spec/**/*.js",
+  "test/server/run",
   "bin/*.js",
   "gulpfile.js"
 ];
 
 const TEST_FILES = [
-  "test/**/*.js",
-  "!test/vendor/**/*"
+  "test/spec/**/*.js"
 ];
 
 function generate(contents) {
@@ -71,7 +67,7 @@ gulp.task("test", () =>
 
 // Run benchmarks.
 gulp.task("benchmark", () =>
-  spawn("node", ["benchmark/run"], { stdio: "inherit" })
+  spawn("node", ["test/benchmark/run"], { stdio: "inherit" })
 );
 
 // Create the browser build.

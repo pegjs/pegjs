@@ -10,12 +10,6 @@ $("#run").click(() => {
 
   let resultsTable = $("#results-table");
 
-  function appendHeading(heading) {
-    resultsTable.append(
-      "<tr class='heading'><th colspan='4'>" + heading + "</th></tr>"
-    );
-  }
-
   function appendResult(klass, title, url, inputSize, parseTime) {
     const KB = 1024;
     const MS_IN_S = 1000;
@@ -76,7 +70,7 @@ $("#run").click(() => {
     readFile(file) {
       return $.ajax({
         type: "GET",
-        url: file,
+        url: "benchmark/" + file,
         dataType: "text",
         async: false
       }).responseText;
@@ -90,14 +84,20 @@ $("#run").click(() => {
       appendResult(
         "individual",
         test.title,
-        benchmark.id + "/" + test.file,
+        "benchmark/" + benchmark.id + "/" + test.file,
         inputSize,
         parseTime
       );
     },
 
     benchmarkStart(benchmark) {
-      appendHeading(benchmark.title);
+      resultsTable.append(
+          "<tr class='heading'><th colspan='4'>"
+        +   "<a href='../../examples/" + benchmark.id + ".pegjs'>"
+        +     benchmark.title
+        +   "</a>"
+        + "</th></tr>"
+      );
     },
 
     benchmarkFinish(benchmark, inputSize, parseTime) {

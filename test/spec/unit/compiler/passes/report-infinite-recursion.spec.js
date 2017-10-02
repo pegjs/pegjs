@@ -2,7 +2,7 @@
 
 let chai = require("chai");
 let helpers = require("./helpers");
-let pass = require("../../../../lib/compiler/passes/report-infinite-recursion");
+let pass = require("../../../../../lib/compiler/passes/report-infinite-recursion");
 
 chai.use(helpers);
 
