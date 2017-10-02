@@ -2,8 +2,6 @@
 
 "use strict";
 
-/* eslint-env node */
-
 let Runner = require("./runner.js");
 let benchmarks = require("./benchmarks.js");
 let fs = require("fs");

@@ -2,8 +2,6 @@
 
 "use strict";
 
-/* eslint-env node */
-
 let babelify = require("babelify");
 let browserify = require("browserify");
 let express = require("express");

@@ -1,7 +1,5 @@
 "use strict";
 
-/* eslint-env node */
-
 let babelify = require("babelify");
 let browserify = require("browserify");
 let buffer = require("vinyl-buffer");
