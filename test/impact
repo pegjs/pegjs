@@ -1,116 +1,134 @@
-#!/bin/sh
+#!/usr/bin/env node
 
-# Measures impact of a Git commit (or multiple commits) on generated parsers'
-# speed and size. Makes sense to use only on PEG.js Git repository checkout.
+/* eslint camelcase:0, max-len:0, one-var:0 */
 
-set -e
-export LC_ALL=C
+//
+// Measures impact of a Git commit (or multiple commits) on generated parsers
+// speed and size. Makes sense to use only on PEG.js git repository checkout.
+//
 
-# Measurement
+"use strict";
 
-prepare() {
-  git checkout --quiet "$1"
+let child_process = require("child_process");
+let fs = require("fs");
+let os = require("os");
+let path = require("path");
+let glob = require("glob");
+
+// Utils
+
+let print = console.log;
+
+function echo(message) {
+  process.stdout.write(message);
 }
 
-run_benchmark() {
-  echo $(gulp benchmark | awk 'BEGIN { FS = " *│ *" } /Total/ { split($5, a, " "); print a[1] }')
+function exec(command) {
+  return child_process.execSync(command, { encoding: "utf8" });
 }
 
-measure_speed() {
-  bc <<-EOT
-    scale = 2
-    ($(run_benchmark) + $(run_benchmark) + $(run_benchmark) + $(run_benchmark) + $(run_benchmark)) / 5
-EOT
+function prepare(commit) {
+  exec(`git checkout --quiet "${commit}"`);
 }
 
-measure_size() {
-  for file in examples/*.pegjs; do
-    bin/pegjs "$file"
-  done
-
-  echo $(cat examples/*.js | wc -c)
-
-  rm examples/*.js
+function runBenchmark() {
+  return parseFloat(
+    exec("node test/benchmark/run")
+      // Split by table seprator, reverse and return the total bytes per second
+      .split("│")
+      .reverse()[1]
+      // Trim the whitespaces and remove ` kB/s` from the end
+      .trim()
+      .slice(0, -5)
+  );
 }
 
-difference() {
-  bc <<-EOT
-    scale = 4
-    ($2 / $1 - 1) * 100
-EOT
+function measureSpeed() {
+  return (runBenchmark() + runBenchmark() + runBenchmark() + runBenchmark() + runBenchmark() / 5).toFixed(2);
 }
 
-# Helpers
+function measureSize() {
+  let size = 0;
 
-print_results() {
-  echo
+  glob.sync("examples/*.pegjs")
+    .forEach(example => {
+      exec("node bin/peg.js " + example);
+      example = example.slice(0, -5) + "js";
+      size += fs.statSync(example).size;
+      fs.unlinkSync(example);
+    });
 
-  echo "Speed impact"
-  echo "------------"
-  echo "Before:     $1 kB/s"
-  echo "After:      $2 kB/s"
-  printf "Difference: %0.2f%%\n" $(difference $1 $2)
-
-  echo
-
-  echo "Size impact"
-  echo "-----------"
-  echo "Before:     $3 b"
-  echo "After:      $4 b"
-  printf "Difference: %0.2f%%\n" $(difference $3 $4)
-
-  echo
-
-  echo "(Measured by /tools/impact with Node.js $(node --version) on $(uname -mrs).)"
+  return size;
 }
 
-print_usage() {
-  echo "Usage:"
-  echo "  $0 <commit>"
-  echo "  $0 <commit_before> <commit_after>"
-  echo
-  echo "Measures impact of a Git commit (or multiple commits) on generated parsers'"
-  echo "speed and size. Makes sense to use only on PEG.js Git repository checkout."
+function difference($1, $2) {
+  return (($2 / $1 - 1) * 100).toFixed(4);
 }
 
-cd_to_root() {
-  if [ -L "$0" ]; then
-    THIS_FILE=$(readlink "$0")
-  else
-    THIS_FILE="$0"
-  fi
-  cd "$(dirname "$THIS_FILE")/.."
+// Prepare
+
+let argv = process.argv.slice(2);
+let cwd = path.join(__dirname, "..");
+let commit_before, commit_after;
+
+if (argv.length === 1) {
+  commit_before = argv[0] + "~1";
+  commit_after = argv[0];
+} else if (argv.length === 2) {
+  commit_before = argv[0];
+  commit_after = argv[1];
+} else {
+  print("Usage:");
+  print("");
+  print("  test/impact <commit>");
+  print("  test/impact <commit_before> <commit_after>");
+  print("");
+  print("Measures impact of a Git commit (or multiple commits) on generated parsers'");
+  print("speed and size. Makes sense to use only on PEG.js Git repository checkout.");
+  print("");
+  process.exit(1);
 }
 
-exit_failure() {
-  exit 1
+if (process.cwd() !== cwd) {
+  process.chdir(cwd);
 }
 
-# Main
+// Measure
 
-if [ $# -eq 1 ]; then
-  commit_before="$1~1"
-  commit_after="$1"
-elif [ $# -eq 2 ]; then
-  commit_before="$1"
-  commit_after="$2"
-else
-  print_usage
-  exit_failure
-fi
+let branch = exec("git rev-parse --abbrev-ref HEAD");
+let speed1, size1, speed2, size2;
 
-cd_to_root
+echo(`Measuring commit ${commit_before}...`);
+prepare(commit_before);
+speed1 = measureSpeed();
+size1 = measureSize();
+echo(" OK" + os.EOL);
 
-printf "Measuring commit %s..." "$commit_before"
-prepare "$commit_before"
-speed1=$(measure_speed)
-size1=$(measure_size)
-echo " OK"
+echo(`Measuring commit ${commit_after}...`);
+prepare(commit_after);
+speed2 = measureSpeed();
+size2 = measureSize();
+echo(" OK" + os.EOL);
 
-printf "Measuring commit %s..." "$commit_after"
-prepare "$commit_after"
-speed2=$(measure_speed)
-size2=$(measure_size)
-echo " OK"
+// Finish
 
-print_results $speed1 $speed2 $size1 $size2
+prepare(branch);
+
+print(`
+test/impact ${commit_before} ${commit_after}
+
+  Speed impact
+  ------------
+  Before:     ${speed1} kB/s
+  After:      ${speed2} kB/s
+  Difference: ${difference(parseFloat(speed1), parseFloat(speed2))}%
+
+  Size impact
+  -----------
+  Before:     ${size1} b
+  After:      ${size2} b
+  Difference: ${difference(size1, size2)}%
+
+- Measured by /test/impact with Node.js ${process.version}
+- Your system: ${os.type()} ${os.release()} ${os.arch()}.
+`);

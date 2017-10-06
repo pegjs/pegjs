@@ -32,6 +32,7 @@ const JS_FILES = [
   "!lib/parser.js",
   "test/benchmark/**/*.js",
   "test/benchmark/run",
+  "test/impact",
   "test/spec/**/*.js",
   "test/server/run",
   "bin/*.js",
