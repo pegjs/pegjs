@@ -226,6 +226,20 @@ describe("PEG.js grammar parser", function() {
     chai.use(helpers);
   });
 
+  // Grammars without any rules are not accepted.
+  it("parses Rule+", function() {
+    expect("start = a").to.parseAs(ruleRefGrammar("a"));
+    let grammar = ruleRefGrammar("a");
+    grammar.initializer = {
+      "type": "initializer",
+      "code": ""
+    };
+    expect("{}\nstart = a").to.parseAs(grammar);
+
+    expect("").to.failToParse();
+    expect("{}").to.failToParse();
+  });
+
   // Canonical Grammar is "a = 'abcd'; b = 'efgh'; c = 'ijkl';".
   it("parses Grammar", function() {
     expect("\na = 'abcd';\n").to.parseAs(
