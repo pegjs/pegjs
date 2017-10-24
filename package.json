@@ -70,7 +70,6 @@
     "gulp-header": "1.8.8",
     "gulp-mocha": "3.0.1",
     "gulp-rename": "1.2.2",
-    "gulp-transform": "1.0.8",
     "gulp-uglify": "2.0.0",
     "morgan": "1.7.0",
     "run-sequence": "1.2.2",
