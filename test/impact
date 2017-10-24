@@ -15,6 +15,27 @@ let os = require("os");
 let path = require("path");
 let glob = require("glob");
 
+// Current Working Directory
+
+let cwd = path.join(__dirname, "..");
+
+if (process.cwd() !== cwd) {
+  process.chdir(cwd);
+}
+
+// Execution Files
+
+let PEGJS_BIN = "bin/peg.js";
+let BENCHMARK_BIN = "test/benchmark/run";
+
+if (!fs.existsSync(PEGJS_BIN)) {
+  PEGJS_BIN = "bin/pegjs";
+}
+
+if (!fs.existsSync(BENCHMARK_BIN)) {
+  BENCHMARK_BIN = "benchmark/run";
+}
+
 // Utils
 
 let print = console.log;
@@ -33,7 +54,7 @@ function prepare(commit) {
 
 function runBenchmark() {
   return parseFloat(
-    exec("node test/benchmark/run")
+    exec("node " + BENCHMARK_BIN)
       // Split by table seprator, reverse and return the total bytes per second
       .split("│")
       .reverse()[1]
@@ -52,7 +73,7 @@ function measureSize() {
 
   glob.sync("examples/*.pegjs")
     .forEach(example => {
-      exec("node bin/peg.js " + example);
+      exec(`node ${PEGJS_BIN} ${example}`);
       example = example.slice(0, -5) + "js";
       size += fs.statSync(example).size;
       fs.unlinkSync(example);
@@ -68,7 +89,6 @@ function difference($1, $2) {
 // Prepare
 
 let argv = process.argv.slice(2);
-let cwd = path.join(__dirname, "..");
 let commit_before, commit_after;
 
 if (argv.length === 1) {
@@ -87,10 +107,6 @@ if (argv.length === 1) {
   print("speed and size. Makes sense to use only on PEG.js Git repository checkout.");
   print("");
   process.exit(1);
-}
-
-if (process.cwd() !== cwd) {
-  process.chdir(cwd);
 }
 
 // Measure
