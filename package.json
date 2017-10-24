@@ -63,7 +63,7 @@
     "browserify": "14.5.0",
     "chai": "4.1.2",
     "del": "3.0.0",
-    "eslint-config-dmajda": "1.0.0",
+    "eslint-config-futagozaryuu": "3.6.x",
     "express": "4.16.2",
     "glob": "7.1.2",
     "gulp": "3.9.1",
