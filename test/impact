@@ -23,20 +23,24 @@ if ( process.cwd() !== cwd ) process.chdir( cwd );
 
 // Execution Files
 
-let PEGJS_BIN = "bin/peg.js";
-let BENCHMARK_BIN = "test/benchmark/run";
+let NEWER_PEGJS_BIN = "bin/peg.js";
+let NEWER_BENCHMARK_BIN = "test/benchmark/run";
 
-if ( ! fs.existsSync( PEGJS_BIN ) ) {
+const ef = {
 
-    PEGJS_BIN = "bin/pegjs";
+    get pegjs() {
 
-}
+        return fs.existsSync( NEWER_PEGJS_BIN ) ? NEWER_PEGJS_BIN : "bin/pegjs";
 
-if ( ! fs.existsSync( BENCHMARK_BIN ) ) {
+    },
 
-    BENCHMARK_BIN = "benchmark/run";
+    get benchmark() {
 
-}
+        return fs.existsSync( NEWER_BENCHMARK_BIN ) ? NEWER_BENCHMARK_BIN : "benchmark/run";
+
+    },
+
+};
 
 // Utils
 
@@ -61,7 +65,7 @@ function prepare( commit ) {
 function runBenchmark() {
 
     return parseFloat(
-        exec( "node " + BENCHMARK_BIN )
+        exec( "node " + ef.benchmark )
 
             // Split by table seprator, reverse and return the total bytes per second
             .split( "│" )
@@ -87,7 +91,7 @@ function measureSize() {
     glob.sync( "examples/*.pegjs" )
         .forEach( example => {
 
-            exec( `node ${ PEGJS_BIN } ${ example }` );
+            exec( `node ${ ef.pegjs } ${ example }` );
             example = example.slice( 0, -5 ) + "js";
             size += fs.statSync( example ).size;
             fs.unlinkSync( example );
