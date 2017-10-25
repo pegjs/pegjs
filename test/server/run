@@ -2,31 +2,35 @@
 
 "use strict";
 
-let babelify = require("babelify");
-let browserify = require("browserify");
-let express = require("express");
-let glob = require("glob");
-let logger = require("morgan");
+const babelify = require( "babelify" );
+const browserify = require( "browserify" );
+const express = require( "express" );
+const glob = require( "glob" );
+const logger = require( "morgan" );
 
-let app = express();
+const app = express();
 
-app.use(logger("dev"));
-app.use(express.static(__dirname));
-app.use("/benchmark", express.static(`${__dirname}/../benchmark`));
-app.use("/examples", express.static(`${__dirname}/../../examples`));
+app.use( logger( "dev" ) );
+app.use( express.static( __dirname ) );
+app.use( "/benchmark", express.static( `${ __dirname }/../benchmark` ) );
+app.use( "/examples", express.static( `${ __dirname }/../../examples` ) );
 
-app.get("/:dir/bundle.js", (req, res) => {
-  browserify(glob.sync(
-    `${__dirname}/../${req.params.dir}/**/*.js`
-  ))
-    .transform(babelify, {
-      presets: "es2015",
-      compact: false
-    })
-    .bundle()
-    .pipe(res);
-});
+app.get( "/:dir/bundle.js", ( req, res ) => {
 
-app.listen(8000, () => {
-  console.log("Test server running at: http://localhost:8000/");
-});
+    browserify( glob.sync(
+        `${ __dirname }/../${ req.params.dir }/**/*.js`
+    ) )
+        .transform( babelify, {
+            presets: "es2015",
+            compact: false
+        } )
+        .bundle()
+        .pipe( res );
+
+} );
+
+app.listen( 8000, () => {
+
+    console.log( "Test server running at: http://localhost:8000/" );
+
+} );

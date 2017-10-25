@@ -1,90 +1,112 @@
 "use strict";
 
-let parser = require("../../../../../lib/parser");
+const parser = require( "../../../../../lib/parser" );
 
-module.exports = function(chai, utils) {
-  let Assertion = chai.Assertion;
+module.exports = function ( chai, utils ) {
 
-  Assertion.addMethod("changeAST", function(grammar, props, options) {
-    options = options !== undefined ? options : {};
+    const Assertion = chai.Assertion;
 
-    function matchProps(value, props) {
-      function isArray(value) {
-        return Object.prototype.toString.apply(value) === "[object Array]";
-      }
+    Assertion.addMethod( "changeAST", function ( grammar, props, options ) {
 
-      function isObject(value) {
-        return value !== null && typeof value === "object";
-      }
+        options = typeof options !== "undefined" ? options : {};
 
-      if (isArray(props)) {
-        if (!isArray(value)) { return false; }
+        function matchProps( value, props ) {
 
-        if (value.length !== props.length) { return false; }
-        for (let i = 0; i < props.length; i++) {
-          if (!matchProps(value[i], props[i])) { return false; }
+            function isObject( value ) {
+
+                return value !== null && typeof value === "object";
+
+            }
+
+            if ( Array.isArray( props ) ) {
+
+                if ( ! Array.isArray( value ) ) return false;
+                if ( value.length !== props.length ) return false;
+
+                for ( let i = 0; i < props.length; i++ ) {
+
+                    if ( ! matchProps( value[ i ], props[ i ] ) ) return false;
+
+                }
+
+                return true;
+
+            } else if ( isObject( props ) ) {
+
+                if ( ! isObject( value ) ) return false;
+
+                const keys = Object.keys( props );
+                for ( let i = 0; i < keys.length; i++ ) {
+
+                    const key = keys[ i ];
+
+                    if ( ! ( key in value ) ) return false;
+                    if ( ! matchProps( value[ key ], props[ key ] ) ) return false;
+
+                }
+
+                return true;
+
+            }
+
+            return value === props;
+
         }
 
-        return true;
-      } else if (isObject(props)) {
-        if (!isObject(value)) { return false; }
+        const ast = parser.parse( grammar );
 
-        let keys = Object.keys(props);
-        for (let i = 0; i < keys.length; i++) {
-          let key = keys[i];
+        utils.flag( this, "object" )( ast, options );
 
-          if (!(key in value)) { return false; }
+        this.assert(
+            matchProps( ast, props ),
+            "expected #{this} to change the AST to match #{exp}",
+            "expected #{this} to not change the AST to match #{exp}",
+            props,
+            ast
+        );
 
-          if (!matchProps(value[key], props[key])) { return false; }
+    } );
+
+    Assertion.addMethod( "reportError", function ( grammar, props, options ) {
+
+        options = typeof options !== "undefined" ? options : {};
+
+        const ast = parser.parse( grammar );
+
+        let passed, result;
+
+        try {
+
+            utils.flag( this, "object" )( ast, options );
+            passed = true;
+
+        } catch ( e ) {
+
+            result = e;
+            passed = false;
+
         }
 
-        return true;
-      } else {
-        return value === props;
-      }
-    }
+        this.assert(
+            ! passed,
+            "expected #{this} to report an error but it didn't",
+            "expected #{this} to not report an error but #{act} was reported",
+            null,
+            result
+        );
 
-    let ast = parser.parse(grammar);
+        if ( ! passed && typeof props !== "undefined" ) {
 
-    utils.flag(this, "object")(ast, options);
+            Object.keys( props ).forEach( key => {
 
-    this.assert(
-      matchProps(ast, props),
-      "expected #{this} to change the AST to match #{exp}",
-      "expected #{this} to not change the AST to match #{exp}",
-      props,
-      ast
-    );
-  });
+                new Assertion( result )
+                    .to.have.property( key )
+                    .that.is.deep.equal( props[ key ] );
 
-  Assertion.addMethod("reportError", function(grammar, props, options) {
-    options = options !== undefined ? options : {};
+            } );
 
-    let ast = parser.parse(grammar);
+        }
 
-    let passed, result;
+    } );
 
-    try {
-      utils.flag(this, "object")(ast, options);
-      passed = true;
-    } catch (e) {
-      result = e;
-      passed = false;
-    }
-
-    this.assert(
-      !passed,
-      "expected #{this} to report an error but it didn't",
-      "expected #{this} to not report an error but #{act} was reported",
-      null,
-      result
-    );
-
-    if (!passed && props !== undefined) {
-      Object.keys(props).forEach(key => {
-        new Assertion(result).to.have.property(key)
-          .that.is.deep.equal(props[key]);
-      });
-    }
-  });
 };

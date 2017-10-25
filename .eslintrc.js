@@ -3,6 +3,11 @@
 module.exports = {
 
     "extends": "futagozaryuu/node-v4",
-    "root": true
+    "root": true,
+    "rules": {
+
+        "prefer-rest-params": 0,
+
+    },
 
 };

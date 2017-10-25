@@ -1,150 +1,179 @@
 #!/usr/bin/env node
 
-/* eslint camelcase:0, max-len:0, one-var:0 */
-
 //
 // Measures impact of a Git commit (or multiple commits) on generated parsers
 // speed and size. Makes sense to use only on PEG.js git repository checkout.
 //
 
+/* eslint prefer-const: 0 */
+
 "use strict";
 
-let child_process = require("child_process");
-let fs = require("fs");
-let os = require("os");
-let path = require("path");
-let glob = require("glob");
+const child_process = require( "child_process" );
+const fs = require( "fs" );
+const os = require( "os" );
+const path = require( "path" );
+const dedent = require( "dedent" );
+const glob = require( "glob" );
 
 // Current Working Directory
 
-let cwd = path.join(__dirname, "..");
-
-if (process.cwd() !== cwd) {
-  process.chdir(cwd);
-}
+const cwd = path.join( __dirname, ".." );
+if ( process.cwd() !== cwd ) process.chdir( cwd );
 
 // Execution Files
 
 let PEGJS_BIN = "bin/peg.js";
 let BENCHMARK_BIN = "test/benchmark/run";
 
-if (!fs.existsSync(PEGJS_BIN)) {
-  PEGJS_BIN = "bin/pegjs";
+if ( ! fs.existsSync( PEGJS_BIN ) ) {
+
+    PEGJS_BIN = "bin/pegjs";
+
 }
 
-if (!fs.existsSync(BENCHMARK_BIN)) {
-  BENCHMARK_BIN = "benchmark/run";
+if ( ! fs.existsSync( BENCHMARK_BIN ) ) {
+
+    BENCHMARK_BIN = "benchmark/run";
+
 }
 
 // Utils
 
-let print = console.log;
+function echo( message ) {
 
-function echo(message) {
-  process.stdout.write(message);
+    process.stdout.write( message );
+
 }
 
-function exec(command) {
-  return child_process.execSync(command, { encoding: "utf8" });
+function exec( command ) {
+
+    return child_process.execSync( command, { encoding: "utf8" } );
+
 }
 
-function prepare(commit) {
-  exec(`git checkout --quiet "${commit}"`);
+function prepare( commit ) {
+
+    exec( `git checkout --quiet "${ commit }"` );
+
 }
 
 function runBenchmark() {
-  return parseFloat(
-    exec("node " + BENCHMARK_BIN)
-      // Split by table seprator, reverse and return the total bytes per second
-      .split("│")
-      .reverse()[1]
-      // Trim the whitespaces and remove ` kB/s` from the end
-      .trim()
-      .slice(0, -5)
-  );
+
+    return parseFloat(
+        exec( "node " + BENCHMARK_BIN )
+
+            // Split by table seprator, reverse and return the total bytes per second
+            .split( "│" )
+            .reverse()[ 1 ]
+
+            // Trim the whitespaces and remove ` kB/s` from the end
+            .trim()
+            .slice( 0, -5 )
+    );
+
 }
 
 function measureSpeed() {
-  return (runBenchmark() + runBenchmark() + runBenchmark() + runBenchmark() + runBenchmark() / 5).toFixed(2);
+
+    return ( runBenchmark() + runBenchmark() + runBenchmark() + runBenchmark() + runBenchmark() / 5 ).toFixed( 2 );
+
 }
 
 function measureSize() {
-  let size = 0;
 
-  glob.sync("examples/*.pegjs")
-    .forEach(example => {
-      exec(`node ${PEGJS_BIN} ${example}`);
-      example = example.slice(0, -5) + "js";
-      size += fs.statSync(example).size;
-      fs.unlinkSync(example);
-    });
+    let size = 0;
 
-  return size;
+    glob.sync( "examples/*.pegjs" )
+        .forEach( example => {
+
+            exec( `node ${ PEGJS_BIN } ${ example }` );
+            example = example.slice( 0, -5 ) + "js";
+            size += fs.statSync( example ).size;
+            fs.unlinkSync( example );
+
+        } );
+
+    return size;
+
 }
 
-function difference($1, $2) {
-  return (($2 / $1 - 1) * 100).toFixed(4);
+function difference( $1, $2 ) {
+
+    return ( ( $2 / $1 - 1 ) * 100 ).toFixed( 4 );
+
 }
 
 // Prepare
 
-let argv = process.argv.slice(2);
+const argv = process.argv.slice( 2 );
 let commit_before, commit_after;
 
-if (argv.length === 1) {
-  commit_before = argv[0] + "~1";
-  commit_after = argv[0];
-} else if (argv.length === 2) {
-  commit_before = argv[0];
-  commit_after = argv[1];
+if ( argv.length === 1 ) {
+
+    commit_before = argv[ 0 ] + "~1";
+    commit_after = argv[ 0 ];
+
+} else if ( argv.length === 2 ) {
+
+    commit_before = argv[ 0 ];
+    commit_after = argv[ 1 ];
+
 } else {
-  print("Usage:");
-  print("");
-  print("  test/impact <commit>");
-  print("  test/impact <commit_before> <commit_after>");
-  print("");
-  print("Measures impact of a Git commit (or multiple commits) on generated parsers'");
-  print("speed and size. Makes sense to use only on PEG.js Git repository checkout.");
-  print("");
-  process.exit(1);
+
+    console.log( dedent`
+
+        Usage:
+
+            test/impact <commit>
+            test/impact <commit_before> <commit_after>
+
+        Measures impact of a Git commit (or multiple commits) on generated parser's
+        speed and size. Makes sense to use only on PEG.js Git repository checkout.
+
+    ` );
+    process.exit( 1 );
+
 }
 
 // Measure
 
-let branch = exec("git rev-parse --abbrev-ref HEAD");
+const branch = exec( "git rev-parse --abbrev-ref HEAD" );
 let speed1, size1, speed2, size2;
 
-echo(`Measuring commit ${commit_before}...`);
-prepare(commit_before);
+echo( `Measuring commit ${ commit_before }...` );
+prepare( commit_before );
 speed1 = measureSpeed();
 size1 = measureSize();
-echo(" OK" + os.EOL);
+echo( " OK" + os.EOL );
 
-echo(`Measuring commit ${commit_after}...`);
-prepare(commit_after);
+echo( `Measuring commit ${ commit_after }...` );
+prepare( commit_after );
 speed2 = measureSpeed();
 size2 = measureSize();
-echo(" OK" + os.EOL);
+echo( " OK" + os.EOL );
 
 // Finish
 
-prepare(branch);
+prepare( branch );
 
-print(`
-test/impact ${commit_before} ${commit_after}
+console.log( dedent`
 
-  Speed impact
-  ------------
-  Before:     ${speed1} kB/s
-  After:      ${speed2} kB/s
-  Difference: ${difference(parseFloat(speed1), parseFloat(speed2))}%
+    test/impact ${ commit_before } ${ commit_after }
 
-  Size impact
-  -----------
-  Before:     ${size1} b
-  After:      ${size2} b
-  Difference: ${difference(size1, size2)}%
+    Speed impact
+    ------------
+    Before:     ${ speed1 } kB/s
+    After:      ${ speed2 } kB/s
+    Difference: ${ difference( parseFloat( speed1 ), parseFloat( speed2 ) ) }%
 
-- Measured by /test/impact with Node.js ${process.version}
-- Your system: ${os.type()} ${os.release()} ${os.arch()}.
-`);
+    Size impact
+    -----------
+    Before:     ${ size1 } b
+    After:      ${ size2 } b
+    Difference: ${ difference( size1, size2 ) }%
+
+    - Measured by /test/impact with Node.js ${ process.version }
+    - Your system: ${ os.type() } ${ os.release() } ${ os.arch() }.
+
+` );
