@@ -10,16 +10,6 @@ let expect = chai.expect;
 
 describe("generated parser behavior", function() {
   function varyOptimizationOptions(block) {
-    function clone(object) {
-      let result = {};
-
-      Object.keys(object).forEach(key => {
-        result[key] = object[key];
-      });
-
-      return result;
-    }
-
     let optionsVariants = [
       { cache: false, optimize: "speed", trace: false },
       { cache: false, optimize: "speed", trace: true  },
@@ -34,7 +24,7 @@ describe("generated parser behavior", function() {
     optionsVariants.forEach(variant => {
       describe(
         "with options " + chai.util.inspect(variant),
-        function() { block(clone(variant)); }
+        function() { block(Object.assign({}, variant)); }
       );
     });
   }
