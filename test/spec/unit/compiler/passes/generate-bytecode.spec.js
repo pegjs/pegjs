@@ -306,9 +306,9 @@ describe( "compiler pass |generateBytecode|", function () {
 
             expect( pass ).to.changeAST( grammar, bytecodeDetails( [
                 5,                            // PUSH_CURR_POS
-                28,                           // SILENT_FAILS_ON
+                38,                           // EXPECT_NS_BEGIN
                 23, 1, 18, 0, 2, 1, 22, 0, 3, // <expression>
-                29,                           // SILENT_FAILS_OFF
+                39,                           // EXPECT_NS_END
                 15, 3, 3,                     // IF_NOT_ERROR
                 6,                            //   * POP
                 7,                            //     POP_CURR_POS
@@ -339,9 +339,9 @@ describe( "compiler pass |generateBytecode|", function () {
 
             expect( pass ).to.changeAST( grammar, bytecodeDetails( [
                 5,                            // PUSH_CURR_POS
-                28,                           // SILENT_FAILS_ON
+                38,                           // EXPECT_NS_BEGIN
                 23, 1, 18, 0, 2, 1, 22, 0, 3, // <expression>
-                29,                           // SILENT_FAILS_OFF
+                39,                           // EXPECT_NS_END
                 14, 3, 3,                     // IF_ERROR
                 6,                            //   * POP
                 6,                            //     POP
