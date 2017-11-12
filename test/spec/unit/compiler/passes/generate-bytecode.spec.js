@@ -83,9 +83,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 23, 0,                        // EXPECT <0>
                 28,                           // SILENT_FAILS_ON
                 23, 2, 18, 1, 2, 1, 22, 1, 3, // <expression>
-                29,                           // SILENT_FAILS_OFF
-                14, 1, 0,                     // IF_ERROR
-                3                             //   * PUSH_FAILED
+                29                            // SILENT_FAILS_OFF
             ] ) );
 
         } );
