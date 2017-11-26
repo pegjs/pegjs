@@ -308,7 +308,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 5,                            // PUSH_CURR_POS
                 38,                           // EXPECT_NS_BEGIN
                 23, 1, 18, 0, 2, 1, 22, 0, 3, // <expression>
-                39,                           // EXPECT_NS_END
+                39, 0,                        // EXPECT_NS_END <false>
                 15, 3, 3,                     // IF_NOT_ERROR
                 6,                            //   * POP
                 7,                            //     POP_CURR_POS
@@ -341,7 +341,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 5,                            // PUSH_CURR_POS
                 38,                           // EXPECT_NS_BEGIN
                 23, 1, 18, 0, 2, 1, 22, 0, 3, // <expression>
-                39,                           // EXPECT_NS_END
+                39, 1,                        // EXPECT_NS_END <true>
                 14, 3, 3,                     // IF_ERROR
                 6,                            //   * POP
                 6,                            //     POP
