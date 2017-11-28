@@ -48,13 +48,13 @@
   "scripts": {
     "lint": "gulp lint",
     "spec": "gulp test",
-    "test": "gulp",
+    "benchmark": "gulp benchmark",
+    "build:parser": "gulp build:parser",
+    "build:browser": "gulp build:browser",
+    "clean": "gulp clean",
     "test:impact": "node test/impact",
     "test:server": "node test/server/run",
-    "benchmark": "gulp benchmark",
-    "browser:build": "gulp browser:build",
-    "browser:clean": "gulp browser:build",
-    "parser": "gulp parser"
+    "test": "gulp"
   },
   "devDependencies": {
     "babel-preset-es2015": "6.24.1",

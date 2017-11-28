@@ -51,8 +51,13 @@ task( "test", () => gulp
 // Run benchmarks.
 task( "benchmark", () => node( "test/benchmark/run" ) );
 
+// Generate the grammar parser.
+task( "build:parser", () =>
+    node( "bin/peg src/parser.pegjs -o lib/parser.js" )
+);
+
 // Create the browser build.
-task( "browser:build", () => {
+task( "build:browser", () => {
 
     const HEADER = dedent`
 
@@ -82,15 +87,12 @@ task( "browser:build", () => {
 
 } );
 
-// Delete the browser build.
-task( "browser:clean", () => del( "browser" ) );
-
-// Generate the grammar parser.
-task( "parser", () =>
-    node( "bin/peg src/parser.pegjs -o lib/parser.js" )
+// Delete the generated files.
+task( "clean", () =>
+    del( [ "browser", "examples/*.js" ] )
 );
 
 // Default task.
 task( "default", cb =>
-    runSequence( "benchmark", "test", cb )
+    runSequence( "lint", "benchmark", "test", cb )
 );
