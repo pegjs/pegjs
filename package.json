@@ -1,85 +1,61 @@
 {
-  "name": "pegjs",
-  "version": "0.10.0",
-  "description": "Parser generator for JavaScript",
-  "keywords": [
-    "parser generator",
-    "PEG"
-  ],
-  "homepage": "https://pegjs.org/",
-  "bugs": "https://github.com/pegjs/pegjs/issues",
-  "license": "MIT",
-  "contributors": [
-    "David Majda <david@majda.cz> (https://majda.cz/)",
-    "Futago-za Ryuu <futagoza.ryuu@gmail.com>"
-  ],
-  "files": [
-    "CHANGELOG.md",
-    "LICENSE",
-    "README.md",
-    "bin/peg.js",
-    "bin/options.js",
-    "bin/usage.txt",
-    "examples/arithmetics.pegjs",
-    "examples/css.pegjs",
-    "examples/javascript.pegjs",
-    "examples/json.pegjs",
-    "lib/compiler/asts.js",
-    "lib/compiler/index.js",
-    "lib/compiler/js.js",
-    "lib/compiler/opcodes.js",
-    "lib/compiler/passes/generate-bytecode.js",
-    "lib/compiler/passes/generate-js.js",
-    "lib/compiler/passes/remove-proxy-rules.js",
-    "lib/compiler/passes/report-duplicate-labels.js",
-    "lib/compiler/passes/report-duplicate-rules.js",
-    "lib/compiler/passes/report-infinite-recursion.js",
-    "lib/compiler/passes/report-infinite-repetition.js",
-    "lib/compiler/passes/report-undefined-rules.js",
-    "lib/compiler/visitor.js",
-    "lib/grammar-error.js",
-    "lib/parser.js",
-    "lib/peg.js",
-    "package.json"
-  ],
-  "main": "lib/peg",
-  "bin": "bin/peg.js",
-  "repository": "pegjs/pegjs",
-  "scripts": {
-    "lint": "gulp lint",
-    "spec": "gulp test",
-    "benchmark": "gulp benchmark",
-    "build:parser": "gulp build:parser",
-    "build:browser": "gulp build:browser",
-    "clean": "gulp clean",
-    "test:impact": "node test/impact",
-    "test:server": "node test/server/run",
-    "test": "gulp"
-  },
-  "devDependencies": {
-    "babel-preset-es2015": "6.24.1",
-    "babel-core": "6.26.0",
-    "dedent": "0.7.0",
-    "babelify": "8.0.0",
-    "browserify": "14.5.0",
-    "chai": "4.1.2",
-    "del": "3.0.0",
-    "eslint-config-futagozaryuu": "3.6.x",
-    "express": "4.16.2",
-    "glob": "7.1.2",
-    "gulp": "3.9.1",
-    "gulp-eslint": "4.0.0",
-    "gulp-header": "1.8.9",
-    "gulp-mocha": "4.3.1",
-    "gulp-rename": "1.2.2",
-    "gulp-uglify": "3.0.0",
-    "morgan": "1.9.0",
-    "run-sequence": "2.2.0",
-    "sinon": "4.0.1",
-    "vinyl-buffer": "1.0.0",
-    "vinyl-source-stream": "1.1.0"
-  },
-  "engines": {
-    "node": ">=4"
-  }
+    "name": "pegjs",
+    "version": "0.10.0",
+    "description": "Parser generator for JavaScript",
+    "keywords": [
+        "parser generator",
+        "PEG"
+    ],
+    "homepage": "https://pegjs.org/",
+    "bugs": "https://github.com/pegjs/pegjs/issues",
+    "license": "MIT",
+    "contributors": [
+        "David Majda <david@majda.cz> (https://majda.cz/)",
+        "Futago-za Ryuu <futagoza.ryuu@gmail.com>"
+    ],
+    "files": [
+        "bin",
+        "lib",
+        "!lib/.eslintrc.js"
+    ],
+    "main": "lib/peg.js",
+    "bin": "bin/peg.js",
+    "repository": "pegjs/pegjs",
+    "scripts": {
+        "lint": "gulp lint",
+        "spec": "gulp test",
+        "benchmark": "gulp benchmark",
+        "build:parser": "gulp build:parser",
+        "build:browser": "gulp build:browser",
+        "clean": "gulp clean",
+        "test:impact": "node test/impact",
+        "test:server": "node test/server/run",
+        "test": "gulp"
+    },
+    "devDependencies": {
+        "babel-preset-es2015": "6.24.1",
+        "babel-core": "6.26.0",
+        "dedent": "0.7.0",
+        "babelify": "8.0.0",
+        "browserify": "14.5.0",
+        "chai": "4.1.2",
+        "del": "3.0.0",
+        "eslint-config-futagozaryuu": "3.6.x",
+        "express": "4.16.2",
+        "glob": "7.1.2",
+        "gulp": "3.9.1",
+        "gulp-eslint": "4.0.0",
+        "gulp-header": "1.8.9",
+        "gulp-mocha": "4.3.1",
+        "gulp-rename": "1.2.2",
+        "gulp-uglify": "3.0.0",
+        "morgan": "1.9.0",
+        "run-sequence": "2.2.0",
+        "sinon": "4.0.1",
+        "vinyl-buffer": "1.0.0",
+        "vinyl-source-stream": "1.1.0"
+    },
+    "engines": {
+        "node": ">=4"
+    }
 }
