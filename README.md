@@ -664,8 +664,6 @@ You are welcome to contribute code using [GitHub pull requests](https://github.c
 5. Validate your changes:
     - Lint the JavaScript changes (command line only, run `gulp lint` or `npm run lint`)
     - Run tests to ensure nothing's broken: [see separate documentation](https://github.com/pegjs/pegjs/blob/master/test/README.md)
-    - Optionally, check benchmark results: [see separate documentation](https://github.com/pegjs/pegjs/blob/master/benchmark/README.md)
-    - Optionally, check commit impact (this is a bash script, run `tools/impact`)
 6. If validation fails: reverse your commit, fix the problem and then add/commit again
 7. Push the commits from your clone to the fork
 8. From your fork, start a new pull request
