@@ -1,7 +1,7 @@
 # Contribution Guidelines
 
 The best way to contribute to PEG.js is by using it and giving back useful
-feedback — reporting discovered bugs or requesting missing features.
+feedback, reporting discovered bugs or requesting missing features.
 
 You can also contribute code, but be advised that many patches end up being
 rejected, usually because the change doesn’t fit the project or because of
@@ -26,8 +26,8 @@ input) reproducing the problem.
 ## Requesting Features
 
 Request features using [GitHub issues][issues]. Before submitting a feature
-request, please [search existing requests][issues-search-enhancements] to see if
-the feature wasn’t requested already.
+request, please [search existing requests][issues-search-enhancements] to see
+if the feature wasn’t requested already.
 
 In the request, please describe:
 
