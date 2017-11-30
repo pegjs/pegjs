@@ -193,7 +193,7 @@ while ( args.length > 0 ) {
 
         case "-h":
         case "--help":
-            console.log( fs.readFileSync( path.join( __dirname, "usage.txt" ), "utf8" ).trim() );
+            console.log( require( "./usage" ) );
             process.exit();
             break;
 

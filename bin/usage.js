@@ -1,3 +1,6 @@
+"use strict";
+
+module.exports = `
 Usage: pegjs [options] [<input_file>] [--]
 
 Options:
@@ -49,3 +52,4 @@ Options:
     --trace                        Enable tracing in generated parser
 
 -v, --version                      Print version information and exit
+`;
