@@ -1,4 +1,5 @@
 [![ci](https://img.shields.io/travis/pegjs/pegjs.svg)](https://travis-ci.org/pegjs/pegjs)
+[![coverage](https://img.shields.io/coveralls/github/pegjs/pegjs.svg)](https://coveralls.io/github/pegjs/pegjs)
 [![release](https://img.shields.io/npm/v/pegjs.svg)](https://www.npmjs.com/package/pegjs)
 [![dev](https://img.shields.io/npm/v/pegjs/dev.svg)](https://github.com/pegjs/pegjs)
 [![bower](https://img.shields.io/bower/v/pegjs.svg)](https://github.com/pegjs/bower)
