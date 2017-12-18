@@ -53,7 +53,7 @@ task( "benchmark", () => node( "test/benchmark/run" ) );
 
 // Generate the grammar parser.
 task( "build:parser", () =>
-    node( "bin/peg src/parser.pegjs -o lib/parser.js" )
+    node( "bin/peg src/parser.pegjs -o lib/parser.js -c src/config.json" )
 );
 
 // Create the browser build.
