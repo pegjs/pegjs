@@ -10,6 +10,9 @@ node_js:
 before_script:
   - npm install -g gulp
 
+after_success:
+  - npm run coverage
+
 cache:
   directories:
     - node_modules

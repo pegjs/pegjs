@@ -30,7 +30,8 @@
         "clean": "gulp clean",
         "test:impact": "node test/impact",
         "test:server": "node test/server/run",
-        "test": "gulp"
+        "test": "nyc gulp",
+        "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "devDependencies": {
         "babel-preset-es2015": "6.24.1",
@@ -39,6 +40,7 @@
         "babelify": "8.0.0",
         "browserify": "14.5.0",
         "chai": "4.1.2",
+        "coveralls": "3.0.0",
         "del": "3.0.0",
         "eslint-config-futagozaryuu": "3.7.x",
         "express": "4.16.2",
@@ -50,6 +52,7 @@
         "gulp-rename": "1.2.2",
         "gulp-uglify": "3.0.0",
         "morgan": "1.9.0",
+        "nyc": "11.3.0",
         "run-sequence": "2.2.0",
         "sinon": "4.1.3",
         "vinyl-buffer": "1.0.0",
@@ -57,5 +60,16 @@
     },
     "engines": {
         "node": ">=4"
+    },
+    "nyc": {
+        "exclude": [
+            "test",
+            "gulpfile.js",
+            "**/.eslintrc.js"
+        ],
+        "reporter": [
+            "text",
+            "text-summary"
+        ]
     }
 }
