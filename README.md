@@ -1,8 +1,8 @@
-[![Build status](https://img.shields.io/travis/pegjs/pegjs.svg?label=travis)](https://travis-ci.org/pegjs/pegjs)
-[![npm/pegjs version](https://img.shields.io/npm/v/pegjs.svg?label=npm/pegjs)](https://www.npmjs.com/package/pegjs)
-[![npm/pegjs-dev version](https://img.shields.io/npm/v/pegjs-dev.svg?label=npm/pegjs-dev)](https://www.npmjs.com/package/pegjs-dev)
-[![Bower version](https://img.shields.io/bower/v/pegjs.svg?label=bower/pegjs)](https://github.com/pegjs/bower)
-[![License](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
+[![ci](https://img.shields.io/travis/pegjs/pegjs.svg)](https://travis-ci.org/pegjs/pegjs)
+[![release](https://img.shields.io/npm/v/pegjs.svg)](https://www.npmjs.com/package/pegjs)
+[![dev](https://img.shields.io/npm/v/pegjs/dev.svg)](https://github.com/pegjs/pegjs)
+[![bower](https://img.shields.io/bower/v/pegjs.svg)](https://github.com/pegjs/bower)
+[![license](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 
 PEG.js is a simple parser generator for JavaScript that produces fast parsers with excellent error reporting. You can use it to
 process complex data or computer languages and build transformers, interpreters, compilers and other tools easily.
@@ -84,16 +84,16 @@ $ bower install pegjs
 
 ### Latest
 
-To use the latest features, fixes and changes of PEG.js, directly install from the repository:
+To use the latest features, fixes and changes of PEG.js, install the packaged dev release:
+
+```console
+$ npm install pegjs@dev
+```
+
+Alternatively, you can directly install from the repository (larger then the packaged dev release):
 
 ```console
 $ npm install pegjs/pegjs#master
-```
-
-Alternatively, you can use the most recently packaged version of the PEG.js code hosted on GitHub:
-
-```console
-$ npm install pegjs-dev
 ```
 
 Generating a Parser
