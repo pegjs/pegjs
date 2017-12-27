@@ -94,5 +94,5 @@ task( "clean", () =>
 
 // Default task.
 task( "default", cb =>
-    runSequence( "lint", "benchmark", "test", cb )
+    runSequence( "lint", "test", cb )
 );
