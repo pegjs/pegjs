@@ -7,7 +7,7 @@
         "PEG"
     ],
     "homepage": "https://pegjs.org/",
-    "bugs": "https://github.com/pegjs/pegjs/issues",
+    "repository": "pegjs/pegjs",
     "license": "MIT",
     "contributors": [
         "David Majda <david@majda.cz> (https://majda.cz/)",
@@ -21,7 +21,6 @@
     "types": "lib/typings/pegjs.d.ts",
     "main": "lib/peg.js",
     "bin": "bin/peg.js",
-    "repository": "pegjs/pegjs",
     "scripts": {
         "lint": "gulp lint",
         "spec": "gulp test",
