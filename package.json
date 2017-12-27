@@ -18,6 +18,7 @@
         "lib",
         "!lib/.eslintrc.js"
     ],
+    "types": "lib/typings/pegjs.d.ts",
     "main": "lib/peg.js",
     "bin": "bin/peg.js",
     "repository": "pegjs/pegjs",
