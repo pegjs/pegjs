@@ -2,7 +2,7 @@
 
 const chai = require( "chai" );
 const helpers = require( "./helpers" );
-const pass = require( "../../../../../lib/compiler/passes/remove-proxy-rules" );
+const pass = require( "pegjs-dev" ).compiler.passes.transform.removeProxyRules;
 
 chai.use( helpers );
 

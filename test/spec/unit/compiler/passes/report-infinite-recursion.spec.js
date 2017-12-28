@@ -2,7 +2,7 @@
 
 const chai = require( "chai" );
 const helpers = require( "./helpers" );
-const pass = require( "../../../../../lib/compiler/passes/report-infinite-recursion" );
+const pass = require( "pegjs-dev" ).compiler.passes.check.reportInfiniteRecursion;
 
 chai.use( helpers );
 

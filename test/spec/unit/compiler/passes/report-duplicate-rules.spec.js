@@ -2,7 +2,7 @@
 
 const chai = require( "chai" );
 const helpers = require( "./helpers" );
-const pass = require( "../../../../../lib/compiler/passes/report-duplicate-rules" );
+const pass = require( "pegjs-dev" ).compiler.passes.check.reportDuplicateRules;
 
 chai.use( helpers );
 

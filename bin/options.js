@@ -2,7 +2,7 @@
 
 const fs = require( "fs" );
 const path = require( "path" );
-const peg = require( "../" );
+const peg = require( "../lib/peg" );
 
 // Options
 

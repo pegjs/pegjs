@@ -2,7 +2,7 @@
 
 const chai = require( "chai" );
 const helpers = require( "./helpers" );
-const pass = require( "../../../../../lib/compiler/passes/report-undefined-rules" );
+const pass = require( "pegjs-dev" ).compiler.passes.check.reportUndefinedRules;
 
 chai.use( helpers );
 

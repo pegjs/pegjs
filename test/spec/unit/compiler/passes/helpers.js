@@ -1,6 +1,6 @@
 "use strict";
 
-const parser = require( "../../../../../lib/parser" );
+const parser = require( "pegjs-dev" ).parser;
 
 module.exports = function ( chai, utils ) {
 

@@ -1,7 +1,7 @@
 "use strict";
 
 const chai = require( "chai" );
-const parser = require( "../../../lib/parser" );
+const parser = require( "pegjs-dev" ).parser;
 
 const expect = chai.expect;
 

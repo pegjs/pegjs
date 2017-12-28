@@ -2,7 +2,7 @@
 
 const chai = require( "chai" );
 const helpers = require( "./helpers" );
-const pass = require( "../../../../../lib/compiler/passes/report-infinite-repetition" );
+const pass = require( "pegjs-dev" ).compiler.passes.check.reportInfiniteRepetition;
 
 chai.use( helpers );
 
