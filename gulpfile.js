@@ -74,7 +74,7 @@ task( "build:browser", () => {
     `;
 
     return browserify( "lib/peg.js", { standalone: "peg" } )
-        .transform( babelify, { presets: "es2015", compact: false } )
+        .transform( babelify, { presets: "env", compact: false } )
         .bundle()
         .pipe( source( "peg.js" ) )
         .pipe( header( HEADER ) )
