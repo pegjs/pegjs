@@ -94,6 +94,10 @@ declare namespace peg {
 
                 bytecode?: number[];
 
+                // Added by calc-report-failures pass
+
+                reportFailures?: boolean;
+
             }
 
             interface Named extends INode {
@@ -340,6 +344,7 @@ declare namespace peg {
             namespace transform {
 
                 function removeProxyRules( ast: Grammar, options: ICompilerPassOptions ): void;
+                function calcReportFailures( ast: Grammar, options: ICompilerPassOptions ): void;
 
             }
 

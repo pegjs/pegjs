@@ -6,9 +6,10 @@ module.exports = function ( chai, utils ) {
 
     const Assertion = chai.Assertion;
 
-    Assertion.addMethod( "changeAST", function ( grammar, props, options ) {
+    Assertion.addMethod( "changeAST", function ( grammar, props, options, additionalRuleProps ) {
 
         options = typeof options !== "undefined" ? options : {};
+        additionalRuleProps = typeof additionalRuleProps !== "undefined" ? additionalRuleProps : { reportFailures: true };
 
         function matchProps( value, props ) {
 
@@ -63,11 +64,13 @@ module.exports = function ( chai, utils ) {
 
         }
 
+        ast.rules = ast.rules.map( rule => Object.assign( rule, additionalRuleProps ) );
+
         utils.flag( this, "object" )( ast, options );
 
         this.assert(
             matchProps( ast, props ),
-            "expected #{this} to change the AST to match #{exp}",
+            "expected #{this} to change the AST to match #{exp} but #{act} was produced",
             "expected #{this} to not change the AST to match #{exp}",
             props,
             ast
