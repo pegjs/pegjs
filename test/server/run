@@ -17,13 +17,8 @@ app.use( "/examples", express.static( `${ __dirname }/../../examples` ) );
 
 app.get( "/:dir/bundle.js", ( req, res ) => {
 
-    browserify( glob.sync(
-        `${ __dirname }/../${ req.params.dir }/**/*.js`
-    ) )
-        .transform( babelify, {
-            presets: "env",
-            compact: false
-        } )
+    browserify( glob.sync( `${ __dirname }/../${ req.params.dir }/**/*.js` ) )
+        .transform( babelify )
         .bundle()
         .pipe( res );
 

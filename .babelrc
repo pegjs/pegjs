@@ -1,0 +1,15 @@
+{
+    "comments": false,
+    "compact": false,
+    "presets": [
+        [
+            "env",
+            {
+                "modules": false,
+                "targets": {
+                    "ie": 9
+                }
+            }
+        ]
+    ]
+}
