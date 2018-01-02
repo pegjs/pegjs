@@ -69,7 +69,9 @@ task( "build:browser", () => {
          * Copyright (c) 2017+ Futago-za Ryuu
          *
          * Released under the MIT License.
-         */\n\n
+         */
+
+        /* eslint-disable */
 
     `;
 
