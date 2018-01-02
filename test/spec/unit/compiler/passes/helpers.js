@@ -4,55 +4,14 @@ const parser = require( "pegjs-dev" ).parser;
 
 module.exports = function ( chai, utils ) {
 
+    chai.use( require( "chai-like" ) );
+
     const Assertion = chai.Assertion;
 
     Assertion.addMethod( "changeAST", function ( grammar, props, options, additionalRuleProps ) {
 
         options = typeof options !== "undefined" ? options : {};
         additionalRuleProps = typeof additionalRuleProps !== "undefined" ? additionalRuleProps : { reportFailures: true };
-
-        function matchProps( value, props ) {
-
-            function isObject( value ) {
-
-                return value !== null && typeof value === "object";
-
-            }
-
-            if ( Array.isArray( props ) ) {
-
-                if ( ! Array.isArray( value ) ) return false;
-                if ( value.length !== props.length ) return false;
-
-                for ( let i = 0; i < props.length; i++ ) {
-
-                    if ( ! matchProps( value[ i ], props[ i ] ) ) return false;
-
-                }
-
-                return true;
-
-            } else if ( isObject( props ) ) {
-
-                if ( ! isObject( value ) ) return false;
-
-                const keys = Object.keys( props );
-                for ( let i = 0; i < keys.length; i++ ) {
-
-                    const key = keys[ i ];
-
-                    if ( ! ( key in value ) ) return false;
-                    if ( ! matchProps( value[ key ], props[ key ] ) ) return false;
-
-                }
-
-                return true;
-
-            }
-
-            return value === props;
-
-        }
 
         const ast = parser.parse( grammar );
 
@@ -68,13 +27,7 @@ module.exports = function ( chai, utils ) {
 
         utils.flag( this, "object" )( ast, options );
 
-        this.assert(
-            matchProps( ast, props ),
-            "expected #{this} to change the AST to match #{exp} but #{act} was produced",
-            "expected #{this} to not change the AST to match #{exp}",
-            props,
-            ast
-        );
+        new Assertion( ast ).like( props );
 
     } );
 
