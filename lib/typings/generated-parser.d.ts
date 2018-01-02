@@ -67,6 +67,7 @@ declare namespace generatedparser {
         parts?: string[];
         inverted?: boolean;
         ignoreCase?: boolean;
+        expected?: SyntaxExpectation;
 
     }
 
@@ -106,12 +107,20 @@ declare namespace generatedparser {
 
     }
 
+    interface NotExpectation {
+
+        type: "not";
+        expected: SyntaxExpectation;
+
+    }
+
     type SyntaxErrorConstructor
         = SyntaxError<LiteralExpectation>
         | SyntaxError<ClassExpectation>
         | SyntaxError<AnyExpectation>
         | SyntaxError<EndExpectation>
         | SyntaxError<OtherExpectation>
+        | SyntaxError<NotExpectation>
         | SyntaxError<SyntaxExpectation>;
 
     /**
