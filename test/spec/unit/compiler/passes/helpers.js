@@ -1,10 +1,11 @@
 "use strict";
 
+const LikeHelper = require( "chai-like" );
 const parser = require( "pegjs-dev" ).parser;
 
 module.exports = function ( chai, utils ) {
 
-    chai.use( require( "chai-like" ) );
+    chai.use( LikeHelper );
 
     const Assertion = chai.Assertion;
 
