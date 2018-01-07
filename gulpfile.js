@@ -17,9 +17,16 @@ const header = require( "gulp-header" );
 const del = require( "del" );
 const runSequence = require( "run-sequence" );
 
-function node( args ) {
+function node( args, cb ) {
 
-    return spawn( "node", args.split( " " ), { stdio: "inherit" } );
+    spawn( "node", args.split( " " ), { stdio: "inherit" } )
+
+        .on( "error", cb )
+        .on( "close", code => {
+
+            if ( ! code ) cb();
+
+        } );
 
 }
 
@@ -49,12 +56,18 @@ task( "test", () => gulp
 );
 
 // Run benchmarks.
-task( "benchmark", () => node( "test/benchmark/run" ) );
+task( "benchmark", cb => {
+
+    node( "test/benchmark/run", cb );
+
+} );
 
 // Generate the grammar parser.
-task( "build:parser", () =>
-    node( "bin/peg src/parser.pegjs -o lib/parser.js -c src/config.json" )
-);
+task( "build:parser", cb => {
+
+    node( "bin/peg src/parser.pegjs -o lib/parser.js -c src/config.json", cb );
+
+} );
 
 // Create the browser build.
 task( "build:browser", () => {
