@@ -74,6 +74,12 @@ declare module "pegjs/lib/compiler/visitor" {
 
 }
 
+declare module "pegjs/lib/compiler/passes/calc-report-failures" {
+
+    export default peg.compiler.passes.generate.calcReportFailures;
+
+}
+
 declare module "pegjs/lib/compiler/passes/generate-bytecode" {
 
     export default peg.compiler.passes.generate.generateBytecode;
@@ -83,6 +89,12 @@ declare module "pegjs/lib/compiler/passes/generate-bytecode" {
 declare module "pegjs/lib/compiler/passes/generate-js" {
 
     export default peg.compiler.passes.generate.generateJS;
+
+}
+
+declare module "pegjs/lib/compiler/passes/inference-match-result" {
+
+    export default peg.compiler.passes.generate.inferenceMatchResult;
 
 }
 

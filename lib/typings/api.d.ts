@@ -90,10 +90,6 @@ declare namespace peg {
                 name: string;
                 expression: Named | Expression;
 
-                // Added by bytecode generator
-
-                bytecode?: number[];
-
                 // Added by calc-report-failures pass
 
                 reportFailures?: boolean;
@@ -101,6 +97,10 @@ declare namespace peg {
                 // Added by inference-match-result pass
 
                 match?: number;
+
+                // Added by generate-bytecode pass
+
+                bytecode?: number[];
 
             }
 
@@ -348,12 +348,13 @@ declare namespace peg {
             namespace transform {
 
                 function removeProxyRules( ast: Grammar, options: ICompilerPassOptions ): void;
-                function calcReportFailures( ast: Grammar, options: ICompilerPassOptions ): void;
 
             }
 
             namespace generate {
 
+                function calcReportFailures( ast: Grammar, options: ICompilerPassOptions ): void;
+                function inferenceMatchResult( ast: Grammar ): void;
                 function generateBytecode( ast: Grammar ): void;
                 function generateJS( ast: Grammar, options: ICompilerPassOptions ): void;
 
