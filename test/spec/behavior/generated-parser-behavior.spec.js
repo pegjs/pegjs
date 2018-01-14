@@ -1782,6 +1782,26 @@ describe( "generated parser behavior", function () {
 
                 } );
 
+                it( "reports expectations correctly with look ahead", function () {
+
+                    const parser = peg.generate( [
+                        "Statement",
+                        "  = '{' __ !Statement Statement __ '}'",
+                        "__ 'space'",
+                        "  = [ ]*"
+                    ].join( "\n" ), options );
+
+                    expect( parser ).to.failToParse( "{x}", {
+                        expected: [
+                            { type: "other", description: "space" },
+                            { type: "not",
+                                expected: { type: "literal", text: "{", ignoreCase: false } },
+                            { type: "literal", text: "{", ignoreCase: false }
+                        ]
+                    } );
+
+                } );
+
             } );
 
             describe( "found string reporting", function () {
