@@ -379,6 +379,48 @@ declare namespace peg {
 
     }
 
+    namespace util {
+
+        interface IStageMap {
+
+            [ stage: string ]
+                : compiler.ICompilerPass[]
+                | { [ pass: string ]: compiler.ICompilerPass };
+
+        }
+
+        function convertPasses( stages: IStageMap ): compiler.IPassesMap;
+
+        interface IIterator<R = any> {
+
+            ( value: any ): R;
+            ( value: any, key: string ): R;
+
+        }
+
+        function clone( source: {} ): {};
+        function each( object: {}, iterator: IIterator<void> ): void;
+        function extend( target: {}, source: {} ): {};
+        function map( object: {}, transformer: IIterator ): {};
+        function values( object: {}, transformer?: IIterator ): any[];
+
+        interface IVisitor {
+
+            ( value: {} ): void;
+
+        }
+
+        interface IVisitorCallback {
+
+            ( value: any ): void;
+            ( value: any, args: any[] ): void;
+
+        }
+
+        function createVisitor( property: string | number, visit: IVisitorCallback ): IVisitor;
+
+    }
+
     interface IBuildConfig<T = any> {
 
         parser: GeneratedParser<T>;

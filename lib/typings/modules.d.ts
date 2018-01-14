@@ -133,3 +133,37 @@ declare module "pegjs/lib/compiler/passes/report-undefined-rules" {
     export default peg.compiler.passes.check.reportUndefinedRules;
 
 }
+
+declare module "pegjs/lib/util" {
+
+    export default peg.util;
+
+}
+
+declare module "pegjs/lib/util/convert-passes" {
+
+    export default peg.util.convertPasses;
+
+}
+
+declare module "pegjs/lib/util/index" {
+
+    export default peg.util;
+
+}
+
+declare module "pegjs/lib/util/objects" {
+
+    namespace objects {
+
+        function clone( source: {} ): {};
+        function each( object: {}, iterator: peg.util.IIterator<void> ): void;
+        function extend( target: {}, source: {} ): {};
+        function map( object: {}, transformer: peg.util.IIterator ): {};
+        function values( object: {}, transformer?: peg.util.IIterator ): any[];
+        function createVisitor( property: string | number, visit: peg.util.IVisitorCallback ): peg.util.IVisitor;
+
+    }
+    export default objects;
+
+}
