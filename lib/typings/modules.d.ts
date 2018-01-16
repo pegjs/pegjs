@@ -18,6 +18,38 @@ declare module "pegjs/lib/parser" {
 
 }
 
+declare module "pegjs/lib/parser/ast" {
+
+    export class Node {
+
+        type: string;
+        location: peg.SourceLocation;
+
+        constructor( type: string, location: peg.SourceLocation );
+
+    }
+
+    export class Grammar extends Node {
+
+        initializer?: peg.parser.ast.Initializer;
+        rules: peg.parser.ast.Rule[];
+
+        constructor(
+            initializer: void | peg.parser.ast.Initializer,
+            rules: peg.parser.ast.Rule[],
+            location: peg.SourceLocation,
+        );
+
+    }
+
+}
+
+declare module "pegjs/lib/parser/index" {
+
+    export default peg.parser;
+
+}
+
 declare module "pegjs/lib/peg" {
 
     export default peg;
@@ -161,7 +193,7 @@ declare module "pegjs/lib/util/objects" {
         function extend( target: {}, source: {} ): {};
         function map( object: {}, transformer: peg.util.IIterator ): {};
         function values( object: {}, transformer?: peg.util.IIterator ): any[];
-        function createVisitor( property: string | number, visit: peg.util.IVisitorCallback ): peg.util.IVisitor;
+        function enforceFastProperties( o: {} ): {};
 
     }
     export default objects;

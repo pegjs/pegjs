@@ -8,6 +8,7 @@ declare namespace peg {
     type Grammar = parser.ast.Grammar;
     type GeneratedParser<T = any> = gp.API<T>;
     type SyntaxError = gp.SyntaxErrorConstructor;
+    type SourceLocation = gp.SourceLocation;
 
     /**
      * PEG.js version (uses semantic versioning).
@@ -21,9 +22,9 @@ declare namespace peg {
 
         name: string;
         message: string;
-        location?: gp.SourceLocation;
+        location?: SourceLocation;
 
-        constructor( message: string, location?: gp.SourceLocation );
+        constructor( message: string, location?: SourceLocation );
 
     }
 
@@ -53,7 +54,7 @@ declare namespace peg {
             interface INode {
 
                 type: string;
-                location: gp.SourceLocation;
+                location: SourceLocation;
 
             }
 
@@ -294,42 +295,45 @@ declare namespace peg {
 
         }
 
-        namespace visitor {
+        interface IVisitor<R = any> {
 
-            interface Visitor<R = any> {
+            ( node: parser.ast.Node, ...args ): R;
 
-                ( node: Node, ...args ): R;
+        }
 
-            }
+        interface IVisitorMap<U = void> {
 
-            interface VisitorMap<U = void> {
+            [ key: string ]: any;
+            grammar?<R = U>( node: Grammar, ...args ): R;
+            initializer?<R = U>( node: parser.ast.Initializer, ...args ): R;
+            rule?<R = U>( node: parser.ast.Rule, ...args ): R;
+            named?<R = U>( node: parser.ast.Named, ...args ): R;
+            choice?<R = U>( node: parser.ast.ChoiceExpression, ...args ): R;
+            action?<R = U>( node: parser.ast.ActionExpression, ...args ): R;
+            sequence?<R = U>( node: parser.ast.SequenceExpression, ...args ): R;
+            labeled?<R = U>( node: parser.ast.LabeledExpression, ...args ): R;
+            text?<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
+            simple_and?<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
+            simple_not?<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
+            optional?<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
+            zero_or_more?<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
+            one_or_more?<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
+            literal?<R = U>( node: parser.ast.LiteralMatcher, ...args ): R;
+            class?<R = U>( node: parser.ast.CharacterClassMatcher, ...args ): R;
+            any?<R = U>( node: parser.ast.AnyMatcher, ...args ): R;
+            rule_ref?<R = U>( node: parser.ast.RuleReferenceExpression, ...args ): R;
+            semantic_and?<R = U>( node: parser.ast.SemanticPredicateExpression, ...args ): R;
+            semantic_not?<R = U>( node: parser.ast.SemanticPredicateExpression, ...args ): R;
+            group?<R = U>( node: parser.ast.GroupExpression, ...args ): R;
 
-                [ type: string ]: any;
-                grammar<R = U>( node: Grammar, ...args ): R;
-                initializer<R = U>( node: parser.ast.Initializer, ...args ): R;
-                rule<R = U>( node: parser.ast.Rule, ...args ): R;
-                named<R = U>( node: parser.ast.Named, ...args ): R;
-                choice<R = U>( node: parser.ast.ChoiceExpression, ...args ): R;
-                action<R = U>( node: parser.ast.ActionExpression, ...args ): R;
-                sequence<R = U>( node: parser.ast.SequenceExpression, ...args ): R;
-                labeled<R = U>( node: parser.ast.LabeledExpression, ...args ): R;
-                text<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
-                simple_and<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
-                simple_not<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
-                optional<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
-                zero_or_more<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
-                one_or_more<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
-                literal<R = U>( node: parser.ast.LiteralMatcher, ...args ): R;
-                class<R = U>( node: parser.ast.CharacterClassMatcher, ...args ): R;
-                any<R = U>( node: parser.ast.AnyMatcher, ...args ): R;
-                rule_ref<R = U>( node: parser.ast.RuleReferenceExpression, ...args ): R;
-                semantic_and<R = U>( node: parser.ast.SemanticPredicateExpression, ...args ): R;
-                semantic_not<R = U>( node: parser.ast.SemanticPredicateExpression, ...args ): R;
-                group<R = U>( node: parser.ast.GroupExpression, ...args ): R;
+        }
 
-            }
+        class visitor implements IVisitorMap {
 
-            function build<T = void, R = any>( functions: VisitorMap<T> ): Visitor<R>;
+            visit: IVisitor;
+
+            static build<T = void, R = any>( functions: IVisitorMap<T> ): IVisitor<R>;
+            static ASTVisitor: visitor;
 
         }
 
@@ -403,21 +407,7 @@ declare namespace peg {
         function extend( target: {}, source: {} ): {};
         function map( object: {}, transformer: IIterator ): {};
         function values( object: {}, transformer?: IIterator ): any[];
-
-        interface IVisitor {
-
-            ( value: {} ): void;
-
-        }
-
-        interface IVisitorCallback {
-
-            ( value: any ): void;
-            ( value: any, args: any[] ): void;
-
-        }
-
-        function createVisitor( property: string | number, visit: IVisitorCallback ): IVisitor;
+        function enforceFastProperties( o: {} ): {};
 
     }
 
