@@ -93,7 +93,7 @@
   function createNode( type, details ) {
     const node = new ast.Node( type, location() );
     util.extend( node, details );
-    return node;
+    return util.enforceFastProperties( node );
   }
 }
 
