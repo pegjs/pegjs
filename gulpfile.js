@@ -35,7 +35,7 @@ task( "lint", () => gulp
     .src( [
         "**/.*rc.js",
         "lib/**/*.js",
-        "!lib/parser.js",
+        "!lib/parser/index.js",
         "test/benchmark/**/*.js",
         "test/benchmark/run",
         "test/impact",
@@ -65,7 +65,7 @@ task( "benchmark", cb => {
 // Generate the grammar parser.
 task( "build:parser", cb => {
 
-    node( "bin/peg src/parser.pegjs -o lib/parser.js -c src/config.json", cb );
+    node( "bin/peg src/parser.pegjs -o lib/parser/index.js -c src/config.json", cb );
 
 } );
 

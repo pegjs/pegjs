@@ -89,23 +89,28 @@
   function buildList(head, tail, index) {
     return [head].concat(extractList(tail, index));
   }
+
+  function createNode( type, details ) {
+    const node = new ast.Node( type, location() );
+    util.extend( node, details );
+    return node;
+  }
 }
 
 // ---- Syntactic Grammar -----
 
 Grammar
   = __ initializer:(Initializer __)? rules:(Rule __)+ {
-      return {
-        type: "grammar",
-        initializer: extractOptional(initializer, 0),
-        rules: extractList(rules, 0),
-        location: location()
-      };
+      return new ast.Grammar(
+        extractOptional(initializer, 0),
+        extractList(rules, 0),
+        location(),
+      );
     }
 
 Initializer
   = code:CodeBlock EOS {
-      return { type: "initializer", code: code, location: location() };
+      return createNode( "initializer", { code: code } );
     }
 
 Rule
@@ -114,19 +119,15 @@ Rule
     "=" __
     expression:Expression EOS
     {
-      return {
-        type: "rule",
+      return createNode( "rule", {
         name: name,
         expression: displayName !== null
-          ? {
-              type: "named",
+          ? createNode( "named", {
               name: displayName[0],
               expression: expression,
-              location: location()
-            }
+            } )
           : expression,
-        location: location()
-      };
+      } );
     }
 
 Expression
@@ -135,34 +136,28 @@ Expression
 ChoiceExpression
   = head:ActionExpression tail:(__ "/" __ ActionExpression)* {
       return tail.length > 0
-        ? {
-            type: "choice",
+        ? createNode( "choice", {
             alternatives: buildList(head, tail, 3),
-            location: location()
-          }
+          } )
         : head;
     }
 
 ActionExpression
   = expression:SequenceExpression code:(__ CodeBlock)? {
       return code !== null
-        ? {
-            type: "action",
+        ? createNode( "action", {
             expression: expression,
             code: code[1],
-            location: location()
-          }
+          } )
         : expression;
     }
 
 SequenceExpression
   = head:LabeledExpression tail:(__ LabeledExpression)* {
       return tail.length > 0
-        ? {
-            type: "sequence",
+        ? createNode( "sequence", {
             elements: buildList(head, tail, 1),
-            location: location()
-          }
+          } )
         : head;
     }
 
@@ -172,22 +167,18 @@ LabeledExpression
         error(`Label can't be a reserved word "${label[0]}".`, label[1]);
       }
 
-      return {
-        type: "labeled",
+      return createNode( "labeled", {
         label: label[0],
         expression: expression,
-        location: location()
-      };
+      } );
     }
   / PrefixedExpression
 
 PrefixedExpression
   = operator:PrefixedOperator __ expression:SuffixedExpression {
-      return {
-        type: OPS_TO_PREFIXED_TYPES[operator],
+      return createNode( OPS_TO_PREFIXED_TYPES[operator], {
         expression: expression,
-        location: location()
-      };
+      } );
     }
   / SuffixedExpression
 
@@ -198,11 +189,9 @@ PrefixedOperator
 
 SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
-      return {
-        type: OPS_TO_SUFFIXED_TYPES[operator],
+      return createNode( OPS_TO_SUFFIXED_TYPES[operator], {
         expression: expression,
-        location: location()
-      };
+      } );
     }
   / PrimaryExpression
 
@@ -223,22 +212,18 @@ PrimaryExpression
       // nodes that already isolate label scope themselves. This leaves us with
       // "labeled" and "sequence".
       return expression.type === "labeled" || expression.type === "sequence"
-          ? { type: "group", expression: expression, location: location() }
+          ? createNode( "group", { expression: expression } )
           : expression;
     }
 
 RuleReferenceExpression
   = name:IdentifierName !(__ (StringLiteral __)? "=") {
-      return { type: "rule_ref", name: name, location: location() };
+      return createNode( "rule_ref", { name: name } );
     }
 
 SemanticPredicateExpression
   = operator:SemanticPredicateOperator __ code:CodeBlock {
-      return {
-        type: OPS_TO_SEMANTIC_PREDICATE_TYPES[operator],
-        code: code,
-        location: location()
-      };
+      return createNode( OPS_TO_SEMANTIC_PREDICATE_TYPES[operator], { code: code } );
     }
 
 SemanticPredicateOperator
@@ -322,12 +307,10 @@ UnicodeConnectorPunctuation
 
 LiteralMatcher "literal"
   = value:StringLiteral ignoreCase:"i"? {
-      return {
-        type: "literal",
+      return createNode( "literal", {
         value: value,
         ignoreCase: ignoreCase !== null,
-        location: location()
-      };
+      } );
     }
 
 StringLiteral "string"
@@ -351,13 +334,11 @@ CharacterClassMatcher "character class"
     "]"
     ignoreCase:"i"?
     {
-      return {
-        type: "class",
+      return createNode( "class", {
         parts: parts.filter(part => part !== ""),
         inverted: inverted !== null,
         ignoreCase: ignoreCase !== null,
-        location: location()
-      };
+      } );
     }
 
 ClassCharacterRange
@@ -426,7 +407,7 @@ HexDigit
   = [0-9a-f]i
 
 AnyMatcher
-  = "." { return { type: "any", location: location() }; }
+  = "." { return createNode( "any", {} ); }
 
 CodeBlock "code block"
   = "{" code:Code "}" { return code; }
