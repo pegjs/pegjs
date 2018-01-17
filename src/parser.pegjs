@@ -104,7 +104,7 @@ Grammar
       return new ast.Grammar(
         extractOptional(initializer, 0),
         extractList(rules, 0),
-        location(),
+        location()
       );
     }
 
