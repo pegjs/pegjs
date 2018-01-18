@@ -1782,6 +1782,57 @@ describe( "generated parser behavior", function () {
 
                 } );
 
+                it( "reports expectations correctly with look ahead", function () {
+
+                    // Case 1, by https://github.com/dmajda
+
+                    let parser = peg.generate( [
+                        "Statement = '{' __ !Statement Statement __ '}'",
+                        "__ = [ ]*"
+                    ].join( "\n" ), options );
+
+                    expect( parser ).to.failToParse( "{x}", {
+                        expected: [
+                            { type: "class", parts: [ " " ], inverted: false, ignoreCase: false },
+                            { type: "not", expected: { type: "literal", text: "{", ignoreCase: false } },
+                            { type: "literal", text: "{", ignoreCase: false }
+                        ]
+                    } );
+
+                    // Case 2, by https://github.com/nikku
+
+                    parser = peg.generate( [
+                        "Start = Char+ End",
+                        "End = 'e'",
+                        "Char = !End [a-z]"
+                    ].join( "\n" ), options );
+
+                    expect( parser ).to.failToParse( "a", {
+                        expected: [
+                            { type: "class", parts: [ [ "a", "z" ] ], inverted: false, ignoreCase: false },
+                            { type: "literal", text: "e", ignoreCase: false }
+                        ]
+                    } );
+
+                } );
+
+                it( "reports expectations correctly with look ahead + grouped names", function () {
+
+                    const parser = peg.generate( [
+                        "Start = Char+ End",
+                        "End 'end' = 'e'",
+                        "Char = !End [a-z]"
+                    ].join( "\n" ), options );
+
+                    expect( parser ).to.failToParse( "a", {
+                        expected: [
+                            { type: "class", parts: [ [ "a", "z" ] ], inverted: false, ignoreCase: false },
+                            { type: "other", description: "end" }
+                        ]
+                    } );
+
+                } );
+
             } );
 
             describe( "found string reporting", function () {
