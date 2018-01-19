@@ -34,6 +34,7 @@ function node( args, cb ) {
 task( "lint", () => gulp
     .src( [
         "**/.*rc.js",
+        "bin/*.js",
         "lib/**/*.js",
         "!lib/parser/index.js",
         "test/benchmark/**/*.js",
@@ -41,7 +42,7 @@ task( "lint", () => gulp
         "test/impact",
         "test/spec/**/*.js",
         "test/server/run",
-        "bin/*.js",
+        "src/*.js",
         "gulpfile.js"
     ] )
     .pipe( eslint( { dotfiles: true } ) )
@@ -65,7 +66,7 @@ task( "benchmark", cb => {
 // Generate the grammar parser.
 task( "build:parser", cb => {
 
-    node( "bin/peg src/parser.pegjs -o lib/parser/index.js -c src/config.json", cb );
+    node( "bin/peg src/parser.pegjs -o lib/parser/index.js -c src/pegjs.config.js", cb );
 
 } );
 

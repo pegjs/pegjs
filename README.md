@@ -131,7 +131,7 @@ You can tweak the generated parser with several options:
   * `-d`, `--dependency` — makes the parser require a specified dependency (can be specified multiple times)
   * `-e`, `--export-var` — name of a global variable into which the parser object is assigned to when no module loader is detected
   * `--extra-options` — additional options (in JSON format) to pass to `peg.generate`
-  * `-c`, `--config`, `--extra-options-file` — file with additional options (in JSON format) to pass to `peg.generate`
+  * `-c`, `--config`, `--extra-options-file` — file with additional options (in JSON or JavaScript) to pass to `peg.generate`
   * `-f`, `--format` — format of the generated parser: `amd`, `bare`, `commonjs`, `es`, `globals`, `umd` (default: `commonjs`)
   * `-O`, `--optimize` — selects between optimizing the generated parser for parsing speed (`speed`) or code size (`size`) (default: `speed`)
   * `-p`, `--plugin` — makes PEG.js use a specified plugin (can be specified multiple times)

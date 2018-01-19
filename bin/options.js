@@ -3,13 +3,13 @@
 const fs = require( "fs" );
 const path = require( "path" );
 const peg = require( "../lib/peg" );
+const util = peg.util;
 
 // Options
 
 let inputFile = null;
 let outputFile = null;
-
-const options = {
+let options = {
     "--": [],
     "cache": false,
     "dependencies": {},
@@ -35,33 +35,32 @@ function abort( message ) {
 
 }
 
-function addExtraOptions( json ) {
+function addExtraOptions( config ) {
 
-    let extraOptions;
+    if ( typeof config === "string" ) {
 
-    try {
+        try {
 
-        extraOptions = JSON.parse( json );
+            config = JSON.parse( config );
 
-    } catch ( e ) {
+        } catch ( e ) {
 
-        if ( ! ( e instanceof SyntaxError ) ) throw e;
-        abort( "Error parsing JSON: " + e.message );
+            if ( ! ( e instanceof SyntaxError ) ) throw e;
+            abort( "Error parsing JSON: " + e.message );
+
+        }
 
     }
-    if ( typeof extraOptions !== "object" ) {
+    if ( typeof config !== "object" ) {
 
         abort( "The JSON with extra options has to represent an object." );
 
     }
 
-    Object
-        .keys( extraOptions )
-        .forEach( key => {
-
-            options[ key ] = extraOptions[ key ];
-
-        } );
+    const extraOptions = {};
+    util.extend( extraOptions, config );
+    util.extend( extraOptions, options );
+    options = extraOptions;
 
 }
 
@@ -112,7 +111,7 @@ function nextArg( option ) {
 
 while ( args.length > 0 ) {
 
-    let json, mod;
+    let config, mod;
     let argument = args.shift();
 
     if ( argument.indexOf( "-" ) === 0 && argument.indexOf( "=" ) > 1 ) {
@@ -168,16 +167,24 @@ while ( args.length > 0 ) {
         case "--config":
         case "--extra-options-file":
             argument = nextArg( "-c/--config/--extra-options-file" );
-            try {
+            if ( path.extname( argument ) === ".js" ) {
 
-                json = fs.readFileSync( argument, "utf8" );
+                config = require( path.resolve( argument ) );
 
-            } catch ( e ) {
+            } else {
 
-                abort( `Can't read from file "${ argument }".` );
+                try {
+
+                    config = fs.readFileSync( argument, "utf8" );
+
+                } catch ( e ) {
+
+                    abort( `Can't read from file "${ argument }".` );
+
+                }
 
             }
-            addExtraOptions( json );
+            addExtraOptions( config );
             break;
 
         case "-f":

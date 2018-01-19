@@ -26,7 +26,7 @@ Options:
                                    (note: repeatable option)
 
     --extra-options-file <file>    File with additional options (in JSON
-                                   format) to pass to peg.generate
+                                   or JavaScript) to pass to peg.generate
                                    (note: repeatable option)
 
 -f, --format <format>              Format of the generated parser:

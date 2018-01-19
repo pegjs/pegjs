@@ -1,7 +1,0 @@
-{
-    "header": "/* eslint-disable */",
-    "dependencies": {
-        "ast": "./ast",
-        "util": "../util"
-    }
-}
