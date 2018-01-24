@@ -188,6 +188,25 @@ object to `peg.generate`. The following options are supported:
   * `plugins` — plugins to use
   * `trace` — makes the parser trace its progress (default: `false`)
 
+Also you can supply boolean option `extractComments` (default: `false`).
+When set to `true`, parser will be collect all comments in the grammar to the object
+in the `comments` property in the `grammar` AST node. This key contains mapping from
+offset position of start location of the comment (i.e. `//` or `/*`) to comment object
+itself. Comment object has following structure:
+
+  ```js
+  {
+    text: 'all text between /* or */, or // and end of line',
+    multiline: true|false,
+    location: location()
+  }
+  ```
+
+When set to `false`, `comments` will be set to `null`.
+
+This option not impact to the generated parser but only to grammar AST, which
+can be used by plugins.
+
 Using the Parser
 ----------------
 

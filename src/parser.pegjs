@@ -95,6 +95,20 @@
     util.extend( node, details );
     return util.enforceFastProperties( node );
   }
+
+  let comments = options.extractComments ? {} : null;
+  function addComment(comment, multiline) {
+    if (options.extractComments) {
+      let loc = location();
+      comment = {
+        text: comment,
+        multiline: multiline,
+        location: loc
+      };
+      comments[loc.start.offset] = comment;
+      return comment;
+    }
+  }
 }
 
 // ---- Syntactic Grammar -----
@@ -104,6 +118,7 @@ Grammar
       return new ast.Grammar(
         extractOptional(initializer, 0),
         extractList(rules, 0),
+        comments,
         location()
       );
     }
@@ -259,13 +274,19 @@ Comment "comment"
   / SingleLineComment
 
 MultiLineComment
-  = "/*" (!"*/" SourceCharacter)* "*/"
+  = "/*" comment:$(!"*/" SourceCharacter)* "*/" {
+    return addComment(comment, true);
+  }
 
 MultiLineCommentNoLineTerminator
-  = "/*" (!("*/" / LineTerminator) SourceCharacter)* "*/"
+  = "/*" comment:$(!("*/" / LineTerminator) SourceCharacter)* "*/" {
+    return addComment(comment, true);
+  }
 
 SingleLineComment
-  = "//" (!LineTerminator SourceCharacter)*
+  = "//" comment:$(!LineTerminator SourceCharacter)* {
+    return addComment(comment, false);
+  }
 
 Identifier
   = name:IdentifierName { return [name, location()]; }
