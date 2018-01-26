@@ -163,7 +163,7 @@ describe( "PEG.js grammar parser", function () {
         rules: [ ruleA, ruleB ]
     };
 
-    const stripLocation = ( function () {
+    const stripProperties = ( function () {
 
         let strip;
 
@@ -207,6 +207,7 @@ describe( "PEG.js grammar parser", function () {
             grammar( node ) {
 
                 delete node.location;
+                delete node._alwaysConsumesOnSuccess;
 
                 if ( node.initializer ) {
 
@@ -258,7 +259,7 @@ describe( "PEG.js grammar parser", function () {
 
             const result = parser.parse( utils.flag( this, "object" ), options );
 
-            stripLocation( result );
+            stripProperties( result );
 
             this.assert(
                 utils.eql( result, expected ),
@@ -289,7 +290,7 @@ describe( "PEG.js grammar parser", function () {
 
             if ( passed ) {
 
-                stripLocation( result );
+                stripProperties( result );
 
             }
 
