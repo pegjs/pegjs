@@ -102,19 +102,20 @@ describe( "plugin API", function () {
 
                     config.parser = peg.generate( `
 
+                        {
+                            const pp = require( process.cwd() + "/lib/peg" ).parser;
+                        }
+
                         start = .* {
-                            return {
-                                type: 'grammar',
-                                rules: [{
-                                    type: 'rule',
-                                    name: 'start',
-                                    expression: {
-                                        type: 'literal',
-                                        value: text(),
-                                        ignoreCase: false
-                                    }
-                                }]
-                            };
+                            return new pp.Grammar( void 0, [{
+                                type: "rule",
+                                name: "start",
+                                expression: {
+                                    type: "literal",
+                                    value: text(),
+                                    ignoreCase: false
+                                }
+                            }] );
                         }
 
                     ` );
