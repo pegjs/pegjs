@@ -20,27 +20,8 @@ declare module "pegjs/lib/parser" {
 
 declare module "pegjs/lib/parser/ast" {
 
-    export class Node {
-
-        type: string;
-        location: peg.SourceLocation;
-
-        constructor( type: string, location: peg.SourceLocation );
-
-    }
-
-    export class Grammar extends Node {
-
-        initializer?: peg.parser.ast.Initializer;
-        rules: peg.parser.ast.Rule[];
-
-        constructor(
-            initializer: void | peg.parser.ast.Initializer,
-            rules: peg.parser.ast.Rule[],
-            location: peg.SourceLocation,
-        );
-
-    }
+    export const Node: peg.parser.Node;
+    export const Grammar: peg.parser.Grammar;
 
 }
 
@@ -59,19 +40,6 @@ declare module "pegjs/lib/peg" {
 declare module "pegjs/lib/compiler" {
 
     export default peg.compiler;
-
-}
-
-declare module "pegjs/lib/compiler/asts" {
-
-    namespace asts {
-
-        function findRule( ast: peg.Grammar, name: string ): peg.parser.ast.Rule | void;
-        function indexOfRule( ast: peg.Grammar, name: string ): number;
-        function alwaysConsumesOnSuccess( ast: peg.Grammar, node: peg.parser.ast.Node ): boolean;
-
-    }
-    export default asts;
 
 }
 

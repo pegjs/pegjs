@@ -5,7 +5,7 @@ export as namespace peg;
 
 declare namespace peg {
 
-    type Grammar = parser.ast.Grammar;
+    type AST = parser.Grammar;
     type GeneratedParser<T = any> = gp.API<T>;
     type SyntaxError = gp.SyntaxErrorConstructor;
     type SourceLocation = gp.SourceLocation;
@@ -34,47 +34,82 @@ declare namespace peg {
     namespace parser {
 
         /**
+         * PEG.js node constructor, used internally by the PEG.js to create nodes.
+         */
+        class Node {
+
+            type: string;
+            location: SourceLocation;
+
+            constructor( type: string, location: SourceLocation );
+
+        }
+
+        /**
+         * The main PEG.js AST class returned by the parser.
+         */
+        class Grammar extends Node {
+
+            // Default properties and methods
+
+            private readonly _alwaysConsumesOnSuccess: any;
+            type: "grammar";
+            comments?: CommentMao;
+            initializer?: ast.Initializer;
+            rules: ast.Rule[];
+
+            constructor(
+                initializer: void | ast.Initializer,
+                rules: ast.Rule[],
+                comments: void | CommentMao,
+                location: SourceLocation,
+            );
+
+            findRule( name: string ): ast.Rule | void;
+            indexOfRule( name: string ): number;
+            alwaysConsumesOnSuccess( node: ast.Node ): boolean;
+
+            // Added by Bytecode generator
+
+            literals?: string[];
+            classes?: string[];
+            expectations?: string[];
+            functions?: string[];
+
+            // Added by JavaScript generator
+
+            code?: string;
+
+        }
+
+        interface CommentMao {
+
+            [ offset: number ]: {
+
+                text: string;
+                multiline: boolean;
+                location: SourceLocation;
+
+            };
+
+        }
+
+        /**
          * Interface's that describe the abstact sytax tree used by PEG.js
          */
         namespace ast {
 
+            interface INode extends parser.Node { }
+
             /**
-             * Unlike `parser.ast.INode` this interface represent's all PEG.js node's.
+             * Unlike `parser.Node` this interface represent's all PEG.js node's.
              */
             type Node
-                = Grammar
+                = parser.Grammar
                 | Initializer
                 | Rule
                 | Named
                 | Expression;
-
-            /**
-             * Basic representation of a PEG.js node.
-             */
-            interface INode {
-
-                type: string;
-                location: SourceLocation;
-
-            }
-
-            interface Grammar extends INode {
-
-                // Default properties
-
-                type: "grammar";
-                initializer?: Initializer;
-                rules: Rule[];
-
-                // Added by Bytecode generator
-
-                consts?: string[];
-
-                // Added by JavaScript generator
-
-                code?: string;
-
-            }
 
             interface Initializer extends INode {
 
