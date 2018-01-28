@@ -18,22 +18,40 @@ declare module "pegjs/lib/parser" {
 
 }
 
-declare module "pegjs/lib/parser/ast" {
-
-    export const Node: peg.parser.Node;
-    export const Grammar: peg.parser.Grammar;
-
-}
-
-declare module "pegjs/lib/parser/index" {
-
-    export default peg.parser;
-
-}
-
 declare module "pegjs/lib/peg" {
 
     export default peg;
+
+}
+
+declare module "pegjs/lib/ast" {
+
+    export const Node: peg.ast.Node;
+    export const Grammar: peg.ast.Grammar;
+    export const visitor: {
+
+        ASTVisitor: peg.ast.visitor.ASTVisitor;
+        build<T = void, R = any>( functions: peg.ast.visitor.IVisitorMap<T> ): peg.ast.visitor.IVisitor<R>;
+
+    };
+
+}
+
+declare module "pegjs/lib/ast/Grammar" {
+
+    export default peg.ast.Grammar;
+
+}
+
+declare module "pegjs/lib/ast/Node" {
+
+    export default peg.ast.Node;
+
+}
+
+declare module "pegjs/lib/ast/visitor" {
+
+    export default peg.ast.visitor;
 
 }
 
@@ -65,12 +83,6 @@ declare module "pegjs/lib/compiler/opcodes" {
 
     const opcodes: { [ name: string ]: number };
     export default opcodes;
-
-}
-
-declare module "pegjs/lib/compiler/visitor" {
-
-    export default peg.compiler.visitor;
 
 }
 

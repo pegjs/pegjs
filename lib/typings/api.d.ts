@@ -5,7 +5,7 @@ export as namespace peg;
 
 declare namespace peg {
 
-    type AST = parser.Grammar;
+    type Grammar = ast.Grammar;
     type GeneratedParser<T = any> = gp.API<T>;
     type SyntaxError = gp.SyntaxErrorConstructor;
     type SourceLocation = gp.SourceLocation;
@@ -28,13 +28,10 @@ declare namespace peg {
 
     }
 
-    /**
-     * A generated PEG.js parser to parse PEG.js grammar source's.
-     */
-    namespace parser {
+    namespace ast {
 
         /**
-         * PEG.js node constructor, used internally by the PEG.js to create nodes.
+         * PEG.js node constructor, used internally by the PEG.js parser to create nodes.
          */
         class Node {
 
@@ -54,20 +51,20 @@ declare namespace peg {
 
             private readonly _alwaysConsumesOnSuccess: any;
             type: "grammar";
-            comments?: CommentMao;
-            initializer?: ast.Initializer;
-            rules: ast.Rule[];
+            comments?: Comment;
+            initializer?: Initializer;
+            rules: Rule[];
 
             constructor(
-                initializer: void | ast.Initializer,
-                rules: ast.Rule[],
-                comments: void | CommentMao,
+                initializer: void | Initializer,
+                rules: Rule[],
+                comments: void | Comment,
                 location: SourceLocation,
             );
 
-            findRule( name: string ): ast.Rule | void;
+            findRule( name: string ): Rule | void;
             indexOfRule( name: string ): number;
-            alwaysConsumesOnSuccess( node: ast.Node ): boolean;
+            alwaysConsumesOnSuccess( node: Object ): boolean;
 
             // Added by Bytecode generator
 
@@ -82,7 +79,7 @@ declare namespace peg {
 
         }
 
-        interface CommentMao {
+        interface Comment {
 
             [ offset: number ]: {
 
@@ -94,188 +91,233 @@ declare namespace peg {
 
         }
 
+        interface INode extends peg.ast.Node { }
+
         /**
-         * Interface's that describe the abstact sytax tree used by PEG.js
+         * This type represent's all PEG.js AST node's.
          */
-        namespace ast {
+        type Object
+            = Grammar
+            | Initializer
+            | Rule
+            | Named
+            | Expression;
 
-            interface INode extends parser.Node { }
+        interface Initializer extends INode {
 
-            /**
-             * Unlike `parser.Node` this interface represent's all PEG.js node's.
-             */
-            type Node
-                = parser.Grammar
-                | Initializer
-                | Rule
-                | Named
-                | Expression;
+            type: "initializer";
+            code: string;
 
-            interface Initializer extends INode {
+        }
 
-                type: "initializer";
-                code: string;
+        interface Rule extends INode {
 
-            }
+            // Default properties
 
-            interface Rule extends INode {
+            type: "rule",
+            name: string;
+            expression: Named | Expression;
 
-                // Default properties
+            // Added by calc-report-failures pass
 
-                type: "rule",
-                name: string;
-                expression: Named | Expression;
+            reportFailures?: boolean;
 
-                // Added by calc-report-failures pass
+            // Added by inference-match-result pass
 
-                reportFailures?: boolean;
+            match?: number;
 
-                // Added by inference-match-result pass
+            // Added by generate-bytecode pass
 
-                match?: number;
+            bytecode?: number[];
 
-                // Added by generate-bytecode pass
+        }
 
-                bytecode?: number[];
+        interface Named extends INode {
 
-            }
+            type: "named";
+            name: string;
+            expression: Expression;
 
-            interface Named extends INode {
+        }
 
-                type: "named";
-                name: string;
-                expression: Expression;
+        type Expression
+            = ChoiceExpression
+            | ActionExpression
+            | SequenceExpression
+            | LabeledExpression
+            | PrefixedExpression
+            | SuffixedExpression
+            | PrimaryExpression;
 
-            }
+        interface ChoiceExpression extends INode {
 
-            type Expression
-                = ChoiceExpression
-                | ActionExpression
+            type: "choice";
+            alternatives: (
+                ActionExpression
                 | SequenceExpression
                 | LabeledExpression
                 | PrefixedExpression
                 | SuffixedExpression
-                | PrimaryExpression;
-
-            interface ChoiceExpression extends INode {
-
-                type: "choice";
-                alternatives: (
-                    ActionExpression
-                    | SequenceExpression
-                    | LabeledExpression
-                    | PrefixedExpression
-                    | SuffixedExpression
-                    | PrimaryExpression
-                )[];
-
-            }
-
-            interface ActionExpression extends INode {
-
-                type: "action";
-                expression: (
-                    SequenceExpression
-                    | LabeledExpression
-                    | PrefixedExpression
-                    | SuffixedExpression
-                    | PrimaryExpression
-                );
-                code: string;
-
-            }
-
-            interface SequenceExpression extends INode {
-
-                type: "sequence",
-                elements: (
-                    LabeledExpression
-                    | PrefixedExpression
-                    | SuffixedExpression
-                    | PrimaryExpression
-                )[];
-
-            }
-
-            interface LabeledExpression extends INode {
-
-                type: "labeled";
-                label: string;
-                expression: (
-                    PrefixedExpression
-                    | SuffixedExpression
-                    | PrimaryExpression
-                );
-
-            }
-
-            interface PrefixedExpression extends INode {
-
-                type: "text" | "simple_and" | "simple_not";
-                expression: SuffixedExpression | PrimaryExpression;
-
-            }
-
-            interface SuffixedExpression extends INode {
-
-                type: "optional" | "zero_or_more" | "one_or_more";
-                expression: PrimaryExpression;
-
-            }
-
-            type PrimaryExpression
-                = LiteralMatcher
-                | CharacterClassMatcher
-                | AnyMatcher
-                | RuleReferenceExpression
-                | SemanticPredicateExpression
-                | GroupExpression;
-
-            interface LiteralMatcher extends INode {
-
-                type: "literal";
-                value: string;
-                ignoreCase: boolean;
-
-            }
-
-            interface CharacterClassMatcher extends INode {
-
-                type: "class";
-                parts: ( string[] | string )[];
-                inverted: boolean;
-                ignoreCase: boolean;
-
-            }
-
-            interface AnyMatcher extends INode {
-
-                type: "any";
-
-            }
-
-            interface RuleReferenceExpression extends INode {
-
-                type: "rule_ref";
-                name: string;
-
-            }
-
-            interface SemanticPredicateExpression extends INode {
-
-                type: "semantic_and" | "semantic_not";
-                code: string;
-
-            }
-
-            interface GroupExpression extends INode {
-
-                type: "group";
-                expression: LabeledExpression | SequenceExpression;
-
-            }
+                | PrimaryExpression
+            )[];
 
         }
+
+        interface ActionExpression extends INode {
+
+            type: "action";
+            expression: (
+                SequenceExpression
+                | LabeledExpression
+                | PrefixedExpression
+                | SuffixedExpression
+                | PrimaryExpression
+            );
+            code: string;
+
+        }
+
+        interface SequenceExpression extends INode {
+
+            type: "sequence",
+            elements: (
+                LabeledExpression
+                | PrefixedExpression
+                | SuffixedExpression
+                | PrimaryExpression
+            )[];
+
+        }
+
+        interface LabeledExpression extends INode {
+
+            type: "labeled";
+            label: string;
+            expression: (
+                PrefixedExpression
+                | SuffixedExpression
+                | PrimaryExpression
+            );
+
+        }
+
+        interface PrefixedExpression extends INode {
+
+            type: "text" | "simple_and" | "simple_not";
+            expression: SuffixedExpression | PrimaryExpression;
+
+        }
+
+        interface SuffixedExpression extends INode {
+
+            type: "optional" | "zero_or_more" | "one_or_more";
+            expression: PrimaryExpression;
+
+        }
+
+        type PrimaryExpression
+            = LiteralMatcher
+            | CharacterClassMatcher
+            | AnyMatcher
+            | RuleReferenceExpression
+            | SemanticPredicateExpression
+            | GroupExpression;
+
+        interface LiteralMatcher extends INode {
+
+            type: "literal";
+            value: string;
+            ignoreCase: boolean;
+
+        }
+
+        interface CharacterClassMatcher extends INode {
+
+            type: "class";
+            parts: ( string[] | string )[];
+            inverted: boolean;
+            ignoreCase: boolean;
+
+        }
+
+        interface AnyMatcher extends INode {
+
+            type: "any";
+
+        }
+
+        interface RuleReferenceExpression extends INode {
+
+            type: "rule_ref";
+            name: string;
+
+        }
+
+        interface SemanticPredicateExpression extends INode {
+
+            type: "semantic_and" | "semantic_not";
+            code: string;
+
+        }
+
+        interface GroupExpression extends INode {
+
+            type: "group";
+            expression: LabeledExpression | SequenceExpression;
+
+        }
+
+        namespace visitor {
+
+            interface IVisitorMap<U = void> {
+
+                [ key: string ]: any;
+                grammar?<R = U>( node: Grammar, ...args ): R;
+                initializer?<R = U>( node: Initializer, ...args ): R;
+                rule?<R = U>( node: Rule, ...args ): R;
+                named?<R = U>( node: Named, ...args ): R;
+                choice?<R = U>( node: ChoiceExpression, ...args ): R;
+                action?<R = U>( node: ActionExpression, ...args ): R;
+                sequence?<R = U>( node: SequenceExpression, ...args ): R;
+                labeled?<R = U>( node: LabeledExpression, ...args ): R;
+                text?<R = U>( node: PrefixedExpression, ...args ): R;
+                simple_and?<R = U>( node: PrefixedExpression, ...args ): R;
+                simple_not?<R = U>( node: PrefixedExpression, ...args ): R;
+                optional?<R = U>( node: SuffixedExpression, ...args ): R;
+                zero_or_more?<R = U>( node: SuffixedExpression, ...args ): R;
+                one_or_more?<R = U>( node: SuffixedExpression, ...args ): R;
+                literal?<R = U>( node: LiteralMatcher, ...args ): R;
+                class?<R = U>( node: CharacterClassMatcher, ...args ): R;
+                any?<R = U>( node: AnyMatcher, ...args ): R;
+                rule_ref?<R = U>( node: RuleReferenceExpression, ...args ): R;
+                semantic_and?<R = U>( node: SemanticPredicateExpression, ...args ): R;
+                semantic_not?<R = U>( node: SemanticPredicateExpression, ...args ): R;
+                group?<R = U>( node: GroupExpression, ...args ): R;
+
+            }
+
+            class ASTVisitor implements IVisitorMap {
+
+                visit<R = any>( node: Object, ...args ): R;
+
+            }
+
+            interface IVisitor<R = any> {
+
+                ( node: Object, ...args ): R;
+
+            }
+
+            function build<T = void, R = any>( functions: IVisitorMap<T> ): IVisitor<R>;
+
+        }
+
+    }
+
+    /**
+     * A generated PEG.js parser to parse PEG.js grammar source's.
+     */
+    namespace parser {
 
         const SyntaxError: SyntaxError;
         function parse( input: string, options?: gp.IOptions ): Grammar;
@@ -327,48 +369,6 @@ declare namespace peg {
         interface IPassesMap {
 
             [ type: string ]: ICompilerPass[];
-
-        }
-
-        interface IVisitor<R = any> {
-
-            ( node: parser.ast.Node, ...args ): R;
-
-        }
-
-        interface IVisitorMap<U = void> {
-
-            [ key: string ]: any;
-            grammar?<R = U>( node: Grammar, ...args ): R;
-            initializer?<R = U>( node: parser.ast.Initializer, ...args ): R;
-            rule?<R = U>( node: parser.ast.Rule, ...args ): R;
-            named?<R = U>( node: parser.ast.Named, ...args ): R;
-            choice?<R = U>( node: parser.ast.ChoiceExpression, ...args ): R;
-            action?<R = U>( node: parser.ast.ActionExpression, ...args ): R;
-            sequence?<R = U>( node: parser.ast.SequenceExpression, ...args ): R;
-            labeled?<R = U>( node: parser.ast.LabeledExpression, ...args ): R;
-            text?<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
-            simple_and?<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
-            simple_not?<R = U>( node: parser.ast.PrefixedExpression, ...args ): R;
-            optional?<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
-            zero_or_more?<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
-            one_or_more?<R = U>( node: parser.ast.SuffixedExpression, ...args ): R;
-            literal?<R = U>( node: parser.ast.LiteralMatcher, ...args ): R;
-            class?<R = U>( node: parser.ast.CharacterClassMatcher, ...args ): R;
-            any?<R = U>( node: parser.ast.AnyMatcher, ...args ): R;
-            rule_ref?<R = U>( node: parser.ast.RuleReferenceExpression, ...args ): R;
-            semantic_and?<R = U>( node: parser.ast.SemanticPredicateExpression, ...args ): R;
-            semantic_not?<R = U>( node: parser.ast.SemanticPredicateExpression, ...args ): R;
-            group?<R = U>( node: parser.ast.GroupExpression, ...args ): R;
-
-        }
-
-        class visitor implements IVisitorMap {
-
-            visit: IVisitor;
-
-            static build<T = void, R = any>( functions: IVisitorMap<T> ): IVisitor<R>;
-            static ASTVisitor: visitor;
 
         }
 

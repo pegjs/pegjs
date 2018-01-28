@@ -3,6 +3,7 @@
 const chai = require( "chai" );
 const parser = require( "pegjs-dev" ).parser;
 const util = require( "pegjs-dev" ).util;
+const visitor = require( "pegjs-dev" ).ast.visitor;
 
 const expect = chai.expect;
 
@@ -167,16 +168,6 @@ describe( "PEG.js grammar parser", function () {
 
         let strip;
 
-        function buildVisitor( functions ) {
-
-            return function ( node ) {
-
-                return functions[ node.type ].apply( null, arguments );
-
-            };
-
-        }
-
         function stripLeaf( node ) {
 
             delete node.location;
@@ -203,7 +194,7 @@ describe( "PEG.js grammar parser", function () {
 
         }
 
-        strip = buildVisitor( {
+        strip = visitor.build( {
             grammar( node ) {
 
                 delete node.location;

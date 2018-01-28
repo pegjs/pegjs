@@ -103,11 +103,11 @@ describe( "plugin API", function () {
                     config.parser = peg.generate( `
 
                         {
-                            const pp = require( process.cwd() + "/lib/peg" ).parser;
+                            const ast = require( process.cwd() + "/lib/ast" );
                         }
 
                         start = .* {
-                            return new pp.Grammar( void 0, [{
+                            return new ast.Grammar( void 0, [{
                                 type: "rule",
                                 name: "start",
                                 expression: {
