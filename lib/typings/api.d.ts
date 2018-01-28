@@ -319,8 +319,15 @@ declare namespace peg {
      */
     namespace parser {
 
+        interface IOptions extends gp.IOptions {
+
+            extractComments?: boolean;
+            reservedWords?: string[];
+
+        }
+
         const SyntaxError: SyntaxError;
-        function parse( input: string, options?: gp.IOptions ): Grammar;
+        function parse( input: string, options?: IOptions ): Grammar;
 
     }
 
@@ -464,6 +471,7 @@ declare namespace peg {
     interface IBuildOptions<T = compiler.OutputOptions> extends compiler.ICompilerOptions<T> {
 
         plugins?: IPlugin<T>[];
+        parser?: parser.IOptions;
 
     }
 

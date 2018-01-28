@@ -39,44 +39,8 @@
     "!": "semantic_not"
   };
 
-  const RESERVED_WORDS = [
-    "break",
-    "case",
-    "catch",
-    "class",
-    "const",
-    "continue",
-    "debugger",
-    "default",
-    "delete",
-    "do",
-    "else",
-    "enum",
-    "export",
-    "extends",
-    "false",
-    "finally",
-    "for",
-    "function",
-    "if",
-    "import",
-    "instanceof",
-    "in",
-    "new",
-    "null",
-    "return",
-    "super",
-    "switch",
-    "this",
-    "throw",
-    "true",
-    "try",
-    "typeof",
-    "var",
-    "void",
-    "while",
-    "with"
-  ];
+  let RESERVED_WORDS = options.reservedWords || js.reservedWords;
+  if ( !Array.isArray(RESERVED_WORDS) ) RESERVED_WORDS = [];
 
   function extractOptional(optional, index) {
     return optional ? optional[index] : null;
