@@ -28,7 +28,7 @@
         "build:parser": "gulp build:parser",
         "build:browser": "gulp build:browser",
         "clean": "gulp clean",
-        "test:impact": "node test/impact",
+        "test:impact": "node test/impact master",
         "test:server": "node test/server/run",
         "test": "nyc gulp",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
