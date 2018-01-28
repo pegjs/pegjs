@@ -36,7 +36,6 @@ task( "lint", () => gulp
         "**/.*rc.js",
         "bin/*.js",
         "lib/**/*.js",
-        "!lib/parser/index.js",
         "test/benchmark/**/*.js",
         "test/benchmark/run",
         "test/impact",
