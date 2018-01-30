@@ -1,7 +1,7 @@
 "use strict";
 
 const LikeHelper = require( "chai-like" );
-const parser = require( "pegjs-dev" ).parser;
+const Session = require( "pegjs-dev" ).compiler.Session;
 
 module.exports = function ( chai, utils ) {
 
@@ -14,7 +14,8 @@ module.exports = function ( chai, utils ) {
         options = typeof options !== "undefined" ? options : {};
         additionalRuleProps = typeof additionalRuleProps !== "undefined" ? additionalRuleProps : { reportFailures: true };
 
-        const ast = parser.parse( grammar );
+        const session = new Session( { grammar } );
+        const ast = session.parse( grammar );
 
         if ( ! options.allowedStartRules ) {
 
@@ -26,7 +27,7 @@ module.exports = function ( chai, utils ) {
 
         ast.rules = ast.rules.map( rule => Object.assign( rule, additionalRuleProps ) );
 
-        utils.flag( this, "object" )( ast, options );
+        utils.flag( this, "object" )( ast, session, options );
 
         new Assertion( ast ).like( props );
 
@@ -36,7 +37,8 @@ module.exports = function ( chai, utils ) {
 
         options = typeof options !== "undefined" ? options : {};
 
-        const ast = parser.parse( grammar );
+        const session = new Session( { grammar } );
+        const ast = session.parse( grammar );
 
         if ( ! options.allowedStartRules ) {
 
@@ -50,7 +52,7 @@ module.exports = function ( chai, utils ) {
 
         try {
 
-            utils.flag( this, "object" )( ast, options );
+            utils.flag( this, "object" )( ast, session, options );
             passed = true;
 
         } catch ( e ) {
