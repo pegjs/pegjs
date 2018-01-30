@@ -51,14 +51,14 @@ declare namespace peg {
 
             private readonly _alwaysConsumesOnSuccess: any;
             type: "grammar";
-            comments?: Comment;
+            comments?: CommentMap;
             initializer?: Initializer;
             rules: Rule[];
 
             constructor(
                 initializer: void | Initializer,
                 rules: Rule[],
-                comments: void | Comment,
+                comments: void | CommentMap,
                 location: SourceLocation,
             );
 
@@ -79,7 +79,7 @@ declare namespace peg {
 
         }
 
-        interface Comment {
+        interface CommentMap {
 
             [ offset: number ]: {
 

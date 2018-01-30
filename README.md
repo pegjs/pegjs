@@ -185,9 +185,10 @@ The following option's are used by the PEG.js parser:
   * `reservedWords` - An array of words that the parser wont allow as labels for rules (default: [ES5](http://es5.github.io/#x7.6.1)).
 
 When `extractComments` is set to `true`, the parser will collect all comments
-in the grammar and return them on the `comments` property (as an array) in the
-`grammar` AST node (the AST directly returned by the parser). Each comment
-object within the array has the following structure:
+in the grammar and return them on the `comments` property (as an object map)
+on the `grammar` AST node (the AST directly returned by the parser). Each
+comment property has it's offset as the property key, while the property value
+has the following structure:
 
 ```js
 {
