@@ -9,12 +9,8 @@ module.exports = function ( chai, utils ) {
 
     const Assertion = chai.Assertion;
 
-    Assertion.addMethod( "changeAST", function ( grammar, props, options, additionalRuleProps ) {
+    function parse( grammar, session, options ) {
 
-        options = typeof options !== "undefined" ? options : {};
-        additionalRuleProps = typeof additionalRuleProps !== "undefined" ? additionalRuleProps : { reportFailures: true };
-
-        const session = new Session( { grammar } );
         const ast = session.parse( grammar );
 
         if ( ! options.allowedStartRules ) {
@@ -24,6 +20,18 @@ module.exports = function ( chai, utils ) {
                 : [];
 
         }
+
+        return ast;
+
+    }
+
+    Assertion.addMethod( "changeAST", function ( grammar, props, options, additionalRuleProps ) {
+
+        options = typeof options !== "undefined" ? options : {};
+        additionalRuleProps = typeof additionalRuleProps !== "undefined" ? additionalRuleProps : { reportFailures: true };
+
+        const session = new Session( { grammar } );
+        const ast = parse( grammar, session, options );
 
         ast.rules = ast.rules.map( rule => Object.assign( rule, additionalRuleProps ) );
 
@@ -38,15 +46,7 @@ module.exports = function ( chai, utils ) {
         options = typeof options !== "undefined" ? options : {};
 
         const session = new Session( { grammar } );
-        const ast = session.parse( grammar );
-
-        if ( ! options.allowedStartRules ) {
-
-            options.allowedStartRules = ast.rules.length > 0
-                ? [ ast.rules[ 0 ].name ]
-                : [];
-
-        }
+        const ast = parse( grammar, session, options );
 
         let passed, result;
 
@@ -81,6 +81,54 @@ module.exports = function ( chai, utils ) {
             } );
 
         }
+
+    } );
+
+    Assertion.addMethod( "reportWarning", function ( grammar, warnings, options ) {
+
+        warnings = Array.isArray( warnings )
+            ? warnings
+            : warnings == null
+                ? []
+                : [ warnings ];
+
+        options = typeof options !== "undefined" ? options : {};
+
+        const messages = [];
+        function warn( message ) {
+
+            messages.push( message );
+
+        }
+
+        const session = new Session( { grammar, warn } );
+        const ast = parse( grammar, session, options );
+
+        utils.flag( this, "object" )( ast, session, options );
+
+        const messagesCount = messages.length;
+        const warningsCount = warnings.length;
+
+        if ( warnings.length )
+
+            this.assert(
+                messagesCount === warningsCount,
+                `expected #{this} to report ${ warningsCount } warnings, but it reported ${ messagesCount } warnings`,
+                `expected #{this} to not report ${ warningsCount } warnings`,
+                warnings,
+                messages
+            );
+
+        warnings.forEach( warning => {
+
+            this.assert(
+                messages.indexOf( warning ) !== -1,
+                "expected #{this} to report the warning #{exp}, but it didn't",
+                "expected #{this} to not report the warning #{exp}",
+                warning
+            );
+
+        } );
 
     } );
 
