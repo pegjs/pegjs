@@ -102,10 +102,6 @@ describe( "plugin API", function () {
 
                     config.parser = peg.generate( `
 
-                        {
-                            const ast = require( process.cwd() + "/lib/ast" );
-                        }
-
                         start = .* {
                             return new ast.Grammar( void 0, [{
                                 type: "rule",
@@ -118,7 +114,7 @@ describe( "plugin API", function () {
                             }] );
                         }
 
-                    ` );
+                    `, { context: { ast: peg.ast } } );
 
                 }
             };
