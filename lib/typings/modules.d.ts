@@ -26,14 +26,7 @@ declare module "pegjs/lib/peg" {
 
 declare module "pegjs/lib/ast" {
 
-    export const Node: peg.ast.Node;
-    export const Grammar: peg.ast.Grammar;
-    export const visitor: {
-
-        ASTVisitor: peg.ast.visitor.ASTVisitor;
-        build<T = void, R = any>( functions: peg.ast.visitor.IVisitorMap<T> ): peg.ast.visitor.IVisitor<R>;
-
-    };
+    export default peg.ast;
 
 }
 
@@ -81,8 +74,20 @@ declare module "pegjs/lib/compiler/js" {
 
 declare module "pegjs/lib/compiler/opcodes" {
 
-    const opcodes: { [ name: string ]: number };
+    const opcodes: peg.compiler.IOpcodes;
     export default opcodes;
+
+}
+
+declare module "pegjs/lib/compiler/session" {
+
+    export default peg.compiler.Session;
+
+}
+
+declare module "pegjs/lib/compiler/vm" {
+
+    export default peg.compiler.vm;
 
 }
 
@@ -146,6 +151,12 @@ declare module "pegjs/lib/compiler/passes/report-undefined-rules" {
 
 }
 
+declare module "pegjs/lib/compiler/passes/report-unused-rules" {
+
+    export default peg.compiler.passes.check.reportUnusedRules;
+
+}
+
 declare module "pegjs/lib/util" {
 
     export default peg.util;
@@ -166,16 +177,7 @@ declare module "pegjs/lib/util/index" {
 
 declare module "pegjs/lib/util/objects" {
 
-    namespace objects {
-
-        function clone( source: {} ): {};
-        function each( object: {}, iterator: peg.util.IIterator<void> ): void;
-        function extend( target: {}, source: {} ): {};
-        function map( object: {}, transformer: peg.util.IIterator ): {};
-        function values( object: {}, transformer?: peg.util.IIterator ): any[];
-        function enforceFastProperties( o: {} ): {};
-
-    }
+    const objects: peg.IObjectUtils;
     export default objects;
 
 }

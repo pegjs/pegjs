@@ -28,6 +28,9 @@ declare namespace peg {
 
     }
 
+    /**
+     * PEG.js AST
+     */
     namespace ast {
 
         /**
@@ -296,19 +299,32 @@ declare namespace peg {
 
             }
 
-            class ASTVisitor implements IVisitorMap {
-
-                visit<R = any>( node: Object, ...args ): R;
-
-            }
-
             interface IVisitor<R = any> {
 
                 ( node: Object, ...args ): R;
 
             }
 
-            function build<T = void, R = any>( functions: IVisitorMap<T> ): IVisitor<R>;
+            class ASTVisitor implements IVisitorMap {
+
+                visit: IVisitor;
+
+            }
+
+            interface IVisitorBuilder<T = void, R = any> {
+
+                ( functions: IVisitorMap<T> ): IVisitor<R>;
+
+            }
+
+            const build: IVisitorBuilder;
+
+        }
+
+        interface visitor {
+
+            ASTVisitor: visitor.ASTVisitor;
+            build: visitor.IVisitorBuilder;
 
         }
 
@@ -331,6 +347,9 @@ declare namespace peg {
 
     }
 
+    /**
+     * The PEG.js compiler.
+     */
     namespace compiler {
 
         type FormatOptions = "amd" | "bare" | "commonjs" | "es" | "globals" | "umd";
@@ -342,6 +361,7 @@ declare namespace peg {
             [ key: string ]: any;
             allowedStartRules?: string[];
             cache?: boolean;
+            context?: { [ name: string ]: any; };
             dependencies?: { [ name: string ]: string; };
             exportVar?: string;
             format?: FormatOptions;
@@ -356,6 +376,7 @@ declare namespace peg {
 
             allowedStartRules: string[];
             cache: boolean;
+            context: { [ name: string ]: any; };
             dependencies: { [ name: string ]: string; };
             exportVar: string;
             format: FormatOptions;
@@ -369,7 +390,8 @@ declare namespace peg {
         interface ICompilerPass {
 
             ( node: Grammar ): void;
-            ( node: Grammar, options: ICompilerPassOptions ): void;
+            ( node: Grammar, session: Session ): void;
+            ( node: Grammar, session: Session, options: ICompilerPassOptions ): void;
 
         }
 
@@ -379,30 +401,78 @@ declare namespace peg {
 
         }
 
+        interface IOpcodes {
+
+            [ name: string ]: number;
+
+        }
+
+        interface vm {
+
+            runInContext( code: string, vm$context?: { [ name: string ]: any; } ): any;
+
+        }
+        const vm: vm;
+
+        interface ISessionMessageEmitter {
+
+            ( message: string, location: SourceLocation ): any;
+
+        }
+
+        interface ISessionConfig {
+
+            [ key: string ]: any;
+            grammar?: string;
+            opcodes?: IOpcodes;
+            parser?: GeneratedParser<Grammar>;
+            passes?: IPassesMap;
+            visitor?: ast.visitor;
+            vm?: vm;
+            warn?: ISessionMessageEmitter;
+            error?: ISessionMessageEmitter;
+
+        }
+
+        class Session implements ISessionConfig {
+
+            constructor( config?: ISessionConfig );
+
+            parse( input: string, options?: parser.IOptions ): Grammar;
+
+            buildVisitor: ast.visitor.IVisitorBuilder;
+
+            warn: ISessionMessageEmitter;
+            error: ISessionMessageEmitter;
+            fatal: ISessionMessageEmitter;
+
+        }
+
         namespace passes {
 
             namespace check {
 
-                function reportUndefinedRules( ast: Grammar, options: ICompilerPassOptions ): void;
-                function reportDuplicateRules( ast: Grammar ): void;
-                function reportDuplicateLabels( ast: Grammar ): void;
-                function reportInfiniteRecursion( ast: Grammar ): void;
-                function reportInfiniteRepetition( ast: Grammar ): void;
+                function reportUndefinedRules( ast: Grammar, session: Session, options: ICompilerPassOptions ): void;
+                function reportDuplicateRules( ast: Grammar, session: Session ): void;
+                function reportUnusedRules( ast: Grammar, session: Session, options: ICompilerPassOptions ): void;
+                function reportDuplicateLabels( ast: Grammar, session: Session ): void;
+                function reportInfiniteRecursion( ast: Grammar, session: Session ): void;
+                function reportInfiniteRepetition( ast: Grammar, session: Session ): void;
 
             }
 
             namespace transform {
 
-                function removeProxyRules( ast: Grammar, options: ICompilerPassOptions ): void;
+                function removeProxyRules( ast: Grammar, session: Session, options: ICompilerPassOptions ): void;
 
             }
 
             namespace generate {
 
-                function calcReportFailures( ast: Grammar, options: ICompilerPassOptions ): void;
-                function inferenceMatchResult( ast: Grammar ): void;
-                function generateBytecode( ast: Grammar ): void;
-                function generateJS( ast: Grammar, options: ICompilerPassOptions ): void;
+                function calcReportFailures( ast: Grammar, session: Session, options: ICompilerPassOptions ): void;
+                function inferenceMatchResult( ast: Grammar, session: Session ): void;
+                function generateBytecode( ast: Grammar, session: Session ): void;
+                function generateJS( ast: Grammar, session: Session, options: ICompilerPassOptions ): void;
 
             }
 
@@ -411,60 +481,63 @@ declare namespace peg {
         /**
          * Generate's a parser from the PEG.js AST and returns it.
          */
-        function compile( ast: Grammar, passes: IPassesMap, options?: ICompilerOptions ): GeneratedParser | string;
+        function compile( ast: Grammar, session: Session, options?: ICompilerOptions ): GeneratedParser | string;
 
         /**
          * Generate's a parser from the PEG.js AST, then evaluates's the source before returning the parser object.
          */
-        function compile( ast: Grammar, passes: IPassesMap, options?: ICompilerOptions<"parser"> ): GeneratedParser;
+        function compile( ast: Grammar, session: Session, options?: ICompilerOptions<"parser"> ): GeneratedParser;
 
         /**
          * Generate's a parser from the PEG.js AST and returns the JavaScript based source.
          */
-        function compile( ast: Grammar, passes: IPassesMap, options?: ICompilerOptions<"source"> ): string;
+        function compile( ast: Grammar, session: Session, options?: ICompilerOptions<"source"> ): string;
 
     }
 
-    namespace util {
+    // peg.util
 
-        interface IStageMap {
+    interface IStageMap {
 
-            [ stage: string ]
-                : compiler.ICompilerPass[]
-                | { [ pass: string ]: compiler.ICompilerPass };
-
-        }
-
-        function convertPasses( stages: IStageMap ): compiler.IPassesMap;
-
-        interface IIterator<R = any> {
-
-            ( value: any ): R;
-            ( value: any, key: string ): R;
-
-        }
-
-        function clone( source: {} ): {};
-        function each( object: {}, iterator: IIterator<void> ): void;
-        function extend( target: {}, source: {} ): {};
-        function map( object: {}, transformer: IIterator ): {};
-        function values( object: {}, transformer?: IIterator ): any[];
-        function enforceFastProperties( o: {} ): {};
+        [ stage: string ]
+            : compiler.ICompilerPass[]
+            | { [ pass: string ]: compiler.ICompilerPass };
 
     }
 
-    interface IBuildConfig<T = any> {
+    interface IIterator<R = any> {
 
-        parser: GeneratedParser<T>;
-        passes: compiler.IPassesMap;
+        ( value: any ): R;
+        ( value: any, key: string ): R;
 
     }
 
-    interface IPlugin<T = compiler.OutputOptions, U = any> {
+    interface IObjectUtils {
+
+        convertPasses( stages: IStageMap ): compiler.IPassesMap;
+
+        clone( source: {} ): {};
+        each( object: {}, iterator: IIterator<void> ): void;
+        extend( target: {}, source: {} ): {};
+        map( object: {}, transformer: IIterator ): {};
+        values( object: {}, transformer?: IIterator ): any[];
+        enforceFastProperties( o: {} ): {};
+
+    }
+    interface util extends IObjectUtils {
+
+        convertPasses( stages: IStageMap ): compiler.IPassesMap;
+
+    }
+    const util: util;
+
+    // peg.generate
+
+    interface IPlugin<T = compiler.OutputOptions> {
 
         [ key: string ]: any;
-        use( config: IBuildConfig<U> ): void;
-        use( config: IBuildConfig<U>, options: IBuildOptions<T> ): void;
+        use( session: compiler.Session ): void;
+        use( session: compiler.Session, options: IBuildOptions<T> ): void;
 
     }
 
