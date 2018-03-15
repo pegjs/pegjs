@@ -43,7 +43,7 @@
         "coveralls": "3.0.0",
         "dedent": "0.7.0",
         "del": "3.0.0",
-        "eslint-config-futagozaryuu": "3.9.x",
+        "eslint-config-futagozaryuu": "^3.9.0",
         "express": "4.16.2",
         "glob": "7.1.2",
         "gulp": "3.9.1",
