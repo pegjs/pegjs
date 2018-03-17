@@ -364,6 +364,7 @@ declare namespace peg {
             context?: { [ name: string ]: any; };
             dependencies?: { [ name: string ]: string; };
             exportVar?: string;
+            features?: IGeneratedParserFeatures;
             format?: FormatOptions;
             header?: string | string[];
             optimize?: OptimizeOptions;
@@ -379,11 +380,25 @@ declare namespace peg {
             context: { [ name: string ]: any; };
             dependencies: { [ name: string ]: string; };
             exportVar: string;
+            features: IGeneratedParserFeatures;
             format: FormatOptions;
             header: string | string[];
             optimize: OptimizeOptions;
             output: OutputOptions;
             trace: boolean;
+
+        }
+
+        interface IGeneratedParserFeatures {
+
+            [ key: string ]: boolean;
+            text: boolean;
+            offset: boolean;
+            range: boolean;
+            location: boolean;
+            expected: boolean;
+            error: boolean;
+            filename: boolean;
 
         }
 

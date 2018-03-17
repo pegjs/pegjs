@@ -129,6 +129,7 @@ declare namespace generatedparser {
     interface IOptions {
 
         [ key: string ]: any;
+        filename?: string;
         startRule?: string;
         tracer?: ITracer;
 

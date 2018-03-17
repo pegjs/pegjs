@@ -34,6 +34,7 @@ function abort( message ) {
 // Main
 
 let inputStream, outputStream;
+options.parser = options.parser || {};
 
 if ( options.inputFile === "-" ) {
 
@@ -48,6 +49,7 @@ if ( options.inputFile === "-" ) {
 } else {
 
     inputStream = fs.createReadStream( options.inputFile );
+    options.parser.filename = options.inputFile;
 
 }
 

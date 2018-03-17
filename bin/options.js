@@ -17,6 +17,7 @@ let options = {
     "format": "commonjs",
     "optimize": "speed",
     "output": "source",
+    "parser": {},
     "plugins": [],
     "trace": false
 };
