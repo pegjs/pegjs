@@ -24,6 +24,12 @@ function readStream( inputStream, callback ) {
 
 }
 
+function closeStream( stream ) {
+
+    if ( stream !== process.stdin || stream !== process.stdout ) stream.end();
+
+}
+
 function abort( message ) {
 
     console.error( message );
@@ -33,36 +39,45 @@ function abort( message ) {
 
 // Main
 
-let inputStream, outputStream;
+let inputStream, outputStream, orignalContent;
+
+const inputFile = options.inputFile;
+const outputFile = options.outputFile;
 options.parser = options.parser || {};
 
-if ( options.inputFile === "-" ) {
+if ( inputFile === "-" ) {
 
     process.stdin.resume();
     inputStream = process.stdin;
     inputStream.on( "error", () => {
 
-        abort( `Can't read from file "${ options.inputFile }".` );
+        abort( `Can't read from file "${ inputFile }".` );
 
     } );
 
 } else {
 
-    inputStream = fs.createReadStream( options.inputFile );
-    options.parser.filename = options.inputFile;
+    inputStream = fs.createReadStream( inputFile );
+    options.parser.filename = inputFile;
 
 }
 
-if ( options.outputFile === "-" ) {
+if ( outputFile === "-" ) {
 
     outputStream = process.stdout;
 
 } else {
 
-    outputStream = fs.createWriteStream( options.outputFile );
+    if ( fs.existsSync( outputFile ) ) {
+
+        orignalContent = fs.readFileSync( outputFile, "utf8" );
+
+    }
+
+    outputStream = fs.createWriteStream( outputFile );
     outputStream.on( "error", () => {
 
-        abort( `Can't write to file "${ options.outputFile }".` );
+        abort( `Can't write to file "${ outputFile }".` );
 
     } );
 
@@ -89,15 +104,18 @@ readStream( inputStream, input => {
 
         }
 
+        if ( orignalContent ) {
+
+            closeStream( outputStream );
+            fs.writeFileSync( outputFile, orignalContent, "utf8" );
+
+        }
+
         return abort( e.message );
 
     }
 
     outputStream.write( source );
-    if ( outputStream !== process.stdout ) {
-
-        outputStream.end();
-
-    }
+    closeStream( outputStream );
 
 } );
