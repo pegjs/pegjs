@@ -72,6 +72,14 @@ task( "build:parser", cb => {
 // Create the browser build.
 task( "build:browser", () => {
 
+    const options = {
+
+        bare: true,
+        standalone: "peg",
+        suffix: ".min",
+
+    };
+
     const HEADER = dedent`
 
         /**
@@ -88,13 +96,13 @@ task( "build:browser", () => {
 
     `;
 
-    return browserify( "lib/peg.js", { standalone: "peg" } )
+    return browserify( "lib/peg.js", options )
         .transform( babelify )
         .bundle()
         .pipe( source( "peg.js" ) )
         .pipe( header( HEADER ) )
         .pipe( gulp.dest( "browser" ) )
-        .pipe( rename( { suffix: ".min" } ) )
+        .pipe( rename( options ) )
         .pipe( buffer() )
         .pipe( uglify() )
         .pipe( header( HEADER ) )
