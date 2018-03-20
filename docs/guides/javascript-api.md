@@ -74,6 +74,7 @@ This class will also return some helper methods:
 
   * `parse( input, options )` - an alias for `this.parser.parse( input, options )`
   * `buildVisitor( functions )` - an alias for `this.visitor.build( functions )`
+  * `fatal( message, location )` - Will always throw an error (used by default for `this.error()` if not overridden).
 
 #### peg.compiler.compile(ast, session[, options])
 
