@@ -62,7 +62,6 @@ An instance of this class holds helpers (methods, objects with methods, constant
 
 The following option's are used by the Session API, but are currently all optional:
 
-  * `grammar` - The input that was parsed (source for the PEG.js AST passed to the compiler and the current passes).
   * `opcodes` - An `enum` like hashmap (plain object) that is used by the bytecode and parser generators.
   * `parser` - A pre-generated PEG.js grammar parser that should return an instance of the PEG.js AST's Grammar class. Can be replaced to add additional syntax features, or allow an alternative syntax for the grammar.
   * `passes` - An object with each property being an array of methods that will check or alter the AST passed to them.

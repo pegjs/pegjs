@@ -438,7 +438,6 @@ declare namespace peg {
         interface ISessionConfig {
 
             [ key: string ]: any;
-            grammar?: string;
             opcodes?: IOpcodes;
             parser?: GeneratedParser<Grammar>;
             passes?: IPassesMap;
