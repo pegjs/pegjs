@@ -6,4 +6,4 @@
 * [Issue tracker](https://github.com/pegjs/pegjs/issues)
 * [Google Group](http://groups.google.com/group/pegjs)
 * [Stack Overflow](https://stackoverflow.com/questions/tagged/pegjs)
-* [Twitter](http://twitter.com/peg_js)
+* [Twitter](https://twitter.com/pegjs)
