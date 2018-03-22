@@ -317,7 +317,15 @@ declare namespace peg {
 
             }
 
+            interface IOn {
+
+                property( name: string ): IVisitor;
+                children( name: string ): IVisitor;
+
+            }
+
             const build: IVisitorBuilder;
+            const on: IFor;
 
         }
 
@@ -325,6 +333,7 @@ declare namespace peg {
 
             ASTVisitor: visitor.ASTVisitor;
             build: visitor.IVisitorBuilder;
+            on: visitor.IOn;
 
         }
 
