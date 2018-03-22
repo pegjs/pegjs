@@ -408,6 +408,7 @@ declare namespace peg {
             expected: boolean;
             error: boolean;
             filename: boolean;
+            DefaultTracer: boolean;
 
         }
 
