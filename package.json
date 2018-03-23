@@ -46,7 +46,7 @@
         "eslint-config-futagozaryuu": "4.17.x",
         "express": "4.16.3",
         "glob": "7.1.2",
-        "gulp": "3.9.1",
+        "gulp": "4.0.0",
         "gulp-eslint": "4.0.2",
         "gulp-header": "2.0.5",
         "gulp-mocha": "5.0.0",
@@ -54,7 +54,7 @@
         "gulp-uglify": "3.0.0",
         "morgan": "1.9.0",
         "nyc": "11.6.0",
-        "run-sequence": "2.2.1",
+        "pump": "3.0.0",
         "sinon": "4.4.6",
         "vinyl-buffer": "1.0.1",
         "vinyl-source-stream": "2.0.0"

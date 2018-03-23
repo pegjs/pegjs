@@ -2,20 +2,22 @@
 
 const version = require( "./package" ).version;
 const spawn = require( "child_process" ).spawn;
-const gulp = require( "gulp" );
-const task = gulp.task.bind( gulp );
+const dest = require( "gulp" ).dest;
+const src = require( "gulp" ).src;
+const series = require( "gulp" ).series;
+const task = require( "gulp" ).task;
 const eslint = require( "gulp-eslint" );
 const mocha = require( "gulp-mocha" );
 const dedent = require( "dedent" );
 const browserify = require( "browserify" );
 const babelify = require( "babelify" );
-const source = require( "vinyl-source-stream" );
+const stream = require( "vinyl-source-stream" );
 const rename = require( "gulp-rename" );
 const buffer = require( "vinyl-buffer" );
 const uglify = require( "gulp-uglify" );
 const header = require( "gulp-header" );
 const del = require( "del" );
-const runSequence = require( "run-sequence" );
+const pump = require( "pump" );
 
 function node( args, cb ) {
 
@@ -31,8 +33,9 @@ function node( args, cb ) {
 }
 
 // Run ESLint on all JavaScript files.
-task( "lint", () => gulp
-    .src( [
+task( "lint", () => pump(
+
+    src( [
         "**/.*rc.js",
         "bin/*.js",
         "lib/**/*.js",
@@ -43,17 +46,20 @@ task( "lint", () => gulp
         "test/server/run",
         "src/*.js",
         "gulpfile.js"
-    ] )
-    .pipe( eslint( { dotfiles: true } ) )
-    .pipe( eslint.format() )
-    .pipe( eslint.failAfterError() )
-);
+    ] ),
+    eslint( { dotfiles: true } ),
+    eslint.format(),
+    eslint.failAfterError()
+
+) );
 
 // Run tests.
-task( "test", () => gulp
-    .src( "test/spec/**/*.spec.js", { read: false } )
-    .pipe( mocha() )
-);
+task( "test", () => pump(
+
+    src( "test/spec/**/*.spec.js", { read: false } ),
+    mocha()
+
+) );
 
 // Run benchmarks.
 task( "benchmark", cb => {
@@ -96,17 +102,21 @@ task( "build:browser", () => {
 
     `;
 
-    return browserify( "lib/peg.js", options )
-        .transform( babelify )
-        .bundle()
-        .pipe( source( "peg.js" ) )
-        .pipe( header( HEADER ) )
-        .pipe( gulp.dest( "browser" ) )
-        .pipe( rename( options ) )
-        .pipe( buffer() )
-        .pipe( uglify() )
-        .pipe( header( HEADER ) )
-        .pipe( gulp.dest( "browser" ) );
+    return pump(
+
+        browserify( "lib/peg.js", options )
+            .transform( babelify )
+            .bundle(),
+        stream( "peg.js" ),
+        header( HEADER ),
+        dest( "browser" ),
+        rename( options ),
+        buffer(),
+        uglify(),
+        header( HEADER ),
+        dest( "browser" )
+
+    );
 
 } );
 
@@ -116,6 +126,4 @@ task( "clean", () =>
 );
 
 // Default task.
-task( "default", cb =>
-    runSequence( "lint", "test", cb )
-);
+task( "default", series( "lint", "test" ) );
