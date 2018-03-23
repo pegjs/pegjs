@@ -12,4 +12,12 @@ module.exports = {
 
     },
 
+    features: {
+
+        offset: false,
+        range: false,
+        expected: false,
+
+    },
+
 };
