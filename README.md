@@ -25,6 +25,7 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 - [Using the Parser](https://github.com/pegjs/pegjs/blob/master/docs/guides/using-the-parser.md)
 - [Grammar Syntax and Semantics](https://github.com/pegjs/pegjs/tree/master/docs/grammar)
 - [JavaScript API](https://github.com/pegjs/pegjs/blob/master/docs/guides/javascript-api.md)
+- [Plugins](https://github.com/pegjs/pegjs/blob/master/docs/guides/plugins.md)
 - [Compatibility](https://github.com/pegjs/pegjs/blob/master/docs/notes/compatibility.md)
 - [Development](https://github.com/pegjs/pegjs/blob/master/docs/notes/development.md)
 - [Useful Links](https://github.com/pegjs/pegjs/blob/master/docs/notes/useful-links.md)
