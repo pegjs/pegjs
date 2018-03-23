@@ -7,11 +7,8 @@ node_js:
   - "6.0"
   - "8.0"
 
-before_script:
-  - npm install -g gulp
-
 after_success:
-  - npm run coverage
+  - yarn coverage
 
 cache:
   yarn: true
