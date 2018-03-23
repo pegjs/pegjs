@@ -1,0 +1,11 @@
+{
+    "exclude": [
+        "test",
+        "gulpfile.js",
+        "**/.eslintrc.js"
+    ],
+    "reporter": [
+        "text",
+        "text-summary"
+    ]
+}

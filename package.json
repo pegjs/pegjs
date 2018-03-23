@@ -61,16 +61,5 @@
     },
     "engines": {
         "node": ">=4"
-    },
-    "nyc": {
-        "exclude": [
-            "test",
-            "gulpfile.js",
-            "**/.eslintrc.js"
-        ],
-        "reporter": [
-            "text",
-            "text-summary"
-        ]
     }
 }
