@@ -14,5 +14,6 @@ after_success:
   - npm run coverage
 
 cache:
+  yarn: true
   directories:
     - node_modules
