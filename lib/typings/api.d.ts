@@ -538,8 +538,6 @@ declare namespace peg {
 
     interface IObjectUtils {
 
-        convertPasses( stages: IStageMap ): compiler.IPassesMap;
-
         clone( source: {} ): {};
         each( object: {}, iterator: IIterator<void> ): void;
         extend( target: {}, source: {} ): {};
@@ -550,7 +548,9 @@ declare namespace peg {
     }
     interface util extends IObjectUtils {
 
+        noop(): void;
         convertPasses( stages: IStageMap ): compiler.IPassesMap;
+        processOptions( options: {}, defaults: {} ): {};
 
     }
     const util: util;

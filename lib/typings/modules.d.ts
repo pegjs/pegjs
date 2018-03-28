@@ -181,3 +181,9 @@ declare module "pegjs/lib/util/objects" {
     export default objects;
 
 }
+
+declare module "pegjs/lib/util/process-options" {
+
+    export default peg.util.processOptions;
+
+}
