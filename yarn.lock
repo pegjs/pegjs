@@ -476,7 +476,7 @@ babel-core@6.26.0, babel-core@^6.26.0:
     slash "^1.0.0"
     source-map "^0.5.6"
 
-babel-eslint@8.2.x:
+babel-eslint@~8.2.0:
   version "8.2.2"
   resolved "http://registry.npmjs.org/babel-eslint/-/babel-eslint-8.2.2.tgz#1102273354c6f0b29b4ea28a65f97d122296b68b"
   dependencies:
@@ -1970,16 +1970,16 @@ escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
 eslint-config-futagozaryuu@4.17.x:
-  version "4.17.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-futagozaryuu/-/eslint-config-futagozaryuu-4.17.1.tgz#83a1cc6e459377b64fc5df87f25913fe785cfe87"
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/eslint-config-futagozaryuu/-/eslint-config-futagozaryuu-4.17.2.tgz#ad921ebfb078784a65e1af5b992ca41e1b7c2280"
   dependencies:
-    babel-eslint "8.2.x"
-    eslint-plugin-node "6.0.x"
-    globals ">= 11.0.0"
-    typescript ">= 2.7.0"
-    typescript-eslint-parser ">= 14.0.0"
+    babel-eslint "~8.2.0"
+    eslint-plugin-node "~6.0.0"
+    globals "^11.0.0"
+    typescript "~2.7.0"
+    typescript-eslint-parser "^14.0.0"
 
-eslint-plugin-node@6.0.x:
+eslint-plugin-node@~6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-node/-/eslint-plugin-node-6.0.1.tgz#bf19642298064379315d7a4b2a75937376fa05e4"
   dependencies:
@@ -2575,7 +2575,11 @@ global-prefix@^1.0.1:
     is-windows "^1.0.1"
     which "^1.2.14"
 
-"globals@>= 11.0.0", globals@^11.0.1, globals@^11.1.0:
+globals@^11.0.0, globals@^11.1.0:
+  version "11.4.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-11.4.0.tgz#b85c793349561c16076a3c13549238a27945f1bc"
+
+globals@^11.0.1:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.3.0.tgz#e04fdb7b9796d8adac9c8f64c14837b2313378b0"
 
@@ -5329,14 +5333,14 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-"typescript-eslint-parser@>= 14.0.0":
+typescript-eslint-parser@^14.0.0:
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/typescript-eslint-parser/-/typescript-eslint-parser-14.0.0.tgz#c90a8f541c1d96e5c55e2807c61d154e788520f9"
   dependencies:
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
-"typescript@>= 2.7.0":
+typescript@~2.7.0:
   version "2.7.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
 
