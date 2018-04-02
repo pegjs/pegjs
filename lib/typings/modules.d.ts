@@ -65,7 +65,8 @@ declare module "pegjs/lib/compiler/js" {
     namespace js {
 
         function stringEscape( s: string ): string;
-        function regexpClassEscape( s: string ): string;
+        function regexpEscape( s: string ): string;
+        const reservedWords: string[];
 
     }
     export default js;
