@@ -163,12 +163,6 @@ declare module "pegjs/lib/util" {
 
 }
 
-declare module "pegjs/lib/util/convert-passes" {
-
-    export default peg.util.convertPasses;
-
-}
-
 declare module "pegjs/lib/util/index" {
 
     export default peg.util;
@@ -179,11 +173,5 @@ declare module "pegjs/lib/util/objects" {
 
     const objects: peg.IObjectUtils;
     export default objects;
-
-}
-
-declare module "pegjs/lib/util/process-options" {
-
-    export default peg.util.processOptions;
 
 }
