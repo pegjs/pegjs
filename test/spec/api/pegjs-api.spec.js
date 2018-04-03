@@ -310,44 +310,7 @@ describe( "PEG.js API", function () {
 
         describe( "reserved words", function () {
 
-            const RESERVED_WORDS = [
-                "break",
-                "case",
-                "catch",
-                "class",
-                "const",
-                "continue",
-                "debugger",
-                "default",
-                "delete",
-                "do",
-                "else",
-                "enum",
-                "export",
-                "extends",
-                "false",
-                "finally",
-                "for",
-                "function",
-                "if",
-                "import",
-                "instanceof",
-                "in",
-                "new",
-                "null",
-                "return",
-                "super",
-                "switch",
-                "this",
-                "throw",
-                "true",
-                "try",
-                "typeof",
-                "var",
-                "void",
-                "while",
-                "with"
-            ];
+            const RESERVED_WORDS = peg.util.reservedWords;
 
             describe( "throws an exception on reserved JS words used as labels", function () {
 
