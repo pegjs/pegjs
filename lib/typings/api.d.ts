@@ -536,6 +536,13 @@ declare namespace peg {
 
     }
 
+    interface IJavaScriptUtils {
+
+        stringEscape( s: string ): string;
+        regexpEscape( s: string ): string;
+        reservedWords: string[];
+
+    }
     interface IObjectUtils {
 
         clone( source: {} ): {};
@@ -546,7 +553,7 @@ declare namespace peg {
         enforceFastProperties( o: {} ): {};
 
     }
-    interface util extends IObjectUtils {
+    interface util extends IJavaScriptUtils, IObjectUtils {
 
         noop(): void;
         convertPasses( stages: IStageMap ): compiler.IPassesMap;

@@ -60,19 +60,6 @@ declare module "pegjs/lib/compiler/index" {
 
 }
 
-declare module "pegjs/lib/compiler/js" {
-
-    namespace js {
-
-        function stringEscape( s: string ): string;
-        function regexpEscape( s: string ): string;
-        const reservedWords: string[];
-
-    }
-    export default js;
-
-}
-
 declare module "pegjs/lib/compiler/opcodes" {
 
     const opcodes: peg.compiler.IOpcodes;
@@ -167,6 +154,13 @@ declare module "pegjs/lib/util" {
 declare module "pegjs/lib/util/index" {
 
     export default peg.util;
+
+}
+
+declare module "pegjs/lib/util/js" {
+
+    const js: peg.IJavaScriptUtils;
+    export default js;
 
 }
 
