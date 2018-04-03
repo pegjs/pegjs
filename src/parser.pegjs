@@ -39,7 +39,7 @@
     "!": "semantic_not"
   };
 
-  let RESERVED_WORDS = options.reservedWords || js.reservedWords;
+  let RESERVED_WORDS = options.reservedWords || util.reservedWords;
   if ( !Array.isArray(RESERVED_WORDS) ) RESERVED_WORDS = [];
 
   function extractOptional(optional, index) {

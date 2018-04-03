@@ -7,7 +7,6 @@ module.exports = {
     dependencies: {
 
         ast: "./ast",
-        js: "./compiler/js",
         util: "./util"
 
     },
