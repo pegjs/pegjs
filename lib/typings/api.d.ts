@@ -325,7 +325,7 @@ declare namespace peg {
             }
 
             const build: IVisitorBuilder;
-            const on: IFor;
+            const on: IOn;
 
         }
 
@@ -432,12 +432,11 @@ declare namespace peg {
 
         }
 
-        interface vm {
+        interface ISessionVM {
 
             runInContext( code: string, vm$context?: { [ name: string ]: any; } ): any;
 
         }
-        const vm: vm;
 
         interface ISessionMessageEmitter {
 
@@ -452,7 +451,7 @@ declare namespace peg {
             parser?: GeneratedParser<Grammar>;
             passes?: IPassesMap;
             visitor?: ast.visitor;
-            vm?: vm;
+            vm?: ISessionVM;
             warn?: ISessionMessageEmitter;
             error?: ISessionMessageEmitter;
 
@@ -553,7 +552,7 @@ declare namespace peg {
         enforceFastProperties( o: {} ): {};
 
     }
-    interface util extends IJavaScriptUtils, IObjectUtils {
+    interface util extends IJavaScriptUtils, IObjectUtils, compiler.ISessionVM {
 
         noop(): void;
         convertPasses( stages: IStageMap ): compiler.IPassesMap;

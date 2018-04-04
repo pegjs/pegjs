@@ -73,12 +73,6 @@ declare module "pegjs/lib/compiler/session" {
 
 }
 
-declare module "pegjs/lib/compiler/vm" {
-
-    export default peg.compiler.vm;
-
-}
-
 declare module "pegjs/lib/compiler/passes/calc-report-failures" {
 
     export default peg.compiler.passes.generate.calcReportFailures;
@@ -168,5 +162,12 @@ declare module "pegjs/lib/util/objects" {
 
     const objects: peg.IObjectUtils;
     export default objects;
+
+}
+
+declare module "pegjs/lib/util/vm" {
+
+    const vm: peg.compiler.ISessionVM;
+    export default vm;
 
 }
