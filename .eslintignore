@@ -1,0 +1,5 @@
+/.nyc_output
+/browser
+/coverage
+/node_modules
+/test/server/vendor
