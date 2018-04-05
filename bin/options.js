@@ -58,10 +58,7 @@ function addExtraOptions( config ) {
 
     }
 
-    const extraOptions = {};
-    util.extend( extraOptions, config );
-    util.extend( extraOptions, options );
-    options = extraOptions;
+    options = util.processOptions( config, options );
 
 }
 
