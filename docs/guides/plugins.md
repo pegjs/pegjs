@@ -18,7 +18,7 @@ import customGrammarParser from "./parser";
 export function use( session, options ) {
 
     // Replace the grammar parser
-    config.parser = customGrammarParser;
+    session.parser = customGrammarParser;
 
     // always output the source
     options.output = "source";
