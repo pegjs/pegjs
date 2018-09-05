@@ -6,6 +6,7 @@ module.exports = {
     "root": true,
     "rules": {
 
+        "no-eval": 0,
         "prefer-rest-params": 0,
 
     },

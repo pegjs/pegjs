@@ -800,13 +800,11 @@ describe( "PEG.js grammar parser", function () {
 
         expect( "start = '\\a'" ).to.parseAs( literalGrammar( "a", false ) );
 
-    // The negative predicate is impossible to test with PEG.js grammar
-    // structure.
-
     } );
 
-    // The EscapeCharacter rule is impossible to test with PEG.js grammar
-    // structure.
+    // The negative predicate is impossible to test with PEG.js grammar structure.
+
+    // The EscapeCharacter rule is impossible to test with PEG.js grammar structure.
 
     // Canonical HexEscapeSequence is "xFF".
     it( "parses HexEscapeSequence", function () {
