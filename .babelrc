@@ -3,7 +3,7 @@
     "compact": false,
     "presets": [
         [
-            "env",
+            "@babel/preset-env",
             {
                 "modules": false,
                 "targets": {
