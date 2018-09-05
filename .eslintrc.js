@@ -2,7 +2,7 @@
 
 module.exports = {
 
-    "extends": "futagozaryuu/node-v4",
+    "extends": "futagozaryuu/node-v6",
     "root": true,
     "rules": {
 

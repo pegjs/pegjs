@@ -65,6 +65,6 @@
         "vinyl-source-stream": "2.0.0"
     },
     "engines": {
-        "node": ">=4"
+        "node": ">= 6"
     }
 }
