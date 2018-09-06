@@ -76,7 +76,7 @@ $( "#run" ).click( () => {
 
             return $.ajax( {
                 type: "GET",
-                url: "benchmark/" + file,
+                url: file,
                 dataType: "text",
                 async: false
             } ).responseText;

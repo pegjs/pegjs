@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/css/benchmark.css">
+
+<div id="options">
+    <label for="run-count">Run each test</label>
+    <input type="text" id="run-count" value="10"> times
+    <input type="checkbox" id="cache">
+    <label for="cache">Use results cache</label>
+    <label for="optimize">Optimize:</label>
+    <select id="optimize">
+        <option value="speed">Speed</option>
+        <option value="size">Size</option>
+    </select>
+    <input type="button" id="run" value="Run">
+</div>
+
+<table id="results-table">
+    <tr class="columns">
+        <th>Test</th>
+        <th>Input Size</th>
+        <th>Average Parse Time</th>
+        <th>Average Parse Speed</th>
+    </tr>
+    <tr>
+        <td class="no-results" colspan="4">No results available yet.</td>
+    </tr>
+</table>
+
+<script src="/vendor/jquery/jquery.js"></script>
+<script src="/vendor/jquery.scrollto/jquery.scrollTo.js"></script>
+<script src="/benchmark/bundle.js"></script>

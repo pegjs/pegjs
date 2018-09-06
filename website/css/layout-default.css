@@ -40,6 +40,13 @@
 #footer {
   margin-bottom: 2em;
   text-align: center; font-size: 75%;
-  color: silver;
+  color: #3d586c;
 }
-#footer a, #footer a:visited { color: silver; }
+#footer a {
+  text-decoration: none;
+  color: #1A0BF1;
+}
+#footer a:hover {
+  text-decoration: underline;
+  color: #9D0BF1;
+}

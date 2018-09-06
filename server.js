@@ -1,20 +1,27 @@
 "use strict";
 
+const babelify = require( "babelify" );
 const bodyParser = require( "body-parser" );
+const browserify = require( "browserify" );
 const express = require( "express" );
 const layout = require( "express-layout" );
+const glob = require( "glob" ).sync;
 const logger = require( "morgan" );
 const { join } = require( "path" );
+
+const path = ( ...parts ) => join( __dirname, ...parts );
 
 /* Setup */
 
 const app = express();
 
-app.set( "views", join( __dirname, "website", "views" ) );
+app.set( "views", path( "website", "views" ) );
 app.set( "view engine", "ejs" );
 
 app.use( logger( "dev" ) );
-app.use( express.static( join( __dirname, "website" ) ) );
+app.use( express.static( path( "website" ) ) );
+app.use( "/benchmark", express.static( path( "test", "benchmark" ) ) );
+app.use( "/examples", express.static( path( "examples" ) ) );
 
 app.use( layout() );
 app.use( ( req, res, next ) => {
@@ -69,6 +76,27 @@ app.get( "/development", ( req, res ) => {
 app.get( "/download", ( req, res ) => {
 
     res.redirect( 301, "/#download" );
+
+} );
+
+app.get( "/spec", ( req, res ) => {
+
+    res.render( "spec", { title: "Spec Suite" } );
+
+} );
+
+app.get( "/benchmark", ( req, res ) => {
+
+    res.render( "benchmark", { title: "Benchmark Suite" } );
+
+} );
+
+app.get( "/:dir/bundle.js", ( req, res ) => {
+
+    browserify( glob( `${ __dirname }/test/${ req.params.dir }/**/*.js` ) )
+        .transform( babelify )
+        .bundle()
+        .pipe( res );
 
 } );
 

@@ -68,10 +68,7 @@ The commands below need to be executed via the console from the PEG.js root dire
 
 ## Running in the Browser
 
-  1. Serve the test suites using a web server:
+  * [Benchmark Suite](https://pegjs.org/benchmark)
+  * [Spec Suite](https://pegjs.org/spec)
 
-     ```console
-     $ node test/server/run
-     ```
-
-  2. Point your browser to the [test suite](http://localhost:8000/)
+You also have the option of running the website locally by running `node server.js` or `npm start` from the root of this repository. After that just go to the development page and click the link `Benchmark Suite` or `Spec Suite`.

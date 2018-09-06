@@ -1,0 +1,16 @@
+<div id="mocha"></div>
+
+<link href="/css/spec.css" rel="stylesheet" />
+<script src="https://unpkg.com/mocha@5.2.0/mocha.js"></script>
+
+<script>
+    mocha.setup( {
+        ui: "bdd"
+    } );
+</script>
+
+<script src="/spec/bundle.js"></script>
+
+<script>
+    mocha.run();
+</script>

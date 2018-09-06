@@ -35,7 +35,6 @@
         "clean": "gulp clean",
         "start": "node server.js",
         "test:impact": "node test/impact master",
-        "test:server": "node test/server/run",
         "test": "nyc gulp",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
