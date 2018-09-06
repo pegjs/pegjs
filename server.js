@@ -74,8 +74,8 @@ app.get( "/download", ( req, res ) => {
 
 /* Main */
 
-app.listen( 3000, () => {
+app.listen( 80, () => {
 
-    console.log( "PEG.js website running at http://localhost:3000/ in %s mode...", app.get( "env" ) );
+    console.log( "The PEG.js website is running on the localhost in %s mode...", app.get( "env" ) );
 
 } );

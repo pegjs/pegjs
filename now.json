@@ -1,0 +1,13 @@
+{
+    "name": "pegjs-website",
+    "type": "npm",
+    "alias": [
+        "www.pegjs.org",
+        "pegjs.org",
+        "pegjs.now.sh"
+    ],
+    "files": [
+        "website",
+        "server.js"
+    ]
+}
