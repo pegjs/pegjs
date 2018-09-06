@@ -45,7 +45,8 @@ task( "lint", () => pump(
         "test/spec/**/*.js",
         "test/server/run",
         "src/*.js",
-        "gulpfile.js"
+        "gulpfile.js",
+        "server.js",
     ] ),
     eslint( { dotfiles: true } ),
     eslint.format(),
