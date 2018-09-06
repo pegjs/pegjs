@@ -17,7 +17,7 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
   * Based on [parsing expression grammar](http://en.wikipedia.org/wiki/Parsing_expression_grammar) formalism - more powerful than traditional LL(*k*) and LR(*k*) parsers
   * Usable [from your browser](https://pegjs.org/online), from the command line, or via JavaScript API
 
-[![CrossBrowserTesting](docs/images/CBT_OS-logo_Black-H.png)](https://crossbrowsertesting.com/)
+[![CrossBrowserTesting](website/img/CBT_OS-logo_Black-H.png)](https://crossbrowsertesting.com/)
 
 ## documentation
 
