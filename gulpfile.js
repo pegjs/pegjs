@@ -43,7 +43,6 @@ task( "lint", () => pump(
         "test/benchmark/run",
         "test/impact",
         "test/spec/**/*.js",
-        "test/server/run",
         "src/*.js",
         "gulpfile.js",
         "server.js",
