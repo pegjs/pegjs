@@ -11,6 +11,7 @@
         "lib",
         "test",
         "website",
+        ".babelrc",
         "server.js"
     ]
 }
