@@ -1,2 +1,2 @@
 * text=auto
-bin/*.js text eol=lf
+packages/pegjs/bin/*.js text eol=lf

@@ -1,9 +1,11 @@
 "use strict";
 
 const chai = require( "chai" );
-const parser = require( "pegjs-dev" ).parser;
-const util = require( "pegjs-dev" ).util;
-const visitor = require( "pegjs-dev" ).ast.visitor;
+const {
+    parser,
+    util,
+    ast,
+} = require( "pegjs" );
 
 const expect = chai.expect;
 
@@ -194,7 +196,7 @@ describe( "PEG.js grammar parser", function () {
 
         }
 
-        strip = visitor.build( {
+        strip = ast.visitor.build( {
             grammar( node ) {
 
                 delete node.location;

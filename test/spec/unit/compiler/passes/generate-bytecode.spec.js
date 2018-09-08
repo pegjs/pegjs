@@ -2,7 +2,7 @@
 
 const chai = require( "chai" );
 const helpers = require( "./helpers" );
-const pass = require( "pegjs-dev" ).compiler.passes.generate.generateBytecode;
+const pass = require( "pegjs" ).compiler.passes.generate.generateBytecode;
 
 chai.use( helpers );
 

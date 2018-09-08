@@ -1,6 +1,6 @@
 "use strict";
 
-const peg = require( "pegjs-dev" );
+const peg = require( "pegjs" );
 
 const Runner = {
     run( benchmarks, runCount, options, callbacks ) {

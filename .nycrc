@@ -1,6 +1,7 @@
 {
     "exclude": [
         "test",
+        "website",
         "gulpfile.js",
         "**/.eslintrc.js"
     ],

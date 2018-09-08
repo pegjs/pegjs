@@ -1,5 +1,5 @@
 /.idea
-/browser
+/packages/pegjs/dist
 /examples/*.js
 /node_modules
 /coverage

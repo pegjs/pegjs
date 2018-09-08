@@ -1,7 +1,7 @@
 "use strict";
 
 const chai = require( "chai" );
-const util = require( "pegjs-dev" ).util;
+const util = require( "pegjs" ).util;
 
 const expect = chai.expect;
 

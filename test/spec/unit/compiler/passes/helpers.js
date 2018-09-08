@@ -1,7 +1,7 @@
 "use strict";
 
 const LikeHelper = require( "chai-like" );
-const Session = require( "pegjs-dev" ).compiler.Session;
+const Session = require( "pegjs" ).compiler.Session;
 
 module.exports = function ( chai, utils ) {
 

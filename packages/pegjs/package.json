@@ -1,0 +1,27 @@
+{
+    "name": "pegjs",
+    "version": "0.11.0-dev",
+    "description": "Parser generator for JavaScript",
+    "keywords": [
+        "PEG.js",
+        "pegjs",
+        "grammar",
+        "parser",
+        "generator",
+        "language",
+        "PEG"
+    ],
+    "homepage": "https://pegjs.org/",
+    "repository": "pegjs/pegjs",
+    "license": "MIT",
+    "contributors": [
+        "David Majda <david@majda.cz> (https://majda.cz/)",
+        "Futago-za Ryuu <futagoza.ryuu@gmail.com>"
+    ],
+    "types": "typings/pegjs.d.ts",
+    "main": "lib/peg.js",
+    "bin": "bin/peg.js",
+    "engines": {
+        "node": ">= 6"
+    }
+}
