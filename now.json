@@ -1,6 +1,9 @@
 {
     "name": "pegjs-website",
     "type": "npm",
+    "env": {
+        "NODE_ENV": "production"
+    },
     "alias": [
         "www.pegjs.org",
         "pegjs.org",
@@ -11,7 +14,7 @@
         "packages",
         "test",
         "website",
-        ".babelrc",
+        ".babelrc.js",
         "server.js"
     ]
 }
