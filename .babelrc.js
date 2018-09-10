@@ -1,4 +1,6 @@
-{
+"use strict";
+
+module.exports = {
     "comments": false,
     "compact": false,
     "presets": [
@@ -12,4 +14,4 @@
             }
         ]
     ]
-}
+};

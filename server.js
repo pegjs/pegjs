@@ -1,19 +1,29 @@
 "use strict";
 
-const babelify = require( "babelify" );
 const bodyParser = require( "body-parser" );
-const browserify = require( "browserify" );
 const express = require( "express" );
 const layout = require( "express-layout" );
-const glob = require( "glob" ).sync;
 const logger = require( "morgan" );
 const { join } = require( "path" );
+const ms = require( "pretty-ms" );
+const rollup = require( "rollup" );
+const babel = require( "rollup-plugin-babel" );
+const commonjs = require( "rollup-plugin-commonjs" );
+const multiEntry = require( "rollup-plugin-multi-entry" );
+const resolve = require( "rollup-plugin-node-resolve" );
 
 const path = ( ...parts ) => join( __dirname, ...parts );
+const pp = p => // pretty-path
+    ( Array.isArray( p ) ? p.join( ", " ) : p )
+        .replace( __dirname, "" )
+        .replace( /\\/g, "/" )
+        .replace( /^\//, "" );
 
 /* Setup */
 
 const app = express();
+const NODE_ENV = process.env.NODE_ENV;
+const WARNINGS = process.argv.includes( "--show-warnings" );
 
 app.set( "views", path( "website", "views" ) );
 app.set( "view engine", "ejs" );
@@ -91,12 +101,111 @@ app.get( "/benchmark", ( req, res ) => {
 
 } );
 
-app.get( "/:dir/bundle.js", ( req, res ) => {
+/* Test: bundle and optionally watch */
 
-    browserify( glob( `${ __dirname }/test/${ req.params.dir }/**/*.js` ) )
-        .transform( babelify )
-        .bundle()
-        .pipe( res );
+const babelOptions = require( "./.babelrc" );
+babelOptions.babelrc = false;
+babelOptions.exclude = "node_modules/**";
+babelOptions.runtimeHelpers = true;
+
+[ "benchmark", "spec" ].forEach( testType => {
+
+    const bundleConfig = {
+
+        input: `test/${ testType }/**/*.js`,
+        output: {
+            name: `PEG_${ testType }`,
+            file: `website/js/${ testType }-bundle.js`,
+            format: "iife",
+        },
+        plugins: [
+            multiEntry(),
+            commonjs(),
+            babel( babelOptions ),
+            resolve(),
+        ],
+        onwarn( warning, warn ) {
+
+            if ( WARNINGS ) warn( warning );
+
+        },
+        treeshake: false,
+
+    };
+
+    // based on https://github.com/rollup/rollup/blob/master/bin/src/logging.ts
+    function handleError( err ) {
+
+        let description = err.message || err;
+
+        if ( err.name ) description = `${ err.name }: ${ description }`;
+
+        const message = err.plugin ? `(${ err.plugin } plugin) ${ description }` : description;
+
+        console.error( message.toString() );
+
+        if ( err.url ) console.error( err.url );
+
+        if ( err.loc )
+            console.error( `${ err.loc.file || err.id } (${ err.loc.line }:${ err.loc.column })` );
+        else if ( err.id )
+            console.error( err.id );
+
+        if ( err.frame ) console.error( err.frame );
+
+        if ( err.stack ) console.error( err.stack );
+
+    }
+
+    if ( NODE_ENV === "production" ) {
+
+        rollup
+            .rollup( bundleConfig )
+            .catch( handleError );
+
+        return void 0;
+
+    }
+
+    const watcher = rollup.watch( {
+
+        ...bundleConfig,
+        watch: {
+            include: [
+                "packages/**",
+                "test/**",
+            ],
+        },
+
+    } );
+
+    // https://rollupjs.org/guide/en#rollup-watch
+    watcher.on( "event", event => {
+
+        switch ( event.code ) {
+
+            case "BUNDLE_START":
+                console.info( `pegjs-website > bundling ${ pp( event.input ) }` );
+                break;
+
+            case "BUNDLE_END":
+                console.info( `pegjs-website > created ${ pp( event.output ) } in ${ ms( event.duration ) }` );
+                break;
+
+            case "ERROR":
+                handleError( event.error );
+                break;
+
+            case "FATAL":
+                console.error( "pegjs-website > Fatel Error!" );
+                handleError( event.error );
+                break;
+
+        }
+
+    } );
+
+    process.on( "exit", () => watcher.close() );
 
 } );
 

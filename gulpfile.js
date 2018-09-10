@@ -1,21 +1,9 @@
 "use strict";
 
-const version = require( "./package" ).version;
-const spawn = require( "child_process" ).spawn;
-const dest = require( "gulp" ).dest;
-const src = require( "gulp" ).src;
-const series = require( "gulp" ).series;
-const task = require( "gulp" ).task;
+const { spawn } = require( "child_process" );
+const { series, src, task } = require( "gulp" );
 const eslint = require( "gulp-eslint" );
 const mocha = require( "gulp-mocha" );
-const dedent = require( "dedent" );
-const browserify = require( "browserify" );
-const babelify = require( "babelify" );
-const stream = require( "vinyl-source-stream" );
-const rename = require( "gulp-rename" );
-const buffer = require( "vinyl-buffer" );
-const uglify = require( "gulp-uglify" );
-const header = require( "gulp-header" );
 const del = require( "del" );
 const pump = require( "pump" );
 
@@ -43,6 +31,7 @@ task( "lint", () => pump(
         "test/impact",
         "test/spec/**/*.js",
         "src/*.js",
+        "rollup.config.js",
         "gulpfile.js",
         "server.js",
     ] ),
@@ -74,54 +63,9 @@ task( "build:parser", cb => {
 
 } );
 
-// Create the browser build.
-task( "build:browser", () => {
-
-    const options = {
-
-        bare: true,
-        standalone: "peg",
-        suffix: ".min",
-
-    };
-
-    const HEADER = dedent`
-
-        /**
-         * PEG.js v${ version }
-         * https://pegjs.org/
-         *
-         * Copyright (c) 2010-2016 David Majda
-         * Copyright (c) 2017+ Futago-za Ryuu
-         *
-         * Released under the MIT License.
-         */
-
-        /* eslint-disable */
-
-    `;
-
-    return pump(
-
-        browserify( "packages/pegjs/lib/peg.js", options )
-            .transform( babelify )
-            .bundle(),
-        stream( "peg.js" ),
-        header( HEADER ),
-        dest( "packages/pegjs/dist" ),
-        rename( options ),
-        buffer(),
-        uglify(),
-        header( HEADER ),
-        dest( "browser" )
-
-    );
-
-} );
-
 // Delete the generated files.
 task( "clean", () =>
-    del( [ "browser", "examples/*.js" ] )
+    del( [ "packages/pegjs/dist", "website/js/*-bundle.js", "examples/*.js" ] )
 );
 
 // Default task.
