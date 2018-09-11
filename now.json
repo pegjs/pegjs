@@ -15,6 +15,7 @@
         "test",
         "website",
         ".babelrc.js",
-        "server.js"
+        "server.js",
+        "yarn.lock"
     ]
 }
