@@ -33,7 +33,7 @@ function generate( target ) {
         output: {
             file: `packages/pegjs/dist/${ target }`,
             format: "umd",
-            name: "PEG",
+            name: "peg",
             banner: HEADER,
         },
         onwarn( warning, warn ) {
