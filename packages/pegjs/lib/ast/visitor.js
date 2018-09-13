@@ -1,7 +1,6 @@
 "use strict";
 
 const util = require( "../util" );
-const __slice = Array.prototype.slice;
 
 // Abstract syntax tree visitor for PEG.js
 class ASTVisitor {
