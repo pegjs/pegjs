@@ -2,6 +2,9 @@
 
 module.exports = {
 
+    input: "src/parser.pegjs",
+    output: "packages/pegjs/lib/parser.js",
+
     header: "/* eslint-disable */",
 
     dependencies: {

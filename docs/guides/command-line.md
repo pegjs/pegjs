@@ -4,6 +4,16 @@ The CLI `pegjs` can be used from terminals to generate a parser from the given g
 
 It's usage signature is: `pegjs [options] [<input_file>] [--]`
 
+### Configuration file
+
+If you provide a configuration file (via `-c` or `--config`) then you can use all the options used by the [PEG.js API](./javascript-api.md), as well as:
+
+* `input` — The grammar used as the input file
+* `output` — Output's generated parser to the provided destination
+
+> 1. Will throw if neither are strings, or the input has already been provided
+> 2. the `output` option for the compiler is not usable from the config
+
 ### Input File
 
 Only one grammar is accepted as the given input file, otherwise the CLI aborts with an error.

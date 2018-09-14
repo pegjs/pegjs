@@ -58,6 +58,42 @@ function addExtraOptions( config ) {
 
     }
 
+    if ( config.input !== null || config.output !== null ) {
+
+        // We don't want to touch the orignal config, just in case it comes from
+        // a javascript file, in which case its possible the same object is used
+        // for something else, somewhere else.
+        config = util.clone( config );
+        const { input, output } = config;
+
+        if ( input !== null ) {
+
+            if ( typeof input !== "string" )
+
+                abort( "The option `input` must be a string." );
+
+            if ( inputFile !== null )
+
+                abort( `The input file is already set, cannot use: "${ input }".` );
+
+            inputFile = input;
+            delete config.input;
+
+        }
+
+        if ( output !== null ) {
+
+            if ( typeof output !== "string" )
+
+                abort( "The option `output` must be a string." );
+
+            outputFile = output;
+            delete config.output;
+
+        }
+
+    }
+
     options = util.processOptions( config, options );
 
 }

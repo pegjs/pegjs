@@ -59,7 +59,7 @@ task( "benchmark", cb => {
 // Generate the grammar parser.
 task( "build:parser", cb => {
 
-    node( "packages/pegjs/bin/peg src/parser.pegjs -o packages/pegjs/lib/parser.js -c src/pegjs.config.js", cb );
+    node( "packages/pegjs/bin/peg -c src/pegjs.config.js", cb );
 
 } );
 
