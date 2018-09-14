@@ -6,6 +6,12 @@ declare module "pegjs" {
 
 }
 
+declare module "pegjs/lib/version" {
+
+    export default peg.VERSION;
+
+}
+
 declare module "pegjs/lib/grammar-error" {
 
     export default peg.GrammarError;
