@@ -8,7 +8,7 @@ const util = require( "./util" );
 
 const peg = {
     // PEG.js version (uses semantic versioning).
-    VERSION: "0.11.0-dev",
+    VERSION: require( "../package.json" ).version,
 
     GrammarError: GrammarError,
     ast: ast,

@@ -3,6 +3,7 @@
 const dedent = require( "dedent" );
 const babel = require( "rollup-plugin-babel" );
 const commonjs = require( "rollup-plugin-commonjs" );
+const json = require( "rollup-plugin-json" );
 const resolve = require( "rollup-plugin-node-resolve" );
 const { terser } = require( "rollup-plugin-terser" );
 
@@ -44,6 +45,7 @@ function generate( target ) {
         plugins: [
             commonjs(),
             babel( babelOptions ),
+            json( { namedExports: false } ),
             resolve(),
         ],
     };

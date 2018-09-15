@@ -4292,6 +4292,12 @@ rollup-plugin-commonjs@9.1.6:
     resolve "^1.5.0"
     rollup-pluginutils "^2.0.1"
 
+rollup-plugin-json@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-json/-/rollup-plugin-json-3.1.0.tgz#7c1daf60c46bc21021ea016bd00863561a03321b"
+  dependencies:
+    rollup-pluginutils "^2.3.1"
+
 rollup-plugin-multi-entry@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/rollup-plugin-multi-entry/-/rollup-plugin-multi-entry-2.0.2.tgz#ab50fbabec62526706492badadd8d59f139e4d58"
@@ -4314,7 +4320,7 @@ rollup-plugin-terser@2.0.2:
     jest-worker "^23.2.0"
     terser "^3.8.2"
 
-rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.3.0:
+rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.3.0, rollup-pluginutils@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/rollup-pluginutils/-/rollup-pluginutils-2.3.1.tgz#760d185ccc237dedc12d7ae48c6bcd127b4892d0"
   dependencies:

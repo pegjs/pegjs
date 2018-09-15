@@ -9,6 +9,7 @@ const ms = require( "pretty-ms" );
 const rollup = require( "rollup" );
 const babel = require( "rollup-plugin-babel" );
 const commonjs = require( "rollup-plugin-commonjs" );
+const json = require( "rollup-plugin-json" );
 const multiEntry = require( "rollup-plugin-multi-entry" );
 const resolve = require( "rollup-plugin-node-resolve" );
 
@@ -121,6 +122,7 @@ babelOptions.runtimeHelpers = true;
         plugins: [
             multiEntry(),
             commonjs(),
+            json( { namedExports: false } ),
             babel( babelOptions ),
             resolve(),
         ],
