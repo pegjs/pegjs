@@ -5,11 +5,10 @@ const ast = require( "./ast" );
 const compiler = require( "./compiler" );
 const parser = require( "./parser" );
 const util = require( "./util" );
-const VERSION = require( "./version" );
 
 const peg = {
     // PEG.js version (uses semantic versioning).
-    VERSION: VERSION,
+    VERSION: "0.11.0-dev",
 
     GrammarError: GrammarError,
     ast: ast,
