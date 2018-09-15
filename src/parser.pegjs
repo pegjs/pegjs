@@ -93,7 +93,7 @@ Initializer
     }
 
 Rule
-  = name:IdentifierName __
+  = name:Identifier __
     displayName:(StringLiteral __)?
     "=" __
     expression:Expression EOS
@@ -141,7 +141,7 @@ SequenceExpression
     }
 
 LabeledExpression
-  = label:Identifier __ ":" __ expression:PrefixedExpression {
+  = label:IdentifierName __ ":" __ expression:PrefixedExpression {
       if (RESERVED_WORDS.indexOf(label[0]) >= 0) {
         error(`Label can't be a reserved word "${label[0]}".`, label[1]);
       }
@@ -152,6 +152,9 @@ LabeledExpression
       } );
     }
   / PrefixedExpression
+
+IdentifierName
+  = name:Identifier { return [name, location()]; }
 
 PrefixedExpression
   = operator:PrefixedOperator __ expression:SuffixedExpression {
@@ -196,7 +199,7 @@ PrimaryExpression
     }
 
 RuleReferenceExpression
-  = name:IdentifierName !(__ (StringLiteral __)? "=") {
+  = name:Identifier !(__ (StringLiteral __)? "=") {
       return createNode( "rule_ref", { name: name } );
     }
 
@@ -252,10 +255,7 @@ SingleLineComment
     return addComment(comment, false);
   }
 
-Identifier
-  = name:IdentifierName { return [name, location()]; }
-
-IdentifierName "identifier"
+Identifier "identifier"
   = head:IdentifierStart tail:IdentifierPart* { return head + tail.join(""); }
 
 IdentifierStart

@@ -287,17 +287,18 @@ function peg$parse(input, options) {
           expression: expression,
         } );
       };
-  var peg$f7 = function(operator, expression) {
+  var peg$f7 = function(name) { return [name, location()]; };
+  var peg$f8 = function(operator, expression) {
         return createNode( OPS_TO_PREFIXED_TYPES[operator], {
           expression: expression,
         } );
       };
-  var peg$f8 = function(expression, operator) {
+  var peg$f9 = function(expression, operator) {
         return createNode( OPS_TO_SUFFIXED_TYPES[operator], {
           expression: expression,
         } );
       };
-  var peg$f9 = function(expression) {
+  var peg$f10 = function(expression) {
         // The purpose of the "group" AST node is just to isolate label scope. We
         // don't need to put it around nodes that can't contain any labels or
         // nodes that already isolate label scope themselves. This leaves us with
@@ -306,19 +307,18 @@ function peg$parse(input, options) {
             ? createNode( "group", { expression: expression } )
             : expression;
       };
-  var peg$f10 = function(name) {
+  var peg$f11 = function(name) {
         return createNode( "rule_ref", { name: name } );
       };
-  var peg$f11 = function(operator, code) {
+  var peg$f12 = function(operator, code) {
         return createNode( OPS_TO_SEMANTIC_PREDICATE_TYPES[operator], { code: code } );
       };
-  var peg$f12 = function(comment) {
+  var peg$f13 = function(comment) {
       return addComment(comment, true);
     };
-  var peg$f13 = function(comment) {
+  var peg$f14 = function(comment) {
       return addComment(comment, false);
     };
-  var peg$f14 = function(name) { return [name, location()]; };
   var peg$f15 = function(head, tail) { return head + tail.join(""); };
   var peg$f16 = function(sequence) { return sequence; };
   var peg$f17 = function(value, ignoreCase) {
@@ -624,7 +624,7 @@ function peg$parse(input, options) {
     }
 
     s0 = peg$currPos;
-    s1 = peg$parseIdentifierName();
+    s1 = peg$parseIdentifier();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse__();
       s3 = peg$currPos;
@@ -830,7 +830,7 @@ function peg$parse(input, options) {
     }
 
     s0 = peg$currPos;
-    s1 = peg$parseIdentifier();
+    s1 = peg$parseIdentifierName();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse__();
       rule$expects(peg$e2);
@@ -865,6 +865,24 @@ function peg$parse(input, options) {
     return s0;
   }
 
+  function peg$parseIdentifierName() {
+    var s0, s1;
+
+    var rule$expects = function (expected) {
+      if (peg$silentFails === 0) peg$expect(expected);
+    }
+
+    s0 = peg$currPos;
+    s1 = peg$parseIdentifier();
+    if (s1 !== peg$FAILED) {
+      peg$savedPos = s0;
+      s1 = peg$f7(s1);
+    }
+    s0 = s1;
+
+    return s0;
+  }
+
   function peg$parsePrefixedExpression() {
     var s0, s1, s2, s3;
 
@@ -879,7 +897,7 @@ function peg$parse(input, options) {
       s3 = peg$parseSuffixedExpression();
       if (s3 !== peg$FAILED) {
         peg$savedPos = s0;
-        s0 = peg$f7(s1, s3);
+        s0 = peg$f8(s1, s3);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -945,7 +963,7 @@ function peg$parse(input, options) {
       s3 = peg$parseSuffixedOperator();
       if (s3 !== peg$FAILED) {
         peg$savedPos = s0;
-        s0 = peg$f8(s1, s3);
+        s0 = peg$f9(s1, s3);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -1036,7 +1054,7 @@ function peg$parse(input, options) {
                   }
                   if (s5 !== peg$FAILED) {
                     peg$savedPos = s0;
-                    s0 = peg$f9(s3);
+                    s0 = peg$f10(s3);
                   } else {
                     peg$currPos = s0;
                     s0 = peg$FAILED;
@@ -1066,7 +1084,7 @@ function peg$parse(input, options) {
     }
 
     s0 = peg$currPos;
-    s1 = peg$parseIdentifierName();
+    s1 = peg$parseIdentifier();
     if (s1 !== peg$FAILED) {
       s2 = peg$currPos;
       peg$begin();
@@ -1108,7 +1126,7 @@ function peg$parse(input, options) {
       }
       if (s2 !== peg$FAILED) {
         peg$savedPos = s0;
-        s0 = peg$f10(s1);
+        s0 = peg$f11(s1);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -1135,7 +1153,7 @@ function peg$parse(input, options) {
       s3 = peg$parseCodeBlock();
       if (s3 !== peg$FAILED) {
         peg$savedPos = s0;
-        s0 = peg$f11(s1, s3);
+        s0 = peg$f12(s1, s3);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -1431,7 +1449,7 @@ function peg$parse(input, options) {
       }
       if (s3 !== peg$FAILED) {
         peg$savedPos = s0;
-        s0 = peg$f12(s2);
+        s0 = peg$f13(s2);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -1541,7 +1559,7 @@ function peg$parse(input, options) {
       }
       if (s3 !== peg$FAILED) {
         peg$savedPos = s0;
-        s0 = peg$f12(s2);
+        s0 = peg$f13(s2);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -1625,7 +1643,7 @@ function peg$parse(input, options) {
       }
       s2 = input.substring(s2, peg$currPos);
       peg$savedPos = s0;
-      s0 = peg$f13(s2);
+      s0 = peg$f14(s2);
     } else {
       peg$currPos = s0;
       s0 = peg$FAILED;
@@ -1635,24 +1653,6 @@ function peg$parse(input, options) {
   }
 
   function peg$parseIdentifier() {
-    var s0, s1;
-
-    var rule$expects = function (expected) {
-      if (peg$silentFails === 0) peg$expect(expected);
-    }
-
-    s0 = peg$currPos;
-    s1 = peg$parseIdentifierName();
-    if (s1 !== peg$FAILED) {
-      peg$savedPos = s0;
-      s1 = peg$f14(s1);
-    }
-    s0 = s1;
-
-    return s0;
-  }
-
-  function peg$parseIdentifierName() {
     var s0, s1, s2, s3;
 
     var rule$expects = function (expected) {
