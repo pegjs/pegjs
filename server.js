@@ -60,7 +60,13 @@ app.get( "/", ( req, res ) => {
 
 app.get( "/online", ( req, res ) => {
 
-    res.render( "online", { title: "Online version", layout: "layout-online" } );
+    res.render( "online", {
+
+        title: "Online version",
+        layout: "layout-online",
+        pegjs: "/vendor/pegjs/peg.js",
+
+    } );
 
 } );
 
@@ -84,6 +90,18 @@ app.get( "/development", ( req, res ) => {
 
 } );
 
+app.get( "/development/try", ( req, res ) => {
+
+    res.render( "online", {
+
+        title: "Online Development version",
+        layout: "layout-online",
+        pegjs: "/js/peg-bundle.js",
+
+    } );
+
+} );
+
 app.get( "/download", ( req, res ) => {
 
     res.redirect( 301, "/#download" );
@@ -102,36 +120,43 @@ app.get( "/benchmark", ( req, res ) => {
 
 } );
 
-/* Test: bundle and optionally watch */
+/* Bundle local sources (and watch for changes on non-production NODE_ENV) */
 
 const babelOptions = require( "./.babelrc" );
 babelOptions.babelrc = false;
 babelOptions.exclude = "node_modules/**";
 babelOptions.runtimeHelpers = true;
 
-[ "benchmark", "spec" ].forEach( testType => {
+[
+    { name: "benchmark", input: "test/benchmark/**/*.js" },
+    { name: "spec", input: "test/spec/**/*.js" },
+    { name: "peg", input: "packages/pegjs/lib/peg.js", format: "umd" },
 
-    const bundleConfig = {
+].forEach( bundle => {
 
-        input: `test/${ testType }/**/*.js`,
+    const plugins = [
+        resolve(),
+        commonjs(),
+        json( { namedExports: false } ),
+        babel( babelOptions ),
+    ];
+
+    if ( bundle.input.includes( "*" ) ) plugins.unshift( multiEntry() );
+
+    const config = {
+
+        input: bundle.input,
         output: {
-            name: `PEG_${ testType }`,
-            file: `website/js/${ testType }-bundle.js`,
-            format: "iife",
+            file: `website/js/${ bundle.name }-bundle.js`,
+            format: bundle.format || "iife",
+            name: bundle.name,
         },
-        plugins: [
-            multiEntry(),
-            commonjs(),
-            json( { namedExports: false } ),
-            babel( babelOptions ),
-            resolve(),
-        ],
+        plugins,
         onwarn( warning, warn ) {
 
             if ( WARNINGS ) warn( warning );
 
         },
-        treeshake: false,
 
     };
 
@@ -162,7 +187,7 @@ babelOptions.runtimeHelpers = true;
     if ( NODE_ENV === "production" ) {
 
         rollup
-            .rollup( bundleConfig )
+            .rollup( config )
             .catch( handleError );
 
         return void 0;
@@ -171,7 +196,7 @@ babelOptions.runtimeHelpers = true;
 
     const watcher = rollup.watch( {
 
-        ...bundleConfig,
+        ...config,
         watch: {
             include: [
                 "packages/**",
