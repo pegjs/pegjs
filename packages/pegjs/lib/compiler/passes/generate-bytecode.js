@@ -441,16 +441,19 @@ function generateBytecode( ast, session ) {
 
         sequence( node, context ) {
 
+            const TOTAL_ELEMENTS = node.elements.length;
+
             function buildElementsCode( elements, context ) {
 
                 if ( elements.length > 0 ) {
 
-                    const processedCount = node.elements.length - elements.slice( 1 ).length;
+                    const processedCount = TOTAL_ELEMENTS - elements.slice( 1 ).length;
 
                     return buildSequence(
                         generate( elements[ 0 ], {
                             sp: context.sp,
                             env: context.env,
+                            pluck: context.pluck,
                             action: null,
                             reportFailures: context.reportFailures
                         } ),
@@ -460,6 +463,7 @@ function generateBytecode( ast, session ) {
                             buildElementsCode( elements.slice( 1 ), {
                                 sp: context.sp + 1,
                                 env: context.env,
+                                pluck: context.pluck,
                                 action: context.action,
                                 reportFailures: context.reportFailures
                             } ),
@@ -471,26 +475,32 @@ function generateBytecode( ast, session ) {
                         )
                     );
 
-                } else if ( context.action ) {
+                }
 
-                    const functionIndex = addFunctionConst(
-                        false,
-                        Object.keys( context.env ),
-                        context.action.code
-                    );
+                if ( context.pluck.length > 0 )
 
                     return buildSequence(
-                        [ op.LOAD_SAVED_POS, node.elements.length ],
+                        [ op.PLUCK, TOTAL_ELEMENTS + 1, context.pluck.length ],
+                        context.pluck.map( eSP => context.sp - eSP )
+                    );
+
+                if ( context.action )
+
+                    return buildSequence(
+                        [ op.LOAD_SAVED_POS, TOTAL_ELEMENTS ],
                         buildCall(
-                            functionIndex,
-                            node.elements.length + 1,
+                            addFunctionConst( // functionIndex
+                                false,
+                                Object.keys( context.env ),
+                                context.action.code
+                            ),
+                            TOTAL_ELEMENTS + 1,
                             context.env,
                             context.sp
                         )
                     );
 
-                }
-                return buildSequence( [ op.WRAP, node.elements.length ], [ op.NIP ] );
+                return buildSequence( [ op.WRAP, TOTAL_ELEMENTS ], [ op.NIP ] );
 
             }
 
@@ -499,6 +509,7 @@ function generateBytecode( ast, session ) {
                 buildElementsCode( node.elements, {
                     sp: context.sp + 1,
                     env: context.env,
+                    pluck: [],
                     action: context.action,
                     reportFailures: context.reportFailures
                 } )
@@ -508,9 +519,20 @@ function generateBytecode( ast, session ) {
 
         labeled( node, context ) {
 
-            const env = util.clone( context.env );
+            let env = context.env;
+            const label = node.label;
+            const sp = context.sp + 1;
 
-            context.env[ node.label ] = context.sp + 1;
+            if ( label !== null ) {
+
+                env = util.clone( context.env );
+                context.env[ label ] = sp;
+
+            }
+
+            if ( context.pluck && node.pick )
+
+                context.pluck.push( sp );
 
             return generate( node.expression, {
                 sp: context.sp,

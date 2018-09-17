@@ -133,15 +133,34 @@ ActionExpression
 
 SequenceExpression
   = head:LabeledExpression tail:(__ LabeledExpression)* {
-      return tail.length > 0
-        ? createNode( "sequence", {
-            elements: buildList(head, tail, 1),
-          } )
-        : head;
+      if ( tail.length < 1 )
+
+        return head.type === "labeled" && head.pick
+          ? createNode( "sequence", { elements: [ head ] } )
+          : head;
+
+      return createNode( "sequence", {
+
+        elements: buildList( head, tail, 1 ),
+
+      } );
     }
 
 LabeledExpression
-  = label:IdentifierName __ ":" __ expression:PrefixedExpression {
+  = "@" label:(IdentifierName __ ":")? __ expression:PrefixedExpression {
+      const [ name, location ] = extractOptional(label, 0) || [];
+
+      if (name && RESERVED_WORDS.indexOf(name) >= 0) {
+        error(`Label can't be a reserved word "${name}".`, location);
+      }
+
+      return createNode( "labeled", {
+        pick: true,
+        label: name,
+        expression: expression,
+      } );
+    }
+  / label:IdentifierName __ ":" __ expression:PrefixedExpression {
       if (RESERVED_WORDS.indexOf(label[0]) >= 0) {
         error(`Label can't be a reserved word "${label[0]}".`, label[1]);
       }

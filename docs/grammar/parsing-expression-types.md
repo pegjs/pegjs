@@ -16,9 +16,10 @@ There are several types of parsing expressions, some of them containing subexpre
   * [! { predicate }](#--predicate--1)
   * [$ expression](#-expression-2)
   * [label : expression](#label--expression)
-  * [expression1 expression2 ... expressionN](#expression1-expression2---expressionn)
+  * [expression<sub>1</sub> expression<sub>2</sub> ... expression<sub>n</sub>](#expression1-expression2---expressionn)
   * [expression { action }](#expression--action-)
-  * [expression1 / expression2 / ... / expressionN](#expression1--expression2----expressionn)
+  * [expression<sub>1</sub> / expression<sub>2</sub> / ... / expression<sub>n</sub>](#expression1--expression2----expressionn)
+  * [expression<sub>1</sub> @expression<sub>2</sub> ... expression<sub>n</sub>](#expression1--expression2---expressionn)
 
 #### "*literal*"<br>'*literal*'
 
@@ -113,3 +114,23 @@ The action has access to all variables and functions in the [Action Execution En
 #### *expression<sub>1</sub>* / *expression<sub>2</sub>* / ... / *expression<sub>n</sub>*
 
 Try to match the first expression, if it does not succeed, try the second one, etc. Return the match result of the first successfully matched expression. If no expression matches, consider the match failed.
+
+#### *expression<sub>1</sub>* @*expression<sub>2</sub>* ...  *expression<sub>n</sub>*
+
+Only returns the expression(s) following `@` 
+
+> WARNING: You cannot use this on predicate's, and cannot use it alongside an action.
+
+```js
+start = MultiPluck
+      / SinglePluck
+
+SinglePluck = "0"? @integer
+MultiPluck = @integer "." @integer
+
+integer = $[0-9]+
+```
+
+When `SinglePluck` finds `011`, it returns `"11"`
+
+When `MultiPluck` finds `0.11`, it returns `["0", "11"]`

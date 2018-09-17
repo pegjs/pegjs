@@ -342,6 +342,50 @@ describe( "compiler pass |generateBytecode|", function () {
 
         } );
 
+        it( "generates correct plucking bytecode", function () {
+
+            expect( pass ).to.changeAST( "start = 'a' @'b' 'c'", bytecodeDetails( [
+                5,                            // PUSH_CURR_POS
+                23, 0, 18, 0, 2, 1, 22, 0, 3, // <elements[0]>
+                15, 36, 3,                    // IF_NOT_ERROR
+                23, 1, 18, 1, 2, 1, 22, 1, 3, //   * <elements[1]>
+                15, 20, 4,                    //     IF_NOT_ERROR
+                23, 2, 18, 2, 2, 1, 22, 2, 3, //       * <elements[2]>
+                15, 4, 4,                     //         IF_NOT_ERROR
+                41, 4, 1, 1,                  //           * PLUCK
+                8, 3,                         //           * POP_N
+                7,                            //             POP_CURR_POS
+                3,                            //             PUSH_FAILED
+                8, 2,                         //       * POP_N
+                7,                            //         POP_CURR_POS
+                3,                            //         PUSH_FAILED
+                6,                            //   * POP
+                7,                            //     POP_CURR_POS
+                3,                            //     PUSH_FAILED
+            ] ) );
+
+            expect( pass ).to.changeAST( "start = 'a' @'b' @'c'", bytecodeDetails( [
+                5,                            // PUSH_CURR_POS
+                23, 0, 18, 0, 2, 1, 22, 0, 3, // <elements[0]>
+                15, 37, 3,                    // IF_NOT_ERROR
+                23, 1, 18, 1, 2, 1, 22, 1, 3, //   * <elements[1]>
+                15, 21, 4,                    //     IF_NOT_ERROR
+                23, 2, 18, 2, 2, 1, 22, 2, 3, //       * <elements[2]>
+                15, 5, 4,                     //         IF_NOT_ERROR
+                41, 4, 2, 1, 0,               //           * PLUCK
+                8, 3,                         //           * POP_N
+                7,                            //             POP_CURR_POS
+                3,                            //             PUSH_FAILED
+                8, 2,                         //       * POP_N
+                7,                            //         POP_CURR_POS
+                3,                            //         PUSH_FAILED
+                6,                            //   * POP
+                7,                            //     POP_CURR_POS
+                3,                            //     PUSH_FAILED
+            ] ) );
+
+        } );
+
     } );
 
     describe( "for labeled", function () {

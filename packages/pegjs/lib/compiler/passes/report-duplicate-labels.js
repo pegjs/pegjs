@@ -37,7 +37,7 @@ function reportDuplicateLabels( ast, session ) {
 
             const label = node.label;
 
-            if ( __hasOwnProperty.call( env, label ) ) {
+            if ( label && __hasOwnProperty.call( env, label ) ) {
 
                 const start = env[ label ].start;
 
@@ -49,7 +49,8 @@ function reportDuplicateLabels( ast, session ) {
             }
 
             check( node.expression, env );
-            env[ label ] = node.location;
+
+            if ( label ) env[ label ] = node.location;
 
         },
 

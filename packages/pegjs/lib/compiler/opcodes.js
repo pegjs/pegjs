@@ -18,6 +18,7 @@ const opcodes = {
     APPEND:            10,   // APPEND
     WRAP:              11,   // WRAP n
     TEXT:              12,   // TEXT
+    PLUCK:             41,   // PLUCK n, k, p1, ..., pK
 
     // Conditions and Loops
 

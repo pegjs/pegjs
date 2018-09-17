@@ -11,6 +11,7 @@ const reportInfiniteRecursion = require( "./passes/report-infinite-recursion" );
 const reportInfiniteRepetition = require( "./passes/report-infinite-repetition" );
 const reportUndefinedRules = require( "./passes/report-undefined-rules" );
 const inferenceMatchResult = require( "./passes/inference-match-result" );
+const reportIncorrectPlucking = require( "./passes/report-incorrect-plucking" );
 const Session = require( "./session" );
 const util = require( "../util" );
 
@@ -30,7 +31,8 @@ const compiler = {
             reportUnusedRules: reportUnusedRules,
             reportDuplicateLabels: reportDuplicateLabels,
             reportInfiniteRecursion: reportInfiniteRecursion,
-            reportInfiniteRepetition: reportInfiniteRepetition
+            reportInfiniteRepetition: reportInfiniteRepetition,
+            reportIncorrectPlucking: reportIncorrectPlucking,
         },
         transform: {
             removeProxyRules: removeProxyRules

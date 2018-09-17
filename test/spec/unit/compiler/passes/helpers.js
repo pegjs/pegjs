@@ -72,6 +72,8 @@ module.exports = function ( chai, utils ) {
 
         if ( ! passed && typeof props !== "undefined" ) {
 
+            if ( typeof props === "string" ) props = { message: props };
+
             Object.keys( props ).forEach( key => {
 
                 new Assertion( result )

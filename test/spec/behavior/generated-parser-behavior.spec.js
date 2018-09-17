@@ -10,20 +10,6 @@ describe( "generated parser behavior", function () {
 
     function varyOptimizationOptions( block ) {
 
-        function clone( object ) {
-
-            const result = {};
-
-            Object.keys( object ).forEach( key => {
-
-                result[ key ] = object[ key ];
-
-            } );
-
-            return result;
-
-        }
-
         const optionsVariants = [
             { cache: false, optimize: "speed", trace: false },
             { cache: false, optimize: "speed", trace: true },
@@ -41,7 +27,7 @@ describe( "generated parser behavior", function () {
                 "with options " + chai.util.inspect( variant ),
                 function () {
 
-                    block( clone( variant ) );
+                    block( peg.util.clone( variant ) );
 
                 }
             );
@@ -1332,13 +1318,117 @@ describe( "generated parser behavior", function () {
 
             describe( "when all expressions match", function () {
 
-                it( "returns an array of their match results", function () {
+                function parser( description, edgecases ) {
 
-                    const parser = peg.generate( "start = 'a' 'b' 'c'", options );
+                    it( description, () => {
 
-                    expect( parser ).to.parse( "abc", [ "a", "b", "c" ] );
+                        edgecases.forEach( ( { grammar, input, output } ) => {
 
-                } );
+                            const parser = peg.generate( grammar, options );
+                            expect( parser ).to.parse( input, output );
+
+                        } );
+
+                    } );
+
+                }
+
+                parser( "returns an array of their match results", [
+                    {
+                        grammar: "start = 'a' 'b' 'c'",
+                        input: "abc",
+                        output: [ "a", "b", "c" ]
+                    },
+                ] );
+
+                parser( "plucking a single value", [
+                    {
+                        grammar: "start = @'a'",
+                        input: "a",
+                        output: "a"
+                    },
+                    {
+                        grammar: "start = @'a' / @'b'",
+                        input: "a",
+                        output: "a"
+                    },
+                    {
+                        grammar: "start = @'a' / @'b'",
+                        input: "b",
+                        output: "b"
+                    },
+                    {
+                        grammar: "start = 'a' @'b' 'c'",
+                        input: "abc",
+                        output: "b"
+                    },
+                    {
+                        grammar: "start = 'a' ( @'b' 'c' )",
+                        input: "abc",
+                        output: [ "a", "b" ]
+                    },
+                    {
+                        grammar: "start = 'a' @( 'b' @'c' 'd' )",
+                        input: "abcd",
+                        output: "c"
+                    },
+                    {
+                        grammar: "start = 'a' ( @'b' 'c' ) @'d'",
+                        input: "abcd",
+                        output: "d"
+                    },
+                    {
+                        grammar: "start = 'a' @'b' 'c' / 'd' 'e' @'f'",
+                        input: "def",
+                        output: "f"
+                    },
+                ] );
+
+                parser( "plucking multiple values", [
+                    {
+                        grammar: "start = 'a' @'b' @'c'",
+                        input: "abc",
+                        output: [ "b", "c" ]
+                    },
+                    {
+                        grammar: "start = 'a' ( @'b' @'c' )",
+                        input: "abc",
+                        output: [ "a", [ "b", "c" ] ]
+                    },
+                    {
+                        grammar: "start = 'a' @( 'b' @'c' @'d' )",
+                        input: "abcd",
+                        output: [ "c", "d" ]
+                    },
+                    {
+                        grammar: "start = 'a' @( @'b' 'c' ) @'d' 'e'",
+                        input: "abcde",
+                        output: [ "b", "d" ]
+                    },
+                    {
+                        grammar: "start = 'a' @'b' 'c' / @'d' 'e' @'f'",
+                        input: "def",
+                        output: [ "d", "f" ]
+                    },
+                ] );
+
+                parser( "plucking a value if a predicate doesnt fail", [
+                    {
+                        grammar: "start = @'a' &{ return true; }",
+                        input: "a",
+                        output: "a"
+                    },
+                    {
+                        grammar: "start = @'a' !{ return false; }",
+                        input: "a",
+                        output: "a"
+                    },
+                    {
+                        grammar: "start = @n:[0-9] &{ return n > 0; }",
+                        input: "2",
+                        output: "2"
+                    },
+                ] );
 
             } );
 

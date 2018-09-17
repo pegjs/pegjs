@@ -379,7 +379,7 @@ function generateJS( ast, session, options ) {
                 "  var ends = [];",
                 "  var stack = [];",
                 "  var startPos = peg$currPos;",
-                "  var params;"
+                "  var params, paramsLength, paramsN;"
             ].join( "\n" ) );
 
         } else {
@@ -391,7 +391,7 @@ function generateJS( ast, session, options ) {
                 "  var end = bc.length;",
                 "  var ends = [];",
                 "  var stack = [];",
-                "  var params;"
+                "  var params, paramsLength, paramsN;"
             ].join( "\n" ) );
 
         }
@@ -470,6 +470,24 @@ function generateJS( ast, session, options ) {
             "        case " + op.TEXT + ":",               // TEXT
             "          stack.push(input.substring(stack.pop(), peg$currPos));",
             "          ip++;",
+            "          break;",
+            "",
+            "        case " + op.PLUCK + ":",               // PLUCK n, k, p1, ..., pK
+            "          paramsLength = bc[ip + 2];",
+            "          paramsN = 3 + paramsLength",
+            "",
+            "          params = bc.slice(ip + 3, ip + paramsN);",
+            "          params = paramsLength === 1",
+            "            ? stack[stack.length - 1 - params[ 0 ]]",
+            "            : params.map(function(p) { return stack[stack.length - 1 - p]; });",
+            "",
+            "          stack.splice(",
+            "            stack.length - bc[ip + 1],",
+            "            bc[ip + 1],",
+            "            params",
+            "          );",
+            "",
+            "          ip += paramsN;",
             "          break;",
             "",
             "        case " + op.IF + ":",                 // IF t, f
@@ -823,6 +841,22 @@ function generateJS( ast, session, options ) {
                             stack.push( "input.substring(" + stack.pop() + ", peg$currPos)" )
                         );
                         ip++;
+                        break;
+
+                    case op.PLUCK:               // PLUCK n, k, p1, ..., pK
+                        const baseLength = 3;
+                        const paramsLength = bc[ ip + baseLength - 1 ];
+                        const n = baseLength + paramsLength;
+                        value = bc.slice( ip + baseLength, ip + n );
+                        value = paramsLength === 1
+                            ? stack.index( value[ 0 ] )
+                            : `[ ${
+                                value.map( p => stack.index( p ) )
+                                    .join( ", " )
+                            } ]`;
+                        stack.pop( bc[ ip + 1 ] );
+                        parts.push( stack.push( value ) );
+                        ip += n;
                         break;
 
                     case op.IF:                 // IF t, f
