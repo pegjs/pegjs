@@ -17,7 +17,7 @@
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "dependencies": {
-        "@babel/core": "7.0.0",
+        "@babel/core": "7.0.1",
         "@babel/preset-env": "7.0.0",
         "body-parser": "1.18.3",
         "chai": "4.1.2",
@@ -25,10 +25,10 @@
         "ejs": "2.6.1",
         "express": "4.16.3",
         "express-layout": "0.1.0",
-        "morgan": "1.9.0",
+        "morgan": "1.9.1",
         "pretty-ms": "3.2.0",
-        "sinon": "6.2.0",
-        "rollup": "0.65.2",
+        "sinon": "6.3.3",
+        "rollup": "0.66.0",
         "rollup-plugin-babel": "4.0.3",
         "rollup-plugin-commonjs": "9.1.6",
         "rollup-plugin-multi-entry": "2.0.2",
@@ -46,7 +46,7 @@
         "gulp-mocha": "6.0.0",
         "nyc": "13.0.1",
         "pump": "3.0.0",
-        "rollup-plugin-terser": "2.0.2"
+        "rollup-plugin-terser": "3.0.0"
     },
     "engines": {
         "node": ">= 6"
