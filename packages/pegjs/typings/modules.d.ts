@@ -115,6 +115,12 @@ declare module "pegjs/lib/compiler/passes/report-duplicate-rules" {
 
 }
 
+declare module "pegjs/lib/compiler/passes/report-incorrect-plucking" {
+
+    export default peg.compiler.passes.check.reportIncorrectPlucking;
+
+}
+
 declare module "pegjs/lib/compiler/passes/report-infinite-recursion" {
 
     export default peg.compiler.passes.check.reportInfiniteRecursion;

@@ -195,6 +195,7 @@ declare namespace peg {
         interface LabeledExpression extends INode {
 
             type: "labeled";
+            pick?: true;
             label: string;
             expression: (
                 PrefixedExpression
@@ -481,6 +482,7 @@ declare namespace peg {
                 function reportDuplicateLabels( ast: Grammar, session: Session ): void;
                 function reportInfiniteRecursion( ast: Grammar, session: Session ): void;
                 function reportInfiniteRepetition( ast: Grammar, session: Session ): void;
+                function reportIncorrectPlucking( ast: Grammar, session: Session ): void;
 
             }
 
