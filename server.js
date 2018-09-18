@@ -4,6 +4,7 @@ const bodyParser = require( "body-parser" );
 const express = require( "express" );
 const layout = require( "express-layout" );
 const logger = require( "morgan" );
+const { readFileSync } = require( "fs" );
 const { join } = require( "path" );
 const ms = require( "pretty-ms" );
 const rollup = require( "rollup" );
@@ -58,6 +59,7 @@ app.get( "/", ( req, res ) => {
 
 } );
 
+const LEGACY_EXAMPLE = readFileSync( path( "website", "vendor", "pegjs", "arithmetics.pegjs" ), "utf8" );
 app.get( "/online", ( req, res ) => {
 
     res.render( "online", {
@@ -65,6 +67,7 @@ app.get( "/online", ( req, res ) => {
         title: "Online version",
         layout: "layout-online",
         pegjs: "/vendor/pegjs/peg.js",
+        example: LEGACY_EXAMPLE,
 
     } );
 
@@ -90,6 +93,7 @@ app.get( "/development", ( req, res ) => {
 
 } );
 
+const DEV_EXAMPLE = readFileSync( path( "examples", "arithmetics.pegjs" ) );
 app.get( "/development/try", ( req, res ) => {
 
     res.render( "online", {
@@ -97,6 +101,7 @@ app.get( "/development/try", ( req, res ) => {
         title: "Online Development version",
         layout: "layout-online",
         pegjs: "/js/peg-bundle.js",
+        example: DEV_EXAMPLE,
 
     } );
 
