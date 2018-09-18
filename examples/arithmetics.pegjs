@@ -4,23 +4,23 @@
 // Accepts expressions like "2 * (3 + 4)" and computes their value.
 
 Expression
-  = head:Term tail:(_ ("+" / "-") _ Term)* {
-      return tail.reduce(function(result, element) {
-        if (element[1] === "+") { return result + element[3]; }
-        if (element[1] === "-") { return result - element[3]; }
+  = head:Term tail:(_ @("+" / "-") _ @Term)* {
+      return tail.reduce(function(result, [operator, factor]) {
+        if (operator === "+") return result + factor;
+        if (operator === "-") return result - factor;
       }, head);
     }
 
 Term
-  = head:Factor tail:(_ ("*" / "/") _ Factor)* {
-      return tail.reduce(function(result, element) {
-        if (element[1] === "*") { return result * element[3]; }
-        if (element[1] === "/") { return result / element[3]; }
+  = head:Factor tail:(_ @("*" / "/") _ @Factor)* {
+      return tail.reduce(function(result, [operator, factor]) {
+        if (operator === "*") return result * factor;
+        if (operator === "/") return result / factor;
       }, head);
     }
 
 Factor
-  = "(" _ expr:Expression _ ")" { return expr; }
+  = "(" _ @Expression _ ")"
   / Integer
 
 Integer "integer"
