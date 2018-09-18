@@ -441,7 +441,7 @@ describe( "PEG.js grammar parser", function () {
             return {
                 type: "labeled",
                 pick: true,
-                label: label || void 0,
+                label: label,
                 expression: expression
             };
 

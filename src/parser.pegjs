@@ -22,184 +22,175 @@
 // [1] http://www.ecma-international.org/publications/standards/Ecma-262.htm
 
 {
-  const OPS_TO_PREFIXED_TYPES = {
-    "$": "text",
-    "&": "simple_and",
-    "!": "simple_not"
-  };
 
-  const OPS_TO_SUFFIXED_TYPES = {
-    "?": "optional",
-    "*": "zero_or_more",
-    "+": "one_or_more"
-  };
+    // Used as a shorthand property name for `LabeledExpression`
+    const pick = true;
 
-  const OPS_TO_SEMANTIC_PREDICATE_TYPES = {
-    "&": "semantic_and",
-    "!": "semantic_not"
-  };
+    // Used by `LabelIdentifier` to disallow the use of certain words as labels
+    const RESERVED_WORDS = {};
 
-  let RESERVED_WORDS = options.reservedWords || util.reservedWords;
-  if ( !Array.isArray(RESERVED_WORDS) ) RESERVED_WORDS = [];
+    // Populate `RESERVED_WORDS` using the optional option `reservedWords`
+    const reservedWords = options.reservedWords || util.reservedWords;
+    if ( Array.isArray( reservedWords ) ) {
 
-  function extractOptional(optional, index) {
-    return optional ? optional[index] : null;
-  }
+        for ( const word of reservedWords ) RESERVED_WORDS[ word ] = true;
 
-  function extractList(list, index) {
-    return list.map(element => element[index]);
-  }
-
-  function buildList(head, tail, index) {
-    return [head].concat(extractList(tail, index));
-  }
-
-  function createNode( type, details ) {
-    const node = new ast.Node( type, location() );
-    util.extend( node, details );
-    return util.enforceFastProperties( node );
-  }
-
-  let comments = options.extractComments ? {} : null;
-  function addComment(comment, multiline) {
-    if (options.extractComments) {
-      let loc = location();
-      comment = {
-        text: comment,
-        multiline: multiline,
-        location: loc
-      };
-      comments[loc.start.offset] = comment;
-      return comment;
     }
-  }
+
+    // Helper to construct a new AST Node
+    function createNode( type, details ) {
+
+        const node = new ast.Node( type, location() );
+        if ( details === null ) return node;
+
+        util.extend( node, details );
+        return util.enforceFastProperties( node );
+
+    }
+
+    // Used by `addComment` to store comments for the Grammar AST
+    const comments = options.extractComments ? {} : null;
+
+    // Helper that collects all the comments to pass to the Grammar AST
+    function addComment( text, multiline ) {
+
+        if ( options.extractComments ) {
+
+            const loc = location();
+
+            comments[ loc.start.offset ] = {
+                text: text,
+                multiline: multiline,
+                location: loc,
+            };
+
+        }
+
+        return text;
+
+    }
+
 }
 
 // ---- Syntactic Grammar -----
 
 Grammar
-  = __ initializer:(Initializer __)? rules:(Rule __)+ {
-      return new ast.Grammar(
-        extractOptional(initializer, 0),
-        extractList(rules, 0),
-        comments,
-        location()
-      );
+  = __ initializer:(@Initializer __)? rules:(@Rule __)+ {
+
+        return new ast.Grammar( initializer, rules, comments, location() );
+
     }
 
 Initializer
   = code:CodeBlock EOS {
-      return createNode( "initializer", { code: code } );
+
+        return createNode( "initializer", { code } );
+
     }
 
 Rule
-  = name:Identifier __
-    displayName:(StringLiteral __)?
-    "=" __
-    expression:Expression EOS
-    {
-      return createNode( "rule", {
-        name: name,
-        expression: displayName !== null
-          ? createNode( "named", {
-              name: displayName[0],
-              expression: expression,
-            } )
-          : expression,
-      } );
+  = name:Identifier __ displayName:(@StringLiteral __)? "=" __ expression:Expression EOS {
+
+        if ( displayName )
+
+            expression = createNode( "named", {
+                name: displayName,
+                expression: expression,
+            } );
+
+        return createNode( "rule", { name, expression } );
+
     }
 
 Expression
   = ChoiceExpression
 
 ChoiceExpression
-  = head:ActionExpression tail:(__ "/" __ ActionExpression)* {
-      return tail.length > 0
-        ? createNode( "choice", {
-            alternatives: buildList(head, tail, 3),
-          } )
-        : head;
+  = head:ActionExpression tail:(__ "/" __ @ActionExpression)* {
+
+        if ( tail.length === 0 ) return head;
+
+        return createNode( "choice", {
+            alternatives: [ head ].concat( tail ),
+        } );
+
     }
 
 ActionExpression
-  = expression:SequenceExpression code:(__ CodeBlock)? {
-      return code !== null
-        ? createNode( "action", {
-            expression: expression,
-            code: code[1],
-          } )
-        : expression;
+  = expression:SequenceExpression code:(__ @CodeBlock)? {
+
+        if ( code === null ) return expression;
+
+        return createNode( "action", { expression, code } );
+
     }
 
 SequenceExpression
-  = head:LabeledExpression tail:(__ LabeledExpression)* {
-      if ( tail.length < 1 )
+  = head:LabeledExpression tail:(__ @LabeledExpression)* {
 
-        return head.type === "labeled" && head.pick
-          ? createNode( "sequence", { elements: [ head ] } )
-          : head;
+        let elements = [ head ];
 
-      return createNode( "sequence", {
+        if ( tail.length === 0 ) {
 
-        elements: buildList( head, tail, 1 ),
+            if ( head.type !== "labeled" || ! head.pick ) return head;
 
-      } );
+        } else {
+
+            elements = elements.concat( tail );
+
+        }
+
+        return createNode( "sequence", { elements } );
+
     }
 
 LabeledExpression
-  = "@" label:(IdentifierName __ ":")? __ expression:PrefixedExpression {
-      const [ name, location ] = extractOptional(label, 0) || [];
+  = "@" label:LabelIdentifier? __ expression:PrefixedExpression {
 
-      if (name && RESERVED_WORDS.indexOf(name) >= 0) {
-        error(`Label can't be a reserved word "${name}".`, location);
-      }
+        return createNode( "labeled", { pick, label, expression } );
 
-      return createNode( "labeled", {
-        pick: true,
-        label: name,
-        expression: expression,
-      } );
     }
-  / label:IdentifierName __ ":" __ expression:PrefixedExpression {
-      if (RESERVED_WORDS.indexOf(label[0]) >= 0) {
-        error(`Label can't be a reserved word "${label[0]}".`, label[1]);
-      }
+  / label:LabelIdentifier __ expression:PrefixedExpression {
 
-      return createNode( "labeled", {
-        label: label[0],
-        expression: expression,
-      } );
+        return createNode( "labeled", { label, expression } );
+
     }
   / PrefixedExpression
 
-IdentifierName
-  = name:Identifier { return [name, location()]; }
+LabelIdentifier
+  = name:Identifier __ ":" {
+
+        if ( RESERVED_WORDS[ name ] !== true ) return name;
+
+        error( `Label can't be a reserved word "${ name }".`, location() );
+
+    }
 
 PrefixedExpression
   = operator:PrefixedOperator __ expression:SuffixedExpression {
-      return createNode( OPS_TO_PREFIXED_TYPES[operator], {
-        expression: expression,
-      } );
+
+        return createNode( operator, { expression } );
+
     }
   / SuffixedExpression
 
 PrefixedOperator
-  = "$"
-  / "&"
-  / "!"
+  = "$" { return "text"; }
+  / "&" { return "simple_and"; }
+  / "!" { return "simple_not"; }
 
 SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {
-      return createNode( OPS_TO_SUFFIXED_TYPES[operator], {
-        expression: expression,
-      } );
+
+        return createNode( operator, { expression } );
+
     }
   / PrimaryExpression
 
 SuffixedOperator
-  = "?"
-  / "*"
-  / "+"
+  = "?" { return "optional"; }
+  / "*" { return "zero_or_more"; }
+  / "+" { return "one_or_more"; }
 
 PrimaryExpression
   = LiteralMatcher
@@ -207,29 +198,35 @@ PrimaryExpression
   / AnyMatcher
   / RuleReferenceExpression
   / SemanticPredicateExpression
-  / "(" __ expression:Expression __ ")" {
-      // The purpose of the "group" AST node is just to isolate label scope. We
-      // don't need to put it around nodes that can't contain any labels or
-      // nodes that already isolate label scope themselves. This leaves us with
-      // "labeled" and "sequence".
-      return expression.type === "labeled" || expression.type === "sequence"
-          ? createNode( "group", { expression: expression } )
-          : expression;
+  / "(" __ e:Expression __ ")" {
+
+        // The purpose of the "group" AST node is just to isolate label scope. We
+        // don't need to put it around nodes that can't contain any labels or
+        // nodes that already isolate label scope themselves.
+        if ( e.type !== "labeled" && e.type !== "sequence" ) return e;
+
+        // This leaves us with "labeled" and "sequence".
+        return createNode( "group", { expression: e } );
+
     }
 
 RuleReferenceExpression
   = name:Identifier !(__ (StringLiteral __)? "=") {
-      return createNode( "rule_ref", { name: name } );
+
+        return createNode( "rule_ref", { name } );
+
     }
 
 SemanticPredicateExpression
   = operator:SemanticPredicateOperator __ code:CodeBlock {
-      return createNode( OPS_TO_SEMANTIC_PREDICATE_TYPES[operator], { code: code } );
+
+        return createNode( operator, { code } );
+
     }
 
 SemanticPredicateOperator
-  = "&"
-  / "!"
+  = "&" { return "semantic_and"; }
+  / "!" { return "semantic_not"; }
 
 // ---- Lexical Grammar -----
 
@@ -261,27 +258,37 @@ Comment "comment"
 
 MultiLineComment
   = "/*" comment:$(!"*/" SourceCharacter)* "*/" {
-    return addComment(comment, true);
+
+        return addComment( comment, true );
+
   }
 
 MultiLineCommentNoLineTerminator
   = "/*" comment:$(!("*/" / LineTerminator) SourceCharacter)* "*/" {
-    return addComment(comment, true);
+
+        return addComment( comment, true );
+
   }
 
 SingleLineComment
   = "//" comment:$(!LineTerminator SourceCharacter)* {
-    return addComment(comment, false);
+
+        return addComment( comment, false );
+
   }
 
 Identifier "identifier"
-  = head:IdentifierStart tail:IdentifierPart* { return head + tail.join(""); }
+  = head:IdentifierStart tail:IdentifierPart* {
+      
+        return head + tail.join("");
+
+    }
 
 IdentifierStart
   = UnicodeLetter
   / "$"
   / "_"
-  / "\\" sequence:UnicodeEscapeSequence { return sequence; }
+  / "\\" @UnicodeEscapeSequence
 
 IdentifierPart
   = IdentifierStart
@@ -311,10 +318,12 @@ UnicodeConnectorPunctuation
 
 LiteralMatcher "literal"
   = value:StringLiteral ignoreCase:"i"? {
-      return createNode( "literal", {
-        value: value,
-        ignoreCase: ignoreCase !== null,
-      } );
+
+        return createNode( "literal", {
+            value: value,
+            ignoreCase: ignoreCase !== null,
+        } );
+
     }
 
 StringLiteral "string"
@@ -322,43 +331,44 @@ StringLiteral "string"
   / "'" chars:SingleStringCharacter* "'" { return chars.join(""); }
 
 DoubleStringCharacter
-  = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
-  / "\\" sequence:EscapeSequence { return sequence; }
+  = !('"' / "\\" / LineTerminator) @SourceCharacter
+  / "\\" @EscapeSequence
   / LineContinuation
 
 SingleStringCharacter
-  = !("'" / "\\" / LineTerminator) SourceCharacter { return text(); }
-  / "\\" sequence:EscapeSequence { return sequence; }
+  = !("'" / "\\" / LineTerminator) @SourceCharacter
+  / "\\" @EscapeSequence
   / LineContinuation
 
 CharacterClassMatcher "character class"
-  = "["
-    inverted:"^"?
-    parts:(ClassCharacterRange / ClassCharacter)*
-    "]"
-    ignoreCase:"i"?
-    {
-      return createNode( "class", {
-        parts: parts.filter(part => part !== ""),
-        inverted: inverted !== null,
-        ignoreCase: ignoreCase !== null,
-      } );
+  = "[" inverted:"^"? parts:CharacterPart* "]" ignoreCase:"i"? {
+
+        return createNode( "class", {
+            parts: parts.filter( part => part !== "" ),
+            inverted: inverted !== null,
+            ignoreCase: ignoreCase !== null,
+        } );
+
     }
+
+CharacterPart
+  = ClassCharacterRange
+  / ClassCharacter
 
 ClassCharacterRange
   = begin:ClassCharacter "-" end:ClassCharacter {
-      if (begin.charCodeAt(0) > end.charCodeAt(0)) {
-        error(
-          "Invalid character range: " + text() + "."
-        );
-      }
 
-      return [begin, end];
+        if ( begin.charCodeAt( 0 ) > end.charCodeAt( 0 ) )
+
+            error( "Invalid character range: " + text() + "." );
+
+        return [ begin, end ];
+
     }
 
 ClassCharacter
-  = !("]" / "\\" / LineTerminator) SourceCharacter { return text(); }
-  / "\\" sequence:EscapeSequence { return sequence; }
+  = !("]" / "\\" / LineTerminator) @SourceCharacter
+  / "\\" @EscapeSequence
   / LineContinuation
 
 LineContinuation
@@ -386,7 +396,7 @@ SingleEscapeCharacter
   / "v"  { return "\v"; }
 
 NonEscapeCharacter
-  = !(EscapeCharacter / LineTerminator) SourceCharacter { return text(); }
+  = !(EscapeCharacter / LineTerminator) @SourceCharacter
 
 EscapeCharacter
   = SingleEscapeCharacter
@@ -396,12 +406,16 @@ EscapeCharacter
 
 HexEscapeSequence
   = "x" digits:$(HexDigit HexDigit) {
-      return String.fromCharCode(parseInt(digits, 16));
+
+        return String.fromCharCode( parseInt( digits, 16 ) );
+
     }
 
 UnicodeEscapeSequence
   = "u" digits:$(HexDigit HexDigit HexDigit HexDigit) {
-      return String.fromCharCode(parseInt(digits, 16));
+
+        return String.fromCharCode( parseInt( digits, 16 ) );
+
     }
 
 DecimalDigit
@@ -411,10 +425,14 @@ HexDigit
   = [0-9a-f]i
 
 AnyMatcher
-  = "." { return createNode( "any", {} ); }
+  = "." {
+
+        return createNode( "any" );
+
+    }
 
 CodeBlock "code block"
-  = "{" code:Code "}" { return code; }
+  = "{" @Code "}"
   / "{" { error("Unbalanced brace."); }
 
 Code
