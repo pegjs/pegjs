@@ -17,7 +17,7 @@ const resolve = require( "rollup-plugin-node-resolve" );
 const path = ( ...parts ) => join( __dirname, ...parts );
 const pp = p => // pretty-path
     ( Array.isArray( p ) ? p.join( ", " ) : p )
-        .replace( __dirname, "" )
+        .replace( process.cwd(), "" )
         .replace( /\\/g, "/" )
         .replace( /^\//, "" );
 
@@ -191,8 +191,21 @@ babelOptions.runtimeHelpers = true;
 
     if ( NODE_ENV === "production" ) {
 
+        const output = config.output;
+
         rollup
             .rollup( config )
+            .then( bundle => {
+
+                console.info( `pegjs-website > bundling ${ pp( config.input ) }` );
+                return bundle.write( output );
+
+            } )
+            .then( () => {
+
+                console.info( `pegjs-website > created ${ pp( output.file ) }` );
+
+            } )
             .catch( handleError );
 
         return void 0;
