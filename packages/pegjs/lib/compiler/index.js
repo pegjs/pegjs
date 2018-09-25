@@ -67,8 +67,8 @@ const compiler = {
             trace: false
         } );
 
-        // We want `session.vm.runInContext` to return the parser
-        if ( options.output === "parser" ) options.format = "bare";
+        // We want `session.vm.evalModule` to return the parser
+        if ( options.output === "parser" ) options.format = "umd";
 
         util.each( session.passes, stage => {
 
@@ -83,7 +83,7 @@ const compiler = {
         switch ( options.output ) {
 
             case "parser":
-                return session.vm.runInContext( ast.code, options.context );
+                return session.vm.evalModule( ast.code, options.context );
 
             case "source":
                 return ast.code;

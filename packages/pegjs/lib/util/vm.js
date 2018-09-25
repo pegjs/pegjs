@@ -1,26 +1,25 @@
 "use strict";
 
 /**
- * `eval` the given source, using properties found in `context` as top-level variables.
+ * `eval` the given source as a CommonJS module, using properties found in `context` as top-level variables.
  * 
  * Based on `vm.runInContext` found in Node.js, this is a cross-env solution.
  */
-function runInContext( source, context ) {
+function evalModule( source, context ) {
 
     const argumentKeys = Object.keys( context );
     const argumentValues = argumentKeys.map( argument => context[ argument ] );
 
-    const object = {};
-    argumentKeys.push( "_peg$object", `_peg$object.result = ${ source };` );
-    argumentValues.push( object );
+    const sandbox = { exports: {} };
+    argumentKeys.push( "module", "exports", source );
+    argumentValues.push( sandbox, sandbox.exports );
 
     Function( ...argumentKeys )( ...argumentValues );
 
-    return object.result;
-
+    return sandbox.exports;
 
 }
 
 // Exports
 
-module.exports = { runInContext };
+module.exports = { evalModule };

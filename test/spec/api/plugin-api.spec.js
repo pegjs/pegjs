@@ -131,7 +131,7 @@ describe( "plugin API", function () {
 
                     function pass( ast ) {
 
-                        ast.code = "({ parse: function() { return 42; } })";
+                        ast.code = "exports.parse = function() { return 42; }";
 
                     }
 

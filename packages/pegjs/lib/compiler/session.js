@@ -7,6 +7,7 @@ const GrammarError = require( "../grammar-error" );
 const opcodes = require( "./opcodes" );
 const parser = require( "../parser" );
 const util = require( "../util" );
+const vm = require( "../util/vm" );
 
 function fatal( message, location ) {
 
@@ -28,9 +29,7 @@ class Session {
         this.parser = config.parser || parser;
         this.passes = config.passes || {};
         this.visitor = config.visitor || ast.visitor;
-        this.vm = config.vm || {
-            runInContext: util.runInContext
-        };
+        this.vm = config.vm || vm;
 
         if ( typeof config.warn === "function" ) this.warn = config.warn;
         if ( typeof config.error === "function" ) this.error = config.error;

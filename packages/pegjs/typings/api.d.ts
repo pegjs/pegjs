@@ -435,7 +435,7 @@ declare namespace peg {
 
         interface ISessionVM {
 
-            runInContext( code: string, context?: { [ name: string ]: any; } ): any;
+            evalModule( code: string, context?: { [ name: string ]: any; } ): any;
 
         }
 
