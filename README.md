@@ -10,6 +10,4 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 | ------- | --------------- | ---------- |
 | [pegjs](https://github.com/pegjs/pegjs/tree/master/packages/pegjs) | [![release](https://img.shields.io/npm/v/pegjs.svg)](https://www.npmjs.com/package/pegjs) [![dev](https://img.shields.io/npm/v/pegjs/dev.svg)](https://github.com/pegjs/pegjs) | [Futago-za Ryuu](https://github.com/futagoza) |
 
-------------------------
-
-[![CrossBrowserTesting](website/img/CBT_OS-logo_Black-H.png)](https://crossbrowsertesting.com/)
+[<img src="website/img/CBT_OS-logo_Black-H.png" width="500" />](https://crossbrowsertesting.com/)
