@@ -4,13 +4,13 @@
 <script src="https://unpkg.com/mocha@5.2.0/mocha.js"></script>
 
 <script>
-    mocha.setup( {
-        ui: "bdd"
-    } );
-</script>
+    mocha.setup( { ui: "bdd" } );
 
-<script src="/js/spec-bundle.js"></script>
+    if ( window.MSInputMethodContext && document.documentMode )
 
-<script>
-    mocha.run();
+        document.getElementById( "mocha" ).innerHTML = "Sorry, IE11 is not supported by the Spec Runner's dependencies.";
+
+    else
+
+        document.write( "<script src='/js/spec-bundle.js' onload='mocha.run()'><\/script>" );
 </script>
