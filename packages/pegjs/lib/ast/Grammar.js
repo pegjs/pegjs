@@ -27,21 +27,13 @@ class Grammar extends Node {
 
     findRule( name ) {
 
-        return this.rules.find( rule => rule.name === name );
+        return util.find( this.rules, rule => rule.name === name );
 
     }
 
     indexOfRule( name ) {
 
-        const rules = this.rules;
-
-        for ( let i = 0; i < rules.length; ++i ) {
-
-            if ( rules[ i ].name === name ) return i;
-
-        }
-
-        return -1;
+        return util.findIndex( this.rules, rule => rule.name === name );
 
     }
 

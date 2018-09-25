@@ -151,6 +151,13 @@ declare module "pegjs/lib/util" {
 
 }
 
+declare module "pegjs/lib/util/arrays" {
+
+    const arrays: peg.IArrayUtils;
+    export default arrays;
+
+}
+
 declare module "pegjs/lib/util/index" {
 
     export default peg.util;

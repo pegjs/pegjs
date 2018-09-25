@@ -22,18 +22,18 @@ function removeProxyRules( ast, session, options ) {
     const allowedStartRules = options.allowedStartRules;
     const rules = [];
 
-    for ( const rule of ast.rules ) {
+    ast.rules.forEach( rule => {
 
         if ( isProxyRule( rule ) ) {
 
             replaceRuleRefs( ast, rule.name, rule.expression.name );
-            if ( allowedStartRules.indexOf( rule.name ) < 0 ) continue;
+            if ( allowedStartRules.indexOf( rule.name ) < 0 ) return;
 
         }
 
         rules.push( rule );
 
-    }
+    } );
 
     ast.rules = rules;
 

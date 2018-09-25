@@ -67,6 +67,9 @@ const compiler = {
             trace: false
         } );
 
+        // We want `session.vm.runInContext` to return the parser
+        if ( options.output === "parser" ) options.format = "bare";
+
         util.each( session.passes, stage => {
 
             stage.forEach( pass => {

@@ -435,7 +435,7 @@ declare namespace peg {
 
         interface ISessionVM {
 
-            runInContext( code: string, vm$context?: { [ name: string ]: any; } ): any;
+            runInContext( code: string, context?: { [ name: string ]: any; } ): any;
 
         }
 
@@ -537,6 +537,12 @@ declare namespace peg {
 
     }
 
+    interface IArrayUtils {
+
+        findIndex( array: any[], condition: IIterator ): number;
+        find( array: any[], condition: IIterator ): any;
+
+    }
     interface IJavaScriptUtils {
 
         stringEscape( s: string ): string;
@@ -554,7 +560,7 @@ declare namespace peg {
         enforceFastProperties( o: {} ): {};
 
     }
-    interface util extends IJavaScriptUtils, IObjectUtils, compiler.ISessionVM {
+    interface util extends IArrayUtils, IJavaScriptUtils, IObjectUtils, compiler.ISessionVM {
 
         noop(): void;
         convertPasses( stages: IStageMap ): compiler.IPassesMap;

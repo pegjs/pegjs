@@ -222,7 +222,7 @@ function generateBytecode( ast, session ) {
             ignoreCase: node.ignoreCase
         };
         const pattern = JSON.stringify( cls );
-        const index = classes.findIndex( c => JSON.stringify( c ) === pattern );
+        const index = util.findIndex( classes, c => JSON.stringify( c ) === pattern );
         return index === -1 ? classes.push( cls ) - 1 : index;
 
     }
@@ -230,7 +230,7 @@ function generateBytecode( ast, session ) {
     function addExpectedConst( expected ) {
 
         const pattern = JSON.stringify( expected );
-        const index = expectations.findIndex( e => JSON.stringify( e ) === pattern );
+        const index = util.findIndex( expectations, e => JSON.stringify( e ) === pattern );
         return index === -1 ? expectations.push( expected ) - 1 : index;
 
     }
@@ -239,7 +239,7 @@ function generateBytecode( ast, session ) {
 
         const func = { predicate: predicate, params: params, body: code };
         const pattern = JSON.stringify( func );
-        const index = functions.findIndex( f => JSON.stringify( f ) === pattern );
+        const index = util.findIndex( functions, f => JSON.stringify( f ) === pattern );
         return index === -1 ? functions.push( func ) - 1 : index;
 
     }

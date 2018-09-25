@@ -5,17 +5,17 @@
 
 Expression
   = head:Term tail:(_ @("+" / "-") _ @Term)* {
-      return tail.reduce(function(result, [operator, factor]) {
-        if (operator === "+") return result + factor;
-        if (operator === "-") return result - factor;
+      return tail.reduce(function(result, element) {
+        if (element[0] === "+") return result + element[1];
+        if (element[0] === "-") return result - element[1];
       }, head);
     }
 
 Term
   = head:Factor tail:(_ @("*" / "/") _ @Factor)* {
-      return tail.reduce(function(result, [operator, factor]) {
-        if (operator === "*") return result * factor;
-        if (operator === "/") return result / factor;
+      return tail.reduce(function(result, element) {
+        if (element[0] === "*") return result * element[1];
+        if (element[0] === "/") return result / element[1];
       }, head);
     }
 

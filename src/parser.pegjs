@@ -31,11 +31,11 @@
 
     // Populate `RESERVED_WORDS` using the optional option `reservedWords`
     const reservedWords = options.reservedWords || util.reservedWords;
-    if ( Array.isArray( reservedWords ) ) {
+    if ( Array.isArray( reservedWords ) ) reservedWords.forEach( word => {
 
-        for ( const word of reservedWords ) RESERVED_WORDS[ word ] = true;
+        RESERVED_WORDS[ word ] = true;
 
-    }
+    } );
 
     // Helper to construct a new AST Node
     function createNode( type, details ) {

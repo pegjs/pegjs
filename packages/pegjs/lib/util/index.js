@@ -1,9 +1,11 @@
 "use strict";
 
+const arrays = require( "./arrays" );
 const js = require( "./js" );
 const objects = require( "./objects" );
 const vm = require( "./vm" );
 
+objects.extend( exports, arrays );
 objects.extend( exports, js );
 objects.extend( exports, objects );
 objects.extend( exports, vm );
