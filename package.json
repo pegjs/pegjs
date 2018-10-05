@@ -36,16 +36,16 @@
         "rollup-plugin-json": "3.1.0"
     },
     "devDependencies": {
+        "@futagoza/child-process": "~1.0.0",
+        "@futagoza/gulpx": "~1.0.0",
         "coveralls": "3.0.2",
         "dedent": "0.7.0",
         "del": "3.0.0",
         "eslint-config-futagozaryuu": "5",
         "glob": "7.1.3",
-        "gulp": "4.0.0",
         "gulp-eslint": "5.0.0",
-        "gulp-mocha": "6.0.0",
+        "mocha": "5.2.0",
         "nyc": "13.0.1",
-        "pump": "3.0.0",
         "rollup-plugin-terser": "3.0.0"
     },
     "engines": {

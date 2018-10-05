@@ -1,27 +1,12 @@
 "use strict";
 
-const { spawn } = require( "child_process" );
-const { series, src, task } = require( "gulp" );
+const { run } = require( "@futagoza/child-process" );
+const { series, src, task } = require( "@futagoza/gulpx" );
 const eslint = require( "gulp-eslint" );
-const mocha = require( "gulp-mocha" );
 const del = require( "del" );
-const pump = require( "pump" );
-
-function node( args, cb ) {
-
-    spawn( "node", args.split( " " ), { stdio: "inherit" } )
-
-        .on( "error", cb )
-        .on( "close", code => {
-
-            if ( ! code ) cb();
-
-        } );
-
-}
 
 // Run ESLint on all JavaScript files.
-task( "lint", () => pump(
+task( "lint", () => [
 
     src( [
         "**/.*rc.js",
@@ -37,31 +22,30 @@ task( "lint", () => pump(
     ] ),
     eslint( { dotfiles: true } ),
     eslint.format(),
-    eslint.failAfterError()
+    eslint.failAfterError(),
 
-) );
+] );
 
 // Run tests.
-task( "test", () => pump(
+task( "test", () =>
 
-    src( "test/spec/**/*.spec.js", { read: false } ),
-    mocha()
+    run( "node node_modules/mocha/bin/mocha test/spec/**/*.spec.js" )
 
-) );
+);
 
 // Run benchmarks.
-task( "benchmark", cb => {
+task( "benchmark", () =>
 
-    node( "test/benchmark/run", cb );
+    run( "node test/benchmark/run" )
 
-} );
+);
 
 // Generate the grammar parser.
-task( "build:parser", cb => {
+task( "build:parser", () =>
 
-    node( "packages/pegjs/bin/peg -c src/pegjs.config.js", cb );
+    run( "node packages/pegjs/bin/peg -c src/pegjs.config.js" )
 
-} );
+);
 
 // Delete the generated files.
 task( "clean", () =>
