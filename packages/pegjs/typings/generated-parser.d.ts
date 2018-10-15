@@ -18,6 +18,7 @@ declare namespace generatedparser {
      */
     interface SourceLocation {
 
+        filename?: string;
         start: SourcePosition;
         end: SourcePosition;
 

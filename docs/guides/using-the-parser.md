@@ -12,7 +12,8 @@ parser.parse("abcd"); // throws an exception
 
 You can tweak parser behavior by passing a second parameter with an `options` object to the `parse` method. The following options are supported:
 
-  * `startRule` — name of the rule to start parsing from (depends on the rules the grammar supports as starting rules)
-  * `tracer` — tracer to use (only if the parser was generated with `"trace": true` option passed to the compiler)
+* `filename` — the name of the source passed to the generated parser; will be used by the `location()` helper
+* `startRule` — name of the rule to start parsing from (depends on the rules the grammar supports as starting rules)
+* `tracer` — tracer to use (only if the parser was generated with `"trace": true` option passed to the compiler)
 
 Parsers can also support their own custom options on the `options` object passed to them.
