@@ -21,7 +21,7 @@ var grammar = "start = ('a' / 'b')+";
 var ast = peg.parser.parse(grammar);
 
 // Create a new compiler session
-var session = new peg.Session( { warn: customLogger } );
+var session = new peg.compiler.Session( { warn: customLogger } );
 
 // Generate parser from PEG.js AST using an exisiting session 
 var parserA = peg.compiler.compile(ast, session);
@@ -89,7 +89,7 @@ This method takes a parsed grammar (the PEG.js AST), sets default options, execu
 var grammar = "start = ('a' / 'b')+";
 var ast = peg.parser.parse(grammar);
 var passes = peg.util.convertPasses( peg.compiler.passes );
-var session = new peg.Session( { passes } );
+var session = new peg.compiler.Session( { passes } );
 var parser = peg.compiler.compile(ast, session);
 ```
 
