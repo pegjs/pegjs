@@ -67,6 +67,6 @@ If an expression successfully matches a part of the text when running the genera
 
 The match results propagate through the rules when the rule names are used in expressions, up to the start rule. The generated parser returns start rule's match result when parsing is successful.
 
-One special case of parser expression is a *parser action* - a piece of JavaScript code inside curly braces (“{” and “}”) that takes match results of some of the the preceding expressions and returns a JavaScript value. This value is considered a match result of the preceding expression (in other words, the parser action is a match result transformer).
+One special case of parser expression is a *parser action* - a piece of JavaScript code inside curly braces (“{” and “}”) that takes match results of some of the preceding expressions and returns a JavaScript value. This value is considered a match result of the preceding expression (in other words, the parser action is a match result transformer).
 
 In our arithmetic's example, there are many parser actions. Consider the action in expression `digits:[0-9]+ { return parseInt(digits.join(""), 10); }`. It takes the match result of the expression [0-9]+, which is an array of strings containing digits, as its parameter. It joins the digits together to form a number and converts it to a JavaScript `number` object.
