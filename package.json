@@ -7,14 +7,14 @@
     ],
     "scripts": {
         "lint": "gulp lint",
-        "spec": "gulp test",
+        "spec": "mocha --recursive",
         "benchmark": "benchmark",
         "build:parser": "gulp build:parser",
         "build:dist": "rollup -c",
         "clean": "gulp clean",
         "impact": "impact master",
         "start": "node server.js",
-        "test": "nyc gulp",
+        "test": "gulp lint && nyc mocha --recursive",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "dependencies": {

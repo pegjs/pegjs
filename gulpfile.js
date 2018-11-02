@@ -11,7 +11,7 @@ task( "lint", () => [
     src( [
         "**/.*rc.js",
         "packages/**/*.js",
-        "test/spec/**/*.js",
+        "test/**/*.js",
         "tools/**/*.js",
         "src/*.js",
         "rollup.config.js",
@@ -24,13 +24,6 @@ task( "lint", () => [
 
 ] );
 
-// Run tests.
-task( "test", () =>
-
-    run( "node node_modules/mocha/bin/mocha test/spec/**/*.spec.js" )
-
-);
-
 // Generate the grammar parser.
 task( "build:parser", () =>
 
@@ -42,6 +35,3 @@ task( "build:parser", () =>
 task( "clean", () =>
     del( [ "packages/pegjs/dist", "website/js/*-bundle.js", "examples/*.js" ] )
 );
-
-// Default task.
-task( "default", series( "lint", "test" ) );

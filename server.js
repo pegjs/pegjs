@@ -134,7 +134,7 @@ babelOptions.runtimeHelpers = true;
 
 [
     { name: "benchmark", input: "tools/benchmark/browser.js" },
-    { name: "spec", input: "test/spec/**/*.js" },
+    { name: "spec", input: "test/**/*.js" },
     { name: "peg", input: "packages/pegjs/lib/peg.js", format: "umd" },
 
 ].forEach( bundle => {
