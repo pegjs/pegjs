@@ -5,7 +5,7 @@
 // speed and size. Makes sense to use only on PEG.js git repository checkout.
 //
 
-/* eslint prefer-const: 0 */
+/* eslint-disable no-mixed-operators, prefer-const */
 
 "use strict";
 
@@ -18,7 +18,7 @@ const glob = require( "glob" );
 
 // Current Working Directory
 
-const cwd = path.join( __dirname, ".." );
+const cwd = path.join( __dirname, "..", ".." );
 if ( process.cwd() !== cwd ) process.chdir( cwd );
 
 // Execution Files
@@ -35,14 +35,20 @@ function binfile( ...files ) {
 
 }
 
-let PEGJS_BIN = binfile( "packages/pegjs/bin/peg.js", "bin/peg.js", "bin/pegjs" );
-let BENCHMARK_BIN = binfile( "test/benchmark/run", "benchmark/run" );
+const PEGJS_BIN = binfile( "packages/pegjs/bin/peg.js", "bin/peg.js", "bin/pegjs" );
+const BENCHMARK_BIN = binfile( "test/benchmark/run", "benchmark/run" );
 
 // Utils
 
 function echo( message ) {
 
     process.stdout.write( message );
+
+}
+
+function print_empty_line() {
+
+    console.log( " " );
 
 }
 
@@ -121,6 +127,7 @@ if ( argv.length === 1 ) {
 
 } else {
 
+    print_empty_line();
     console.log( dedent`
 
         Usage:
@@ -132,6 +139,7 @@ if ( argv.length === 1 ) {
         speed and size. Makes sense to use only on PEG.js Git repository checkout.
 
     ` );
+    print_empty_line();
     process.exit( 1 );
 
 }
@@ -141,21 +149,24 @@ if ( argv.length === 1 ) {
 const branch = exec( "git rev-parse --abbrev-ref HEAD" );
 let speed1, size1, speed2, size2;
 
+print_empty_line();
+
 echo( `Measuring commit ${ commit_before }...` );
 prepare( commit_before );
 speed1 = measureSpeed();
 size1 = measureSize();
-echo( " OK" + os.EOL );
+echo( " done." + os.EOL );
 
 echo( `Measuring commit ${ commit_after }...` );
 prepare( commit_after );
 speed2 = measureSpeed();
 size2 = measureSize();
-echo( " OK" + os.EOL );
+echo( " done." + os.EOL );
 
 // Finish
 
 prepare( branch );
+print_empty_line();
 
 console.log( dedent`
 
@@ -173,7 +184,8 @@ console.log( dedent`
     After:      ${ size2 } b
     Difference: ${ difference( size1, size2 ) }%
 
-    - Measured by /test/impact with Node.js ${ process.version }
+    - Measured by /tools/impact with Node.js ${ process.version }
     - Your system: ${ os.type() } ${ os.release() } ${ os.arch() }.
 
 ` );
+print_empty_line();

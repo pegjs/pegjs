@@ -1,0 +1,10 @@
+{
+    "name": "impact",
+    "version": "2.1.0",
+    "private": true,
+    "bin": "index.js",
+    "dependencies": {
+        "dedent": "0.7.0",
+        "glob": "7.1.3"
+    }
+}
