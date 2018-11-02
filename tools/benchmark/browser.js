@@ -16,33 +16,33 @@ $( "#run" ).click( () => {
         const KB = 1024;
         const MS_IN_S = 1000;
 
-        resultsTable.append(
-            "<tr class='" + klass + "'>"
-            + "<td class='title'>"
-            + ( url !== null ? "<a href='" + url + "'>" : "" )
-            + title
-            + ( url !== null ? "</a>" : "" )
-            + "</td>"
-            + "<td class='input-size'>"
-            + "<span class='value'>"
-            + ( inputSize / KB ).toFixed( 2 )
-            + "</span>"
-            + "&nbsp;<span class='unit'>kB</span>"
-            + "</td>"
-            + "<td class='parse-time'>"
-            + "<span class='value'>"
-            + parseTime.toFixed( 2 )
-            + "</span>"
-            + "&nbsp;<span class='unit'>ms</span>"
-            + "</td>"
-            + "<td class='parse-speed'>"
-            + "<span class='value'>"
-            + ( ( inputSize / KB ) / ( parseTime / MS_IN_S ) ).toFixed( 2 )
-            + "</span>"
-            + "&nbsp;<span class='unit'>kB/s</span>"
-            + "</td>"
-            + "</tr>"
-        );
+        resultsTable.append( `
+            <tr class='${ klass }'>
+                <td class='title'>
+                    ${ url !== null ? "<a href='" + url + "'>" : "" }
+                    ${ title }
+                    ${ url !== null ? "</a>" : "" }
+                </td>
+                <td class='input-size'>
+                    <span class='value'>
+                        ${ ( inputSize / KB ).toFixed( 2 ) }
+                    </span>
+                    &nbsp;<span class='unit'>kB</span>
+                </td>
+                <td class='parse-time'>
+                    <span class='value'>
+                        ${ parseTime.toFixed( 2 ) }
+                    </span>
+                    &nbsp;<span class='unit'>ms</span>
+                </td>
+                <td class='parse-speed'>
+                    <span class='value'>
+                        ${ ( ( inputSize / KB ) / ( parseTime / MS_IN_S ) ).toFixed( 2 ) }
+                    </span>
+                    &nbsp;<span class='unit'>kB/s</span>
+                </td>
+            </tr>
+        ` );
 
     }
 
@@ -72,11 +72,12 @@ $( "#run" ).click( () => {
     }
 
     Runner.run( benchmarks, runCount, options, {
+
         readFile( file ) {
 
             return $.ajax( {
                 type: "GET",
-                url: file,
+                url: "/" + file,
                 dataType: "text",
                 async: false
             } ).responseText;
@@ -101,13 +102,13 @@ $( "#run" ).click( () => {
 
         benchmarkStart( benchmark ) {
 
-            resultsTable.append(
-                "<tr class='heading'><th colspan='4'>"
-                + "<a href='../../examples/" + benchmark.id + ".pegjs'>"
-                + benchmark.title
-                + "</a>"
-                + "</th></tr>"
-            );
+            resultsTable.append( `
+                <tr class='heading'>
+                    <th colspan='4'>
+                        <a href='examples/${ benchmark.id }.pegjs'> ${ benchmark.title } </a>
+                    </th>
+                </tr>"
+            ` );
 
         },
 
@@ -146,6 +147,7 @@ $( "#run" ).click( () => {
             $( "#run-count, #cache, #run" ).removeAttr( "disabled" );
 
         }
+
     } );
 
 } );

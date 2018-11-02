@@ -11,10 +11,8 @@ task( "lint", () => [
     src( [
         "**/.*rc.js",
         "packages/**/*.js",
-        "test/benchmark/**/*.js",
-        "test/benchmark/run",
-        "test/impact",
         "test/spec/**/*.js",
+        "tools/**/*.js",
         "src/*.js",
         "rollup.config.js",
         "gulpfile.js",
@@ -30,13 +28,6 @@ task( "lint", () => [
 task( "test", () =>
 
     run( "node node_modules/mocha/bin/mocha test/spec/**/*.spec.js" )
-
-);
-
-// Run benchmarks.
-task( "benchmark", () =>
-
-    run( "node test/benchmark/run" )
 
 );
 

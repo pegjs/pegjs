@@ -207,14 +207,19 @@ if ( args.length > 0 ) {
 }
 
 Runner.run( benchmarks, runCount, options, {
+
     readFile( file ) {
 
-        return fs.readFileSync( path.join( __dirname, file ), "utf8" );
+        if ( file.startsWith( "benchmark" ) ) file = path.join( "tools", file );
+
+        return fs.readFileSync( file, "utf8" );
 
     },
 
     testStart() {
-    // Nothing to do.
+
+        // Nothing to do.
+
     },
 
     testFinish( benchmark, test, inputSize, parseTime ) {
@@ -248,5 +253,6 @@ Runner.run( benchmarks, runCount, options, {
         writeResult( "Total", inputSize, parseTime );
         writeTableFooter();
 
-    }
+    },
+
 } );

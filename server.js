@@ -32,7 +32,7 @@ app.set( "view engine", "ejs" );
 
 app.use( logger( "dev" ) );
 app.use( express.static( path( "website" ) ) );
-app.use( "/benchmark", express.static( path( "test", "benchmark" ) ) );
+app.use( "/benchmark", express.static( path( "tools", "benchmark" ) ) );
 app.use( "/examples", express.static( path( "examples" ) ) );
 
 app.use( layout() );
@@ -133,7 +133,7 @@ babelOptions.exclude = "node_modules/**";
 babelOptions.runtimeHelpers = true;
 
 [
-    { name: "benchmark", input: "test/benchmark/**/*.js" },
+    { name: "benchmark", input: "tools/benchmark/browser.js" },
     { name: "spec", input: "test/spec/**/*.js" },
     { name: "peg", input: "packages/pegjs/lib/peg.js", format: "umd" },
 
@@ -219,6 +219,7 @@ babelOptions.runtimeHelpers = true;
             include: [
                 "packages/**",
                 "test/**",
+                "tools/benchmark/**"
             ],
         },
 

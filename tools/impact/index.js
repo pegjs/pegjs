@@ -36,7 +36,7 @@ function binfile( ...files ) {
 }
 
 const PEGJS_BIN = binfile( "packages/pegjs/bin/peg.js", "bin/peg.js", "bin/pegjs" );
-const BENCHMARK_BIN = binfile( "test/benchmark/run", "benchmark/run" );
+const BENCHMARK_BIN = binfile( "tools/benchmark/node.js", "test/benchmark/run", "benchmark/run" );
 
 // Utils
 

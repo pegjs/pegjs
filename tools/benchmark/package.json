@@ -1,0 +1,6 @@
+{
+    "name": "benchmark",
+    "version": "3.1.0",
+    "private": true,
+    "bin": "node.js"
+}

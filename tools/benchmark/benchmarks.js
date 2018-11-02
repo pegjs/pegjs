@@ -1,6 +1,7 @@
 "use strict";
 
 const benchmarks = [
+
     {
         id: "json",
         title: "JSON",
@@ -12,6 +13,7 @@ const benchmarks = [
             { file: "example5.json", title: "Example 5" }
         ]
     },
+
     {
         id: "css",
         title: "CSS",
@@ -32,7 +34,8 @@ const benchmarks = [
             { file: "blueprint/src/reset.css", title: "Blueprint - reset.css (source)" },
             { file: "blueprint/src/typography.css", title: "Blueprint - typography.css (source)" }
         ]
-    }
+    },
+
 ];
 
 module.exports = benchmarks;

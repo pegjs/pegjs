@@ -13,8 +13,10 @@
         "examples",
         "packages",
         "test",
+        "tools/benchmark",
         "website",
         ".babelrc.js",
+        "package.json",
         "server.js",
         "yarn.lock"
     ]

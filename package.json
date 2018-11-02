@@ -8,7 +8,7 @@
     "scripts": {
         "lint": "gulp lint",
         "spec": "gulp test",
-        "benchmark": "gulp benchmark",
+        "benchmark": "benchmark",
         "build:parser": "gulp build:parser",
         "build:dist": "rollup -c",
         "clean": "gulp clean",

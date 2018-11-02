@@ -3,11 +3,13 @@
 const peg = require( "pegjs" );
 
 const Runner = {
+
     run( benchmarks, runCount, options, callbacks ) {
 
         // Queue
 
         const Q = {
+
             functions: [],
 
             add( f ) {
@@ -33,6 +35,7 @@ const Runner = {
                 }
 
             }
+
         };
 
         // The benchmark itself is factored out into several functions (some of them
@@ -61,12 +64,12 @@ const Runner = {
 
         function benchmarkInitializer( benchmark ) {
 
-            return function () {
+            return () => {
 
                 callbacks.benchmarkStart( benchmark );
 
                 state.parser = peg.generate(
-                    callbacks.readFile( "../../examples/" + benchmark.id + ".pegjs" ),
+                    callbacks.readFile( "examples/" + benchmark.id + ".pegjs" ),
                     options
                 );
                 state.benchmarkInputSize = 0;
@@ -78,11 +81,11 @@ const Runner = {
 
         function testRunner( benchmark, test ) {
 
-            return function () {
+            return () => {
 
                 callbacks.testStart( benchmark, test );
 
-                const input = callbacks.readFile( benchmark.id + "/" + test.file );
+                const input = callbacks.readFile( "benchmark/" + benchmark.id + "/" + test.file );
 
                 let parseTime = 0;
                 for ( let i = 0; i < runCount; i++ ) {
@@ -105,7 +108,7 @@ const Runner = {
 
         function benchmarkFinalizer( benchmark ) {
 
-            return function () {
+            return () => {
 
                 callbacks.benchmarkFinish(
                     benchmark,
@@ -145,6 +148,7 @@ const Runner = {
         Q.run();
 
     }
+
 };
 
 module.exports = Runner;
