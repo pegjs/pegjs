@@ -113,13 +113,13 @@ app.get( "/download", ( req, res ) => {
 
 } );
 
-app.get( "/spec", ( req, res ) => {
+app.get( "/development/test", ( req, res ) => {
 
-    res.render( "spec", { title: "Spec Suite" } );
+    res.render( "test", { title: "Test Suite" } );
 
 } );
 
-app.get( "/benchmark", ( req, res ) => {
+app.get( "/development/benchmark", ( req, res ) => {
 
     res.render( "benchmark", { title: "Benchmark Suite" } );
 
@@ -134,8 +134,8 @@ babelOptions.runtimeHelpers = true;
 
 [
     { name: "benchmark", input: "tools/benchmark/browser.js" },
-    { name: "spec", input: "test/**/*.js" },
     { name: "peg", input: "packages/pegjs/lib/peg.js", format: "umd" },
+    { name: "test", input: "test/**/*.js" },
 
 ].forEach( bundle => {
 
