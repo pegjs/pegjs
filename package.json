@@ -6,7 +6,7 @@
         "tools/*"
     ],
     "scripts": {
-        "lint": "gulp lint",
+        "lint": "eslint .",
         "spec": "mocha --recursive",
         "benchmark": "benchmark",
         "build:parser": "gulp build:parser",
@@ -14,7 +14,7 @@
         "clean": "gulp clean",
         "impact": "impact master",
         "start": "node server.js",
-        "test": "gulp lint && nyc mocha --recursive",
+        "test": "eslint . && nyc mocha --recursive",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "dependencies": {
@@ -42,8 +42,8 @@
         "coveralls": "3.0.2",
         "dedent": "0.7.0",
         "del": "3.0.0",
+        "eslint": "5",
         "eslint-config-futagozaryuu": "5",
-        "gulp-eslint": "5.0.0",
         "mocha": "5.2.0",
         "nyc": "13.1.0",
         "rollup-plugin-terser": "3.0.0"

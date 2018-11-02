@@ -1,3 +1,4 @@
+/.idea
 /.nyc_output
 /packages/pegjs/dist
 /coverage
