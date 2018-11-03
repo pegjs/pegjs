@@ -78,7 +78,7 @@
 
 * Use ESLint to enforce code style
 * Switch from Jasmine to Mocha & Chai
-* Switch from Make to Gulp (`Makefile` -> `gulpfile.js`)
+* Removed Makefile (Had switched to Gulp, but removed that as well); Using the _scripts_ field of `package.json` instead
 * Rewrote `tools/impact` (a bash script, dependent on external tools) as `test/impact` (a cross-platform Node script)
 * Added code coverage ([Istanbul](https://www.npmjs.com/package/nyc) and [coveralls.io](https://coveralls.io/github/pegjs/pegjs))
 * Updated spec tests

@@ -46,8 +46,8 @@ see good examples.
 
 When appropriate, add documentation and tests.
 
-Before submitting, make sure your change passes the tests (`gulp test`) and
-ESLint checks (`gulp lint`).
+Before submitting, make sure your change passes the tests (`yarn test`) and
+ESLint checks (`yarn lint`).
 
 [issues]: https://github.com/pegjs/pegjs/issues
 [issues-search-bugs]: https://github.com/pegjs/pegjs/issues?q=is%3Aopen+is%3Aissue+label%3ABug
