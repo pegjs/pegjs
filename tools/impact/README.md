@@ -3,6 +3,6 @@ This directory contains a tool used on the PEG.js repository that measures the i
 From the root of the repository:
 
 ```sh
-yarn impact <commit>
-yarn impact <commit_before> <commit_after>
+npx impact <commit>
+npx impact <commit_before> <commit_after>
 ```

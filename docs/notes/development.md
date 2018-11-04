@@ -27,6 +27,6 @@ _Ensure you have Node.js v6+ and Yarn installed._
 7. Push the commits from your clone to the fork
 8. From your fork, start a new pull request
 
-It's also a good idea to check out the [gulpfile.js](https://github.com/pegjs/pegjs/blob/master/gulpfile.js) that defines various tasks that are commented with a description of each task.
+It's also a good idea to check out the [package.json](https://github.com/pegjs/pegjs/blob/master/package.json) that defines various scripts.
 
 To see the list of contributors check out the [repository's contributors page](https://github.com/pegjs/pegjs/graphs/contributors).
