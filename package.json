@@ -4,30 +4,23 @@
     "workspaces": [
         "packages/*",
         "tools/*",
+        "test",
         "website"
     ],
     "scripts": {
         "lint": "eslint .",
         "spec": "mocha --recursive",
-        "benchmark": "benchmark",
+        "benchmark": "node tools/benchmark/node",
         "build-parser": "pegjs -c src/pegjs.config.js",
-        "generate-dist": "bundle",
+        "generate-dist": "node tools/bundle/create-pegjs-dist",
         "clean": "rimraf packages/pegjs/dist website/js/*-bundle.js examples/*.js",
-        "impact": "impact master",
+        "impact": "node tools/impact master",
         "start": "node website/server.js",
         "test": "eslint . && nyc mocha --recursive",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
-    "dependencies": {
-        "@babel/core": "~7.1.0",
-        "@babel/preset-env": "~7.1.0",
-        "chai": "4.2.0",
-        "chai-like": "1.1.1",
-        "sinon": "7.1.0"
-    },
     "devDependencies": {
         "coveralls": "3.0.2",
-        "dedent": "0.7.0",
         "rimraf": "2.6.2",
         "eslint": "5",
         "eslint-config-futagozaryuu": "5",

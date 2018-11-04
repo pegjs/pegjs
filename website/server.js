@@ -1,7 +1,7 @@
 "use strict";
 
 const bodyParser = require( "body-parser" );
-const bundle = require( "bundle" );
+const bundle = require( "@pegjs/bundle-generator" );
 const express = require( "express" );
 const layout = require( "express-layout" );
 const logger = require( "morgan" );

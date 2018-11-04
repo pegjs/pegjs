@@ -92,13 +92,11 @@ module.exports = bundle => {
 
     if ( bundle.watch !== true ) {
 
-        log( `@pegjs/bundle > bundling ${ pp( config.input ) }` );
-
         return rollup.rollup( config )
             .then( bundle => bundle.write( config.output ) )
             .then( () => {
 
-                log( `@pegjs/bundle > created ${ pp( bundle.target ) }` );
+                log( `@pegjs/bundle-generator > created ${ pp( bundle.target ) }` );
 
             } )
             .catch( handleError );
@@ -113,11 +111,11 @@ module.exports = bundle => {
         switch ( event.code ) {
 
             case "BUNDLE_START":
-                log( `@pegjs/bundle > watching ${ pp( event.input ) }` );
+                log( `@pegjs/bundle-generator > watching ${ pp( event.input ) }` );
                 break;
 
             case "BUNDLE_END":
-                log( `@pegjs/bundle > created ${ pp( event.output ) } in ${ ms( event.duration ) }` );
+                log( `@pegjs/bundle-generator > created ${ pp( event.output ) } in ${ ms( event.duration ) }` );
                 break;
 
             case "ERROR":
@@ -125,7 +123,7 @@ module.exports = bundle => {
                 break;
 
             case "FATAL":
-                console.error( "@pegjs/bundle > Fatel Error!" );
+                console.error( "@pegjs/bundle-generator > Fatel Error!" );
                 handleError( event.error );
                 break;
 

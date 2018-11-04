@@ -3,5 +3,5 @@ This directory contains the benchmark suite that measures the speed of parsers g
 From the root of the repository:
 
 ```sh
-npx benchmark
+node tools/benchmark/node
 ```

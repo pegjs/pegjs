@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 "use strict";
 
 const Runner = require( "./runner.js" );
@@ -91,15 +89,14 @@ function writeTableFooter() {
 
 function printHelp() {
 
-    console.log( "Usage: run [options]" );
+    console.log( "Usage:" );
     console.log( "" );
-    console.log( "Runs PEG.js benchmark suite." );
+    console.log( "  node tools/benchmark [options]" );
     console.log( "" );
     console.log( "Options:" );
-    console.log( "  -n, --run-count <n>          number of runs (default: 10)" );
-    console.log( "      --cache                  make tested parsers cache results" );
-    console.log( "  -o, --optimize <goal>        select optimization for speed or size (default:" );
-    console.log( "                               speed)" );
+    console.log( "  -n, --run-count <n>     number of runs (default: 10)" );
+    console.log( "      --cache             make tested parsers cache results" );
+    console.log( "  -o, --optimize <goal>   select optimization for speed or size (default: speed)" );
 
 }
 

@@ -1,10 +1,11 @@
 {
-    "name": "bundle",
+    "name": "@pegjs/bundle-generator",
     "version": "2.1.0",
     "private": true,
     "main": "index.js",
-    "bin": "create-pegjs-dist.js",
     "dependencies": {
+        "@babel/core": "~7.1.0",
+        "@babel/preset-env": "~7.1.0",
         "dedent": "0.7.0",
         "pretty-ms": "4.0.0",
         "rollup": "0.66.6",

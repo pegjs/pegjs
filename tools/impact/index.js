@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 //
 // Measures impact of a Git commit (or multiple commits) on generated parsers
 // speed and size. Makes sense to use only on PEG.js git repository checkout.
@@ -132,8 +130,8 @@ if ( argv.length === 1 ) {
 
         Usage:
 
-            test/impact <commit>
-            test/impact <commit_before> <commit_after>
+            node tools/impact <commit>
+            node tools/impact <commit_before> <commit_after>
 
         Measures impact of a Git commit (or multiple commits) on generated parser's
         speed and size. Makes sense to use only on PEG.js Git repository checkout.
@@ -170,7 +168,7 @@ print_empty_line();
 
 console.log( dedent`
 
-    test/impact ${ commit_before } ${ commit_after }
+    node tools/impact ${ commit_before } ${ commit_after }
 
     Speed impact
     ------------
