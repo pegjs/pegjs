@@ -1,25 +1,14 @@
 "use strict";
 
 const bodyParser = require( "body-parser" );
+const bundle = require( "bundle" );
 const express = require( "express" );
 const layout = require( "express-layout" );
 const logger = require( "morgan" );
 const { readFileSync } = require( "fs" );
 const { join } = require( "path" );
-const ms = require( "pretty-ms" );
-const rollup = require( "rollup" );
-const babel = require( "rollup-plugin-babel" );
-const commonjs = require( "rollup-plugin-commonjs" );
-const json = require( "rollup-plugin-json" );
-const multiEntry = require( "rollup-plugin-multi-entry" );
-const resolve = require( "rollup-plugin-node-resolve" );
 
 const path = ( ...parts ) => join( __dirname, ...parts );
-const pp = p => // pretty-path
-    ( Array.isArray( p ) ? p.join( ", " ) : p )
-        .replace( process.cwd(), "" )
-        .replace( /\\/g, "/" )
-        .replace( /^\//, "" );
 
 /* Setup */
 
@@ -127,131 +116,23 @@ app.get( "/development/benchmark", ( req, res ) => {
 
 /* Bundle local sources (and watch for changes on non-production NODE_ENV) */
 
-const babelOptions = require( "./.babelrc" );
-babelOptions.babelrc = false;
-babelOptions.exclude = "node_modules/**";
-babelOptions.runtimeHelpers = true;
-
 [
     { name: "benchmark", input: "tools/benchmark/browser.js" },
     { name: "peg", input: "packages/pegjs/lib/peg.js", format: "umd" },
     { name: "test", input: "test/**/*.js" },
 
-].forEach( bundle => {
+].forEach( project => {
 
-    const plugins = [
-        resolve(),
-        commonjs(),
-        json( { namedExports: false } ),
-        babel( babelOptions ),
-    ];
+    bundle( {
 
-    if ( bundle.input.includes( "*" ) ) plugins.unshift( multiEntry() );
-
-    const config = {
-
-        input: bundle.input,
-        output: {
-            file: `website/js/${ bundle.name }-bundle.js`,
-            format: bundle.format || "iife",
-            name: bundle.name,
-        },
-        plugins,
-        onwarn( warning, warn ) {
-
-            if ( WARNINGS ) warn( warning );
-
-        },
-
-    };
-
-    // based on https://github.com/rollup/rollup/blob/master/bin/src/logging.ts
-    function handleError( err ) {
-
-        let description = err.message || err;
-
-        if ( err.name ) description = `${ err.name }: ${ description }`;
-
-        const message = err.plugin ? `(${ err.plugin } plugin) ${ description }` : description;
-
-        console.error( message.toString() );
-
-        if ( err.url ) console.error( err.url );
-
-        if ( err.loc )
-            console.error( `${ err.loc.file || err.id } (${ err.loc.line }:${ err.loc.column })` );
-        else if ( err.id )
-            console.error( err.id );
-
-        if ( err.frame ) console.error( err.frame );
-
-        if ( err.stack ) console.error( err.stack );
-
-    }
-
-    if ( NODE_ENV === "production" ) {
-
-        const output = config.output;
-
-        rollup
-            .rollup( config )
-            .then( bundle => {
-
-                console.info( `pegjs-website > bundling ${ pp( config.input ) }` );
-                return bundle.write( output );
-
-            } )
-            .then( () => {
-
-                console.info( `pegjs-website > created ${ pp( output.file ) }` );
-
-            } )
-            .catch( handleError );
-
-        return void 0;
-
-    }
-
-    const watcher = rollup.watch( {
-
-        ...config,
-        watch: {
-            include: [
-                "packages/**",
-                "test/**",
-                "tools/benchmark/**"
-            ],
-        },
+        format: project.format,
+        name: project.name,
+        source: project.input,
+        target: `website/js/${ project.name }-bundle.js`,
+        silent: !! WARNINGS,
+        watch: NODE_ENV !== "production",
 
     } );
-
-    // https://rollupjs.org/guide/en#rollup-watch
-    watcher.on( "event", event => {
-
-        switch ( event.code ) {
-
-            case "BUNDLE_START":
-                console.info( `pegjs-website > bundling ${ pp( event.input ) }` );
-                break;
-
-            case "BUNDLE_END":
-                console.info( `pegjs-website > created ${ pp( event.output ) } in ${ ms( event.duration ) }` );
-                break;
-
-            case "ERROR":
-                handleError( event.error );
-                break;
-
-            case "FATAL":
-                console.error( "pegjs-website > Fatel Error!" );
-                handleError( event.error );
-                break;
-
-        }
-
-    } );
-
-    process.on( "exit", () => watcher.close() );
 
 } );
 

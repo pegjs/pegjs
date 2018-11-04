@@ -1,6 +1,7 @@
 "use strict";
 
-module.exports = {
+// @babel/core
+const babelOptions = {
     "comments": false,
     "compact": false,
     "presets": [
@@ -15,3 +16,10 @@ module.exports = {
         ]
     ]
 };
+
+// rollup-plugin-babel
+babelOptions.babelrc = false;
+babelOptions.exclude = "node_modules/**";
+babelOptions.runtimeHelpers = true;
+
+module.exports = babelOptions;

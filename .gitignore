@@ -1,7 +1,7 @@
 /.idea
 /packages/pegjs/dist
 /examples/*.js
-/node_modules
+node_modules
 /coverage
 /.nyc_output
 /website/js/*-bundle.js
