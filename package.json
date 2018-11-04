@@ -3,7 +3,8 @@
     "private": true,
     "workspaces": [
         "packages/*",
-        "tools/*"
+        "tools/*",
+        "website"
     ],
     "scripts": {
         "lint": "eslint .",
@@ -13,20 +14,15 @@
         "generate-dist": "bundle",
         "clean": "rimraf packages/pegjs/dist website/js/*-bundle.js examples/*.js",
         "impact": "impact master",
-        "start": "node server.js",
+        "start": "node website/server.js",
         "test": "eslint . && nyc mocha --recursive",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "dependencies": {
         "@babel/core": "~7.1.0",
         "@babel/preset-env": "~7.1.0",
-        "body-parser": "1.18.3",
         "chai": "4.2.0",
         "chai-like": "1.1.1",
-        "ejs": "2.6.1",
-        "express": "4.16.4",
-        "express-layout": "0.1.0",
-        "morgan": "1.9.1",
         "sinon": "7.1.0"
     },
     "devDependencies": {

@@ -3,4 +3,4 @@
 /packages/pegjs/dist
 /coverage
 /node_modules
-/website
+/website/*/**

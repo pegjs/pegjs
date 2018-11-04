@@ -14,10 +14,9 @@
         "packages",
         "test",
         "tools/benchmark",
+        "tools/bundle",
         "website",
-        ".babelrc.js",
         "package.json",
-        "server.js",
         "yarn.lock"
     ]
 }

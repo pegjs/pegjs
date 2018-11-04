@@ -8,7 +8,7 @@ const logger = require( "morgan" );
 const { readFileSync } = require( "fs" );
 const { join } = require( "path" );
 
-const path = ( ...parts ) => join( __dirname, ...parts );
+const path = ( ...parts ) => join( __dirname, "..", ...parts );
 
 /* Setup */
 
