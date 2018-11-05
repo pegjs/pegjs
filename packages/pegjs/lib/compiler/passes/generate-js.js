@@ -1,4 +1,4 @@
-/* eslint no-mixed-operators: 0, prefer-const: 0, eqeqeq: 0 */
+/* eslint no-mixed-operators: 0, prefer-const: 0 */
 
 "use strict";
 

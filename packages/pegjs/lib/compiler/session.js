@@ -1,5 +1,3 @@
-/* eslint no-unused-vars: 0 */
-
 "use strict";
 
 const ast = require( "../ast" );
@@ -50,7 +48,7 @@ class Session {
 
     }
 
-    warn( message, location ) {}
+    warn( _message, _location ) {}
 
     error( message, location ) {
 
