@@ -7,6 +7,7 @@ module.exports = {
     "rules": {
 
         "no-eval": 0,
+        "linebreak-style": [ "error", "unix" ],
 
     },
 
