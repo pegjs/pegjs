@@ -1456,6 +1456,44 @@ describe( "generated parser behavior", function () {
 
         } );
 
+        describe( "global failure", function () {
+        
+          it( "fails globally when inside a simple not predicate", function () {
+
+            const parser = peg.generate( "start = !a b\na = 'kw ' #'foo'\nb = 'bla'", options );
+
+            expect( parser ).to.parse( "bla" );
+            expect( parser ).to.failToParse( "kw bla", {
+              message: "Expected \"foo\" but \"b\" found.",
+              expected: [ { type: "literal", ignoreCase: false, text: "foo" } ],
+              found: "b",
+              location: {
+                  start: { offset: 3, line: 1, column: 4 },
+                  end: { offset: 4, line: 1, column: 5 }
+              }
+            } );
+
+          } );
+
+          it( "fails globally when inside a simple not predicate", function () {
+
+            const parser = peg.generate( "start = &a b\na = 'kw ' #'foo'\nb = 'kw foo bar'", options );
+
+            expect( parser ).to.parse( "kw foo bar" );
+            expect( parser ).to.failToParse( "kw bla", {
+              message: "Expected \"foo\" but \"b\" found.",
+              expected: [ { type: "literal", ignoreCase: false, text: "foo" } ],
+              found: "b",
+              location: {
+                  start: { offset: 3, line: 1, column: 4 },
+                  end: { offset: 4, line: 1, column: 5 }
+              }
+            } );
+
+          } );
+
+        } );
+
         describe( "action", function () {
 
             describe( "when the expression matches", function () {

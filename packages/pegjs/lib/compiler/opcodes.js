@@ -9,6 +9,7 @@ const opcodes = {
     PUSH_UNDEFINED:    1,    // PUSH_UNDEFINED
     PUSH_NULL:         2,    // PUSH_NULL
     PUSH_FAILED:       3,    // PUSH_FAILED
+    PUSH_FATAL:        42,    // PUSH_FATAL
     PUSH_EMPTY_ARRAY:  4,    // PUSH_EMPTY_ARRAY
     PUSH_CURR_POS:     5,    // PUSH_CURR_POS
     POP:               6,    // POP
@@ -51,7 +52,7 @@ const opcodes = {
 
     SILENT_FAILS_ON:   28,   // SILENT_FAILS_ON
     SILENT_FAILS_OFF:  29,   // SILENT_FAILS_OFF
-
+  
     EXPECT_NS_BEGIN:   38,   // EXPECT_NS_BEGIN
     EXPECT_NS_END:     39    // EXPECT_NS_END invert
 
