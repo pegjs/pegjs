@@ -7,7 +7,9 @@ module.exports = {
     "rules": {
 
         "no-eval": 0,
-        "linebreak-style": [ "error", "unix" ],
+
+        // Disabled until https://github.com/eslint/eslint/issues/11178 is resolved
+        "padding-line-between-statements": 0,
 
     },
 
