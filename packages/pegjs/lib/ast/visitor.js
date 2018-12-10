@@ -121,6 +121,7 @@ const DEFAULT_FUNCTIONS = {
     text: visitExpression,
     simple_and: visitExpression,
     simple_not: visitExpression,
+    global_fail: visitExpression,
     optional: visitExpression,
     zero_or_more: visitExpression,
     one_or_more: visitExpression,

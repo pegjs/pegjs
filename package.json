@@ -11,7 +11,7 @@
         "lint": "eslint .",
         "spec": "mocha --recursive",
         "benchmark": "node tools/benchmark/node",
-        "build-parser": "pegjs -c src/pegjs.config.js",
+        "build-parser": "./packages/pegjs/bin/peg.js -c src/pegjs.config.js",
         "generate-dist": "node tools/bundle/create-pegjs-dist",
         "clean": "rimraf packages/pegjs/dist website/js/*-bundle.js examples/*.js",
         "impact": "node tools/impact master",

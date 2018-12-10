@@ -178,6 +178,7 @@ PrefixedOperator
   = "$" { return "text"; }
   / "&" { return "simple_and"; }
   / "!" { return "simple_not"; }
+  / "#" { return "global_fail"; }
 
 SuffixedExpression
   = expression:PrimaryExpression __ operator:SuffixedOperator {

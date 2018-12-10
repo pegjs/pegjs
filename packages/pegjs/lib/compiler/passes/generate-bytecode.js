@@ -26,7 +26,11 @@ const util = require( "../../util" );
 //
 //        stack.push(FAILED);
 //
-//  [4] PUSH_EMPTY_ARRAY
+//  [42] PUSH_FATAL
+//      
+//        throw e;
+// 
+//  [5] PUSH_EMPTY_ARRAY
 //
 //        stack.push([]);
 //
@@ -273,7 +277,7 @@ function generateBytecode( ast, session ) {
     }
 
     function buildSimplePredicate( expression, negative, context ) {
-
+      
         const match = expression.match|0;
         return buildSequence(
             [ op.PUSH_CURR_POS ],
@@ -282,7 +286,8 @@ function generateBytecode( ast, session ) {
                 sp: context.sp + 1,
                 env: util.clone( context.env ),
                 action: null,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
+                failGlobally: context.failGlobally,
             } ),
             [ op.EXPECT_NS_END, negative ? 1 : 0 ],
             buildCondition(
@@ -296,10 +301,16 @@ function generateBytecode( ast, session ) {
                 buildSequence(
                     [ op.POP ],
                     [ negative ? op.POP_CURR_POS : op.POP ],
-                    [ op.PUSH_FAILED ]
+                    buildFailure( context ),
                 )
             )
         );
+
+    }
+
+    function buildFailure( context ) {
+
+        return [ context.failGlobally ? op.PUSH_FATAL : op.PUSH_FAILED ]
 
     }
 
@@ -313,8 +324,8 @@ function generateBytecode( ast, session ) {
             buildCondition(
                 node.match|0,
                 [ op.IF ],
-                buildSequence( [ op.POP ], negative ? [ op.PUSH_FAILED ] : [ op.PUSH_UNDEFINED ] ),
-                buildSequence( [ op.POP ], negative ? [ op.PUSH_UNDEFINED ] : [ op.PUSH_FAILED ] )
+                buildSequence( [ op.POP ], negative ? buildFailure( context ) : [ op.PUSH_UNDEFINED ] ),
+                buildSequence( [ op.POP ], negative ? [ op.PUSH_UNDEFINED ] : buildFailure( context ) )
             )
         );
 
@@ -343,10 +354,11 @@ function generateBytecode( ast, session ) {
         rule( node ) {
 
             node.bytecode = generate( node.expression, {
-                sp: -1,                             // stack pointer
-                env: { },                           // mapping of label names to stack positions
-                action: null,                       // action nodes pass themselves to children here
-                reportFailures: node.reportFailures // if `false`, suppress generation of EXPECT opcodes
+                sp: -1,                              // stack pointer
+                env: { },                            // mapping of label names to stack positions
+                action: null,                        // action nodes pass themselves to children here
+                reportFailures: node.reportFailures, // if `false`, suppress generation of EXPECT opcodes
+                failGlobally: false,
             } );
 
         },
@@ -354,18 +366,19 @@ function generateBytecode( ast, session ) {
         named( node, context ) {
 
             // Do not generate unused constant, if no need it
-            const nameIndex = context.reportFailures ? addExpectedConst(
+            const nameIndex = context.reportFailures || context.failGlobally ? addExpectedConst(
                 { type: "rule", value: node.name }
             ) : null;
             const expressionCode = generate( node.expression, {
                 sp: context.sp,
                 env: context.env,
                 action: context.action,
-                reportFailures: false
+                reportFailures: false,
+                failGlobally: context.failGlobally,
             } );
 
             // No need to disable report failures if it already disabled
-            return context.reportFailures ? buildSequence(
+            return context.reportFailures  || context.failGlobally ? buildSequence(
                 [ op.EXPECT, nameIndex ],
                 [ op.SILENT_FAILS_ON ],
                 expressionCode,
@@ -413,7 +426,8 @@ function generateBytecode( ast, session ) {
                 sp: context.sp + ( emitCall ? 1 : 0 ),
                 env: env,
                 action: node,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
+                failGlobally: context.failGlobally,
             } );
             const match = node.expression.match|0;
             const functionIndex = emitCall && match >= 0
@@ -470,7 +484,7 @@ function generateBytecode( ast, session ) {
                             buildSequence(
                                 processedCount > 1 ? [ op.POP_N, processedCount ] : [ op.POP ],
                                 [ op.POP_CURR_POS ],
-                                [ op.PUSH_FAILED ]
+                                buildFailure ( context )
                             )
                         )
                     );
@@ -538,7 +552,8 @@ function generateBytecode( ast, session ) {
                 sp: context.sp,
                 env: env,
                 action: null,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
+                failGlobally: context.failGlobally,
             } );
 
         },
@@ -551,7 +566,8 @@ function generateBytecode( ast, session ) {
                     sp: context.sp + 1,
                     env: util.clone( context.env ),
                     action: null,
-                    reportFailures: context.reportFailures
+                    reportFailures: context.reportFailures,
+                    failGlobally: context.failGlobally,
                 } ),
                 buildCondition(
                     node.expression.match|0,
@@ -575,6 +591,18 @@ function generateBytecode( ast, session ) {
 
         },
 
+        global_fail( node, context ) {
+          
+          return generate( node.expression, {
+              sp: context.sp,
+              env: util.clone( context.env ),
+              action: context.action,
+              reportFailures: context.reportFailures,
+              failGlobally: true,
+          } );
+
+        },
+
         optional( node, context ) {
 
             return buildSequence(
@@ -582,7 +610,8 @@ function generateBytecode( ast, session ) {
                     sp: context.sp,
                     env: util.clone( context.env ),
                     action: null,
-                    reportFailures: context.reportFailures
+                    reportFailures: context.reportFailures,
+                    failGlobally: context.failGlobally,
                 } ),
                 buildCondition(
                     // If expression always match no need replace FAILED to NULL
@@ -629,7 +658,7 @@ function generateBytecode( ast, session ) {
                     node.expression.match|0,
                     [ op.IF_NOT_ERROR ],
                     buildSequence( buildAppendLoop( expressionCode ), [ op.POP ] ),
-                    buildSequence( [ op.POP ], [ op.POP ], [ op.PUSH_FAILED ] )
+                    buildSequence( [ op.POP ], [ op.POP ], buildFailure( context ) )
                 )
             );
 
@@ -674,7 +703,7 @@ function generateBytecode( ast, session ) {
                     node.ignoreCase ? node.value.toLowerCase() : node.value
                 ) : null;
                 // Do not generate unused constant, if no need it
-                const expectedIndex = context.reportFailures ? addExpectedConst( {
+                const expectedIndex = context.reportFailures || context.failGlobally ? addExpectedConst( {
                     type: "literal",
                     value: node.value,
                     ignoreCase: node.ignoreCase
@@ -684,7 +713,7 @@ function generateBytecode( ast, session ) {
                 // remaining input exactly. As a result, we can use |ACCEPT_STRING| and
                 // save one |substr| call that would be needed if we used |ACCEPT_N|.
                 return buildSequence(
-                    context.reportFailures ? [ op.EXPECT, expectedIndex ] : [],
+                    context.reportFailures || context.failGlobally ? [ op.EXPECT, expectedIndex ] : [],
                     buildCondition(
                         match,
                         node.ignoreCase
@@ -693,7 +722,7 @@ function generateBytecode( ast, session ) {
                         node.ignoreCase
                             ? [ op.ACCEPT_N, node.value.length ]
                             : [ op.ACCEPT_STRING, stringIndex ],
-                        [ op.PUSH_FAILED ]
+                         buildFailure ( context )
                     )
                 );
 
@@ -708,7 +737,7 @@ function generateBytecode( ast, session ) {
             const match = node.match|0;
             const classIndex = match === 0 ? addClassConst( node ) : null;
             // Do not generate unused constant, if no need it
-            const expectedIndex = context.reportFailures ? addExpectedConst( {
+            const expectedIndex = context.reportFailures || context.failGlobally ? addExpectedConst( {
                 type: "class",
                 value: node.parts,
                 inverted: node.inverted,
@@ -716,12 +745,12 @@ function generateBytecode( ast, session ) {
             } ) : null;
 
             return buildSequence(
-                context.reportFailures ? [ op.EXPECT, expectedIndex ] : [],
+                context.reportFailures || context.failGlobally ? [ op.EXPECT, expectedIndex ] : [],
                 buildCondition(
                     match,
                     [ op.MATCH_CLASS, classIndex ],
                     [ op.ACCEPT_N, 1 ],
-                    [ op.PUSH_FAILED ]
+                    buildFailure ( context )
                 )
             );
 
@@ -735,12 +764,12 @@ function generateBytecode( ast, session ) {
                 : null;
 
             return buildSequence(
-                context.reportFailures ? [ op.EXPECT, expectedIndex ] : [],
+                context.reportFailures && !context.failGlobally ? [ op.EXPECT, expectedIndex ] : [],
                 buildCondition(
                     node.match|0,
                     [ op.MATCH_ANY ],
                     [ op.ACCEPT_N, 1 ],
-                    [ op.PUSH_FAILED ]
+                    buildFailure ( context )
                 )
             );
 

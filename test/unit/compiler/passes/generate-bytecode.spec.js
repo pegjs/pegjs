@@ -487,6 +487,74 @@ describe( "compiler pass |generateBytecode|", function () {
 
     } );
 
+    describe( "for global_fail", function () {
+      
+        const grammar = "start = #'a'"
+    
+        describe( "when |reportFailures=false|", function () {
+
+            it( "generates correct bytecode", function () {
+
+                expect( pass ).to.changeAST( grammar, bytecodeDetails( [
+                   23, // EXPECT e
+                   0,  // <nameIndex>
+                   18, // MATCH_STRING
+                   0,  // <nameIndex>
+                   2,  // thenCode.length
+                   1,  // elseCode.length
+                   22, // ACCEPT_STRING
+                   0,  // <nameIndex>
+                   42, // PUSH_FATAL
+                ] ), {}, { reportFailures: false } );
+
+            } );
+
+            it( "defines correct constants", function () {
+
+                expect( pass ).to.changeAST( grammar, constsDetails(
+                    [ "a" ],
+                    [],
+                    [ { type: "literal", value: "a", ignoreCase: false } ],
+                    []
+                ), {}, { reportFailures: false } );
+
+            } );
+  
+        } );
+
+        describe( "when |reportFailures=false|", function () {
+
+            it( "generates correct bytecode", function () {
+
+                expect( pass ).to.changeAST( grammar, bytecodeDetails( [
+                   23, // EXPECT e
+                   0,  // <nameIndex>
+                   18, // MATCH_STRING
+                   0,  // <nameIndex>
+                   2,  // thenCode.length
+                   1,  // elseCode.length
+                   22, // ACCEPT_STRING
+                   0,  // <nameIndex>
+                   42, // PUSH_FATAL
+                ] ), {}, { reportFailures: true } );
+
+            } );
+
+            it( "defines correct constants", function () {
+
+                expect( pass ).to.changeAST( grammar, constsDetails(
+                    [ "a" ],
+                    [],
+                    [ { type: "literal", value: "a", ignoreCase: false } ],
+                    []
+                ), {}, { reportFailures: true } );
+
+            } );
+  
+        } );
+        
+    } );
+
     describe( "for optional", function () {
 
         const grammar = "start = 'a'?";

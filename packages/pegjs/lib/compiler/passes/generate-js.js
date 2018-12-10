@@ -417,6 +417,10 @@ function generateJS( ast, session, options ) {
             "          ip++;",
             "          break;",
             "",
+            "        case " + op.PUSH_FATAL + ":",         // PUSH_FATAL
+            "          //stack.push(peg$FAILED);",
+            "          throw peg$buildLocalError();",
+            "",
             "        case " + op.PUSH_NULL + ":",          // PUSH_NULL
             "          stack.push(null);",
             "          ip++;",
@@ -783,6 +787,12 @@ function generateJS( ast, session, options ) {
 
                     case op.PUSH_UNDEFINED:     // PUSH_UNDEFINED
                         parts.push( stack.push( "undefined" ) );
+                        ip++;
+                        break;
+
+                    case op.PUSH_FATAL:         // PUSH_FATAL
+                        stack.push( "peg$FAILED ");
+                        parts.push( "throw peg$buildLocalError();" );
                         ip++;
                         break;
 
@@ -1556,8 +1566,12 @@ function generateJS( ast, session, options ) {
             "    );",
             "  }",
             "",
-            "  function peg$buildError() {",
-            "    var expected = peg$expected[0];",
+            "  function peg$buildLocalError() {",
+            "    return peg$buildError(peg$expected[peg$expected.length-1]);",
+            "  }",
+            "",
+            "  function peg$buildError(expected) {",
+            "    if (expected === undefined) expected = peg$expected[0];",
             "    var failPos = expected.pos;",
             "",
             "    return peg$buildStructuredError(",
