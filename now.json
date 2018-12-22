@@ -1,22 +1,13 @@
 {
-    "name": "pegjs-website",
-    "type": "npm",
-    "env": {
-        "NODE_ENV": "production"
-    },
+    "version": 2,
+    "name": "pegjs-next-website",
     "alias": [
-        "www.pegjs.org",
-        "pegjs.org",
-        "pegjs.now.sh"
+        "next.pegjs.org"
     ],
-    "files": [
-        "examples",
-        "packages",
-        "test",
-        "tools/benchmark",
-        "tools/bundle",
-        "website",
-        "package.json",
-        "yarn.lock"
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@now/static-build"
+        }
     ]
 }
