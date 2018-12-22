@@ -7,5 +7,4 @@ Both the parser generator and generated parsers should run well in the following
 * Microsoft Edge
 * Firefox
 * Chrome
-* Safari
 * Opera
