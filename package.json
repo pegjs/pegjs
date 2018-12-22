@@ -18,6 +18,7 @@
         "clean": "rimraf packages/pegjs/dist website/js/*-bundle.js examples/*.js",
         "impact": "node tools/impact master",
         "start": "node website/server.js",
+        "now-build": "npm run build",
         "test": "eslint . && nyc mocha --recursive",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
