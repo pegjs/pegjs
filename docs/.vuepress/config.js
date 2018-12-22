@@ -14,7 +14,6 @@ module.exports = {
     ],
     dest: "dist",
     ga: "UA-100728112-1",
-    serviceWorker: true,
     themeConfig: {
 
         nav: [
@@ -129,11 +128,6 @@ module.exports = {
 
         // },
         lastUpdated: true,
-        serviceWorker: {
-
-            updatePopup: true,
-
-        },
         docsRepo: "pegjs/pegjs",
         docsDir: "docs",
         editLinks: true,

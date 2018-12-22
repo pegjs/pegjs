@@ -28,7 +28,7 @@
         "eslint": "5",
         "eslint-config-futagozaryuu": "5",
         "mocha": "5.2.0",
-        "vuepress": "0.14.8",
+        "vuepress": "next",
         "nyc": "13.1.0"
     },
     "engines": {
