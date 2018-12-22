@@ -11,6 +11,8 @@
         "lint": "eslint .",
         "spec": "mocha --recursive",
         "benchmark": "node tools/benchmark/node",
+        "build-docs": "vuepress build docs",
+        "watch-docs": "vuepress dev docs",
         "build-parser": "pegjs -c src/pegjs.config.js",
         "generate-dist": "node tools/bundle/create-pegjs-dist",
         "clean": "rimraf packages/pegjs/dist website/js/*-bundle.js examples/*.js",
@@ -25,6 +27,7 @@
         "eslint": "5",
         "eslint-config-futagozaryuu": "5",
         "mocha": "5.2.0",
+        "vuepress": "0.14.8",
         "nyc": "13.1.0"
     },
     "engines": {

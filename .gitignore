@@ -1,5 +1,7 @@
 /.idea
 /packages/pegjs/dist
+/docs/.vuepress/dist
+/dist
 /examples/*.js
 node_modules
 /coverage
