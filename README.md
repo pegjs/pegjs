@@ -1,4 +1,4 @@
-[![ci](https://img.shields.io/travis/pegjs/pegjs.svg)](https://travis-ci.org/pegjs/pegjs)
+[![Build Status](https://dev.azure.com/pegjs/pegjs/_apis/build/status/Azure%20Pipelines?branchName=master)](https://dev.azure.com/pegjs/pegjs/_build/latest?definitionId=1?branchName=master)
 [![coverage](https://img.shields.io/coveralls/github/pegjs/pegjs.svg)](https://coveralls.io/github/pegjs/pegjs)
 [![forum](https://gitq.com/badge.svg)](https://gitq.com/pegjs/pegjs)
 [![license](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
