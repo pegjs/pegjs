@@ -1,6 +1,7 @@
 {
     "include": [ "packages/**" ],
     "reporter": [
+        "cobertura",
         "text",
         "text-summary"
     ]

@@ -35,8 +35,14 @@ steps:
   displayName: 'Run Unit Tests'
 
 - task: PublishTestResults@2
-  displayName: 'Publish JUnit Results'
+  displayName: 'Publish test results'
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
     testResultsFiles: 'test/junit-results.xml'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage results'
+  inputs: 
+    codeCoverageTool: Cobertura
+    summaryFileLocation: 'coverage/cobertura-coverage.xml'

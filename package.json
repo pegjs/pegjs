@@ -9,7 +9,7 @@
     ],
     "scripts": {
         "lint": "eslint .",
-        "spec": "mocha --recursive",
+        "spec": "nyc mocha --recursive",
         "benchmark": "node tools/benchmark/node",
         "build-docs": "vuepress build docs",
         "watch-docs": "vuepress dev docs",
