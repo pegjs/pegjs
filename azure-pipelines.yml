@@ -7,7 +7,7 @@ trigger:
     - README.md
 
 variables:
-- group: env-variables
+- group: Env Variables
 
 pool:
   vmImage: 'ubuntu-16.04'
