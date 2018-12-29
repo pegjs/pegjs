@@ -8,7 +8,7 @@
         "website"
     ],
     "scripts": {
-        "lint": "eslint .",
+        "lint": "eslint --ext .js,.vue . docs/.vuepress",
         "spec": "nyc mocha --recursive",
         "benchmark": "node tools/benchmark/node",
         "build-docs": "vuepress build docs",
@@ -19,7 +19,7 @@
         "impact": "node tools/impact master",
         "start": "node website/server.js",
         "now-build": "npm run build-docs",
-        "test": "eslint . && nyc mocha --recursive",
+        "test": "npm run lint && nyc mocha --recursive",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "devDependencies": {
@@ -27,6 +27,7 @@
         "rimraf": "2.6.2",
         "eslint": "5",
         "eslint-config-futagozaryuu": "5",
+        "eslint-plugin-vue": "5",
         "mocha": "5.2.0",
         "mocha-junit-reporter": "1.18.0",
         "mocha-multi-reporters": "1.1.7",
