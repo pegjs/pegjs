@@ -19,7 +19,7 @@ steps:
     versionSpec: $(node_version)
   displayName: 'Install Node.js'
 
-- script: yarn
+- script: yarn install --ignore-engines
   displayName: 'Install Dependencies'
 
 - script: yarn lint
