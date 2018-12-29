@@ -1,0 +1,29 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+strategy:
+  matrix:
+    node_6_x:
+      node_version: 6.x
+    node_8_x:
+      node_version: 8.x
+    node_10_x:
+      node_version: 10.x
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: $(node_version)
+  displayName: 'Install Node.js'
+
+- script: yarn
+  displayName: 'Install Dependencies'
+
+- script: yarn lint
+  displayName: 'Lint JavaScript Code'
+
+- script: yarn spec
+  displayName: 'Run Unit Tests'
