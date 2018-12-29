@@ -28,6 +28,8 @@
         "eslint": "5",
         "eslint-config-futagozaryuu": "5",
         "mocha": "5.2.0",
+        "mocha-junit-reporter": "1.18.0",
+        "mocha-multi-reporters": "1.1.7",
         "vuepress": "next",
         "nyc": "13.1.0"
     },
