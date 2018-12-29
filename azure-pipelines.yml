@@ -1,16 +1,22 @@
 trigger:
-- master
+  batch: true
+  paths:
+    exclude:
+    - CHANGELOG.md
+    - LICENSE
+    - README.md
 
 pool:
   vmImage: 'ubuntu-16.04'
 
 strategy:
+  maxParallel: 3
   matrix:
-    node_6_x:
+    Node 6:
       node_version: 6.x
-    node_8_x:
+    Node 8:
       node_version: 8.x
-    node_10_x:
+    Node 10:
       node_version: 10.x
 
 steps:
