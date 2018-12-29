@@ -9,7 +9,7 @@
     ],
     "scripts": {
         "lint": "eslint --ext .js,.vue . docs/.vuepress",
-        "spec": "nyc mocha --recursive",
+        "test": "nyc mocha --recursive",
         "benchmark": "node tools/benchmark/node",
         "build-docs": "vuepress build docs",
         "watch-docs": "vuepress dev docs",
@@ -19,7 +19,6 @@
         "impact": "node tools/impact master",
         "start": "node website/server.js",
         "now-build": "npm run build-docs",
-        "test": "npm run lint && nyc mocha --recursive",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "devDependencies": {

@@ -31,7 +31,7 @@ steps:
 - script: yarn lint
   displayName: 'Lint JavaScript Code'
 
-- script: yarn spec
+- script: yarn test
   displayName: 'Run Unit Tests'
 
 - task: PublishTestResults@2
