@@ -35,14 +35,17 @@ steps:
   displayName: 'Run Unit Tests'
 
 - task: PublishTestResults@2
-  displayName: 'Publish test results'
+  displayName: 'Publish test results (Azure Pipelines)'
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
     testResultsFiles: 'test/junit-results.xml'
 
 - task: PublishCodeCoverageResults@1
-  displayName: 'Publish code coverage results'
+  displayName: 'Publish code coverage results (Azure Pipelines)'
   inputs: 
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+
+- script: yarn coverage
+  displayName: 'Publish code coverage results (coveralls.io)'
