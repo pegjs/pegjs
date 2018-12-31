@@ -29,13 +29,27 @@ steps:
   displayName: 'Install Node.js'
 
 - script: yarn install --ignore-engines
-  displayName: 'Install Dependencies'
+  displayName: 'Install NPM Dependencies'
+
+- script: |
+    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    chmod +x ./cc-test-reporter
+    ./cc-test-reporter before-build
+  displayName: 'Install Code Climate Reporter'
 
 - script: yarn lint
   displayName: 'Lint JavaScript Code'
 
 - script: yarn test
   displayName: 'Run Unit Tests'
+
+- script: ./cc-test-reporter after-build
+  displayName: 'Publish code coverage results (codeclimate.com)'
+  condition: succeededOrFailed()
+  env:
+    CC_TEST_REPORTER_ID: $(CC_TEST_REPORTER_ID)
+    GIT_BRANCH: $(Build.SourceBranch)
+    GIT_COMMIT_SHA: $(Build.SourceVersion)
 
 - task: PublishTestResults@2
   displayName: 'Publish test results (Azure Pipelines)'
