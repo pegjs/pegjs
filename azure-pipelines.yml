@@ -51,5 +51,8 @@ steps:
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
 
-- script: COVERALLS_REPO_TOKEN=$(COVERALLS_REPO_TOKEN) yarn coverage
+- script: yarn coverage
   displayName: 'Publish code coverage results (coveralls.io)'
+  env:
+    COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
+    COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
