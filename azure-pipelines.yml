@@ -48,7 +48,8 @@ steps:
   displayName: 'Publish code coverage results (Azure Pipelines)'
   inputs: 
     codeCoverageTool: Cobertura
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
 
 - script: COVERALLS_REPO_TOKEN=$(COVERALLS_REPO_TOKEN) yarn coverage
   displayName: 'Publish code coverage results (coveralls.io)'
