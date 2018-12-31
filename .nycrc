@@ -3,6 +3,7 @@
     "reporter": [
         "cobertura",
         "html",
+        "lcov",
         "text",
         "text-summary"
     ]
