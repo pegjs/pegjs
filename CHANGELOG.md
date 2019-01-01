@@ -81,7 +81,7 @@
 * Switch from Jasmine to Mocha & Chai ([#409](https://github.com/pegjs/pegjs/issues/409))
 * Removed Makefile (Had switched to Gulp, but removed that as well); Using the _scripts_ field of `package.json` instead
 * Rewrote `tools/impact`; previously a bash script that required external programs, it's now a cross-platform Node script
-* Added code coverage via [Istanbul](https://www.npmjs.com/package/nyc) and [coveralls.io](https://coveralls.io/github/pegjs/pegjs) ([#546](https://github.com/pegjs/pegjs/pull/546))
+* Added coverage via [Istanbul](https://www.npmjs.com/package/nyc), [coveralls.io](https://coveralls.io/github/pegjs/pegjs) and [codeclimate.com](https://codeclimate.com/github/pegjs/pegjs) ([#546](https://github.com/pegjs/pegjs/pull/546), [#596](https://github.com/pegjs/pegjs/pull/596))
 * Updated spec tests
 * Switched to Yarn for workspace based development (_NOTE:_ Yarn should not be required for production use)
 * Updated keywords for the [NPM package](https://www.npmjs.com/package/pegjs)
@@ -90,3 +90,4 @@
 * Switch from [Browserify](https://github.com/browserify/browserify) to [Rollup](https://rollupjs.org/)
 * Auto-import PEG.js version using `require("pegjs/package.json")`, and on dist generation use [rollup-plugin-json](https://www.npmjs.com/package/rollup-plugin-json)
 * Added https://pegjs.org/development/try; an editor that uses the latest source files for PEG.js
+* Replaced [Travis CI support](https://travis-ci.org/pegjs/pegjs/builds) with [Azure Pipelines](https://dev.azure.com/pegjs/pegjs/_build) ([#596](https://github.com/pegjs/pegjs/pull/596))
