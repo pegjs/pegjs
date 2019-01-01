@@ -9,3 +9,4 @@ node_modules
 /website/js/*-bundle.js
 /*.log
 /sh.exe.stackdump
+/test/junit-results.xml

@@ -1,0 +1,2 @@
+--reporter mocha-multi-reporters
+--reporter-options configFile=test/config.json

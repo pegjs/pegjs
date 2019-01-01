@@ -9,7 +9,7 @@
     ],
     "scripts": {
         "lint": "eslint --ext .js,.vue . docs/.vuepress",
-        "spec": "mocha --recursive",
+        "test": "nyc mocha --recursive",
         "benchmark": "node tools/benchmark/node",
         "build-docs": "vuepress build docs",
         "watch-docs": "vuepress dev docs",
@@ -19,7 +19,7 @@
         "impact": "node tools/impact master",
         "start": "node website/server.js",
         "now-build": "npm run build-docs",
-        "test": "npm run lint && nyc mocha --recursive",
+        "ci": "npm run lint && npm run test",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "devDependencies": {
@@ -29,6 +29,8 @@
         "eslint-config-futagozaryuu": "5",
         "eslint-plugin-vue": "5",
         "mocha": "5.2.0",
+        "mocha-junit-reporter": "1.18.0",
+        "mocha-multi-reporters": "1.1.7",
         "vuepress": "next",
         "nyc": "13.1.0"
     },

@@ -1,7 +1,7 @@
 {
     "include": [ "packages/**" ],
     "reporter": [
-        "text",
-        "text-summary"
+        "cobertura",
+        "lcov"
     ]
 }
