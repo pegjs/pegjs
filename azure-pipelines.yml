@@ -37,23 +37,21 @@ steps:
       then
         echo '"yarn ci" passed, publishing to code climate.'
         ./cc-test-reporter after-build --exit-code 0
+        echo 'Publishing code coverage results to coveralls.io'
+        yarn coverage
         exit 0
       else
         echo '"yarn ci" failed, publishing to code climate.'
         ./cc-test-reporter after-build --exit-code 1
         exit 1
     fi
-  displayName: 'Lint source code, Run unit tests & Publish to Code Climate'
+  displayName: 'eslint > mocha > codeclimate & coveralls'
   env:
     CC_TEST_REPORTER_ID: $(CC_TEST_REPORTER_ID)
-    GIT_BRANCH: $(Build.SourceBranch)
-    GIT_COMMIT_SHA: $(Build.SourceVersion)
-
-- script: yarn coverage
-  displayName: 'Publish code coverage results (coveralls.io)'
-  env:
     COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
     COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
+    GIT_BRANCH: $(Build.SourceBranch)
+    GIT_COMMIT_SHA: $(Build.SourceVersion)
 
 - task: PublishTestResults@2
   displayName: 'Publish test results (Azure Pipelines)'
