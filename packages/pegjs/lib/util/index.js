@@ -5,13 +5,6 @@ const js = require( "./js" );
 const objects = require( "./objects" );
 const vm = require( "./vm" );
 
-objects.extend( exports, arrays );
-objects.extend( exports, js );
-objects.extend( exports, objects );
-objects.extend( exports, vm );
-
-exports.noop = function noop() { };
-
 /**
  * ```ts
  * type Session = peg.compiler.Session;
@@ -26,7 +19,7 @@ exports.noop = function noop() { };
  * 
  * This method takes a `StageMap`, returning a `PassMap` that can be used by the compiler.
  */
-exports.convertPasses = ( () => {
+const convertPasses = ( () => {
 
     function convertStage( passes ) {
 
@@ -46,7 +39,7 @@ exports.convertPasses = ( () => {
 
 } )();
 
-exports.processOptions = function processOptions( options, defaults ) {
+function processOptions( options, defaults ) {
 
     const processedOptions = {};
 
@@ -54,5 +47,29 @@ exports.processOptions = function processOptions( options, defaults ) {
     objects.extend( processedOptions, defaults );
 
     return processedOptions;
+
+}
+
+module.exports = {
+
+    find: arrays.find,
+    findIndex: arrays.findIndex,
+
+    stringEscape: js.stringEscape,
+    regexpEscape: js.regexpEscape,
+    reservedWords: js.reservedWords,
+
+    clone: objects.clone,
+    each: objects.each,
+    extend: objects.extend,
+    map: objects.map,
+    values: objects.values,
+    enforceFastProperties: objects.enforceFastProperties,
+
+    evalModule: vm.evalModule,
+
+    convertPasses,
+    processOptions,
+    noop() { },
 
 };
