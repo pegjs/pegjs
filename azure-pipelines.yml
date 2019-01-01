@@ -9,6 +9,7 @@ trigger:
 variables:
 - group: 'env-variables'
 
+name: 'Linux'
 pool:
   vmImage: 'ubuntu-16.04'
 
