@@ -25,9 +25,7 @@ const peg = {
     // |peg.GrammarError| if it contains a semantic error. Note that not all
     // errors are detected during the generation and some may protrude to the
     // generated parser and cause its malfunction.
-    generate( grammar, options ) {
-
-        options = typeof options !== "undefined" ? options : {};
+    generate( grammar, options = {} ) {
 
         const session = new compiler.Session( {
             passes: util.convertPasses( compiler.passes )

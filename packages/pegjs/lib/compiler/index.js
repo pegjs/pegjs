@@ -49,9 +49,7 @@ const compiler = {
     // if the AST contains a semantic error. Note that not all errors are detected
     // during the generation and some may protrude to the generated parser and
     // cause its malfunction.
-    compile( ast, session, options ) {
-
-        options = typeof options !== "undefined" ? options : {};
+    compile( ast, session, options = {} ) {
 
         options = util.processOptions( options, {
             allowedStartRules: [ ast.rules[ 0 ].name ],

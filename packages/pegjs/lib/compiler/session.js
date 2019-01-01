@@ -19,9 +19,7 @@ function fatal( message, location ) {
 
 class Session {
 
-    constructor( config ) {
-
-        config = typeof config !== "undefined" ? config : {};
+    constructor( config = {} ) {
 
         this.opcodes = config.opcodes || opcodes;
         this.parser = config.parser || parser;
