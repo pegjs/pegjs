@@ -32,8 +32,10 @@ steps:
 
 - script: |
     yarn install --ignore-engines
+    echo 'Downloading Code Climate Test Reporter...'
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
+    echo 'Done downloading Code Climate Test Reporter.'
   displayName: 'Install dependencies'
 
 - script: |
