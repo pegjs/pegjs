@@ -7,7 +7,8 @@ trigger:
     - README.md
 
 jobs:
-- job: Project CI
+- job: ci
+  displayName: 'Project CI'
   pool:
     vmImage: 'ubuntu-16.04'
 
@@ -61,7 +62,8 @@ jobs:
       COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
       COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
 
-- job: Report to Azure Pipelines
+- job: report
+  displayName: 'Report to Azure Pipelines'
   pool:
     vmImage: 'ubuntu-16.04'
 
