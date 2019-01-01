@@ -73,7 +73,7 @@ steps:
   inputs: 
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
 
 - script: yarn coverage
   displayName: 'Publish code coverage results (coveralls.io)'
