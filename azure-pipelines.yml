@@ -1,3 +1,5 @@
+name: $(BuildID)
+
 trigger:
   batch: true
   paths:
@@ -6,87 +8,69 @@ trigger:
     - LICENSE
     - README.md
 
-jobs:
-- job: ci
-  displayName: 'Project CI'
-  pool:
-    vmImage: 'ubuntu-16.04'
+pool:
+  vmImage: 'ubuntu-16.04'
 
-  variables:
-  - group: 'env-variables'
+variables:
+- group: 'env-variables'
 
-  strategy:
-    maxParallel: 3
-    matrix:
-      Node 6:
-        node_version: 6.x
-      Node 8:
-        node_version: 8.x
-      Node 10:
-        node_version: 10.x
+strategy:
+  maxParallel: 3
+  matrix:
+    Node 6:
+      node_version: 6.x
+    Node 8:
+      node_version: 8.x
+    Node 10:
+      node_version: 10.x
 
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: $(node_version)
-    displayName: 'Install Node.js'
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: $(node_version)
+  displayName: 'Install Node.js'
 
-  - script: |
-      yarn install --ignore-engines
-      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-      chmod +x ./cc-test-reporter
-    displayName: 'Install dependencies'
+- script: |
+    yarn install --ignore-engines
+    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    chmod +x ./cc-test-reporter
+  displayName: 'Install dependencies'
 
-  - script: |
-      ./cc-test-reporter before-build
-        yarn ci 2> /dev/null 
-        if [ $? -eq 0 ]
-          then
-            echo '"yarn ci" passed, publishing to code climate.'
-            ./cc-test-reporter after-build --exit-code 0
-            exit 0
-          else
-            echo '"yarn ci" failed, publishing to code climate.'
-            ./cc-test-reporter after-build --exit-code 1
-            exit 1
-        fi
-    displayName: 'Lint source code, Run unit tests & Publish to Code Climate'
-    env:
-      CC_TEST_REPORTER_ID: $(CC_TEST_REPORTER_ID)
-      GIT_BRANCH: $(Build.SourceBranch)
-      GIT_COMMIT_SHA: $(Build.SourceVersion)
+- script: |
+    ./cc-test-reporter before-build
+    yarn ci 2> /dev/null 
+    if [ $? -eq 0 ]
+      then
+        echo '"yarn ci" passed, publishing to code climate.'
+        ./cc-test-reporter after-build --exit-code 0
+        exit 0
+      else
+        echo '"yarn ci" failed, publishing to code climate.'
+        ./cc-test-reporter after-build --exit-code 1
+        exit 1
+    fi
+  displayName: 'Lint source code, Run unit tests & Publish to Code Climate'
+  env:
+    CC_TEST_REPORTER_ID: $(CC_TEST_REPORTER_ID)
+    GIT_BRANCH: $(Build.SourceBranch)
+    GIT_COMMIT_SHA: $(Build.SourceVersion)
 
-  - script: yarn coverage
-    displayName: 'Publish code coverage results (coveralls.io)'
-    env:
-      COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
-      COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
+- script: yarn coverage
+  displayName: 'Publish code coverage results (coveralls.io)'
+  env:
+    COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
+    COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
 
-  - task: PublishTestResults@2
-    displayName: 'Publish test results (Azure Pipelines)'
-    condition: succeededOrFailed()
-    inputs:
-      testRunner: JUnit
-      testResultsFiles: 'test/junit-results.xml'
+- task: PublishTestResults@2
+  displayName: 'Publish test results (Azure Pipelines)'
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: 'test/junit-results.xml'
 
-  - task: PublishCodeCoverageResults@1
-    displayName: 'Publish code coverage results (Azure Pipelines)'
-    inputs: 
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
-      reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
-
-- job: deploy
-  displayName: 'Deploy website'
-  dependsOn: ci
-  pool:
-    vmImage: 'ubuntu-16.04'
-
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: 10.x
-    displayName: 'Install Node.js v10'
-
-  - script: yarn install
-    displayName: 'Install dependencies'
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage results (Azure Pipelines)'
+  inputs: 
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
