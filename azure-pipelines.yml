@@ -41,10 +41,19 @@ steps:
 - script: yarn lint
   displayName: 'Lint JavaScript Code'
 
-- script: yarn test
+- script: |
+      yarn test  2> /dev/null 
+      if [ $? -eq 0 ]
+        then
+          Write-Host "##vso[task.setvariable variable=UNIT_TESTS_RESULT;]0"
+          exit 0
+        else
+          Write-Host "##vso[task.setvariable variable=UNIT_TESTS_RESULT;]1"
+          exit 1
+      fi
   displayName: 'Run Unit Tests'
 
-- script: ./cc-test-reporter after-build
+- script: ./cc-test-reporter after-build --exit-code $(UNIT_TESTS_RESULT)
   displayName: 'Publish code coverage results (codeclimate.com)'
   condition: succeededOrFailed()
   env:
