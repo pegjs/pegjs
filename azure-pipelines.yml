@@ -38,11 +38,8 @@ steps:
     ./cc-test-reporter before-build
   displayName: 'Install Code Climate Reporter'
 
-- script: yarn lint
-  displayName: 'Lint JavaScript Code'
-
 - script: |
-      yarn test  2> /dev/null 
+      yarn ci 2> /dev/null 
       if [ $? -eq 0 ]
         then
           Write-Host "##vso[task.setvariable variable=UNIT_TESTS_RESULT;]0"
@@ -51,7 +48,7 @@ steps:
           Write-Host "##vso[task.setvariable variable=UNIT_TESTS_RESULT;]1"
           exit 1
       fi
-  displayName: 'Run Unit Tests'
+  displayName: 'Lint source code & Run tests'
 
 - script: ./cc-test-reporter after-build --exit-code $(UNIT_TESTS_RESULT)
   displayName: 'Publish code coverage results (codeclimate.com)'

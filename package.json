@@ -19,6 +19,7 @@
         "impact": "node tools/impact master",
         "start": "node website/server.js",
         "now-build": "npm run build-docs",
+        "ci": "npm run lint && npm run test",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "devDependencies": {
