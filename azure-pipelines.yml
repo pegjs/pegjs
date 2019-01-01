@@ -78,6 +78,7 @@ jobs:
 
 - job: deploy
   displayName: 'Deploy website'
+  dependsOn: ci
   pool:
     vmImage: 'ubuntu-16.04'
 
