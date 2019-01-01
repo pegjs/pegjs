@@ -62,12 +62,6 @@ jobs:
       COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
       COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
 
-- job: report
-  displayName: 'Report to Azure Pipelines'
-  pool:
-    vmImage: 'ubuntu-16.04'
-
-  steps:
   - task: PublishTestResults@2
     displayName: 'Publish test results (Azure Pipelines)'
     condition: succeededOrFailed()
@@ -81,3 +75,17 @@ jobs:
       codeCoverageTool: Cobertura
       summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
       reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
+
+- job: deploy
+  displayName: 'Deploy website'
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: 10.x
+    displayName: 'Install Node.js v10'
+
+  - script: yarn install
+    displayName: 'Install dependencies'
