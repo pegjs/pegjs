@@ -36,13 +36,13 @@ steps:
     if [ $? -eq 0 ]
       then
         echo '"yarn ci" passed, publishing to code climate.'
-        ./cc-test-reporter after-build --coverage-input-type lcov --exit-code 0
+        ./cc-test-reporter after-build --coverage-input-type lcov -d --exit-code 0
         echo 'Publishing code coverage results to coveralls.io'
         yarn coverage
         exit 0
       else
         echo '"yarn ci" failed, publishing to code climate.'
-        ./cc-test-reporter after-build --coverage-input-type lcov --exit-code 1
+        ./cc-test-reporter after-build --coverage-input-type lcov -d --exit-code 1
         exit 1
     fi
   displayName: 'eslint > mocha > codeclimate & coveralls'
