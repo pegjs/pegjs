@@ -7,6 +7,8 @@ trigger:
     - CHANGELOG.md
     - LICENSE
     - README.md
+    include:
+    - /*
 
 pool:
   vmImage: 'ubuntu-16.04'
