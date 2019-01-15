@@ -5,8 +5,7 @@
         "editor",
         "packages/*",
         "tools/*",
-        "test",
-        "website"
+        "test"
     ],
     "scripts": {
         "lint": "eslint --ext .js,.vue . docs/.vuepress",
@@ -16,9 +15,8 @@
         "watch-docs": "vuepress dev docs",
         "build-parser": "pegjs -c src/pegjs.config.js",
         "generate-dist": "node tools/bundle/create-pegjs-dist",
-        "clean": "rimraf packages/pegjs/dist website/js/*-bundle.js examples/*.js",
+        "clean": "rimraf packages/pegjs/dist examples/*.js",
         "impact": "node tools/impact master",
-        "start": "node website/server.js",
         "now-build": "npm run build-docs",
         "ci": "npm run lint && npm run test",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
