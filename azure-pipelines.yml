@@ -19,6 +19,7 @@ jobs:
     node_version: 6.x
     after:
     - script: yarn coverage
+      displayName: 'Publish code coverage results (coveralls.io)'
       env:
         COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
         COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
