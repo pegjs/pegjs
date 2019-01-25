@@ -5,7 +5,7 @@ resources:
     - repository: apt
       type: github
       name: futagoza/apt
-      endpoint: pegjs
+      endpoint: futagoza
 
 variables:
 - group: 'env-variables'
