@@ -14,9 +14,8 @@ jobs:
 
 - template: eslint.yml@apt
 
-- template: node-test.yml@apt
+- template: node-matrix-test.yml@apt
   parameters:
-    node_version: 6.x
     after:
     - script: yarn coverage
       displayName: 'Publish code coverage results (coveralls.io)'
