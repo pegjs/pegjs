@@ -14,7 +14,7 @@ jobs:
 
 - template: eslint.yml@apt
 
-- template: node-matrix-test.yml@apt
+- template: node-test.yml@apt
   parameters:
     after:
     - script: yarn coverage
@@ -24,4 +24,5 @@ jobs:
         COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
         GIT_BRANCH: $(Build.SourceBranch)
         GIT_COMMIT_SHA: $(Build.SourceVersion)
-    azure_coverage: True
+    publish_test_results_to_pipelines: True
+    publish_code_coverage_to_pipelines: True
