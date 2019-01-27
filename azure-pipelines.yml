@@ -22,8 +22,8 @@ jobs:
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
       displayName: 'Download and Initialize Code Climate Test Reporter'
-    success_script: cc-test-reporter after-build --exit-code 0
-    fail_script: cc-test-reporter after-build --exit-code 1
+    success_script: ./cc-test-reporter after-build --exit-code 0
+    fail_script: ./cc-test-reporter after-build --exit-code 1
     after:
     - script: yarn coverage
       displayName: 'Publish code coverage results (coveralls.io)'
