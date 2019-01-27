@@ -16,22 +16,31 @@ jobs:
 
 - template: node-test.yml@apt
   parameters:
+    npm_test: False
     before:
     - script: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
-        ./cc-test-reporter before-build
-      displayName: 'Download and Initialize Code Climate Test Reporter'
+      displayName: 'Download Code Climate Test Reporter'
     after:
-    - script: ./cc-test-reporter after-build --exit-code 0
-      displayName: 'Publish succeeded code coverage results (codeclimate.com)'
-      condition: succeeded()
-    - script: ./cc-test-reporter after-build --exit-code 1
-      displayName: 'Publish failed code coverage results (codeclimate.com)'
-      condition: failed()
-    - script: yarn coverage
-      displayName: 'Publish code coverage results (coveralls.io)'
+    - script: |
+        ./cc-test-reporter before-build
+        yarn test 2> /dev/null 
+        if [ $? -eq 0 ]
+          then
+            echo '"yarn test" passed, publishing to code climate.'
+            ./cc-test-reporter after-build --exit-code 0
+            echo 'Publishing code coverage results to coveralls.io'
+            yarn coverage
+            exit 0
+          else
+            echo '"yarn test" failed, publishing to code climate.'
+            ./cc-test-reporter after-build --exit-code 1
+            exit 1
+        fi
+      displayName: 'mocha > codeclimate & coveralls'
       env:
+        CC_TEST_REPORTER_ID: $(CC_TEST_REPORTER_ID)
         COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
         COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
         GIT_BRANCH: $(Build.SourceBranch)
