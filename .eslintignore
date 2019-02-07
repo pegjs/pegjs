@@ -2,7 +2,7 @@
 /.nyc_output
 /packages/pegjs/dist
 /coverage
-/node_modules
+node_modules
 /website/*/**
 /docs/.vuepress/dist
 /dist
