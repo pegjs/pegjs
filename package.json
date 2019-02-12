@@ -21,7 +21,7 @@
         "ci": "npm run lint && npm run test",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
-    "devDependencies": {
+    "dependencies": {
         "coveralls": "3.0.2",
         "eslint": "5.13.0",
         "eslint-config-futagozaryuu": "5.6.1",

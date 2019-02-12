@@ -5,7 +5,7 @@
     "bin": {
         "bundle": "bundler.js"
     },
-    "devDependencies": {
+    "dependencies": {
         "@babel/core": "7.2.2",
         "@babel/preset-env": "7.3.1",
         "@futagoza/child-process": "1.0.0",
