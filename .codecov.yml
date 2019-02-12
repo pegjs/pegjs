@@ -1,0 +1,12 @@
+codecov:
+  ci:
+    - dev.azure.com
+
+ignore:
+  - "**/*/dist/*.js"
+  - "**/*.{spec,test}.js"
+  - "**/*.eslintrc.js"
+
+parsers:
+  javascript:
+    enable_partials: yes
