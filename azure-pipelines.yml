@@ -41,7 +41,6 @@ jobs:
       displayName: 'mocha > codeclimate & coveralls'
       env:
         CC_TEST_REPORTER_ID: $(CC_TEST_REPORTER_ID)
-        COVERALLS_SERVICE_NAME: $(COVERALLS_SERVICE_NAME)
-        COVERALLS_REPO_TOKEN: $(COVERALLS_REPO_TOKEN)
+        CODECOV_TOKEN: $(CODECOV_TOKEN)
     publish_test_results_to_pipelines: True
     publish_code_coverage_to_pipelines: True
