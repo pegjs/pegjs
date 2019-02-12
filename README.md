@@ -18,10 +18,11 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 
 | package | dependency status |
 | ------- | ----------------- |
-| [test][H001] | [![dependencies][H002]][H003] |
-| [tools/benchmark][H004] | [![dependencies][H005]][H006] |
-| [tools/bundler][H007] | [![dependencies][H008]][H009] |
-| [tools/impact][H010] | [![dependencies][H011]][H012] |
+| [~/][L013] | [![dependencies][L014]][L015] |
+| [~/test][L001] | [![dependencies][L002]][L003] |
+| [~/tools/benchmark][L004] | [![dependencies][L005]][L006] |
+| [~/tools/bundler][L007] | [![dependencies][L008]][L009] |
+| [~/tools/impact][L010] | [![dependencies][L011]][L012] |
 
 [<img src="website/img/CBT_OS-logo_Black-H.png" width="500" />](https://crossbrowsertesting.com/)
 
@@ -34,22 +35,27 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 [P006]: https://img.shields.io/david/pegjs/pegjs.svg?path=packages/pegjs
 [P007]: https://david-dm.org/pegjs/pegjs?path=packages/pegjs
 
+<!-- https://github.com/pegjs/pegjs/ -->
+[L013]: https://github.com/pegjs/pegjs/tree/master/
+[L014]: https://img.shields.io/david/pegjs/pegjs.svg
+[L015]: https://david-dm.org/pegjs/pegjs
+
 <!-- test -->
-[H001]: https://github.com/pegjs/pegjs/tree/master/test
-[H002]: https://img.shields.io/david/pegjs/pegjs.svg?path=test
-[H003]: https://david-dm.org/pegjs/pegjs?path=test
+[L001]: https://github.com/pegjs/pegjs/tree/master/test
+[L002]: https://img.shields.io/david/pegjs/pegjs.svg?path=test
+[L003]: https://david-dm.org/pegjs/pegjs?path=test
 
 <!-- tools/benchmark -->
-[H004]: https://github.com/pegjs/pegjs/tree/master/tools/benchmark
-[H005]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/benchmark
-[H006]: https://david-dm.org/pegjs/pegjs?path=tools/benchmark
+[L004]: https://github.com/pegjs/pegjs/tree/master/tools/benchmark
+[L005]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/benchmark
+[L006]: https://david-dm.org/pegjs/pegjs?path=tools/benchmark
 
 <!-- tools/bundler -->
-[H007]: https://github.com/pegjs/pegjs/tree/master/tools/bundler
-[H008]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/bundler
-[H009]: https://david-dm.org/pegjs/pegjs?path=tools/bundler
+[L007]: https://github.com/pegjs/pegjs/tree/master/tools/bundler
+[L008]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/bundler
+[L009]: https://david-dm.org/pegjs/pegjs?path=tools/bundler
 
 <!-- tools/impact -->
-[H010]: https://github.com/pegjs/pegjs/tree/master/tools/impact
-[H011]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/impact
-[H012]: https://david-dm.org/pegjs/pegjs?path=tools/impact
+[L010]: https://github.com/pegjs/pegjs/tree/master/tools/impact
+[L011]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/impact
+[L012]: https://david-dm.org/pegjs/pegjs?path=tools/impact
