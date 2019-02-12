@@ -1,12 +1,12 @@
 "use strict";
 
-// @babel/core
-const babelOptions = {
+module.exports = {
+
     "comments": false,
     "compact": false,
     "presets": [
         [
-            "@babel/preset-env",
+            require.resolve( "@babel/preset-env" ),
             {
                 "modules": false,
                 "targets": {
@@ -15,11 +15,5 @@ const babelOptions = {
             }
         ]
     ]
+
 };
-
-// rollup-plugin-babel
-babelOptions.babelrc = false;
-babelOptions.exclude = "node_modules/**";
-babelOptions.runtimeHelpers = true;
-
-module.exports = babelOptions;

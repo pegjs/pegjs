@@ -1,0 +1,21 @@
+{
+    "name": "@pegjs/bundler",
+    "version": "3.0.0",
+    "private": true,
+    "bin": {
+        "bundle": "bundler.js"
+    },
+    "devDependencies": {
+        "@babel/core": "7.2.2",
+        "@babel/preset-env": "7.3.1",
+        "@futagoza/child-process": "1.0.0",
+        "babel-loader": "8.0.5",
+        "dedent": "0.7.0",
+        "glob": "7.1.3",
+        "webpack": "4.29.3",
+        "webpack-cli": "3.2.3"
+    },
+    "engines": {
+        "node": ">= 6"
+    }
+}

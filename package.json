@@ -2,7 +2,6 @@
     "name": "pegjs-dev",
     "private": true,
     "workspaces": [
-        "editor",
         "packages/*",
         "tools/*",
         "test"
@@ -14,7 +13,8 @@
         "build-docs": "vuepress build docs",
         "watch-docs": "vuepress dev docs",
         "build-parser": "pegjs -c src/pegjs.config.js",
-        "generate-dist": "node tools/bundle/create-pegjs-dist",
+        "build-bundles": "bundle",
+        "watch-bundles": "bundle --watch",
         "clean": "rimraf packages/pegjs/dist examples/*.js",
         "impact": "node tools/impact master",
         "now-build": "npm run build-docs",
