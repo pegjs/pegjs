@@ -20,7 +20,7 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 | ------- | ----------------- |
 | [test][H001] | [![dependencies][H002]][H003] |
 | [tools/benchmark][H004] | [![dependencies][H005]][H006] |
-| [tools/bundle][H007] | [![dependencies][H008]][H009] |
+| [tools/bundler][H007] | [![dependencies][H008]][H009] |
 | [tools/impact][H010] | [![dependencies][H011]][H012] |
 
 [<img src="website/img/CBT_OS-logo_Black-H.png" width="500" />](https://crossbrowsertesting.com/)
@@ -44,10 +44,10 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 [H005]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/benchmark
 [H006]: https://david-dm.org/pegjs/pegjs?path=tools/benchmark
 
-<!-- tools/bundle -->
-[H007]: https://github.com/pegjs/pegjs/tree/master/tools/bundle
-[H008]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/bundle
-[H009]: https://david-dm.org/pegjs/pegjs?path=tools/bundle
+<!-- tools/bundler -->
+[H007]: https://github.com/pegjs/pegjs/tree/master/tools/bundler
+[H008]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/bundler
+[H009]: https://david-dm.org/pegjs/pegjs?path=tools/bundler
 
 <!-- tools/impact -->
 [H010]: https://github.com/pegjs/pegjs/tree/master/tools/impact
