@@ -17,12 +17,12 @@ jobs:
 - template: node-test.yml@apt
   parameters:
     npm_test: False
-    before:
+    beforeEach:
     - script: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
       displayName: 'Download Code Climate Test Reporter'
-    after:
+    afterEach:
     - script: |
         ./cc-test-reporter before-build
         yarn test 2> /dev/null 
