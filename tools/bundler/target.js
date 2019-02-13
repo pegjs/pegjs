@@ -1,7 +1,6 @@
 "use strict";
 
 const dedent = require( "dedent" );
-const glob = require( "glob" );
 const path = require( "path" );
 const peg = require( "pegjs" );
 const webpack = require( "webpack" );
@@ -30,20 +29,6 @@ const HEADER = dedent`
 function target( { entry, library, output } ) {
 
     const cwd = process.cwd();
-
-    if ( typeof entry === "object" ) Object
-        .keys( entry )
-        .forEach( name => {
-
-            const value = entry[ name ];
-
-            entry[ name ] = value.includes( "*" )
-                ? glob
-                    .sync( value )
-                    .map( p => path.join( cwd, p ) )
-                : value;
-
-        } );
 
     return {
 
