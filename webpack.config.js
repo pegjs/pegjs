@@ -8,6 +8,7 @@ module.exports = [
     target( {
 
         entry: require.resolve( "pegjs" ),
+        library: "peg",
         output: "packages/pegjs/dist/peg.js",
 
     } ),
@@ -16,6 +17,7 @@ module.exports = [
     target( {
 
         entry: require.resolve( "pegjs" ),
+        library: "peg",
         output: "packages/pegjs/dist/peg.min.js",
 
     } ),
@@ -27,6 +29,7 @@ module.exports = [
             "benchmark": require.resolve( "@pegjs/benchmark-suite/browser.js" ),
             "test": "test/**/*.+(spec|test).js",
         },
+        library: [ "peg", "[name]" ],
         output: "docs/.vuepress/public/[name]-bundle.min.js",
 
     } ),

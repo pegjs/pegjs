@@ -27,13 +27,11 @@ const HEADER = dedent`
  * @param {{ entry: string|{}, output: string }} param0
  */
 
-function target( { entry, output } ) {
-
-    if ( typeof entry !== "object" ) entry = [ entry ];
+function target( { entry, library, output } ) {
 
     const cwd = process.cwd();
 
-    Object
+    if ( typeof entry === "object" ) Object
         .keys( entry )
         .forEach( name => {
 
@@ -54,6 +52,7 @@ function target( { entry, output } ) {
         output: {
             path: path.dirname( path.resolve( cwd, output ) ),
             filename: path.basename( output ),
+            library: library,
             libraryTarget: "umd",
             umdNamedDefine: true,
             sourcePrefix: "  ",
