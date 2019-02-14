@@ -7,8 +7,15 @@
 
 require( "mocha/mocha.js" );
 
+mocha.setup( {
+
+    reporter: "spec",
+    ui: "bdd",
+
+} );
+
 const context = require.context( "./", true, /.+\.(spec|test)\.js?$/ );
 
 context.keys().forEach( context );
 
-module.exports = context;
+process.nextTick( () => mocha.run() );
