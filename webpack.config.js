@@ -27,7 +27,7 @@ module.exports = [
 
         entry: {
             "benchmark": require.resolve( "@pegjs/benchmark-suite/browser.js" ),
-            "test": require.resolve( "@pegjs/spec-suite/browser.js" ),
+            "test": require.resolve( "@pegjs/spec-suite/browser.stub.js" ),
         },
         library: [ "peg", "[name]" ],
         output: "docs/.vuepress/public/[name]-bundle.min.js",

@@ -5,7 +5,9 @@
     and create a valid bundled file that executes on the browser.
 */
 
-const context = require.context( "mocha-loader!./", true, /.+\.(spec|test)\.js?$/ );
+require( "mocha/mocha.js" );
+
+const context = require.context( "./", true, /.+\.(spec|test)\.js?$/ );
 
 context.keys().forEach( context );
 
