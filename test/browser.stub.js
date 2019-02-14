@@ -9,7 +9,7 @@ require( "mocha/mocha.js" );
 
 mocha.setup( {
 
-    reporter: "spec",
+    reporter: "html",
     ui: "bdd",
 
 } );
