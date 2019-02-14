@@ -53,7 +53,7 @@ function target( { entry, library, output } ) {
             rules: [
                 {
                     test: /\.m?js$/,
-                    exclude: /node_modules/,
+                    // exclude: /node_modules/,
                     use: {
                         loader: require.resolve( "babel-loader" ),
                         options: require( "./babel.config.js" ),
