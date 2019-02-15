@@ -53,5 +53,5 @@ jobs:
         displayName: 'Build "pegjs/dist/*.js" files'
       - script: node tools/publish-dev
         displayName: 'Publish to NPM'
-    env:
+    variables:
       NPM_TOKEN: $(NPM_CI_TOKEN)
