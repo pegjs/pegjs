@@ -50,6 +50,8 @@ jobs:
     name: 'Publish pegjs@dev'
     actions:
       - script: npm run build-dist
+        displayName: 'Build "pegjs/dist/*.js" files'
       - script: node tools/publish-dev
+        displayName: 'Publish to NPM'
     env:
-      NPM_TOKEN: $(NPM_TOKEN)
+      NPM_TOKEN: $(NPM_CI_TOKEN)
