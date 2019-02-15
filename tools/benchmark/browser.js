@@ -5,6 +5,9 @@
 const Runner = require( "./runner.js" );
 const benchmarks = require( "./benchmarks.js" );
 
+let BRANCH = location.hash.match( /branch=([^&]*)/i );
+BRANCH = BRANCH ? BRANCH[ 1 ] : "master";
+
 $( "#run" ).click( () => {
 
     // Results Table Manipulation
@@ -75,9 +78,11 @@ $( "#run" ).click( () => {
 
         readFile( file ) {
 
+            if ( file.indexOf( "benchmark" ) === 0 ) file = "tools" + file;
+
             return $.ajax( {
                 type: "GET",
-                url: "/" + file,
+                url: `https://raw.githubusercontent.com/pegjs/pegjs/${ BRANCH }/` + file,
                 dataType: "text",
                 async: false
             } ).responseText;
@@ -105,7 +110,7 @@ $( "#run" ).click( () => {
             resultsTable.append( `
                 <tr class='heading'>
                     <th colspan='4'>
-                        <a href='examples/${ benchmark.id }.pegjs'> ${ benchmark.title } </a>
+                        <a href='https://github.com/pegjs/pegjs/blob/${ BRANCH }/examples/${ benchmark.id }.pegjs'> ${ benchmark.title } </a>
                     </th>
                 </tr>"
             ` );
