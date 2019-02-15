@@ -78,7 +78,7 @@ $( "#run" ).click( () => {
 
         readFile( file ) {
 
-            if ( file.indexOf( "benchmark" ) === 0 ) file = "tools" + file;
+            if ( file.indexOf( "benchmark" ) === 0 ) file = "tools/" + file;
 
             return $.ajax( {
                 type: "GET",
