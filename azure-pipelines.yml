@@ -42,5 +42,14 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: $(CC_TEST_REPORTER_ID)
         CODECOV_TOKEN: $(CODECOV_TOKEN)
+    afterAll:
+    - script: |
+        npm run build-dist
+        node tools/publish-dev
+      displayName: 'publish pegjs@dev'
+      variables:
+        GIT_BRANCH: $(Build.SourceBranchName)
+        GIT_COMMIT_SHA: $(Build.SourceVersion)
+        NPM_TOKEN: $(NPM_TOKEN)
     publish_test_results_to_pipelines: True
     publish_code_coverage_to_pipelines: True

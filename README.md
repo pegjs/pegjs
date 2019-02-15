@@ -23,6 +23,7 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 | [~/tools/benchmark][L004] | [![dependencies][L005]][L006] |
 | [~/tools/bundler][L007] | [![dependencies][L008]][L009] |
 | [~/tools/impact][L010] | [![dependencies][L011]][L012] |
+| [~/tools/publish-dev][L016] | [![dependencies][L017]][L018] |
 
 [<img src="website/img/CBT_OS-logo_Black-H.png" width="500" />](https://crossbrowsertesting.com/)
 
@@ -59,3 +60,8 @@ PEG.js is a simple parser generator for JavaScript that produces fast parsers wi
 [L010]: https://github.com/pegjs/pegjs/tree/master/tools/impact
 [L011]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/impact
 [L012]: https://david-dm.org/pegjs/pegjs?path=tools/impact
+
+<!-- tools/publish-dev -->
+[L016]: https://github.com/pegjs/pegjs/tree/master/tools/publish-dev
+[L017]: https://img.shields.io/david/pegjs/pegjs.svg?path=tools/publish-dev
+[L018]: https://david-dm.org/pegjs/pegjs?path=tools/publish-dev

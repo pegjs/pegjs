@@ -4,7 +4,7 @@ const target = require( "@pegjs/bundler/target" );
 
 module.exports = [
 
-    /* packages/pegjs/dist/peg.js */
+    /* https://unpkg.com/pegjs@latest/dist/peg.js */
     target( {
 
         entry: require.resolve( "pegjs" ),
@@ -13,7 +13,7 @@ module.exports = [
 
     } ),
 
-    /* packages/pegjs/dist/peg.min.js */
+    /* https://unpkg.com/pegjs@latest/dist/peg.min.js */
     target( {
 
         entry: require.resolve( "pegjs" ),
@@ -22,7 +22,7 @@ module.exports = [
 
     } ),
 
-    /* https://pegjs.org/*-bundle.min.js */
+    /* https://unpkg.com/pegjs@dev/dist/*-bundle.min.js */
     target( {
 
         entry: {
@@ -30,7 +30,7 @@ module.exports = [
             "test": require.resolve( "@pegjs/spec-suite/browser.stub.js" ),
         },
         library: [ "peg", "[name]" ],
-        output: "docs/.vuepress/public/[name]-bundle.min.js",
+        output: "packages/pegjs/dist/[name]-bundle.min.js",
 
     } ),
 
