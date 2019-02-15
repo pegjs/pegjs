@@ -9,7 +9,7 @@
     "scripts": {
         "lint": "eslint --ext .js,.vue . docs/.vuepress",
         "test": "nyc mocha --recursive",
-        "benchmark": "node tools/benchmark/node",
+        "benchmark": "node tools/benchmark",
         "build-docs": "vuepress build docs",
         "watch-docs": "vuepress dev docs",
         "build-parser": "pegjs -c src/pegjs.config.js",

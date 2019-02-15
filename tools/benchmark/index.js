@@ -207,8 +207,6 @@ Runner.run( benchmarks, runCount, options, {
 
     readFile( file ) {
 
-        if ( file.startsWith( "benchmark" ) ) file = path.join( "tools", file );
-
         return fs.readFileSync( file, "utf8" );
 
     },

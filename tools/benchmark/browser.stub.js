@@ -78,8 +78,6 @@ $( "#run" ).click( () => {
 
         readFile( file ) {
 
-            if ( file.indexOf( "benchmark" ) === 0 ) file = "tools/" + file;
-
             return $.ajax( {
                 type: "GET",
                 url: `https://raw.githubusercontent.com/pegjs/pegjs/${ BRANCH }/` + file,
@@ -98,7 +96,8 @@ $( "#run" ).click( () => {
             appendResult(
                 "individual",
                 test.title,
-                "benchmark/" + benchmark.id + "/" + test.file,
+                "tools/benchmark/" + benchmark.id + "/" + test.file,
+                `https://raw.githubusercontent.com/pegjs/pegjs/${ BRANCH }/tools/benchmark/${ benchmark.id }/${ test.file }`,
                 inputSize,
                 parseTime
             );

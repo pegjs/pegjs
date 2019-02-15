@@ -85,7 +85,7 @@ const Runner = {
 
                 callbacks.testStart( benchmark, test );
 
-                const input = callbacks.readFile( "benchmark/" + benchmark.id + "/" + test.file );
+                const input = callbacks.readFile( "tools/benchmark/" + benchmark.id + "/" + test.file );
 
                 let parseTime = 0;
                 for ( let i = 0; i < runCount; i++ ) {
