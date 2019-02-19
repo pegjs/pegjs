@@ -26,7 +26,7 @@ module.exports = [
     target( {
 
         entry: {
-            "benchmark": require.resolve( "@pegjs/benchmark-suite/browser.js" ),
+            "benchmark": require.resolve( "@pegjs/benchmark-suite/browser.stub.js" ),
             "test": require.resolve( "@pegjs/spec-suite/browser.stub.js" ),
         },
         library: [ "peg", "[name]" ],
