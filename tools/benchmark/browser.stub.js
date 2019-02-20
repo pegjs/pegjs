@@ -96,8 +96,7 @@ $( "#run" ).click( () => {
             appendResult(
                 "individual",
                 test.title,
-                "tools/benchmark/" + benchmark.id + "/" + test.file,
-                `https://raw.githubusercontent.com/pegjs/pegjs/${ BRANCH }/tools/benchmark/${ benchmark.id }/${ test.file }`,
+                `https://github.com/pegjs/pegjs/blob/${ BRANCH }/tools/benchmark/${ benchmark.id }/${ test.file }`,
                 inputSize,
                 parseTime
             );
