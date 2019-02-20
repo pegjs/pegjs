@@ -20,10 +20,10 @@ If you plan to use the `pegjs` command only in your `package.json`, it is sugges
 
 ### Browser
 
-[Download](https://pegjs.org/#download) the PEG.js library (regular or minified version) or install it using Bower:
+[Download](https://pegjs.org/#download) the PEG.js library (regular or minified version) or use it directly using UNPKG:
 
-```console
-$ bower install pegjs
+```html
+<script src="https://unpkg.com/pegjs/dist/peg.min.js"></script>
 ```
 
 ### Latest
@@ -34,8 +34,8 @@ To use the latest features, fixes and changes of PEG.js, install the packaged de
 $ npm install pegjs@dev
 ```
 
-Alternatively, you can directly install from the repository (larger then the packaged dev release):
+On the browser you can use UNPKG again:
 
-```console
-$ npm install pegjs/pegjs#master
+```html
+<script src="https://unpkg.com/pegjs@dev/dist/peg.min.js"></script>
 ```
