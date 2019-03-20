@@ -18,9 +18,9 @@ const VERSION = require( packagejson ).version;
 
 const {
 
+    BUILD_REASON,
     GIT_BRANCH,
     NPM_TOKEN,
-    PR_BRANCH,
 
 } = process.env;
 
@@ -54,7 +54,7 @@ function exec( command, print = true ) {
 
 // assertions
 
-if ( PR_BRANCH !== "not-found" ) {
+if ( BUILD_REASON && BUILD_REASON === "PullRequest" ) {
 
     console.log( "Skipping publish, PR's are not published." );
     process.exit( 0 );

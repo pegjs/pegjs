@@ -55,4 +55,4 @@ jobs:
         displayName: 'Publish to NPM'
         env:
           NPM_TOKEN: $(NPM_CI_TOKEN)
-          PR_BRANCH: $[ coalesce(variables['System.PullRequest.SourceBranch'], 'not-found') ]
+          BUILD_REASON: $(variables['Build.Reason'])
