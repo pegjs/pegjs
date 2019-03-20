@@ -14,8 +14,16 @@ const npmrc = path.join( pegjs, ".npmrc" );
 // variabes
 
 const APP = require( "./package.json" ).name;
-const { GIT_BRANCH, GIT_COMMIT_SHA, NPM_TOKEN } = process.env;
 const VERSION = require( packagejson ).version;
+
+const {
+
+    GIT_BRANCH,
+    GIT_COMMIT_SHA,
+    NPM_TOKEN,
+    PR_BRANCH,
+
+} = process.env;
 
 // local helpers
 
@@ -38,6 +46,13 @@ function exec( command, print = true ) {
 }
 
 // assertions
+
+if ( PR_BRANCH !== "not-found" ) {
+
+    console.log( "Skipping publish, PR's are not published." );
+    process.exit( 0 );
+
+}
 
 if ( ! GIT_BRANCH ) die( "`process.env.GIT_BRANCH` is required by " + APP );
 if ( ! NPM_TOKEN ) die( "`process.env.NPM_TOKEN` is required by " + APP );
