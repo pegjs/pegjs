@@ -19,11 +19,18 @@ const VERSION = require( packagejson ).version;
 const {
 
     GIT_BRANCH,
-    GIT_COMMIT_SHA,
     NPM_TOKEN,
     PR_BRANCH,
 
 } = process.env;
+
+let {
+
+    GIT_COMMIT_SHA,
+
+} = process.env;
+
+if ( GIT_COMMIT_SHA === "not-found" ) GIT_COMMIT_SHA = GIT_BRANCH;
 
 // local helpers
 
@@ -59,7 +66,7 @@ if ( ! NPM_TOKEN ) die( "`process.env.NPM_TOKEN` is required by " + APP );
 
 // update version field in `pegjs/package.json`
 
-const GIT_COMMIT_SHORT_SHA = exec( "git rev-parse --short " + GIT_COMMIT_SHA || GIT_BRANCH, false );
+const GIT_COMMIT_SHORT_SHA = exec( "git rev-parse --short " + GIT_COMMIT_SHA, false );
 const dev = `${ VERSION }-${ GIT_BRANCH }.${ GIT_COMMIT_SHORT_SHA }`;
 
 exec( `npm --no-git-tag-version -f version ${ dev }` );
