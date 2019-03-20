@@ -53,6 +53,6 @@ jobs:
         displayName: 'Build "pegjs/dist/*.js" files'
       - script: node tools/publish-dev
         displayName: 'Publish to NPM'
-        variables:
+        env:
           NPM_TOKEN: $(NPM_CI_TOKEN)
           PR_BRANCH: $[ coalesce(variables['System.PullRequest.SourceBranch'], 'not-found') ]
