@@ -8,7 +8,7 @@
     ],
     "scripts": {
         "lint": "eslint --ext .js,.vue . docs/.vuepress",
-        "test": "nyc mocha --recursive",
+        "spec": "mocha --reporter progress",
         "benchmark": "node tools/benchmark",
         "build-docs": "vuepress build docs",
         "watch-docs": "vuepress dev docs",
@@ -18,7 +18,7 @@
         "clean": "rimraf packages/pegjs/dist examples/*.js",
         "impact": "node tools/impact master",
         "now-build": "npm run build-docs",
-        "ci": "npm run lint && npm run test",
+        "test": "nyc mocha",
         "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
     },
     "dependencies": {

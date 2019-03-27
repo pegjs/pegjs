@@ -1,3 +1,4 @@
+--recursive
 --reporter mocha-multi-reporters
 --reporter-options configFile=test/config.json
 {packages,test}/**/*.{spec,test}.js
