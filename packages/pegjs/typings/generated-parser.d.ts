@@ -56,7 +56,7 @@ declare namespace generatedparser {
         new( message: string, expected: T, found: string | null, location: SourceLocation ): ISyntaxError<T>;
         readonly prototype: ISyntaxError<T>;
 
-        buildMessage( expected: T, found?: string ): string;
+        buildMessage( expected: T, found?: string, location: SourceLocation ): string;
 
     }
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 "use strict";
-
 const fs = require( "fs" );
 const peg = require( "../lib/peg" );
 const options = require( "./options" );

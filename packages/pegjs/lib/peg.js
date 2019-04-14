@@ -1,5 +1,4 @@
 "use strict";
-
 const GrammarError = require( "./grammar-error" );
 const ast = require( "./ast" );
 const compiler = require( "./compiler" );
