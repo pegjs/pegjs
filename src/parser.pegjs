@@ -403,6 +403,7 @@ EscapeCharacter
   / DecimalDigit
   / "x"
   / "u"
+  / "U"
 
 HexEscapeSequence
   = "x" digits:$(HexDigit HexDigit) {
@@ -417,6 +418,11 @@ UnicodeEscapeSequence
         return String.fromCharCode( parseInt( digits, 16 ) );
 
     }
+  / "U" digits:$(HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit) {
+
+        return String.fromCodePoint( parseInt(digits, 16 ) );
+
+  }
 
 DecimalDigit
   = [0-9]
