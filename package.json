@@ -7,7 +7,7 @@
         "test"
     ],
     "scripts": {
-        "lint": "eslint --ext .js,.vue . docs/.vuepress",
+        "lint": "eslint --ext .js,.ts,.vue . docs/.vuepress",
         "spec": "mocha --reporter progress",
         "benchmark": "node tools/benchmark",
         "build-docs": "vuepress build docs",
@@ -24,8 +24,6 @@
     "dependencies": {
         "codecov": "3.3.0",
         "eslint": "5.16.0",
-        "eslint-config-futagozaryuu": "5.8.0",
-        "eslint-plugin-vue": "5.2.2",
         "mocha": "6.1.3",
         "mocha-junit-reporter": "1.22.0",
         "mocha-multi-reporters": "1.1.7",

@@ -1,0 +1,16 @@
+{
+    "name": "eslint-config-pegjs",
+    "version": "2.3.0",
+    "private": true,
+    "main": "javascript.js",
+    "dependencies": {
+        "@typescript-eslint/eslint-plugin": "1.9.1-alpha.26",
+        "@typescript-eslint/parser": "1.9.1-alpha.26",
+        "eslint-config-futagozaryuu": "5.8.0",
+        "eslint-plugin-vue": "5.2.2",
+        "typescript": "3.5.1"
+    },
+    "engines": {
+        "node": ">= 6"
+    }
+}

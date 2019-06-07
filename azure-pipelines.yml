@@ -13,6 +13,9 @@ variables:
 jobs:
 
 - template: eslint.yml@apt
+  parameters:
+    install_scope: 'yarn'
+    job_script: 'yarn lint'
 
 - template: node-test.yml@apt
   parameters:
