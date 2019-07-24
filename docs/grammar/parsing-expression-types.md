@@ -19,7 +19,7 @@ There are several types of parsing expressions, some of them containing subexpre
   * [expression<sub>1</sub> expression<sub>2</sub> ... expression<sub>n</sub>](#expression1-expression2---expressionn)
   * [expression { action }](#expression--action-)
   * [expression<sub>1</sub> / expression<sub>2</sub> / ... / expression<sub>n</sub>](#expression1--expression2----expressionn)
-  * [expression<sub>1</sub> @expression<sub>2</sub> ... expression<sub>n</sub>](#expression1--expression2---expressionn)
+  * [expression<sub>1</sub> @expression<sub>2</sub> ... expression<sub>n</sub>](#expression1-expression2---expressionn-1)
 
 #### "*literal*"<br>'*literal*'
 
