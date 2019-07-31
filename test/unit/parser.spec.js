@@ -890,8 +890,8 @@ describe( "PEG.js grammar parser", function () {
         expect( "start = 'abcd' {{a}{b}{c}}" ).to.parseAs( actionGrammar( "{a}{b}{c}" ) );
 
         // Arrow blocks
-        expect( "start = 'abcd' => abc" ).to.parseAs( actionGrammar( "return abc" ) ) ;
-        expect( "start = 'abcd' => {abc}" ).to.parseAs( actionGrammar( "return {abc}" ) ) ;
+        expect( "start = 'abcd' => abc" ).to.parseAs( actionGrammar( "return abc" ) );
+        expect( "start = 'abcd' => {abc}" ).to.parseAs( actionGrammar( "return {abc}" ) );
 
         expect( "start = 'abcd' {{}" ).to.failToParse();
         expect( "start = 'abcd' {}}" ).to.failToParse();
