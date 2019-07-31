@@ -432,7 +432,8 @@ AnyMatcher
     }
 
 CodeBlock "code block"
-  = "{" @Code "}"
+  = "=>" code:Code EOS { return "return " + code.trim(); }
+  / "{" @Code "}"
   / "{" { error("Unbalanced brace."); }
 
 Code
