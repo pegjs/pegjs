@@ -49,6 +49,9 @@ function target( { entry, library, output } ) {
         performance: {
             hints: false,
         },
+        resolve: {
+            extensions: [ ".ts", ".js" ]
+        },
         module: {
             rules: [
                 {
@@ -58,6 +61,10 @@ function target( { entry, library, output } ) {
                         loader: require.resolve( "babel-loader" ),
                         options: require( "./babel.config.js" ),
                     },
+                },
+                {
+                    test: /\.ts$/,
+                    loader: "ts-loader",
                 },
             ],
         },
