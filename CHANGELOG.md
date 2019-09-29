@@ -66,6 +66,7 @@
 * On the CLI added the use of `input` and `output` from the _config file_ instead of passing them as arguments
 * Updated examples
 * Upgraded support for Unicode (from _v8_ to _v11_)
+* Forward location to `SyntaxError.buildMessage` ([#608](https://github.com/pegjs/pegjs/pull/608))
 
 ### Bugfixes
 
