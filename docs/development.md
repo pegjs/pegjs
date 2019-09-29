@@ -17,7 +17,7 @@ You are welcome to contribute code using [GitHub pull requests](https://github.c
 
 > Before submitting a pull request, please make sure you've checked out the [Contribution Guidelines](https://github.com/pegjs/pegjs/blob/master/.github/CONTRIBUTING.md).
 
-_Ensure you have Node.js v6+ and Yarn installed._
+_Ensure you have Node.js 8.6+ and Yarn installed._
 
 1. Create a fork of [https://github.com/pegjs/pegjs](https://github.com/pegjs/pegjs)
 2. Clone your fork, and optionally create a new branch
