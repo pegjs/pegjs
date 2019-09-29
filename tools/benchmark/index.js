@@ -140,7 +140,7 @@ function nextArg() {
 let runCount = 10;
 const options = {
     cache: false,
-    optimize: "speed"
+    optimize: "speed",
 };
 
 while ( args.length > 0 && isOption( args[ 0 ] ) ) {

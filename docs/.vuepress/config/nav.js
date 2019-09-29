@@ -73,7 +73,7 @@ module.exports = [
             {
                 text: "Plugins",
                 link: "https://www.npmjs.com/search?q=pegjs%20plugin",
-            }
+            },
         ],
     },
 

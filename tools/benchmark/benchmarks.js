@@ -10,8 +10,8 @@ const benchmarks = [
             { file: "example2.json", title: "Example 2" },
             { file: "example3.json", title: "Example 3" },
             { file: "example4.json", title: "Example 4" },
-            { file: "example5.json", title: "Example 5" }
-        ]
+            { file: "example5.json", title: "Example 5" },
+        ],
     },
 
     {
@@ -32,8 +32,8 @@ const benchmarks = [
             { file: "blueprint/src/grid.css", title: "Blueprint - grid.css (source)" },
             { file: "blueprint/src/print.css", title: "Blueprint - print.css (source)" },
             { file: "blueprint/src/reset.css", title: "Blueprint - reset.css (source)" },
-            { file: "blueprint/src/typography.css", title: "Blueprint - typography.css (source)" }
-        ]
+            { file: "blueprint/src/typography.css", title: "Blueprint - typography.css (source)" },
+        ],
     },
 
 ];

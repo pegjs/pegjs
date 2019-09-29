@@ -92,7 +92,7 @@ describe( "PEG.js API", function () {
 
                         const parser = peg.generate( grammar, {
                             optimize: "speed",
-                            allowedStartRules: [ "b", "c" ]
+                            allowedStartRules: [ "b", "c" ],
                         } );
 
                         expect( () => {
@@ -139,7 +139,7 @@ describe( "PEG.js API", function () {
 
                         const parser = peg.generate( grammar, {
                             optimize: "size",
-                            allowedStartRules: [ "b", "c" ]
+                            allowedStartRules: [ "b", "c" ],
                         } );
 
                         expect( () => {
@@ -322,7 +322,7 @@ describe( "PEG.js API", function () {
 
                             peg.generate( [
                                 "start = " + label + ":end",
-                                "end = 'a'"
+                                "end = 'a'",
                             ].join( "\n" ), { output: "source" } );
 
                         } ).to.throw( peg.parser.SyntaxError );
@@ -343,7 +343,7 @@ describe( "PEG.js API", function () {
 
                             peg.generate( [
                                 "start = " + rule,
-                                rule + " = 'a'"
+                                rule + " = 'a'",
                             ].join( "\n" ), { output: "source" } );
 
                         } ).to.not.throw( peg.parser.SyntaxError );

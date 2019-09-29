@@ -15,7 +15,7 @@ function removeProxyRules( ast, session, options ) {
 
             if ( node.name === proxy ) node.name = real;
 
-        }
+        },
 
     } );
 

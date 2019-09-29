@@ -63,7 +63,7 @@ $( "#run" ).click( () => {
     const runCount = parseInt( $( "#run-count" ).val(), 10 );
     const options = {
         cache: $( "#cache" ).is( ":checked" ),
-        optimize: $( "#optimize" ).val()
+        optimize: $( "#optimize" ).val(),
     };
 
     if ( isNaN( runCount ) || runCount <= 0 ) {
@@ -82,7 +82,7 @@ $( "#run" ).click( () => {
                 type: "GET",
                 url: `https://raw.githubusercontent.com/pegjs/pegjs/${ BRANCH }/` + file,
                 dataType: "text",
-                async: false
+                async: false,
             } ).responseText;
 
         },
@@ -149,7 +149,7 @@ $( "#run" ).click( () => {
             $.scrollTo( "max", { axis: "y", duration: 500 } );
             $( "#run-count, #cache, #run" ).removeAttr( "disabled" );
 
-        }
+        },
 
     } );
 

@@ -13,15 +13,15 @@ describe( "PEG.js Utility API", function () {
             stage1: {
                 pass1() { },
                 pass2() { },
-                pass3() { }
+                pass3() { },
             },
             stage2: {
                 pass1() { },
-                pass2() { }
+                pass2() { },
             },
             stage3: {
-                pass1() { }
-            }
+                pass1() { },
+            },
         };
 
         function expectPasses( result ) {
@@ -54,12 +54,12 @@ describe( "PEG.js Utility API", function () {
                 stage1: [
                     passes.stage1.pass1,
                     passes.stage1.pass2,
-                    passes.stage1.pass3
+                    passes.stage1.pass3,
                 ],
                 stage2: passes.stage2,
                 stage3: [
-                    passes.stage3.pass1
-                ]
+                    passes.stage3.pass1,
+                ],
             } ) );
 
         } );

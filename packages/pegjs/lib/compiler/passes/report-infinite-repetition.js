@@ -29,7 +29,7 @@ function reportInfiniteRepetition( ast, session ) {
 
             }
 
-        }
+        },
     } );
 
     check( ast );

@@ -36,9 +36,10 @@ const js = {
      */
     stringEscape( s ) {
 
-        return sourceEscape( s
-            .replace( /\\/g, "\\\\" )   // backslash
-            .replace( /"/g, "\\\"" )    // closing double quote
+        return sourceEscape(
+            s
+                .replace( /\\/g, "\\\\" )   // backslash
+                .replace( /"/g, "\\\"" )    // closing double quote
         );
 
     },
@@ -50,12 +51,13 @@ const js = {
      */
     regexpEscape( s ) {
 
-        return sourceEscape( s
-            .replace( /\\/g, "\\\\" )   // backslash
-            .replace( /\//g, "\\/" )    // closing slash
-            .replace( /]/g, "\\]" )     // closing bracket
-            .replace( /\^/g, "\\^" )    // caret
-            .replace( /-/g, "\\-" )     // dash
+        return sourceEscape(
+            s
+                .replace( /\\/g, "\\\\" )   // backslash
+                .replace( /\//g, "\\/" )    // closing slash
+                .replace( /]/g, "\\]" )     // closing bracket
+                .replace( /\^/g, "\\^" )    // caret
+                .replace( /-/g, "\\-" )     // dash
         );
 
     },

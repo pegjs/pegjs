@@ -28,7 +28,7 @@ const peg = {
     generate( grammar, options = {} ) {
 
         const session = new compiler.Session( {
-            passes: util.convertPasses( compiler.passes )
+            passes: util.convertPasses( compiler.passes ),
         } );
 
         if ( Array.isArray( options.plugins ) )
@@ -47,7 +47,7 @@ const peg = {
             options
         );
 
-    }
+    },
 };
 
 module.exports = peg;

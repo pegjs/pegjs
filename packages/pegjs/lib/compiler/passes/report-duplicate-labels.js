@@ -60,7 +60,7 @@ function reportDuplicateLabels( ast, session ) {
         optional: checkExpressionWithClonedEnv,
         zero_or_more: checkExpressionWithClonedEnv,
         one_or_more: checkExpressionWithClonedEnv,
-        group: checkExpressionWithClonedEnv
+        group: checkExpressionWithClonedEnv,
     } );
 
     check( ast );

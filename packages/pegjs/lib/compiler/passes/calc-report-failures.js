@@ -51,7 +51,7 @@ function calcReportFailures( ast, session, options ) {
 
             }
 
-        }
+        },
     } );
 
     while ( changedRules.length > 0 ) {

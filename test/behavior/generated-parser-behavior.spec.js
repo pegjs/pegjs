@@ -18,7 +18,7 @@ describe( "generated parser behavior", function () {
             { cache: true, optimize: "speed", trace: false },
             { cache: true, optimize: "speed", trace: true },
             { cache: true, optimize: "size", trace: false },
-            { cache: true, optimize: "size", trace: true }
+            { cache: true, optimize: "size", trace: true },
         ];
 
         optionsVariants.forEach( variant => {
@@ -61,8 +61,7 @@ describe( "generated parser behavior", function () {
             options = typeof options !== "undefined" ? options : {};
 
             const result = withConsoleStub( () =>
-                utils.flag( this, "object" ).parse( input, options )
-            );
+                utils.flag( this, "object" ).parse( input, options ) );
 
             if ( typeof expected !== "undefined" ) {
 
@@ -88,8 +87,7 @@ describe( "generated parser behavior", function () {
             try {
 
                 result = withConsoleStub( () =>
-                    utils.flag( this, "object" ).parse( input, options )
-                );
+                    utils.flag( this, "object" ).parse( input, options ) );
                 passed = true;
 
             } catch ( e ) {
@@ -138,7 +136,7 @@ describe( "generated parser behavior", function () {
 
                 const parser = peg.generate( [
                     "{ var result = 42; }",
-                    "start = 'a' { return result; }"
+                    "start = 'a' { return result; }",
                 ].join( "\n" ), options );
 
                 expect( parser ).to.parse( "a", 42 );
@@ -151,7 +149,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "{ var result = options; }",
-                        "start = 'a' { return result; }"
+                        "start = 'a' { return result; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "a", { a: 42 }, { a: 42 } );
@@ -171,7 +169,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( [
                         "{ var n = 0; }",
                         "start = (a 'b') / (a 'c') { return n; }",
-                        "a = 'a' { n++; }"
+                        "a = 'a' { n++; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "ac", 1 );
@@ -185,7 +183,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( [
                         "{ var n = 0; }",
                         "start = (a 'b') / (a 'c') { return n; }",
-                        "a = 'a' { n++; }"
+                        "a = 'a' { n++; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "ac", 2 );
@@ -215,7 +213,7 @@ describe( "generated parser behavior", function () {
                         const parser = peg.generate( "start = 'a'" );
 
                         expect( parser ).to.failToParse( "b", {
-                            expected: [ { type: "literal", text: "a", ignoreCase: false } ]
+                            expected: [ { type: "literal", text: "a", ignoreCase: false } ],
                         } );
 
                     } );
@@ -229,7 +227,7 @@ describe( "generated parser behavior", function () {
                         const parser = peg.generate( "start 'start' = 'a'" );
 
                         expect( parser ).to.failToParse( "b", {
-                            expected: [ { type: "other", description: "start" } ]
+                            expected: [ { type: "other", description: "start" } ],
                         } );
 
                     } );
@@ -239,7 +237,7 @@ describe( "generated parser behavior", function () {
                         const parser = peg.generate( "start 'start' = 'a'" );
 
                         expect( parser ).to.failToParse( "b", {
-                            expected: [ { type: "other", description: "start" } ]
+                            expected: [ { type: "other", description: "start" } ],
                         } );
 
                     } );
@@ -327,7 +325,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a'", options );
 
                     expect( parser ).to.failToParse( "b", {
-                        expected: [ { type: "literal", text: "a", ignoreCase: false } ]
+                        expected: [ { type: "literal", text: "a", ignoreCase: false } ],
                     } );
 
                 } );
@@ -426,7 +424,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = [a]", options );
 
                     expect( parser ).to.failToParse( "b", {
-                        expected: [ { type: "class", parts: [ "a" ], inverted: false, ignoreCase: false } ]
+                        expected: [ { type: "class", parts: [ "a" ], inverted: false, ignoreCase: false } ],
                     } );
 
                 } );
@@ -478,7 +476,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = .", options );
 
                     expect( parser ).to.failToParse( "", {
-                        expected: [ { type: "any" } ]
+                        expected: [ { type: "any" } ],
                     } );
 
                 } );
@@ -495,7 +493,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "start = a",
-                        "a = 'a'"
+                        "a = 'a'",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "a", "a" );
@@ -510,7 +508,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "start = a",
-                        "a = 'a'"
+                        "a = 'a'",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.failToParse( "b" );
@@ -592,48 +590,48 @@ describe( "generated parser behavior", function () {
                         const testcases = [
                             {
                                 grammar: "start = (a:'a') &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = (a:'a')? &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = (a:'a')* &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = (a:'a')+ &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = $(a:'a') &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = &(a:'a') 'a' &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = !(a:'a') 'b' &{ return a === 'a'; }",
-                                input: "b"
+                                input: "b",
                             },
                             {
                                 grammar: "start = b:(a:'a') &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = ('a' b:'b' 'c') &{ return b === 'b'; }",
-                                input: "abc"
+                                input: "abc",
                             },
                             {
                                 grammar: "start = (a:'a' { return a; }) &{ return a === 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = ('a' / b:'b' / 'c') &{ return b === 'b'; }",
-                                input: "b"
-                            }
+                                input: "b",
+                            },
                         ];
 
                         testcases.forEach( testcase => {
@@ -692,7 +690,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "{ var v = 42 }",
-                        "start = &{ return v === 42; }"
+                        "start = &{ return v === 42; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "" );
@@ -703,7 +701,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "{ function f() { return 42; } }",
-                        "start = &{ return f() === 42; }"
+                        "start = &{ return f() === 42; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "" );
@@ -718,7 +716,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "{ var result; }",
-                        "start = &{ result = options; return true; } { return result; }"
+                        "start = &{ result = options; return true; } { return result; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "", { a: 42 }, { a: 42 } );
@@ -734,22 +732,22 @@ describe( "generated parser behavior", function () {
                         "thing = digit / mark",
                         "digit = [0-9]",
                         "mark = &{ result = location(); return true; } 'x'",
-                        "nl = '\\r'? '\\n'"
+                        "nl = '\\r'? '\\n'",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "1\n2\n\n3\n\n\n4 5 x", {
                         start: { offset: 13, line: 7, column: 5 },
-                        end: { offset: 13, line: 7, column: 5 }
+                        end: { offset: 13, line: 7, column: 5 },
                     } );
 
                     // Newline representations
                     expect( parser ).to.parse( "1\nx", {     // Unix
                         start: { offset: 2, line: 2, column: 1 },
-                        end: { offset: 2, line: 2, column: 1 }
+                        end: { offset: 2, line: 2, column: 1 },
                     } );
                     expect( parser ).to.parse( "1\r\nx", {   // Windows
                         start: { offset: 3, line: 2, column: 1 },
-                        end: { offset: 3, line: 2, column: 1 }
+                        end: { offset: 3, line: 2, column: 1 },
                     } );
 
                 } );
@@ -758,7 +756,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "start = [0-9]+ val:mark { return val; }",
-                        "mark = 'xx' { return offset(); }"
+                        "mark = 'xx' { return offset(); }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "0123456xx", 7 );
@@ -769,7 +767,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "start = [0-9]+ val:mark { return val; }",
-                        "mark = 'xx' { return range(); }"
+                        "mark = 'xx' { return range(); }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "0123456xx", [ 7, 9 ] );
@@ -851,48 +849,48 @@ describe( "generated parser behavior", function () {
                         const testcases = [
                             {
                                 grammar: "start = (a:'a') !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = (a:'a')? !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = (a:'a')* !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = (a:'a')+ !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = $(a:'a') !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = &(a:'a') 'a' !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = !(a:'a') 'b' !{ return a !== 'a'; }",
-                                input: "b"
+                                input: "b",
                             },
                             {
                                 grammar: "start = b:(a:'a') !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = ('a' b:'b' 'c') !{ return b !== 'b'; }",
-                                input: "abc"
+                                input: "abc",
                             },
                             {
                                 grammar: "start = (a:'a' { return a; }) !{ return a !== 'a'; }",
-                                input: "a"
+                                input: "a",
                             },
                             {
                                 grammar: "start = ('a' / b:'b' / 'c') !{ return b !== 'b'; }",
-                                input: "b"
-                            }
+                                input: "b",
+                            },
                         ];
 
                         testcases.forEach( testcase => {
@@ -951,7 +949,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "{ var v = 42 }",
-                        "start = !{ return v !== 42; }"
+                        "start = !{ return v !== 42; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "" );
@@ -962,7 +960,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "{ function f() { return 42; } }",
-                        "start = !{ return f() !== 42; }"
+                        "start = !{ return f() !== 42; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "" );
@@ -977,7 +975,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate( [
                         "{ var result; }",
-                        "start = !{ result = options; return false; } { return result; }"
+                        "start = !{ result = options; return false; } { return result; }",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "", { a: 42 }, { a: 42 } );
@@ -993,22 +991,22 @@ describe( "generated parser behavior", function () {
                         "thing = digit / mark",
                         "digit = [0-9]",
                         "mark = !{ result = location(); return false; } 'x'",
-                        "nl = '\\r'? '\\n'"
+                        "nl = '\\r'? '\\n'",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.parse( "1\n2\n\n3\n\n\n4 5 x", {
                         start: { offset: 13, line: 7, column: 5 },
-                        end: { offset: 13, line: 7, column: 5 }
+                        end: { offset: 13, line: 7, column: 5 },
                     } );
 
                     // Newline representations
                     expect( parser ).to.parse( "1\nx", {     // Unix
                         start: { offset: 2, line: 2, column: 1 },
-                        end: { offset: 2, line: 2, column: 1 }
+                        end: { offset: 2, line: 2, column: 1 },
                     } );
                     expect( parser ).to.parse( "1\r\nx", {   // Windows
                         start: { offset: 3, line: 2, column: 1 },
-                        end: { offset: 3, line: 2, column: 1 }
+                        end: { offset: 3, line: 2, column: 1 },
                     } );
 
                 } );
@@ -1188,8 +1186,8 @@ describe( "generated parser behavior", function () {
                         expected: [
                             { type: "literal", text: "a", ignoreCase: false },
                             { type: "literal", text: "b", ignoreCase: false },
-                            { type: "literal", text: "c", ignoreCase: false }
-                        ]
+                            { type: "literal", text: "c", ignoreCase: false },
+                        ],
                     } );
 
                 } );
@@ -1201,8 +1199,8 @@ describe( "generated parser behavior", function () {
                     expect( parser ).to.failToParse( "d", {
                         expected: [
                             { type: "literal", text: "a", ignoreCase: false },
-                            { type: "literal", text: "b", ignoreCase: false }
-                        ]
+                            { type: "literal", text: "b", ignoreCase: false },
+                        ],
                     } );
 
                 } );
@@ -1251,8 +1249,8 @@ describe( "generated parser behavior", function () {
                         expected: [
                             { type: "literal", text: "a", ignoreCase: false },
                             { type: "not", expected: { type: "literal", text: "b", ignoreCase: false } },
-                            { type: "literal", text: "c", ignoreCase: false }
-                        ]
+                            { type: "literal", text: "c", ignoreCase: false },
+                        ],
                     } );
 
                 } );
@@ -1264,8 +1262,8 @@ describe( "generated parser behavior", function () {
                     expect( parser ).to.failToParse( "b", {
                         expected: [
                             { type: "literal", text: "a", ignoreCase: false },
-                            { type: "not", expected: { type: "literal", text: "b", ignoreCase: false } }
-                        ]
+                            { type: "not", expected: { type: "literal", text: "b", ignoreCase: false } },
+                        ],
                     } );
 
                 } );
@@ -1276,8 +1274,8 @@ describe( "generated parser behavior", function () {
 
                     expect( parser ).to.failToParse( "b", {
                         expected: [
-                            { type: "literal", text: "a", ignoreCase: false }
-                        ]
+                            { type: "literal", text: "a", ignoreCase: false },
+                        ],
                     } );
 
                 } );
@@ -1337,7 +1335,7 @@ describe( "generated parser behavior", function () {
                     {
                         grammar: "start = 'a' 'b' 'c'",
                         input: "abc",
-                        output: [ "a", "b", "c" ]
+                        output: [ "a", "b", "c" ],
                     },
                 ] );
 
@@ -1345,42 +1343,42 @@ describe( "generated parser behavior", function () {
                     {
                         grammar: "start = @'a'",
                         input: "a",
-                        output: "a"
+                        output: "a",
                     },
                     {
                         grammar: "start = @'a' / @'b'",
                         input: "a",
-                        output: "a"
+                        output: "a",
                     },
                     {
                         grammar: "start = @'a' / @'b'",
                         input: "b",
-                        output: "b"
+                        output: "b",
                     },
                     {
                         grammar: "start = 'a' @'b' 'c'",
                         input: "abc",
-                        output: "b"
+                        output: "b",
                     },
                     {
                         grammar: "start = 'a' ( @'b' 'c' )",
                         input: "abc",
-                        output: [ "a", "b" ]
+                        output: [ "a", "b" ],
                     },
                     {
                         grammar: "start = 'a' @( 'b' @'c' 'd' )",
                         input: "abcd",
-                        output: "c"
+                        output: "c",
                     },
                     {
                         grammar: "start = 'a' ( @'b' 'c' ) @'d'",
                         input: "abcd",
-                        output: "d"
+                        output: "d",
                     },
                     {
                         grammar: "start = 'a' @'b' 'c' / 'd' 'e' @'f'",
                         input: "def",
-                        output: "f"
+                        output: "f",
                     },
                 ] );
 
@@ -1388,27 +1386,27 @@ describe( "generated parser behavior", function () {
                     {
                         grammar: "start = 'a' @'b' @'c'",
                         input: "abc",
-                        output: [ "b", "c" ]
+                        output: [ "b", "c" ],
                     },
                     {
                         grammar: "start = 'a' ( @'b' @'c' )",
                         input: "abc",
-                        output: [ "a", [ "b", "c" ] ]
+                        output: [ "a", [ "b", "c" ] ],
                     },
                     {
                         grammar: "start = 'a' @( 'b' @'c' @'d' )",
                         input: "abcd",
-                        output: [ "c", "d" ]
+                        output: [ "c", "d" ],
                     },
                     {
                         grammar: "start = 'a' @( @'b' 'c' ) @'d' 'e'",
                         input: "abcde",
-                        output: [ "b", "d" ]
+                        output: [ "b", "d" ],
                     },
                     {
                         grammar: "start = 'a' @'b' 'c' / @'d' 'e' @'f'",
                         input: "def",
-                        output: [ "d", "f" ]
+                        output: [ "d", "f" ],
                     },
                 ] );
 
@@ -1416,17 +1414,17 @@ describe( "generated parser behavior", function () {
                     {
                         grammar: "start = @'a' &{ return true; }",
                         input: "a",
-                        output: "a"
+                        output: "a",
                     },
                     {
                         grammar: "start = @'a' !{ return false; }",
                         input: "a",
-                        output: "a"
+                        output: "a",
                     },
                     {
                         grammar: "start = @n:[0-9] &{ return n > 0; }",
                         input: "2",
-                        output: "2"
+                        output: "2",
                     },
                 ] );
 
@@ -1496,48 +1494,48 @@ describe( "generated parser behavior", function () {
                             const testcases = [
                                 {
                                     grammar: "start = (a:'a') { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = (a:'a')? { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = (a:'a')* { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = (a:'a')+ { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = $(a:'a') { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = &(a:'a') 'a' { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = !(a:'a') 'b' { return a; }",
-                                    input: "b"
+                                    input: "b",
                                 },
                                 {
                                     grammar: "start = b:(a:'a') { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = ('a' b:'b' 'c') { return b; }",
-                                    input: "abc"
+                                    input: "abc",
                                 },
                                 {
                                     grammar: "start = (a:'a' { return a; }) { return a; }",
-                                    input: "a"
+                                    input: "a",
                                 },
                                 {
                                     grammar: "start = ('a' / b:'b' / 'c') { return b; }",
-                                    input: "b"
-                                }
+                                    input: "b",
+                                },
                             ];
 
                             testcases.forEach( testcase => {
@@ -1596,7 +1594,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate( [
                             "{ var v = 42 }",
-                            "start = 'a' { return v; }"
+                            "start = 'a' { return v; }",
                         ].join( "\n" ), options );
 
                         expect( parser ).to.parse( "a", 42 );
@@ -1607,7 +1605,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate( [
                             "{ function f() { return 42; } }",
-                            "start = 'a' { return f(); }"
+                            "start = 'a' { return f(); }",
                         ].join( "\n" ), options );
 
                         expect( parser ).to.parse( "a", 42 );
@@ -1649,22 +1647,22 @@ describe( "generated parser behavior", function () {
                             "thing = digit / mark",
                             "digit = [0-9]",
                             "mark = 'x' { result = location(); }",
-                            "nl = '\\r'? '\\n'"
+                            "nl = '\\r'? '\\n'",
                         ].join( "\n" ), options );
 
                         expect( parser ).to.parse( "1\n2\n\n3\n\n\n4 5 x", {
                             start: { offset: 13, line: 7, column: 5 },
-                            end: { offset: 14, line: 7, column: 6 }
+                            end: { offset: 14, line: 7, column: 6 },
                         } );
 
                         // Newline representations
                         expect( parser ).to.parse( "1\nx", {     // Unix
                             start: { offset: 2, line: 2, column: 1 },
-                            end: { offset: 3, line: 2, column: 2 }
+                            end: { offset: 3, line: 2, column: 2 },
                         } );
                         expect( parser ).to.parse( "1\r\nx", {   // Windows
                             start: { offset: 3, line: 2, column: 1 },
-                            end: { offset: 4, line: 2, column: 2 }
+                            end: { offset: 4, line: 2, column: 2 },
                         } );
 
                     } );
@@ -1684,8 +1682,8 @@ describe( "generated parser behavior", function () {
                                 found: "a",
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 1, line: 1, column: 2 }
-                                }
+                                    end: { offset: 1, line: 1, column: 2 },
+                                },
                             } );
 
                         } );
@@ -1698,7 +1696,7 @@ describe( "generated parser behavior", function () {
                                 "    start: { offset: 1, line: 1, column: 2 },",
                                 "    end: { offset: 2, line: 1, column: 3 }",
                                 "  });",
-                                "}"
+                                "}",
                             ].join( "\n" ), options );
 
                             expect( parser ).to.failToParse( "a", {
@@ -1707,8 +1705,8 @@ describe( "generated parser behavior", function () {
                                 found: "a",
                                 location: {
                                     start: { offset: 1, line: 1, column: 2 },
-                                    end: { offset: 2, line: 1, column: 3 }
-                                }
+                                    end: { offset: 2, line: 1, column: 3 },
+                                },
                             } );
 
                         } );
@@ -1730,8 +1728,8 @@ describe( "generated parser behavior", function () {
                                 expected: null,
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 1, line: 1, column: 2 }
-                                }
+                                    end: { offset: 1, line: 1, column: 2 },
+                                },
                             } );
 
                         } );
@@ -1744,7 +1742,7 @@ describe( "generated parser behavior", function () {
                                 "    start: { offset: 1, line: 1, column: 2 },",
                                 "    end: { offset: 2, line: 1, column: 3 }",
                                 "  });",
-                                "}"
+                                "}",
                             ].join( "\n" ), options );
 
                             expect( parser ).to.failToParse( "a", {
@@ -1753,8 +1751,8 @@ describe( "generated parser behavior", function () {
                                 found: null,
                                 location: {
                                     start: { offset: 1, line: 1, column: 2 },
-                                    end: { offset: 2, line: 1, column: 3 }
-                                }
+                                    end: { offset: 2, line: 1, column: 3 },
+                                },
                             } );
 
                         } );
@@ -1829,7 +1827,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a' 'b' / 'a' 'c' 'd'", options );
 
                     expect( parser ).to.failToParse( "ace", {
-                        expected: [ { type: "literal", text: "d", ignoreCase: false } ]
+                        expected: [ { type: "literal", text: "d", ignoreCase: false } ],
                     } );
 
                 } );
@@ -1843,7 +1841,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a'", options );
 
                     expect( parser ).to.failToParse( "ab", {
-                        expected: [ { type: "end" } ]
+                        expected: [ { type: "end" } ],
                     } );
 
                 } );
@@ -1853,7 +1851,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a'", options );
 
                     expect( parser ).to.failToParse( "b", {
-                        expected: [ { type: "literal", text: "a", ignoreCase: false } ]
+                        expected: [ { type: "literal", text: "a", ignoreCase: false } ],
                     } );
 
                 } );
@@ -1866,8 +1864,8 @@ describe( "generated parser behavior", function () {
                         expected: [
                             { type: "literal", text: "a", ignoreCase: false },
                             { type: "literal", text: "b", ignoreCase: false },
-                            { type: "literal", text: "c", ignoreCase: false }
-                        ]
+                            { type: "literal", text: "c", ignoreCase: false },
+                        ],
                     } );
 
                 } );
@@ -1878,15 +1876,15 @@ describe( "generated parser behavior", function () {
 
                     let parser = peg.generate( [
                         "Statement = '{' __ !Statement Statement __ '}'",
-                        "__ = [ ]*"
+                        "__ = [ ]*",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.failToParse( "{x}", {
                         expected: [
                             { type: "class", parts: [ " " ], inverted: false, ignoreCase: false },
                             { type: "not", expected: { type: "literal", text: "{", ignoreCase: false } },
-                            { type: "literal", text: "{", ignoreCase: false }
-                        ]
+                            { type: "literal", text: "{", ignoreCase: false },
+                        ],
                     } );
 
                     // Case 2, by https://github.com/nikku
@@ -1894,14 +1892,14 @@ describe( "generated parser behavior", function () {
                     parser = peg.generate( [
                         "Start = Char+ End",
                         "End = 'e'",
-                        "Char = !End [a-z]"
+                        "Char = !End [a-z]",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.failToParse( "a", {
                         expected: [
                             { type: "class", parts: [ [ "a", "z" ] ], inverted: false, ignoreCase: false },
-                            { type: "literal", text: "e", ignoreCase: false }
-                        ]
+                            { type: "literal", text: "e", ignoreCase: false },
+                        ],
                     } );
 
                 } );
@@ -1911,14 +1909,14 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( [
                         "Start = Char+ End",
                         "End 'end' = 'e'",
-                        "Char = !End [a-z]"
+                        "Char = !End [a-z]",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.failToParse( "a", {
                         expected: [
                             { type: "class", parts: [ [ "a", "z" ] ], inverted: false, ignoreCase: false },
-                            { type: "other", description: "end" }
-                        ]
+                            { type: "other", description: "end" },
+                        ],
                     } );
 
                 } );
@@ -1952,7 +1950,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a'", options );
 
                     expect( parser ).to.failToParse( "ab", {
-                        message: "Expected end of input but \"b\" found."
+                        message: "Expected end of input but \"b\" found.",
                     } );
 
                 } );
@@ -1962,7 +1960,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a'", options );
 
                     expect( parser ).to.failToParse( "b", {
-                        message: "Expected \"a\" but \"b\" found."
+                        message: "Expected \"a\" but \"b\" found.",
                     } );
 
                 } );
@@ -1972,7 +1970,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a' / 'b' / 'c'", options );
 
                     expect( parser ).to.failToParse( "d", {
-                        message: "Expected \"a\", \"b\", or \"c\" but \"d\" found."
+                        message: "Expected \"a\", \"b\", or \"c\" but \"d\" found.",
                     } );
 
                 } );
@@ -1982,7 +1980,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a'", options );
 
                     expect( parser ).to.failToParse( "", {
-                        message: "Expected \"a\" but end of input found."
+                        message: "Expected \"a\" but end of input found.",
                     } );
 
                 } );
@@ -1992,7 +1990,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a'", options );
 
                     expect( parser ).to.failToParse( "b", {
-                        message: "Expected \"a\" but \"b\" found."
+                        message: "Expected \"a\" but \"b\" found.",
                     } );
 
                 } );
@@ -2002,7 +2000,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'a' / 'a'", options );
 
                     expect( parser ).to.failToParse( "b", {
-                        message: "Expected \"a\" but \"b\" found."
+                        message: "Expected \"a\" but \"b\" found.",
                     } );
 
                 } );
@@ -2012,7 +2010,7 @@ describe( "generated parser behavior", function () {
                     const parser = peg.generate( "start = 'c' / 'b' / 'a'", options );
 
                     expect( parser ).to.failToParse( "d", {
-                        message: "Expected \"a\", \"b\", or \"c\" but \"d\" found."
+                        message: "Expected \"a\", \"b\", or \"c\" but \"d\" found.",
                     } );
 
                 } );
@@ -2028,8 +2026,8 @@ describe( "generated parser behavior", function () {
                     expect( parser ).to.failToParse( "", {
                         location: {
                             start: { offset: 0, line: 1, column: 1 },
-                            end: { offset: 0, line: 1, column: 1 }
-                        }
+                            end: { offset: 0, line: 1, column: 1 },
+                        },
                     } );
 
                 } );
@@ -2041,8 +2039,8 @@ describe( "generated parser behavior", function () {
                     expect( parser ).to.failToParse( "b", {
                         location: {
                             start: { offset: 0, line: 1, column: 1 },
-                            end: { offset: 1, line: 1, column: 2 }
-                        }
+                            end: { offset: 1, line: 1, column: 2 },
+                        },
                     } );
 
                 } );
@@ -2054,8 +2052,8 @@ describe( "generated parser behavior", function () {
                     expect( parser ).to.failToParse( "aa", {
                         location: {
                             start: { offset: 1, line: 1, column: 2 },
-                            end: { offset: 2, line: 1, column: 3 }
-                        }
+                            end: { offset: 2, line: 1, column: 3 },
+                        },
                     } );
 
                 } );
@@ -2066,28 +2064,28 @@ describe( "generated parser behavior", function () {
                         "start = line (nl+ line)*",
                         "line = digit (' '+ digit)*",
                         "digit = [0-9]",
-                        "nl = '\\r'? '\\n'"
+                        "nl = '\\r'? '\\n'",
                     ].join( "\n" ), options );
 
                     expect( parser ).to.failToParse( "1\n2\n\n3\n\n\n4 5 x", {
                         location: {
                             start: { offset: 13, line: 7, column: 5 },
-                            end: { offset: 14, line: 7, column: 6 }
-                        }
+                            end: { offset: 14, line: 7, column: 6 },
+                        },
                     } );
 
                     // Newline representations
                     expect( parser ).to.failToParse( "1\nx", {     // Old Mac
                         location: {
                             start: { offset: 2, line: 2, column: 1 },
-                            end: { offset: 3, line: 2, column: 2 }
-                        }
+                            end: { offset: 3, line: 2, column: 2 },
+                        },
                     } );
                     expect( parser ).to.failToParse( "1\r\nx", {   // Windows
                         location: {
                             start: { offset: 3, line: 2, column: 1 },
-                            end: { offset: 4, line: 2, column: 2 }
-                        }
+                            end: { offset: 4, line: 2, column: 2 },
+                        },
                     } );
 
                 } );
@@ -2121,7 +2119,7 @@ describe( "generated parser behavior", function () {
                     "            }, head);",
                     "          }",
                     "Value = digits:[0-9]+     { return parseInt(digits.join(''), 10); }",
-                    "      / '(' expr:Expr ')' { return expr; }"
+                    "      / '(' expr:Expr ')' { return expr; }",
                 ].join( "\n" ), options );
 
                 // The "value" rule
@@ -2162,7 +2160,7 @@ describe( "generated parser behavior", function () {
                 const parser = peg.generate( [
                     "S = &(A 'c') a:'a'+ B:B !('a' / 'b' / 'c') { return a.join('') + B; }",
                     "A = a:'a' A:A? b:'b' { return [a, A, b].join(''); }",
-                    "B = b:'b' B:B? c:'c' { return [b, B, c].join(''); }"
+                    "B = b:'b' B:B? c:'c' { return [b, B, c].join(''); }",
                 ].join( "\n" ), options );
 
                 expect( parser ).to.parse( "abc", "abc" );
@@ -2189,7 +2187,7 @@ describe( "generated parser behavior", function () {
                     "  / !Begin !End z:Z { return z; }",
                     "Z = .",
                     "Begin = '(*'",
-                    "End = '*)'"
+                    "End = '*)'",
                 ].join( "\n" ), options );
 
                 expect( parser ).to.parse( "(**)", "(**)" );

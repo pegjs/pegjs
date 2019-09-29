@@ -21,14 +21,14 @@ describe( "compiler pass |reportIncorrectPlucking|", function () {
     reports( `"@" cannot be used with an action block.`, [
 
         `start1 = 'a' @'b' 'c' { /* empty action block */ }`,
-        `start2 = 'a' @('b' @'c' { /* empty action block */ })`
+        `start2 = 'a' @('b' @'c' { /* empty action block */ })`,
 
     ] );
 
     reports( `"@" cannot be used on a semantic predicate.`, [
 
         `start1 = 'a' @&{ /* semantic_and */ } 'c'`,
-        `start2 = 'a' @!{ /* semantic_not */ } 'c'`
+        `start2 = 'a' @!{ /* semantic_not */ } 'c'`,
 
     ] );
 

@@ -50,7 +50,7 @@ function target( { entry, library, output } ) {
             hints: false,
         },
         resolve: {
-            extensions: [ ".ts", ".js" ]
+            extensions: [ ".ts", ".js" ],
         },
         module: {
             rules: [
@@ -72,7 +72,7 @@ function target( { entry, library, output } ) {
             new webpack.BannerPlugin( {
                 banner: HEADER,
                 raw: true,
-            } )
+            } ),
         ],
 
     };

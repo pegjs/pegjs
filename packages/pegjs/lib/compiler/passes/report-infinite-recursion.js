@@ -51,7 +51,7 @@ function reportInfiniteRecursion( ast, session ) {
 
             check( ast.findRule( node.name ) );
 
-        }
+        },
     } );
 
     check( ast );

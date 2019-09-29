@@ -16,8 +16,8 @@ describe( "compiler pass |reportInfiniteRepetition|", function () {
             message: "Possible infinite loop when parsing (repetition used with an expression that may not consume any input).",
             location: {
                 start: { offset: 8, line: 1, column: 9 },
-                end: { offset: 13, line: 1, column: 14 }
-            }
+                end: { offset: 13, line: 1, column: 14 },
+            },
         } );
 
     } );
@@ -28,8 +28,8 @@ describe( "compiler pass |reportInfiniteRepetition|", function () {
             message: "Possible infinite loop when parsing (repetition used with an expression that may not consume any input).",
             location: {
                 start: { offset: 8, line: 1, column: 9 },
-                end: { offset: 13, line: 1, column: 14 }
-            }
+                end: { offset: 13, line: 1, column: 14 },
+            },
         } );
 
     } );
@@ -38,11 +38,11 @@ describe( "compiler pass |reportInfiniteRepetition|", function () {
 
         expect( pass ).to.reportError( [
             "start = a*",
-            "a 'a' = ''"
+            "a 'a' = ''",
         ].join( "\n" ) );
         expect( pass ).to.not.reportError( [
             "start = a*",
-            "a 'a' = 'a'"
+            "a 'a' = 'a'",
         ].join( "\n" ) );
 
         expect( pass ).to.reportError( "start = ('' / 'a' / 'b')*" );
@@ -88,11 +88,11 @@ describe( "compiler pass |reportInfiniteRepetition|", function () {
 
         expect( pass ).to.reportError( [
             "start = a*",
-            "a = ''"
+            "a = ''",
         ].join( "\n" ) );
         expect( pass ).to.not.reportError( [
             "start = a*",
-            "a = 'a'"
+            "a = 'a'",
         ].join( "\n" ) );
 
         expect( pass ).to.reportError( "start = ''*" );

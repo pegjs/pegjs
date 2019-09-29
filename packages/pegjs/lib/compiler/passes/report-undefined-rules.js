@@ -15,7 +15,7 @@ function reportUndefinedRules( ast, session, options ) {
 
             }
 
-        }
+        },
     } );
 
     check( ast );

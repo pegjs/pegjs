@@ -95,7 +95,7 @@ describe( "generated parser API", function () {
                         "1:1-1:1 rule.fail    a",
                         "1:1-1:1 rule.enter   b",
                         "1:1-1:2 rule.match   b",
-                        "1:1-1:2 rule.match start"
+                        "1:1-1:2 rule.match start",
                     ];
 
                     if ( typeof console === "object" ) sinon.stub( console, "log" );
@@ -138,32 +138,32 @@ describe( "generated parser API", function () {
                                 rule: "start",
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 0, line: 1, column: 1 }
-                                }
+                                    end: { offset: 0, line: 1, column: 1 },
+                                },
                             },
                             {
                                 type: "rule.enter",
                                 rule: "a",
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 0, line: 1, column: 1 }
-                                }
+                                    end: { offset: 0, line: 1, column: 1 },
+                                },
                             },
                             {
                                 type: "rule.fail",
                                 rule: "a",
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 0, line: 1, column: 1 }
-                                }
+                                    end: { offset: 0, line: 1, column: 1 },
+                                },
                             },
                             {
                                 type: "rule.enter",
                                 rule: "b",
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 0, line: 1, column: 1 }
-                                }
+                                    end: { offset: 0, line: 1, column: 1 },
+                                },
                             },
                             {
                                 type: "rule.match",
@@ -171,8 +171,8 @@ describe( "generated parser API", function () {
                                 result: "b",
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 1, line: 1, column: 2 }
-                                }
+                                    end: { offset: 1, line: 1, column: 2 },
+                                },
                             },
                             {
                                 type: "rule.match",
@@ -180,9 +180,9 @@ describe( "generated parser API", function () {
                                 result: "b",
                                 location: {
                                     start: { offset: 0, line: 1, column: 1 },
-                                    end: { offset: 1, line: 1, column: 2 }
-                                }
-                            }
+                                    end: { offset: 1, line: 1, column: 2 },
+                                },
+                            },
                         ];
 
                         const tracer = { trace: sinon.spy() };

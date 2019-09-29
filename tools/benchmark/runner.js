@@ -34,7 +34,7 @@ const Runner = {
 
                 }
 
-            }
+            },
 
         };
 
@@ -147,7 +147,7 @@ const Runner = {
 
         Q.run();
 
-    }
+    },
 
 };
 

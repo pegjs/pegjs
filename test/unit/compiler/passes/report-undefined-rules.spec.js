@@ -16,19 +16,23 @@ describe( "compiler pass |reportUndefinedRules|", function () {
             message: "Rule \"undefined\" is not defined.",
             location: {
                 start: { offset: 8, line: 1, column: 9 },
-                end: { offset: 17, line: 1, column: 18 }
-            }
+                end: { offset: 17, line: 1, column: 18 },
+            },
         } );
 
     } );
 
     it( "checks allowedStartRules", function () {
 
-        expect( pass ).to.reportError( "start = 'a'", {
-            message: "Start rule \"missing\" is not defined."
-        }, {
-            allowedStartRules: [ "missing" ]
-        } );
+        expect( pass ).to.reportError(
+            "start = 'a'",
+            {
+                message: "Start rule \"missing\" is not defined.",
+            },
+            {
+                allowedStartRules: [ "missing" ],
+            }
+        );
 
     } );
 

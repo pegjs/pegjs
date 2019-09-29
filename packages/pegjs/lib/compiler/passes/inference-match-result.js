@@ -159,7 +159,7 @@ function inferenceMatchResult( ast, session ) {
 
         },
         // |any| not match on empty input
-        any:          sometimesMatch
+        any:          sometimesMatch,
     } );
 
     inference( ast );

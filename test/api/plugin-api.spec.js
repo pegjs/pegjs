@@ -29,7 +29,7 @@ describe( "plugin API", function () {
 
                     pluginsUsed[ 2 ] = true;
 
-                } }
+                } },
             ];
 
             peg.generate( grammar, { plugins: plugins } );
@@ -71,7 +71,7 @@ describe( "plugin API", function () {
 
                     } );
 
-                }
+                },
             };
 
             peg.generate( grammar, { plugins: [ plugin ] } );
@@ -86,9 +86,9 @@ describe( "plugin API", function () {
 
                         expect( options ).to.equal( generateOptions );
 
-                    }
+                    },
                 } ],
-                foo: 42
+                foo: 42,
             };
 
             peg.generate( grammar, generateOptions );
@@ -116,7 +116,7 @@ describe( "plugin API", function () {
 
                     `, { context: { ast: peg.ast } } );
 
-                }
+                },
             };
 
             const parser = peg.generate( "a", { plugins: [ plugin ] } );
@@ -137,7 +137,7 @@ describe( "plugin API", function () {
 
                     config.passes.generate = [ pass ];
 
-                }
+                },
             };
 
             const parser = peg.generate( grammar, { plugins: [ plugin ] } );
@@ -159,12 +159,12 @@ describe( "plugin API", function () {
 
                     options.allowedStartRules = [ "b", "c" ];
 
-                }
+                },
             };
 
             const parser = peg.generate( grammar, {
                 allowedStartRules: [ "a" ],
-                plugins: [ plugin ]
+                plugins: [ plugin ],
             } );
 
             expect( () => {

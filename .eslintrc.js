@@ -2,7 +2,13 @@
 
 module.exports = {
 
-    "extends": "@futagoza",
+    "extends": [
+
+        "@futagoza/node/6",
+        // "@futagoza/typescript",
+        "@futagoza/vue",
+
+    ],
 
     "rules": {
 
@@ -13,7 +19,11 @@ module.exports = {
 
     "overrides": [ {
 
-        "files": [ "*.spec.js", "*.test.js" ],
+        "files": [
+            "test/unit/compiler/passes/helpers.js",
+            "*.spec.js",
+            "*.test.js"
+        ],
         "extends": "@futagoza/dev/test",
         "rules": {
 

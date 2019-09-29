@@ -16,8 +16,8 @@ describe( "compiler pass |reportInfiniteRecursion|", function () {
             message: "Possible infinite loop when parsing (left recursion: start -> start).",
             location: {
                 start: { offset: 8, line: 1, column: 9 },
-                end: { offset: 13, line: 1, column: 14 }
-            }
+                end: { offset: 13, line: 1, column: 14 },
+            },
         } );
 
     } );
@@ -26,13 +26,13 @@ describe( "compiler pass |reportInfiniteRecursion|", function () {
 
         expect( pass ).to.reportError( [
             "start = stop",
-            "stop = start"
+            "stop = start",
         ].join( "\n" ), {
             message: "Possible infinite loop when parsing (left recursion: start -> stop -> start).",
             location: {
                 start: { offset: 20, line: 2, column: 8 },
-                end: { offset: 25, line: 2, column: 13 }
-            }
+                end: { offset: 25, line: 2, column: 13 },
+            },
         } );
 
     } );
@@ -64,11 +64,11 @@ describe( "compiler pass |reportInfiniteRecursion|", function () {
 
             expect( pass ).to.reportError( [
                 "start = a start",
-                "a 'a' = ''"
+                "a 'a' = ''",
             ].join( "\n" ) );
             expect( pass ).to.not.reportError( [
                 "start = a start",
-                "a 'a' = 'a'"
+                "a 'a' = 'a'",
             ].join( "\n" ) );
 
             expect( pass ).to.reportError( "start = ('' / 'a' / 'b') start" );
@@ -114,11 +114,11 @@ describe( "compiler pass |reportInfiniteRecursion|", function () {
 
             expect( pass ).to.reportError( [
                 "start = a start",
-                "a = ''"
+                "a = ''",
             ].join( "\n" ) );
             expect( pass ).to.not.reportError( [
                 "start = a start",
-                "a = 'a'"
+                "a = 'a'",
             ].join( "\n" ) );
 
             expect( pass ).to.reportError( "start = '' start" );

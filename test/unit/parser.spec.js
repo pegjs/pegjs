@@ -17,7 +17,7 @@ function varyParserOptions( block ) {
     const optionsVariants = [
         { },
         { extractComments: false },
-        { extractComments: true }
+        { extractComments: true },
     ];
 
     optionsVariants.forEach( variant => {
@@ -53,15 +53,15 @@ describe( "PEG.js grammar parser", function () {
     const labeledSimpleNot  = { type: "labeled", label: "a", expression: simpleNotAbcd };
     const sequence          = {
         type: "sequence",
-        elements: [ literalAbcd, literalEfgh, literalIjkl ]
+        elements: [ literalAbcd, literalEfgh, literalIjkl ],
     };
     const sequence2         = {
         type: "sequence",
-        elements: [ labeledAbcd, labeledEfgh ]
+        elements: [ labeledAbcd, labeledEfgh ],
     };
     const sequence4         = {
         type: "sequence",
-        elements: [ labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop ]
+        elements: [ labeledAbcd, labeledEfgh, labeledIjkl, labeledMnop ],
     };
     const groupLabeled      = { type: "group", expression: labeledAbcd };
     const groupSequence     = { type: "group", expression: sequence };
@@ -72,15 +72,15 @@ describe( "PEG.js grammar parser", function () {
     const actionSequence    = { type: "action", expression: sequence, code: " code " };
     const choice            = {
         type: "choice",
-        alternatives: [ literalAbcd, literalEfgh, literalIjkl ]
+        alternatives: [ literalAbcd, literalEfgh, literalIjkl ],
     };
     const choice2           = {
         type: "choice",
-        alternatives: [ actionAbcd, actionEfgh ]
+        alternatives: [ actionAbcd, actionEfgh ],
     };
     const choice4           = {
         type: "choice",
-        alternatives: [ actionAbcd, actionEfgh, actionIjkl, actionMnop ]
+        alternatives: [ actionAbcd, actionEfgh, actionIjkl, actionMnop ],
     };
     const named             = { type: "named", name: "start rule", expression: literalAbcd };
     const ruleA             = { type: "rule", name: "a", expression: literalAbcd };
@@ -95,7 +95,7 @@ describe( "PEG.js grammar parser", function () {
             type: "grammar",
             initializer: null,
             comments: null,
-            rules: [ { type: "rule", name: "start", expression: expression } ]
+            rules: [ { type: "rule", name: "start", expression: expression } ],
         };
 
     }
@@ -122,7 +122,7 @@ describe( "PEG.js grammar parser", function () {
             type: "class",
             parts: parts,
             inverted: inverted,
-            ignoreCase: ignoreCase
+            ignoreCase: ignoreCase,
         } );
 
     }
@@ -145,7 +145,7 @@ describe( "PEG.js grammar parser", function () {
 
             result[ comment.offset ] = {
                 text: comment.text,
-                multiline: comment.multiline
+                multiline: comment.multiline,
             };
 
             return result;
@@ -163,7 +163,7 @@ describe( "PEG.js grammar parser", function () {
         type: "grammar",
         initializer: null,
         comments: null,
-        rules: [ ruleA, ruleB ]
+        rules: [ ruleA, ruleB ],
     };
 
     const stripProperties = ( function () {
@@ -235,7 +235,7 @@ describe( "PEG.js grammar parser", function () {
             rule_ref: stripLeaf,
             literal: stripLeaf,
             class: stripLeaf,
-            any: stripLeaf
+            any: stripLeaf,
         } );
 
         return strip;
@@ -327,7 +327,7 @@ describe( "PEG.js grammar parser", function () {
         const grammar = ruleRefGrammar( "a" );
         grammar.initializer = {
             "type": "initializer",
-            "code": ""
+            "code": "",
         };
         expect( "{}\nstart = a" ).to.parseAs( grammar );
 
@@ -432,7 +432,7 @@ describe( "PEG.js grammar parser", function () {
 
             return oneRuleGrammar( {
                 type: "sequence",
-                elements: elements
+                elements: elements,
             } );
 
         }
@@ -442,7 +442,7 @@ describe( "PEG.js grammar parser", function () {
                 type: "labeled",
                 pick: true,
                 label: label,
-                expression: expression
+                expression: expression,
             };
 
         }
@@ -591,27 +591,17 @@ describe( "PEG.js grammar parser", function () {
         // Canonical Comment is "/* comment */".
         it( "parses Comment", function () {
 
-            expect( "start =// comment\n'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: " comment", multiline: false } ], options
-            ), options );
-            expect( "start =/* comment */'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: " comment ", multiline: true } ], options
-            ), options );
+            expect( "start =// comment\n'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: " comment", multiline: false } ], options ), options );
+            expect( "start =/* comment */'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: " comment ", multiline: true } ], options ), options );
 
         } );
 
         // Canonical MultiLineComment is "/* comment */".
         it( "parses MultiLineComment", function () {
 
-            expect( "start =/**/'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: "", multiline: true } ], options
-            ), options );
-            expect( "start =/*a*/'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: "a", multiline: true } ], options
-            ), options );
-            expect( "start =/*abc*/'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: "abc", multiline: true } ], options
-            ), options );
+            expect( "start =/**/'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: "", multiline: true } ], options ), options );
+            expect( "start =/*a*/'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: "a", multiline: true } ], options ), options );
+            expect( "start =/*abc*/'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: "abc", multiline: true } ], options ), options );
 
             expect( "start =/**/*/'abcd'" ).to.failToParse();
 
@@ -620,15 +610,9 @@ describe( "PEG.js grammar parser", function () {
         // Canonical MultiLineCommentNoLineTerminator is "/* comment */".
         it( "parses MultiLineCommentNoLineTerminator", function () {
 
-            expect( "a = 'abcd'/**/\r\nb = 'efgh'" ).to.parseAs( commented(
-                twoRuleGrammar, [ { offset: 10, text: "", multiline: true } ], options
-            ), options );
-            expect( "a = 'abcd'/*a*/\r\nb = 'efgh'" ).to.parseAs( commented(
-                twoRuleGrammar, [ { offset: 10, text: "a", multiline: true } ], options
-            ), options );
-            expect( "a = 'abcd'/*abc*/\r\nb = 'efgh'" ).to.parseAs( commented(
-                twoRuleGrammar, [ { offset: 10, text: "abc", multiline: true } ], options
-            ), options );
+            expect( "a = 'abcd'/**/\r\nb = 'efgh'" ).to.parseAs( commented( twoRuleGrammar, [ { offset: 10, text: "", multiline: true } ], options ), options );
+            expect( "a = 'abcd'/*a*/\r\nb = 'efgh'" ).to.parseAs( commented( twoRuleGrammar, [ { offset: 10, text: "a", multiline: true } ], options ), options );
+            expect( "a = 'abcd'/*abc*/\r\nb = 'efgh'" ).to.parseAs( commented( twoRuleGrammar, [ { offset: 10, text: "abc", multiline: true } ], options ), options );
 
             expect( "a = 'abcd'/**/*/\r\nb = 'efgh'" ).to.failToParse();
             expect( "a = 'abcd'/*\n*/\r\nb = 'efgh'" ).to.failToParse();
@@ -638,15 +622,9 @@ describe( "PEG.js grammar parser", function () {
         // Canonical SingleLineComment is "// comment".
         it( "parses SingleLineComment", function () {
 
-            expect( "start =//\n'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: "", multiline: false } ], options
-            ), options );
-            expect( "start =//a\n'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: "a", multiline: false } ], options
-            ), options );
-            expect( "start =//abc\n'abcd'" ).to.parseAs( commented(
-                trivialGrammar, [ { offset: 7, text: "abc", multiline: false } ], options
-            ), options );
+            expect( "start =//\n'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: "", multiline: false } ], options ), options );
+            expect( "start =//a\n'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: "a", multiline: false } ], options ), options );
+            expect( "start =//abc\n'abcd'" ).to.parseAs( commented( trivialGrammar, [ { offset: 7, text: "abc", multiline: false } ], options ), options );
 
             expect( "start =//\n>\n'abcd'" ).to.failToParse();
 
@@ -780,7 +758,7 @@ describe( "PEG.js grammar parser", function () {
 
         expect( "start = [a-a]" ).to.parseAs( classGrammar( [ [ "a", "a" ] ], false, false ) );
         expect( "start = [b-a]" ).to.failToParse( {
-            message: "Invalid character range: b-a."
+            message: "Invalid character range: b-a.",
         } );
 
     } );
@@ -939,7 +917,7 @@ describe( "PEG.js grammar parser", function () {
         const text = "rule = \n 'x' { y \n z";
         const errorLocation = {
             start: { offset: 13, line: 2, column: 6 },
-            end: { offset: 14, line: 2, column: 7 }
+            end: { offset: 14, line: 2, column: 7 },
         };
         expect( () => parser.parse( text ) )
             .to.throw( "Unbalanced brace." )

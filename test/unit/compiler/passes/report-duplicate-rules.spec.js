@@ -14,13 +14,13 @@ describe( "compiler pass |reportDuplicateRules|", function () {
 
         expect( pass ).to.reportError( [
             "start = 'a'",
-            "start = 'b'"
+            "start = 'b'",
         ].join( "\n" ), {
             message: "Rule \"start\" is already defined at line 1, column 1.",
             location: {
                 start: { offset: 12, line: 2, column: 1 },
-                end: { offset: 23, line: 2, column: 12 }
-            }
+                end: { offset: 23, line: 2, column: 12 },
+            },
         } );
 
     } );

@@ -219,7 +219,7 @@ function generateBytecode( ast, session ) {
         const cls = {
             value: node.parts,
             inverted: node.inverted,
-            ignoreCase: node.ignoreCase
+            ignoreCase: node.ignoreCase,
         };
         const pattern = JSON.stringify( cls );
         const index = util.findIndex( classes, c => JSON.stringify( c ) === pattern );
@@ -282,7 +282,7 @@ function generateBytecode( ast, session ) {
                 sp: context.sp + 1,
                 env: util.clone( context.env ),
                 action: null,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
             } ),
             [ op.EXPECT_NS_END, negative ? 1 : 0 ],
             buildCondition(
@@ -346,7 +346,7 @@ function generateBytecode( ast, session ) {
                 sp: -1,                             // stack pointer
                 env: { },                           // mapping of label names to stack positions
                 action: null,                       // action nodes pass themselves to children here
-                reportFailures: node.reportFailures // if `false`, suppress generation of EXPECT opcodes
+                reportFailures: node.reportFailures, // if `false`, suppress generation of EXPECT opcodes
             } );
 
         },
@@ -361,7 +361,7 @@ function generateBytecode( ast, session ) {
                 sp: context.sp,
                 env: context.env,
                 action: context.action,
-                reportFailures: false
+                reportFailures: false,
             } );
 
             // No need to disable report failures if it already disabled
@@ -383,7 +383,7 @@ function generateBytecode( ast, session ) {
                         sp: context.sp,
                         env: util.clone( context.env ),
                         action: null,
-                        reportFailures: context.reportFailures
+                        reportFailures: context.reportFailures,
                     } ),
                     alternatives.length < 2
                         ? []
@@ -413,7 +413,7 @@ function generateBytecode( ast, session ) {
                 sp: context.sp + ( emitCall ? 1 : 0 ),
                 env: env,
                 action: node,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
             } );
             const match = node.expression.match|0;
             const functionIndex = emitCall && match >= 0
@@ -455,7 +455,7 @@ function generateBytecode( ast, session ) {
                             env: context.env,
                             pluck: context.pluck,
                             action: null,
-                            reportFailures: context.reportFailures
+                            reportFailures: context.reportFailures,
                         } ),
                         buildCondition(
                             elements[ 0 ].match|0,
@@ -465,7 +465,7 @@ function generateBytecode( ast, session ) {
                                 env: context.env,
                                 pluck: context.pluck,
                                 action: context.action,
-                                reportFailures: context.reportFailures
+                                reportFailures: context.reportFailures,
                             } ),
                             buildSequence(
                                 processedCount > 1 ? [ op.POP_N, processedCount ] : [ op.POP ],
@@ -511,7 +511,7 @@ function generateBytecode( ast, session ) {
                     env: context.env,
                     pluck: [],
                     action: context.action,
-                    reportFailures: context.reportFailures
+                    reportFailures: context.reportFailures,
                 } )
             );
 
@@ -538,7 +538,7 @@ function generateBytecode( ast, session ) {
                 sp: context.sp,
                 env: env,
                 action: null,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
             } );
 
         },
@@ -551,7 +551,7 @@ function generateBytecode( ast, session ) {
                     sp: context.sp + 1,
                     env: util.clone( context.env ),
                     action: null,
-                    reportFailures: context.reportFailures
+                    reportFailures: context.reportFailures,
                 } ),
                 buildCondition(
                     node.expression.match|0,
@@ -582,7 +582,7 @@ function generateBytecode( ast, session ) {
                     sp: context.sp,
                     env: util.clone( context.env ),
                     action: null,
-                    reportFailures: context.reportFailures
+                    reportFailures: context.reportFailures,
                 } ),
                 buildCondition(
                     // If expression always match no need replace FAILED to NULL
@@ -601,7 +601,7 @@ function generateBytecode( ast, session ) {
                 sp: context.sp + 1,
                 env: util.clone( context.env ),
                 action: null,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
             } );
 
             return buildSequence(
@@ -619,7 +619,7 @@ function generateBytecode( ast, session ) {
                 sp: context.sp + 1,
                 env: util.clone( context.env ),
                 action: null,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
             } );
 
             return buildSequence(
@@ -641,7 +641,7 @@ function generateBytecode( ast, session ) {
                 sp: context.sp,
                 env: util.clone( context.env ),
                 action: null,
-                reportFailures: context.reportFailures
+                reportFailures: context.reportFailures,
             } );
 
         },
@@ -677,7 +677,7 @@ function generateBytecode( ast, session ) {
                 const expectedIndex = context.reportFailures ? addExpectedConst( {
                     type: "literal",
                     value: node.value,
-                    ignoreCase: node.ignoreCase
+                    ignoreCase: node.ignoreCase,
                 } ) : null;
 
                 // For case-sensitive strings the value must match the beginning of the
@@ -712,7 +712,7 @@ function generateBytecode( ast, session ) {
                 type: "class",
                 value: node.parts,
                 inverted: node.inverted,
-                ignoreCase: node.ignoreCase
+                ignoreCase: node.ignoreCase,
             } ) : null;
 
             return buildSequence(
@@ -744,7 +744,7 @@ function generateBytecode( ast, session ) {
                 )
             );
 
-        }
+        },
     } );
 
     generate( ast );

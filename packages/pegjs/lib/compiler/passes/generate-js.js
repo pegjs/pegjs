@@ -87,8 +87,7 @@ function generateJS( ast, session, options ) {
                     const parts = e.value.map( part =>
                         ( Array.isArray( part )
                             ? `["${ util.stringEscape( part[ 0 ] ) }", "${ util.stringEscape( part[ 1 ] ) }"]`
-                            : `"${ util.stringEscape( part ) }"` )
-                    );
+                            : `"${ util.stringEscape( part ) }"` ) );
 
                     return "peg$classExpectation(["
                            + parts.join( ", " ) + "], "
@@ -137,13 +136,10 @@ function generateJS( ast, session, options ) {
                         `peg$decode("${
                             util.stringEscape( rule.bytecode
                                 .map( b => String.fromCharCode( b + 32 ) )
-                                .join( "" )
-                            )
-                        }")`
-                    )
-                    .join( ",\n" )
-                ),
-                "];"
+                                .join( "" ) )
+                        }")` )
+                    .join( ",\n" ) ),
+                "];",
             ].join( "\n" );
 
         }
@@ -172,7 +168,7 @@ function generateJS( ast, session, options ) {
             "var rule$expects = function (expected) {",
             "  if (peg$silentFails === 0) peg$expect(expected);",
             "}",
-            ""
+            "",
         ].join( "\n" ) );
 
         if ( options.trace ) {
@@ -183,7 +179,7 @@ function generateJS( ast, session, options ) {
                 "  rule: " + ruleNameCode + ",",
                 "  location: peg$computeLocation(startPos, startPos)",
                 "});",
-                ""
+                "",
             ].join( "\n" ) );
 
         }
@@ -207,7 +203,7 @@ function generateJS( ast, session, options ) {
                 "  if (peg$silentFails === 0) {",
                 "    rule$expectations.forEach(peg$expect);",
                 "  }",
-                ""
+                "",
             ].join( "\n" ) );
 
             if ( options.trace ) {
@@ -227,7 +223,7 @@ function generateJS( ast, session, options ) {
                     "    location: peg$computeLocation(startPos, startPos)",
                     "  });",
                     "}",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
             }
@@ -235,7 +231,7 @@ function generateJS( ast, session, options ) {
             parts.push( [
                 "  return cached.result;",
                 "}",
-                ""
+                "",
             ].join( "\n" ) );
 
         }
@@ -256,7 +252,7 @@ function generateJS( ast, session, options ) {
                 "  nextPos: peg$currPos,",
                 "  result: " + resultCode + ",",
                 "  expectations: rule$expectations",
-                "};"
+                "};",
             ].join( "\n" ) );
 
         }
@@ -278,14 +274,14 @@ function generateJS( ast, session, options ) {
                 "    rule: " + ruleNameCode + ",",
                 "    location: peg$computeLocation(startPos, startPos)",
                 "  });",
-                "}"
+                "}",
             ].join( "\n" ) );
 
         }
 
         parts.push( [
             "",
-            "return " + resultCode + ";"
+            "return " + resultCode + ";",
         ].join( "\n" ) );
 
         return parts.join( "\n" );
@@ -314,7 +310,7 @@ function generateJS( ast, session, options ) {
                 "  ip += " + baseLength + " + " + thenLengthCode + ";",
                 "}",
                 "",
-                "break;"
+                "break;",
             ].join( "\n" );
 
         }
@@ -335,7 +331,7 @@ function generateJS( ast, session, options ) {
                 "  ip += " + baseLength + " + " + bodyLengthCode + ";",
                 "}",
                 "",
-                "break;"
+                "break;",
             ].join( "\n" );
 
         }
@@ -356,7 +352,7 @@ function generateJS( ast, session, options ) {
                 ");",
                 "",
                 "ip += " + baseLength + " + " + paramsLengthCode + ";",
-                "break;"
+                "break;",
             ].join( "\n" );
 
         }
@@ -366,7 +362,7 @@ function generateJS( ast, session, options ) {
             "  return s.split(\"\").map(function(ch) { return ch.charCodeAt(0) - 32; });",
             "}",
             "",
-            "function peg$parseRule(index) {"
+            "function peg$parseRule(index) {",
         ].join( "\n" ) );
 
         if ( options.trace ) {
@@ -379,7 +375,7 @@ function generateJS( ast, session, options ) {
                 "  var ends = [];",
                 "  var stack = [];",
                 "  var startPos = peg$currPos;",
-                "  var params, paramsLength, paramsN;"
+                "  var params, paramsLength, paramsN;",
             ].join( "\n" ) );
 
         } else {
@@ -391,7 +387,7 @@ function generateJS( ast, session, options ) {
                 "  var end = bc.length;",
                 "  var ends = [];",
                 "  var stack = [];",
-                "  var params, paramsLength, paramsN;"
+                "  var params, paramsLength, paramsN;",
             ].join( "\n" ) );
 
         }
@@ -501,9 +497,11 @@ function generateJS( ast, session, options ) {
             "",
             "        case " + op.IF_NOT_ERROR + ":",       // IF_NOT_ERROR t, f
             indent10(
-                generateCondition( "stack[stack.length - 1] !== peg$FAILED",
+                generateCondition(
+                    "stack[stack.length - 1] !== peg$FAILED",
                     0
-                ) ),
+                )
+            ),
             "",
             "        case " + op.WHILE_NOT_ERROR + ":",    // WHILE_NOT_ERROR b
             indent10( generateLoop( "stack[stack.length - 1] !== peg$FAILED" ) ),
@@ -599,7 +597,7 @@ function generateJS( ast, session, options ) {
             "    } else {",
             "      break;",
             "    }",
-            "  }"
+            "  }",
         ].join( "\n" ) );
 
         parts.push( indent2( generateRuleFooter( "peg$ruleNames[index]", "stack[0]" ) ) );
@@ -662,7 +660,7 @@ function generateJS( ast, session, options ) {
 
                 return s( this.sp - i );
 
-            }
+            },
         };
 
         function compile( bc ) {
@@ -1152,7 +1150,7 @@ function generateJS( ast, session, options ) {
             "",
             "  return \"Expected \" + describeExpected(expected) + \" but \" + describeFound(found) + \" found.\";",
             "};",
-            ""
+            "",
         ].join( "\n" ) );
 
         if ( options.trace ) {
@@ -1213,7 +1211,7 @@ function generateJS( ast, session, options ) {
                     "      throw new Error(\"Invalid event type: \" + event.type + \".\");",
                     "  }",
                     "};",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
             else
@@ -1222,7 +1220,7 @@ function generateJS( ast, session, options ) {
                     "var peg$FauxTracer = {",
                     "  trace: function(event) { }",
                     "};",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
         }
@@ -1232,7 +1230,7 @@ function generateJS( ast, session, options ) {
             "  options = options !== undefined ? options : {};",
             "",
             "  var peg$FAILED = {};",
-            ""
+            "",
         ].join( "\n" ) );
 
         if ( options.optimize === "size" ) {
@@ -1246,7 +1244,7 @@ function generateJS( ast, session, options ) {
 
             parts.push( [
                 "  var peg$startRuleIndices = " + startRuleIndices + ";",
-                "  var peg$startRuleIndex = " + startRuleIndex + ";"
+                "  var peg$startRuleIndex = " + startRuleIndex + ";",
             ].join( "\n" ) );
 
         } else {
@@ -1260,7 +1258,7 @@ function generateJS( ast, session, options ) {
 
             parts.push( [
                 "  var peg$startRuleFunctions = " + startRuleFunctions + ";",
-                "  var peg$startRuleFunction = " + startRuleFunction + ";"
+                "  var peg$startRuleFunction = " + startRuleFunction + ";",
             ].join( "\n" ) );
 
         }
@@ -1276,14 +1274,14 @@ function generateJS( ast, session, options ) {
             "  var peg$posDetailsCache = [{ line: 1, column: 1 }];",
             "  var peg$expected = [];",
             "  var peg$silentFails = 0;",   // 0 = report failures, > 0 = silence failures
-            ""
+            "",
         ].join( "\n" ) );
 
         if ( options.cache ) {
 
             parts.push( [
                 "  var peg$resultsCache = {};",
-                ""
+                "",
             ].join( "\n" ) );
 
         }
@@ -1300,7 +1298,7 @@ function generateJS( ast, session, options ) {
 
                 parts.push( [
                     "  var peg$ruleNames = " + ruleNames + ";",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
             }
@@ -1309,21 +1307,21 @@ function generateJS( ast, session, options ) {
 
                 parts.push( [
                     "  var peg$tracer = \"tracer\" in options ? options.tracer : new peg$DefaultTracer();",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
             else
 
                 parts.push( [
                     "  var peg$tracer = \"tracer\" in options ? options.tracer : peg$FauxTracer;",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
         }
 
         parts.push( [
             "  var peg$result;",
-            ""
+            "",
         ].join( "\n" ) );
 
         if ( options.optimize === "size" ) {
@@ -1335,7 +1333,7 @@ function generateJS( ast, session, options ) {
                 "    }",
                 "",
                 "    peg$startRuleIndex = peg$startRuleIndices[options.startRule];",
-                "  }"
+                "  }",
             ].join( "\n" ) );
 
         } else {
@@ -1347,7 +1345,7 @@ function generateJS( ast, session, options ) {
                 "    }",
                 "",
                 "    peg$startRuleFunction = peg$startRuleFunctions[options.startRule];",
-                "  }"
+                "  }",
             ].join( "\n" ) );
 
         }
@@ -1568,7 +1566,7 @@ function generateJS( ast, session, options ) {
             "        : peg$computeLocation(failPos, failPos)",
             "    );",
             "  }",
-            ""
+            "",
         ].join( "\n" ) );
 
         if ( options.optimize === "size" ) {
@@ -1617,7 +1615,7 @@ function generateJS( ast, session, options ) {
             "",
             "    throw peg$buildError();",
             "  }",
-            "}"
+            "}",
         ].join( "\n" ) );
 
         return parts.join( "\n" );
@@ -1658,13 +1656,13 @@ function generateJS( ast, session, options ) {
                     "  SyntaxError: peg$SyntaxError,",
                     "  DefaultTracer: peg$DefaultTracer,",
                     "  parse: peg$parse",
-                    "}"
+                    "}",
                 ].join( "\n" )
                 : [
                     "{",
                     "  SyntaxError: peg$SyntaxError,",
                     "  parse: peg$parse",
-                    "}"
+                    "}",
                 ].join( "\n" );
 
         }
@@ -1677,13 +1675,13 @@ function generateJS( ast, session, options ) {
                     "  peg$SyntaxError as SyntaxError,",
                     "  peg$DefaultTracer as DefaultTracer,",
                     "  peg$parse as parse",
-                    "}"
+                    "}",
                 ].join( "\n" )
                 : [
                     "{",
                     "  peg$SyntaxError as SyntaxError,",
                     "  peg$parse as parse",
-                    "}"
+                    "}",
                 ].join( "\n" );
 
         }
@@ -1699,7 +1697,7 @@ function generateJS( ast, session, options ) {
                     indent2( toplevelCode ),
                     "",
                     indent2( "return " + generateParserObject() + ";" ),
-                    "})()"
+                    "})()",
                 ].join( "\n" );
 
             },
@@ -1713,7 +1711,7 @@ function generateJS( ast, session, options ) {
                     generateHeaderComment(),
                     "",
                     "\"use strict\";",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
                 if ( dependencyVars.length > 0 ) {
@@ -1723,8 +1721,7 @@ function generateJS( ast, session, options ) {
                         parts.push( "var " + variable
                             + " = require(\""
                             + util.stringEscape( options.dependencies[ variable ] )
-                            + "\");"
-                        );
+                            + "\");" );
 
                     } );
                     parts.push( "" );
@@ -1735,7 +1732,7 @@ function generateJS( ast, session, options ) {
                     toplevelCode,
                     "",
                     "module.exports = " + generateParserObject() + ";",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
                 return parts.join( "\n" );
@@ -1759,8 +1756,7 @@ function generateJS( ast, session, options ) {
                         parts.push( "import " + variable
                             + " from \""
                             + util.stringEscape( options.dependencies[ variable ] )
-                            + "\";"
-                        );
+                            + "\";" );
 
                     } );
                     parts.push( "" );
@@ -1800,7 +1796,7 @@ function generateJS( ast, session, options ) {
                     "",
                     indent2( "return " + generateParserObject() + ";" ),
                     "});",
-                    ""
+                    "",
                 ].join( "\n" );
 
             },
@@ -1816,7 +1812,7 @@ function generateJS( ast, session, options ) {
                     "",
                     indent2( "root." + options.exportVar + " = " + generateParserObject() + ";" ),
                     "})(this);",
-                    ""
+                    "",
                 ].join( "\n" );
 
             },
@@ -1843,14 +1839,14 @@ function generateJS( ast, session, options ) {
                     "  if (typeof define === \"function\" && define.amd) {",
                     "    define(" + dependencies + ", factory);",
                     "  } else if (typeof module === \"object\" && module.exports) {",
-                    "    module.exports = factory(" + requires + ");"
+                    "    module.exports = factory(" + requires + ");",
                 ].join( "\n" ) );
 
                 if ( options.exportVar !== null ) {
 
                     parts.push( [
                         "  } else {",
-                        "    root." + options.exportVar + " = factory(" + args + ");"
+                        "    root." + options.exportVar + " = factory(" + args + ");",
                     ].join( "\n" ) );
 
                 }
@@ -1864,12 +1860,12 @@ function generateJS( ast, session, options ) {
                     "",
                     indent2( "return " + generateParserObject() + ";" ),
                     "});",
-                    ""
+                    "",
                 ].join( "\n" ) );
 
                 return parts.join( "\n" );
 
-            }
+            },
         };
 
         return generators[ options.format ]();

@@ -140,17 +140,20 @@ describe( "compiler pass |inferenceMatchResult|", function () {
         expect( pass ).to.changeAST(
             [ "start = end", "end = . " ].join( "\n" ),
             { rules: [ { match:  0 }, { match:  0 } ] },
-            {}, {}
+            {},
+            {}
         );
         expect( pass ).to.changeAST(
             [ "start = end", "end = ''" ].join( "\n" ),
             { rules: [ { match:  1 }, { match:  1 } ] },
-            {}, {}
+            {},
+            {}
         );
         expect( pass ).to.changeAST(
             [ "start = end", "end = []" ].join( "\n" ),
             { rules: [ { match: -1 }, { match: -1 } ] },
-            {}, {}
+            {},
+            {}
         );
 
         expect( pass ).to.changeAST( "start = .  start", { rules: [ { match:  0 } ] }, {}, {} );

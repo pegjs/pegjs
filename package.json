@@ -7,7 +7,7 @@
         "test"
     ],
     "scripts": {
-        "lint": "eslint --ext .js,.ts,.vue . docs/.vuepress",
+        "lint": "eslint --ext .js,.vue . docs/.vuepress",
         "spec": "mocha --reporter progress",
         "benchmark": "node tools/benchmark",
         "build-docs": "vuepress build docs",

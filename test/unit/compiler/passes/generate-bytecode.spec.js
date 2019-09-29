@@ -1,3 +1,5 @@
+/* eslint-disable function-call-argument-newline */
+
 "use strict";
 
 const chai = require( "chai" );
@@ -13,7 +15,7 @@ describe( "compiler pass |generateBytecode|", function () {
     function bytecodeDetails( bytecode ) {
 
         return {
-            rules: [ { bytecode: bytecode } ]
+            rules: [ { bytecode: bytecode } ],
         };
 
     }
@@ -24,7 +26,7 @@ describe( "compiler pass |generateBytecode|", function () {
             literals: literals,
             classes: classes,
             expectations: expectations,
-            functions: functions
+            functions: functions,
         };
 
     }
@@ -36,13 +38,13 @@ describe( "compiler pass |generateBytecode|", function () {
             expect( pass ).to.changeAST( [
                 "a = 'a'",
                 "b = 'b'",
-                "c = 'c'"
+                "c = 'c'",
             ].join( "\n" ), {
                 rules: [
                     { bytecode: [ 23, 0, 18, 0, 2, 1, 22, 0, 3 ] },
                     { bytecode: [ 23, 1, 18, 1, 2, 1, 22, 1, 3 ] },
-                    { bytecode: [ 23, 2, 18, 2, 2, 1, 22, 2, 3 ] }
-                ]
+                    { bytecode: [ 23, 2, 18, 2, 2, 1, 22, 2, 3 ] },
+                ],
             } );
 
         } );
@@ -52,14 +54,14 @@ describe( "compiler pass |generateBytecode|", function () {
             expect( pass ).to.changeAST( [
                 "a = 'a'",
                 "b = 'b'",
-                "c = 'c'"
+                "c = 'c'",
             ].join( "\n" ), constsDetails(
                 [ "a", "b", "c" ],
                 [],
                 [
                     { type: "literal", value: "a", ignoreCase: false },
                     { type: "literal", value: "b", ignoreCase: false },
-                    { type: "literal", value: "c", ignoreCase: false }
+                    { type: "literal", value: "c", ignoreCase: false },
                 ],
                 []
             ) );
@@ -73,7 +75,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "generates correct bytecode", function () {
 
             expect( pass ).to.changeAST( "start = 'a'", bytecodeDetails( [
-                23, 0, 18, 0, 2, 1, 22, 0, 3   // <expression>
+                23, 0, 18, 0, 2, 1, 22, 0, 3,   // <expression>
             ] ) );
 
         } );
@@ -94,19 +96,19 @@ describe( "compiler pass |generateBytecode|", function () {
                     23, 0,                        // EXPECT <0>
                     28,                           // SILENT_FAILS_ON
                     17, 2, 1, 21, 1, 3,           // <expression>
-                    29                            // SILENT_FAILS_OFF
+                    29,                            // SILENT_FAILS_OFF
                 ] ) );
                 expect( pass ).to.changeAST( grammar2, bytecodeDetails( [
                     23, 0,                        // EXPECT <0>
                     28,                           // SILENT_FAILS_ON
                     18, 0, 2, 1, 22, 0, 3,        // <expression>
-                    29                            // SILENT_FAILS_OFF
+                    29,                            // SILENT_FAILS_OFF
                 ] ) );
                 expect( pass ).to.changeAST( grammar3, bytecodeDetails( [
                     23, 0,                        // EXPECT <0>
                     28,                           // SILENT_FAILS_ON
                     20, 0, 2, 1, 21, 1, 3,        // <expression>
-                    29                            // SILENT_FAILS_OFF
+                    29,                            // SILENT_FAILS_OFF
                 ] ) );
 
             } );
@@ -154,15 +156,9 @@ describe( "compiler pass |generateBytecode|", function () {
 
             it( "defines correct constants", function () {
 
-                expect( pass ).to.changeAST( grammar1, constsDetails(
-                    [], [], [], []
-                ), {}, { reportFailures: false } );
-                expect( pass ).to.changeAST( grammar2, constsDetails(
-                    [ "a" ], [], [], []
-                ), {}, { reportFailures: false } );
-                expect( pass ).to.changeAST( grammar3, constsDetails(
-                    [], [ { value: [ "a" ], inverted: false, ignoreCase: false } ], [], []
-                ), {}, { reportFailures: false } );
+                expect( pass ).to.changeAST( grammar1, constsDetails( [], [], [], [] ), {}, { reportFailures: false } );
+                expect( pass ).to.changeAST( grammar2, constsDetails( [ "a" ], [], [], [] ), {}, { reportFailures: false } );
+                expect( pass ).to.changeAST( grammar3, constsDetails( [], [ { value: [ "a" ], inverted: false, ignoreCase: false } ], [], [] ), {}, { reportFailures: false } );
 
             } );
 
@@ -181,7 +177,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 23, 1, 18, 1, 2, 1, 22, 1, 3, //     <alternatives[1]>
                 14, 10, 0,                    //     IF_ERROR
                 6,                            //       * POP
-                23, 2, 18, 2, 2, 1, 22, 2, 3  //         <alternatives[2]>
+                23, 2, 18, 2, 2, 1, 22, 2, 3,  //         <alternatives[2]>
             ] ) );
 
         } );
@@ -202,7 +198,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     15, 6, 0,                     // IF_NOT_ERROR
                     24, 1,                        //   * LOAD_SAVED_POS
                     26, 0, 1, 0,                  //     CALL <0>
-                    9                             // NIP
+                    9,                             // NIP
                 ] ) );
 
             } );
@@ -232,7 +228,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     15, 7, 0,                     // IF_NOT_ERROR
                     24, 1,                        //   * LOAD_SAVED_POS
                     26, 0, 1, 1, 0,               //     CALL <0>
-                    9                             // NIP
+                    9,                             // NIP
                 ] ) );
 
             } );
@@ -274,7 +270,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     3,                            //         PUSH_FAILED
                     6,                            //   * POP
                     7,                            //     POP_CURR_POS
-                    3                             //     PUSH_FAILED
+                    3,                             //     PUSH_FAILED
                 ] ) );
 
             } );
@@ -287,7 +283,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [
                         { type: "literal", value: "a", ignoreCase: false },
                         { type: "literal", value: "b", ignoreCase: false },
-                        { type: "literal", value: "c", ignoreCase: false }
+                        { type: "literal", value: "c", ignoreCase: false },
                     ],
                     [ { predicate: false, params: [ "a", "b", "c" ], body: " code " } ]
                 ) );
@@ -322,7 +318,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 3,                            //         PUSH_FAILED
                 6,                            //   * POP
                 7,                            //     POP_CURR_POS
-                3                             //     PUSH_FAILED
+                3,                             //     PUSH_FAILED
             ] ) );
 
         } );
@@ -335,7 +331,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 [
                     { type: "literal", value: "a", ignoreCase: false },
                     { type: "literal", value: "b", ignoreCase: false },
-                    { type: "literal", value: "c", ignoreCase: false }
+                    { type: "literal", value: "c", ignoreCase: false },
                 ],
                 []
             ) );
@@ -393,7 +389,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "generates correct bytecode", function () {
 
             expect( pass ).to.changeAST( "start = a:'a'", bytecodeDetails( [
-                23, 0, 18, 0, 2, 1, 22, 0, 3   // <expression>
+                23, 0, 18, 0, 2, 1, 22, 0, 3,   // <expression>
             ] ) );
 
         } );
@@ -410,7 +406,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 15, 2, 1,                     // IF_NOT_ERROR
                 6,                            //   * POP
                 12,                           //     TEXT
-                9                             //   * NIP
+                9,                             //   * NIP
             ] ) );
 
         } );
@@ -434,7 +430,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 1,                            //     PUSH_UNDEFINED
                 6,                            //   * POP
                 6,                            //     POP
-                3                             //     PUSH_FAILED
+                3,                             //     PUSH_FAILED
             ] ) );
 
         } );
@@ -469,7 +465,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 1,                            //     PUSH_UNDEFINED
                 6,                            //   * POP
                 7,                            //     POP_CURR_POS
-                3                             //     PUSH_FAILED
+                3,                             //     PUSH_FAILED
             ] ) );
 
         } );
@@ -497,7 +493,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 23, 0, 18, 0, 2, 1, 22, 0, 3, // <expression>
                 14, 2, 0,                     // IF_ERROR
                 6,                            //   * POP
-                2                             //     PUSH_NULL
+                2,                             //     PUSH_NULL
             ] ) );
 
         } );
@@ -527,7 +523,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 16, 10,                       // WHILE_NOT_ERROR
                 10,                           //   * APPEND
                 23, 0, 18, 0, 2, 1, 22, 0, 3, //     <expression>
-                6                             // POP
+                6,                             // POP
             ] ) );
 
         } );
@@ -561,7 +557,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 6,                            //     POP
                 6,                            //   * POP
                 6,                            //     POP
-                3                             //     PUSH_FAILED
+                3,                             //     PUSH_FAILED
             ] ) );
 
         } );
@@ -586,7 +582,7 @@ describe( "compiler pass |generateBytecode|", function () {
         it( "generates correct bytecode", function () {
 
             expect( pass ).to.changeAST( grammar, bytecodeDetails( [
-                23, 0, 18, 0, 2, 1, 22, 0, 3   // <expression>
+                23, 0, 18, 0, 2, 1, 22, 0, 3,   // <expression>
             ] ) );
 
         } );
@@ -619,7 +615,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     6,             //   * POP
                     1,             //     PUSH_UNDEFINED
                     6,             //   * POP
-                    3              //     PUSH_FAILED
+                    3,              //     PUSH_FAILED
                 ] ) );
 
             } );
@@ -670,7 +666,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     3,                            //         PUSH_FAILED
                     6,                            //   * POP
                     7,                            //     POP_CURR_POS
-                    3                             //     PUSH_FAILED
+                    3,                             //     PUSH_FAILED
                 ] ) );
 
             } );
@@ -683,7 +679,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [
                         { type: "literal", value: "a", ignoreCase: false },
                         { type: "literal", value: "b", ignoreCase: false },
-                        { type: "literal", value: "c", ignoreCase: false }
+                        { type: "literal", value: "c", ignoreCase: false },
                     ],
                     [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ]
                 ) );
@@ -709,7 +705,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     6,             //   * POP
                     3,             //     PUSH_FAILED
                     6,             //   * POP
-                    1              //     PUSH_UNDEFINED
+                    1,              //     PUSH_UNDEFINED
                 ] ) );
 
             } );
@@ -760,7 +756,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     3,                            //         PUSH_FAILED
                     6,                            //   * POP
                     7,                            //     POP_CURR_POS
-                    3                             //     PUSH_FAILED
+                    3,                             //     PUSH_FAILED
                 ] ) );
 
             } );
@@ -773,7 +769,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [
                         { type: "literal", value: "a", ignoreCase: false },
                         { type: "literal", value: "b", ignoreCase: false },
-                        { type: "literal", value: "c", ignoreCase: false }
+                        { type: "literal", value: "c", ignoreCase: false },
                     ],
                     [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ]
                 ) );
@@ -790,14 +786,14 @@ describe( "compiler pass |generateBytecode|", function () {
 
             expect( pass ).to.changeAST( [
                 "start = other",
-                "other = 'other'"
+                "other = 'other'",
             ].join( "\n" ), {
                 rules: [
                     {
-                        bytecode: [ 27, 1 ]   // RULE
+                        bytecode: [ 27, 1 ],   // RULE
                     },
-                    { }
-                ]
+                    { },
+                ],
             } );
 
         } );
@@ -815,7 +811,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "generates correct bytecode", function () {
 
                     expect( pass ).to.changeAST( grammar, bytecodeDetails( [
-                        0   // PUSH_EMPTY_STRING
+                        0,   // PUSH_EMPTY_STRING
                     ] ) );
 
                 } );
@@ -838,7 +834,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         23, 0,         // EXPECT <0>
                         18, 0, 2, 1,   // MATCH_STRING <0>
                         22, 0,         //   * ACCEPT_STRING <0>
-                        3              //   * PUSH_FAILED
+                        3,              //   * PUSH_FAILED
                     ] ) );
 
                 } );
@@ -866,7 +862,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         23, 0,         // EXPECT <0>
                         19, 0, 2, 1,   // MATCH_STRING_IC <0>
                         21, 1,         //   * ACCEPT_N <1>
-                        3              //   * PUSH_FAILED
+                        3,              //   * PUSH_FAILED
                     ] ) );
 
                 } );
@@ -895,7 +891,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 it( "generates correct bytecode", function () {
 
                     expect( pass ).to.changeAST( grammar, bytecodeDetails( [
-                        0   // PUSH_EMPTY_STRING
+                        0,   // PUSH_EMPTY_STRING
                     ] ), {}, { reportFailures: false } );
 
                 } );
@@ -917,16 +913,14 @@ describe( "compiler pass |generateBytecode|", function () {
                     expect( pass ).to.changeAST( grammar, bytecodeDetails( [
                         18, 0, 2, 1,   // MATCH_STRING <0>
                         22, 0,         //   * ACCEPT_STRING <0>
-                        3              //   * PUSH_FAILED
+                        3,              //   * PUSH_FAILED
                     ] ), {}, { reportFailures: false } );
 
                 } );
 
                 it( "defines correct constants", function () {
 
-                    expect( pass ).to.changeAST( grammar, constsDetails(
-                        [ "a" ], [], [], []
-                    ), {}, { reportFailures: false } );
+                    expect( pass ).to.changeAST( grammar, constsDetails( [ "a" ], [], [], [] ), {}, { reportFailures: false } );
 
                 } );
 
@@ -941,16 +935,14 @@ describe( "compiler pass |generateBytecode|", function () {
                     expect( pass ).to.changeAST( grammar, bytecodeDetails( [
                         19, 0, 2, 1,   // MATCH_STRING_IC <0>
                         21, 1,         //   * ACCEPT_N <1>
-                        3              //   * PUSH_FAILED
+                        3,              //   * PUSH_FAILED
                     ] ), {}, { reportFailures: false } );
 
                 } );
 
                 it( "defines correct constants", function () {
 
-                    expect( pass ).to.changeAST( grammar, constsDetails(
-                        [ "a" ], [], [], []
-                    ), {}, { reportFailures: false } );
+                    expect( pass ).to.changeAST( grammar, constsDetails( [ "a" ], [], [], [] ), {}, { reportFailures: false } );
 
                 } );
 
@@ -970,7 +962,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     23, 0,         // EXPECT <0>
                     20, 0, 2, 1,   // MATCH_CLASS <0>
                     21, 1,         //   * ACCEPT_N <1>
-                    3              //   * PUSH_FAILED
+                    3,              //   * PUSH_FAILED
                 ] ) );
 
             } );
@@ -1030,16 +1022,16 @@ describe( "compiler pass |generateBytecode|", function () {
                             {
                                 value: [ "a", [ "b", "d" ], "e", [ "f", "h" ], "i", [ "j", "l" ] ],
                                 inverted: false,
-                                ignoreCase: false
-                            }
+                                ignoreCase: false,
+                            },
                         ],
                         [
                             {
                                 type: "class",
                                 value: [ "a", [ "b", "d" ], "e", [ "f", "h" ], "i", [ "j", "l" ] ],
                                 inverted: false,
-                                ignoreCase: false
-                            }
+                                ignoreCase: false,
+                            },
                         ],
                         []
                     ) );
@@ -1057,7 +1049,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 expect( pass ).to.changeAST( "start = [a]", bytecodeDetails( [
                     20, 0, 2, 1,   // MATCH_CLASS <0>
                     21, 1,         //   * ACCEPT_N <1>
-                    3              //   * PUSH_FAILED
+                    3,              //   * PUSH_FAILED
                 ] ), {}, { reportFailures: false } );
 
             } );
@@ -1066,9 +1058,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 it( "defines correct constants", function () {
 
-                    expect( pass ).to.changeAST( "start = [a]", constsDetails(
-                        [], [ { value: [ "a" ], inverted: false, ignoreCase: false } ], [], []
-                    ), {}, { reportFailures: false } );
+                    expect( pass ).to.changeAST( "start = [a]", constsDetails( [], [ { value: [ "a" ], inverted: false, ignoreCase: false } ], [], [] ), {}, { reportFailures: false } );
 
                 } );
 
@@ -1078,9 +1068,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 it( "defines correct constants", function () {
 
-                    expect( pass ).to.changeAST( "start = [^a]", constsDetails(
-                        [], [ { value: [ "a" ], inverted: true, ignoreCase: false } ], [], []
-                    ), {}, { reportFailures: false } );
+                    expect( pass ).to.changeAST( "start = [^a]", constsDetails( [], [ { value: [ "a" ], inverted: true, ignoreCase: false } ], [], [] ), {}, { reportFailures: false } );
 
                 } );
 
@@ -1090,9 +1078,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 it( "defines correct constants", function () {
 
-                    expect( pass ).to.changeAST( "start = [a]i", constsDetails(
-                        [], [ { value: [ "a" ], inverted: false, ignoreCase: true } ], [], []
-                    ), {}, { reportFailures: false } );
+                    expect( pass ).to.changeAST( "start = [a]i", constsDetails( [], [ { value: [ "a" ], inverted: false, ignoreCase: true } ], [], [] ), {}, { reportFailures: false } );
 
                 } );
 
@@ -1108,8 +1094,8 @@ describe( "compiler pass |generateBytecode|", function () {
                             {
                                 value: [ "a", [ "b", "d" ], "e", [ "f", "h" ], "i", [ "j", "l" ] ],
                                 inverted: false,
-                                ignoreCase: false
-                            }
+                                ignoreCase: false,
+                            },
                         ],
                         [],
                         []
@@ -1135,7 +1121,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     23, 0,      // EXPECT <0>
                     17, 2, 1,   // MATCH_ANY
                     21, 1,      //   * ACCEPT_N <1>
-                    3           //   * PUSH_FAILED
+                    3,           //   * PUSH_FAILED
                 ] ) );
 
             } );
@@ -1160,7 +1146,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 expect( pass ).to.changeAST( grammar, bytecodeDetails( [
                     17, 2, 1,   // MATCH_ANY
                     21, 1,      //   * ACCEPT_N <1>
-                    3           //   * PUSH_FAILED
+                    3,           //   * PUSH_FAILED
                 ] ), {}, { reportFailures: false } );
 
             } );

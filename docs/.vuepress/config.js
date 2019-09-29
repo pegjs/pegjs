@@ -40,6 +40,6 @@ module.exports = {
     extraWatchFiles: [
         require.resolve( "./config/nav.js" ),
         require.resolve( "./config/sidebar.js" ),
-    ]
+    ],
 
 };

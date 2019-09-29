@@ -25,7 +25,7 @@ function reportDuplicateRules( ast, session ) {
 
             rules[ node.name ] = node.location;
 
-        }
+        },
     } );
 
     check( ast );

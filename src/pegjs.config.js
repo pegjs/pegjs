@@ -10,7 +10,7 @@ module.exports = {
     dependencies: {
 
         ast: "./ast",
-        util: "./util"
+        util: "./util",
 
     },
 

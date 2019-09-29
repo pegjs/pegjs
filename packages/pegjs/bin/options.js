@@ -19,7 +19,7 @@ let options = {
     "output": "source",
     "parser": {},
     "plugins": [],
-    "trace": false
+    "trace": false,
 };
 
 const EXPORT_VAR_FORMATS = [ "globals", "umd" ];

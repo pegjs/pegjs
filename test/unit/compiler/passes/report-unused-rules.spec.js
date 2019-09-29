@@ -28,7 +28,7 @@ describe( "compiler pass |reportUnusedRules|", function () {
             `,
             [
                 `Rule "used" is not referenced.`,
-                `Rule "unused" is not referenced.`
+                `Rule "unused" is not referenced.`,
             ]
         );
 
@@ -55,7 +55,7 @@ describe( "compiler pass |reportUnusedRules|", function () {
             `,
             null,
             {
-                allowedStartRules: [ "b", "c" ]
+                allowedStartRules: [ "b", "c" ],
             }
         );
 

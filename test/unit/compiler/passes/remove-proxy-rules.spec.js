@@ -18,16 +18,16 @@ describe( "compiler pass |removeProxyRules|", function () {
                 [
                     "start = proxy",
                     "proxy = proxied",
-                    "proxied = 'a'"
+                    "proxied = 'a'",
                 ].join( "\n" ),
                 {
                     rules: [
                         {
                             name: "start",
-                            expression: { type: "rule_ref", name: "proxied" }
+                            expression: { type: "rule_ref", name: "proxied" },
                         },
-                        { name: "proxied" }
-                    ]
+                        { name: "proxied" },
+                    ],
                 },
                 { allowedStartRules: [ "start" ] }
             );
@@ -44,20 +44,20 @@ describe( "compiler pass |removeProxyRules|", function () {
                 [
                     "start = proxy",
                     "proxy = proxied",
-                    "proxied = 'a'"
+                    "proxied = 'a'",
                 ].join( "\n" ),
                 {
                     rules: [
                         {
                             name: "start",
-                            expression: { type: "rule_ref", name: "proxied" }
+                            expression: { type: "rule_ref", name: "proxied" },
                         },
                         {
                             name: "proxy",
-                            expression: { type: "rule_ref", name: "proxied" }
+                            expression: { type: "rule_ref", name: "proxied" },
                         },
-                        { name: "proxied" }
-                    ]
+                        { name: "proxied" },
+                    ],
                 },
                 { allowedStartRules: [ "start", "proxy" ] }
             );

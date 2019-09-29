@@ -35,14 +35,14 @@ const compiler = {
             reportIncorrectPlucking: reportIncorrectPlucking,
         },
         transform: {
-            removeProxyRules: removeProxyRules
+            removeProxyRules: removeProxyRules,
         },
         generate: {
             calcReportFailures: calcReportFailures,
             inferenceMatchResult: inferenceMatchResult,
             generateBytecode: generateBytecode,
-            generateJS: generateJS
-        }
+            generateJS: generateJS,
+        },
     },
 
     // Generates a parser from a specified grammar AST. Throws |peg.GrammarError|
@@ -62,7 +62,7 @@ const compiler = {
             header: null,
             optimize: "speed",
             output: "parser",
-            trace: false
+            trace: false,
         } );
 
         // We want `session.vm.evalModule` to return the parser
@@ -91,7 +91,7 @@ const compiler = {
 
         }
 
-    }
+    },
 
 };
 

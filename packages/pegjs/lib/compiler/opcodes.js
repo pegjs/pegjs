@@ -53,7 +53,7 @@ const opcodes = {
     SILENT_FAILS_OFF:  29,   // SILENT_FAILS_OFF
 
     EXPECT_NS_BEGIN:   38,   // EXPECT_NS_BEGIN
-    EXPECT_NS_END:     39    // EXPECT_NS_END invert
+    EXPECT_NS_END:     39,    // EXPECT_NS_END invert
 
 };
 

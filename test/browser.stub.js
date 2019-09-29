@@ -1,3 +1,5 @@
+/* globals mocha */
+
 "use strict";
 
 /*

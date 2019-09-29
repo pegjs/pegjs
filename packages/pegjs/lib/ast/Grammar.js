@@ -15,6 +15,7 @@ class Grammar extends Node {
         this.comments = comments;
         this.rules = rules;
 
+        // eslint-disable-next-line no-use-before-define
         this._alwaysConsumesOnSuccess = new AlwaysConsumesOnSuccess( this );
 
     }

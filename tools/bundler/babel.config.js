@@ -10,10 +10,10 @@ module.exports = {
             {
                 "modules": false,
                 "targets": {
-                    "ie": 11
-                }
-            }
-        ]
-    ]
+                    "ie": 11,
+                },
+            },
+        ],
+    ],
 
 };
