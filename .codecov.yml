@@ -2,6 +2,13 @@ codecov:
   ci:
     - github.com
 
+coverage:
+  status:
+    project:
+      default:
+        target: 90%
+        threshold: 1
+
 ignore:
   - "**/*/dist/*.js"
   - "**/*.{spec,test}.js"
