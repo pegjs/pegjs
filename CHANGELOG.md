@@ -81,13 +81,14 @@
 * Switch from Jasmine to Mocha & Chai ([#409](https://github.com/pegjs/pegjs/issues/409))
 * Removed Makefile (Had switched to Gulp, but removed that as well); Using the _scripts_ field of `package.json` instead
 * Rewrote `tools/impact`; previously a bash script that required external programs, it's now a cross-platform Node script
-* Added coverage via [Istanbul](https://www.npmjs.com/package/nyc), [coveralls.io](https://coveralls.io/github/pegjs/pegjs) and [codeclimate.com](https://codeclimate.com/github/pegjs/pegjs) ([#546](https://github.com/pegjs/pegjs/pull/546), [#596](https://github.com/pegjs/pegjs/pull/596))
-* Updated spec tests
-* Switched to Yarn for workspace based development (_NOTE:_ Yarn should not be required for production use)
+* Added coverage via [Istanbul](https://www.npmjs.com/package/nyc) ([#546](https://github.com/pegjs/pegjs/pull/546))
+* Test coverage reports are now submitted to [https://codecov.io/gh/pegjs/pegjs](https://codecov.io/gh/pegjs/pegjs)
+* Updated existing spec tests
+* Switched to Yarn for workspace based development (_NOTE:_ Yarn is not be required for production use)
 * Updated keywords for the [NPM package](https://www.npmjs.com/package/pegjs)
-* Moved source code for the [website](https://pegjs.org/) into the main repository; the website is updated as repo is updated now
+* Archived the website's repository; it is now built from the docs and deployed every time the main repository is updated
 * Added the [spec](https://pegjs.org/development/test) and [benchmark](https://pegjs.org/development/benchmark) tests to the website
-* Switch from [Browserify](https://github.com/browserify/browserify) to [Rollup](https://rollupjs.org/)
-* Auto-import PEG.js version using `require("pegjs/package.json")`, and on dist generation use [rollup-plugin-json](https://www.npmjs.com/package/rollup-plugin-json)
+* Switch from [Browserify](https://github.com/browserify/browserify) to [Webpack](https://webpack.js.org/)
+* Export's PEG.js version from `require("pegjs/package.json").version`
 * Added https://pegjs.org/development/try; an editor that uses the latest source files for PEG.js
-* Replaced [Travis CI support](https://travis-ci.org/pegjs/pegjs/builds) with [Azure Pipelines](https://dev.azure.com/pegjs/pegjs/_build) ([#596](https://github.com/pegjs/pegjs/pull/596))
+* Replaced [Travis CI support](https://travis-ci.org/pegjs/pegjs/builds) with GitHub Actions
