@@ -39,9 +39,9 @@ module.exports = {
     },
 
     plugins: [
-        [ '@vuepress/back-to-top', true ],
-        [ '@vuepress/google-analytics', {
-            ga: 'UA-100728112-1'
+        [ "@vuepress/back-to-top", true ],
+        [ "@vuepress/google-analytics", {
+            ga: "UA-100728112-1",
         } ],
     ],
 

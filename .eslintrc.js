@@ -22,7 +22,7 @@ module.exports = {
         "files": [
             "test/unit/compiler/passes/helpers.js",
             "*.spec.js",
-            "*.test.js"
+            "*.test.js",
         ],
         "extends": "@futagoza/dev/test",
         "rules": {
