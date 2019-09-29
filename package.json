@@ -24,7 +24,7 @@
     "dependencies": {
         "@futagoza/eslint-config": "9.3.0",
         "@futagoza/eslint-config-dev": "9.3.0",
-        "@types/node": "6",
+        "@types/node": "8",
         "codecov": "3.6.1",
         "eslint": "6.4.0",
         "mocha": "6.2.0",
