@@ -55,7 +55,7 @@ function publish( id ) {
     // update version field in `<package>/package.json`
 
     const GIT_COMMIT_SHORT_SHA = exec( "git rev-parse --short " + GITHUB_SHA, false );
-    const dev = `${ VERSION }-${ GITHUB_REF }.${ GIT_COMMIT_SHORT_SHA }`;
+    const dev = `${ VERSION }-${ GITHUB_REF.replace( "refs/heads/", "" ) }.${ GIT_COMMIT_SHORT_SHA }`;
 
     exec( `npm --no-git-tag-version -f version ${ dev }` );
 
