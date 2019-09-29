@@ -35,6 +35,6 @@
         "vuepress": "1.1.0"
     },
     "engines": {
-        "node": ">= 6"
+        "node": ">= 8"
     }
 }

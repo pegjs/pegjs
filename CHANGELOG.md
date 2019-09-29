@@ -9,9 +9,9 @@
 * [Implemented value plucking](https://github.com/pegjs/pegjs/commit/460f0cc5bc9e7b12e7830a13a9afa5026a5f20f4): e.g. When `grammar = "-" @$[a-z]i* "-"` is given `-PEGjs-`, it returns `PEGjs`
 * Upgraded JavaScript support:
   - Parser's are generated in ES5
-  - Source code for PEG.js and scripts in the repository are written in ES2015, for Node 6+
+  - Source code for PEG.js and scripts in the repository are written in ES2015, for Node 8+
   - The browser release is in ES5, generated using [Rollup](https://rollupjs.org/) and [Babel](https://babeljs.io/)
-  - Dropped support for Node versions _0.x_, _4_ and _non-LTS_ versions (e.g. `5`, `7`, etc)
+  - Dropped support for Node versions _0.x_, _4_, _6_ and _non-LTS_ versions (e.g. `7`, `9`, etc)
   - Dropped support for IE versions _8_, _9_ and _10_
 * Updated documentation:
   - extracted to separate markdown files in the [docs folder](https://github.com/pegjs/pegjs/tree/master/docs)
