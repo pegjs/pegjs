@@ -2,6 +2,7 @@
     "name": "pegjs-dev",
     "private": true,
     "workspaces": [
+        "docs",
         "packages/*",
         "tools/*",
         "test"

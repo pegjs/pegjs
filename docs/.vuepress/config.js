@@ -13,7 +13,7 @@ module.exports = {
 
     ],
     dest: "dist",
-    ga: "UA-100728112-1",
+
     themeConfig: {
 
         nav: require( "./config/nav.js" ),
@@ -34,8 +34,16 @@ module.exports = {
         docsDir: "docs",
         editLinks: true,
         evergreen: false,
+        smoothScroll: true,
 
     },
+
+    plugins: [
+        [ '@vuepress/back-to-top', true ],
+        [ '@vuepress/google-analytics', {
+            ga: 'UA-100728112-1'
+        } ],
+    ],
 
     extraWatchFiles: [
         require.resolve( "./config/nav.js" ),
