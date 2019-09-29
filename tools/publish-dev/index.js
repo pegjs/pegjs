@@ -2,15 +2,9 @@
 
 const publish = require( "./publish" );
 
-const {
+if ( process.env.GITHUB_EVENT_NAME === "push" ) {
 
-    BUILD_REASON,
-
-} = process.env;
-
-if ( BUILD_REASON && BUILD_REASON === "PullRequest" ) {
-
-    console.log( "Skipping publish, PR's are not published." );
+    console.log( "Skipping publish because dev release's are only published on `git push`." );
     process.exit( 0 );
 
 }

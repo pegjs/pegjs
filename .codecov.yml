@@ -1,6 +1,6 @@
 codecov:
   ci:
-    - dev.azure.com
+    - github.com
 
 ignore:
   - "**/*/dist/*.js"

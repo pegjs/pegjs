@@ -1,6 +1,6 @@
-[![Build Status](https://dev.azure.com/pegjs/pegjs/_apis/build/status/Azure%20Pipelines?branchName=master)](https://dev.azure.com/pegjs/pegjs/_build/latest?definitionId=1?branchName=master)
+![](https://github.com/pegjs/pegjs/workflows/Github%20Actions/badge.svg)
 [![Codecov](https://codecov.io/gh/pegjs/pegjs/branch/master/graph/badge.svg)](https://codecov.io/gh/pegjs/pegjs)
-[![Maintainability](https://api.codeclimate.com/v1/badges/2d1f0313dea3e28e191f/maintainability)](https://codeclimate.com/github/pegjs/pegjs/maintainability)
+[![CodeFactor](https://www.codefactor.io/repository/github/pegjs/pegjs/badge)](https://www.codefactor.io/repository/github/pegjs/pegjs)
 [![forum](https://gitq.com/badge.svg)](https://gitq.com/pegjs/pegjs)
 [![license](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 

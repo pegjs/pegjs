@@ -20,18 +20,11 @@ function publish( id ) {
 
     const {
 
-        GIT_BRANCH,
+        GITHUB_REF,
+        GITHUB_SHA,
         NPM_TOKEN,
 
     } = process.env;
-
-    let {
-
-        GIT_COMMIT_SHA,
-
-    } = process.env;
-
-    if ( GIT_COMMIT_SHA === "not-found" ) GIT_COMMIT_SHA = GIT_BRANCH;
 
     // local helpers
 
@@ -55,13 +48,14 @@ function publish( id ) {
 
     // assertions
 
-    if ( ! GIT_BRANCH ) die( "`process.env.GIT_BRANCH` is required by " + APP );
+    if ( ! GITHUB_REF ) die( "`process.env.GITHUB_REF` is required by " + APP );
+    if ( ! GITHUB_SHA ) die( "`process.env.GITHUB_SHA` is required by " + APP );
     if ( ! NPM_TOKEN ) die( "`process.env.NPM_TOKEN` is required by " + APP );
 
     // update version field in `<package>/package.json`
 
-    const GIT_COMMIT_SHORT_SHA = exec( "git rev-parse --short " + GIT_COMMIT_SHA, false );
-    const dev = `${ VERSION }-${ GIT_BRANCH }.${ GIT_COMMIT_SHORT_SHA }`;
+    const GIT_COMMIT_SHORT_SHA = exec( "git rev-parse --short " + GITHUB_SHA, false );
+    const dev = `${ VERSION }-${ GITHUB_REF }.${ GIT_COMMIT_SHORT_SHA }`;
 
     exec( `npm --no-git-tag-version -f version ${ dev }` );
 

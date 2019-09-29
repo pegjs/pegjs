@@ -1,0 +1,87 @@
+name: Github Actions
+
+on: [ push, pull_request ]
+
+jobs:
+
+  lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Install Node.js
+      uses: actions/setup-node@master
+      with:
+        node-version: 10.x
+
+    - name: Install Yarn
+      run: npm install --global yarn
+
+    - name: Install dependencies
+      run: yarn --ignore-engines
+
+    - name: Lint JavaScript files using ESLint
+      run: yarn lint
+
+  ci:
+    name: Test
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [ 6.x, 8.x, 10.x, 12.x ]
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Install Node.js
+      uses: actions/setup-node@master
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Yarn
+      run: npm install --global yarn
+
+    - name: Install dependencies
+      run: yarn --ignore-engines
+
+    - name: Run tests
+      run: yarn test
+
+    - name: Publish code coverage results
+      run: yarn coverage
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  cd:
+    name: Publish
+    needs: [ lint, ci ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Install Node.js
+      uses: actions/setup-node@master
+      with:
+        node-version: 10.x
+
+    - name: Install Yarn
+      run: npm install --global yarn
+
+    - name: Install dependencies
+      run: yarn --ignore-engines
+
+    - name: 'Build "pegjs/dist/*.js" files'
+      run: yarn build-dist
+
+    - name: Publish pegjs@dev to NPM
+      run: node tools/publish-dev
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
