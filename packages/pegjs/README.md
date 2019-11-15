@@ -1,6 +1,6 @@
-[![Build Status](https://dev.azure.com/pegjs/pegjs/_apis/build/status/Azure%20Pipelines?branchName=master)](https://dev.azure.com/pegjs/pegjs/_build/latest?definitionId=1?branchName=master)
-[![coverage](https://img.shields.io/coveralls/github/pegjs/pegjs.svg)](https://coveralls.io/github/pegjs/pegjs)
-[![Maintainability](https://api.codeclimate.com/v1/badges/2d1f0313dea3e28e191f/maintainability)](https://codeclimate.com/github/pegjs/pegjs/maintainability)
+![GitHub Actions](https://github.com/pegjs/pegjs/workflows/Github%20Actions/badge.svg)
+[![Codecov](https://codecov.io/gh/pegjs/pegjs/branch/master/graph/badge.svg)](https://codecov.io/gh/pegjs/pegjs)
+[![CodeFactor](https://www.codefactor.io/repository/github/pegjs/pegjs/badge)](https://www.codefactor.io/repository/github/pegjs/pegjs)
 [![license](https://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 
 PEG.js is a simple parser generator for JavaScript that produces fast parsers with excellent error reporting. You can use it to process complex data or computer languages and build transformers, interpreters, compilers and other tools easily.
