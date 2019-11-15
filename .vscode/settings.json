@@ -1,6 +1,0 @@
-{
-    "eslint.workingDirectories": [
-        ".",
-        "docs/.vuepress"
-    ]
-}

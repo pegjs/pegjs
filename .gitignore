@@ -1,7 +1,6 @@
 /.idea
 /packages/pegjs/dist
 /packages/pegjs/.npmrc
-/docs/.vuepress/dist
 /dist
 /examples/*.js
 node_modules

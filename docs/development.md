@@ -1,8 +1,3 @@
----
-title: Development
-editLink: false
----
-
 PEG.js is currently maintained by [Futago-za Ryuu](https://github.com/futagoza) ([@futagozaryuu](https://twitter.com/futagozaryuu)).
 
 Since it's [inception](https://www.google.com/search?q=inception+meaning) in 2010, PEG.js was maintained by [David Majda](https://majda.cz/) ([@dmajda](http://twitter.com/dmajda)), until [May 2017](https://github.com/pegjs/pegjs/issues/503).
@@ -35,5 +30,3 @@ _Ensure you have Node.js 8.6+ and Yarn installed._
 It's also a good idea to check out the [package.json](https://github.com/pegjs/pegjs/blob/master/package.json) that defines various scripts.
 
 To see the list of contributors check out the [repository's contributors page](https://github.com/pegjs/pegjs/graphs/contributors).
-
-<PageFooter />

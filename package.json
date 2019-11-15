@@ -8,11 +8,9 @@
         "test"
     ],
     "scripts": {
-        "lint": "eslint --ext .js,.vue . docs/.vuepress",
+        "lint": "eslint --ext .js .",
         "spec": "mocha --reporter progress",
         "benchmark": "node tools/benchmark",
-        "build-docs": "vuepress build docs",
-        "watch-docs": "vuepress dev docs",
         "build-parser": "pegjs -c src/pegjs.config.js",
         "build-dist": "bundle",
         "watch-dist": "bundle --watch",
@@ -30,8 +28,7 @@
         "eslint": "6.4.0",
         "mocha": "6.2.0",
         "nyc": "14.1.1",
-        "rimraf": "3.0.0",
-        "vuepress": "1.1.0"
+        "rimraf": "3.0.0"
     },
     "engines": {
         "node": ">= 8"

@@ -1,9 +1,0 @@
-{
-    "name": "@pegjs/website",
-    "version": "2.0.0-wip",
-    "private": true,
-    "dependencies": {
-        "@vuepress/plugin-back-to-top": "1.1.0",
-        "@vuepress/plugin-google-analytics": "1.1.0"
-    }
-}

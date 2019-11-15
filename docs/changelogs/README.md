@@ -1,7 +1,3 @@
----
-editLink: false
----
-
 * [v0.10](./v0.10.md) _(August 19, 2016)_
 * [v0.9](./v0.9.md) _(August 30, 2015)_
 * [v0.8](./v0.8.md) _(December 24, 2013)_
@@ -16,5 +12,3 @@ editLink: false
 * [v0.2.1](./v0.2.md) _(March 8, 2010)_
 * [v0.2](./v0.2.md) _(March 8, 2010)_
 * [v0.1](./v0.1.md) _(March 8, 2010)_
-
-<PageFooter />

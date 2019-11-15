@@ -5,6 +5,4 @@
 /coverage
 node_modules
 /website/*/**
-/docs/.vuepress/dist
-/docs/.vuepress/public
 /dist
