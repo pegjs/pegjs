@@ -21,12 +21,11 @@
         "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
     },
     "dependencies": {
-        "@futagoza/eslint-config": "9.3.0",
-        "@futagoza/eslint-config-dev": "9.3.0",
+        "@futagoza/eslint-config": "11.2.0",
         "@types/node": "8",
         "codecov": "3.6.1",
-        "eslint": "6.4.0",
-        "mocha": "6.2.0",
+        "eslint": "6.6.0",
+        "mocha": "6.2.2",
         "nyc": "14.1.1",
         "rimraf": "3.0.0"
     },
