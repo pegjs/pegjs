@@ -2,4 +2,4 @@
 
 "use strict";
 
-require( "webpack-cli" );
+require( "webpack-nano/bin/wp" );

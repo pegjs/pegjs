@@ -1,6 +1,6 @@
 {
     "name": "@pegjs/bundler",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "private": true,
     "bin": {
         "bundle": "bundler.js"
@@ -13,9 +13,6 @@
         "ts-loader": "6.2.1",
         "typescript": "3.7.2",
         "webpack": "4.41.2",
-        "webpack-cli": "3.3.10"
-    },
-    "engines": {
-        "node": ">= 6"
+        "webpack-nano": "0.8.1"
     }
 }

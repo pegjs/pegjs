@@ -2,49 +2,36 @@
 
 const dedent = require( "dedent" );
 const path = require( "path" );
-const peg = require( "pegjs" );
 const webpack = require( "webpack" );
 
-const HEADER = dedent`
-
-    /**
-     * PEG.js v${ peg.VERSION }, [hash]
-     * https://pegjs.org/
-     *
-     * Copyright (c) 2010-2016 David Majda
-     * Copyright (c) 2017+ Futago-za Ryuu
-     *
-     * Released under the MIT License.
-     */
-
-    /* eslint-disable */
-
-`;
-
-/**
- * 
- * @param {{ entry: string|{}, output: string }} param0
- */
-
-function target( { entry, library, output } ) {
+function target( { banner, entry, library, minimize, output } ) {
 
     const cwd = process.cwd();
+    const plugins = [];
+
+    if ( typeof banner === "string" ) {
+
+        banner = dedent( banner );
+
+        plugins.push( new webpack.BannerPlugin( { banner, raw: true } ) );
+
+    }
 
     return {
 
         mode: process.argv.includes( "--mode=development" ) ? "development" : "production",
-        entry: entry,
+        entry,
         output: {
             path: path.dirname( path.resolve( cwd, output ) ),
             filename: path.basename( output ),
-            library: library,
+            library,
             libraryTarget: "umd",
             umdNamedDefine: true,
             sourcePrefix: "  ",
             globalObject: "typeof self !== 'undefined' ? self : window",
         },
         optimization: {
-            minimize: output.endsWith( ".min.js" ),
+            minimize: minimize != null ? !! minimize : output.endsWith( ".min.js" ),
         },
         performance: {
             hints: false,
@@ -68,12 +55,7 @@ function target( { entry, library, output } ) {
                 },
             ],
         },
-        plugins: [
-            new webpack.BannerPlugin( {
-                banner: HEADER,
-                raw: true,
-            } ),
-        ],
+        plugins,
 
     };
 
