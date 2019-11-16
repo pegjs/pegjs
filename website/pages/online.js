@@ -1,3 +1,9 @@
+"use strict";
+
+const template = require( "../templates/editor" );
+
+const input = `
+
 // Simple Arithmetics Grammar
 // ==========================
 //
@@ -27,4 +33,12 @@ Integer "integer"
   = _ [0-9]+ { return parseInt(text(), 10); }
 
 _ "whitespace"
-  = [ \t\n\r]*
+  = [ \\t\\n\\r]*
+
+`;
+
+module.exports = () => template( {
+    title: "Online Version",
+    lib: "/vendor/pegjs/peg.js",
+    input: input.trim(),
+} );

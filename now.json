@@ -1,13 +1,21 @@
 {
     "version": 2,
-    "name": "pegjs-next-website",
+    "name": "pegjs",
     "alias": [
-        "next.pegjs.org"
+        "pegjs.org",
+        "www.pegjs.org"
     ],
-    "builds": [
+    "routes": [
         {
-            "src": "package.json",
-            "use": "@now/static-build"
+            "handle": "filesystem"
+        },
+        {
+            "src": "/",
+            "dest": "/index.html"
+        },
+        {
+            "src": "/([^\\.*]+)",
+            "dest": "/$1.html"
         }
     ]
 }

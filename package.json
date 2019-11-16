@@ -2,10 +2,10 @@
     "name": "pegjs-dev",
     "private": true,
     "workspaces": [
-        "docs",
         "packages/*",
         "tools/*",
-        "test"
+        "test",
+        "website"
     ],
     "scripts": {
         "lint": "eslint --ext .js .",
@@ -13,10 +13,10 @@
         "benchmark": "node tools/benchmark",
         "build-parser": "pegjs -c src/pegjs.config.js",
         "build-dist": "bundle",
-        "watch-dist": "bundle --watch",
-        "clean": "rimraf packages/pegjs/dist examples/*.js",
+        "build-website": "node website/export",
+        "clean": "rimraf public packages/pegjs/dist examples/*.js",
         "impact": "node tools/impact master",
-        "now-build": "npm run build-docs",
+        "build": "node website/export --fresh",
         "test": "nyc mocha",
         "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
     },

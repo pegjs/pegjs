@@ -3,6 +3,7 @@ $(document).ready(function() {
   var MS_IN_S = 1000;
 
   var parser;
+  var parserSource       = null;
 
   var buildAndParseTimer = null;
   var parseTimer         = null;
@@ -51,7 +52,7 @@ $(document).ready(function() {
 
     try {
       var timeBefore = (new Date).getTime();
-      var parserSource = peg.generate(getGrammar(), {
+      parserSource = peg.generate(getGrammar(), {
         cache:    $("#option-cache").is(":checked"),
         optimize: $("#option-optimize").val(),
         output:   "source"
@@ -69,7 +70,6 @@ $(document).ready(function() {
           timeAfter - timeBefore
         ));
       $("#input").removeAttr("disabled");
-      $("#parser-source").val($("#parser-var").val() + " = " + parserSource + ";\n");
       $("#parser-var").removeAttr("disabled");
       $("#option-cache").removeAttr("disabled");
       $("#option-optimize").removeAttr("disabled");
@@ -199,6 +199,14 @@ $(document).ready(function() {
     .keydown(scheduleParse)
     .keyup(scheduleParse)
     .keypress(scheduleParse);
+
+  $( "#parser-download" )
+    .click(function(){
+
+      var blob = new Blob( [ $( "#parser-var" ).val() + " = " + parserSource + ";\n" ], { type: "application/javascript" } );
+      window.saveAs( blob, "parser.js" );
+
+    });
 
   doLayout();
   $(window).resize(doLayout);

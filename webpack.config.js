@@ -43,16 +43,4 @@ module.exports = [
 
     } ),
 
-    /* https://unpkg.com/pegjs@dev/dist/*-bundle.min.js */
-    target( {
-
-        entry: {
-            "benchmark": require.resolve( "@pegjs/benchmark-suite/browser.stub.js" ),
-            "test": require.resolve( "@pegjs/spec-suite/browser.stub.js" ),
-        },
-        library: [ "peg", "[name]" ],
-        output: "packages/pegjs/dist/[name]-bundle.min.js",
-
-    } ),
-
 ];

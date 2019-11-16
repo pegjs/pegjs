@@ -10,7 +10,6 @@ function publish( id ) {
 
     const packagejson = require.resolve( id + "/package.json" );
     const directory = path.dirname( packagejson );
-    const npmignore = path.join( directory, ".npmignore" );
     const npmrc = path.join( directory, ".npmrc" );
 
     // variabes
@@ -62,8 +61,6 @@ function publish( id ) {
     // add npm token and remove ignore file (this is a DEV release after all)
 
     fs.writeFileSync( npmrc, `//registry.npmjs.org/:_authToken=${ NPM_TOKEN }` );
-
-    if ( fs.existsSync( npmignore ) ) fs.unlinkSync( npmignore );
 
     // publish <package>@dev
 

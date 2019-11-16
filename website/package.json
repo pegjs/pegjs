@@ -1,12 +1,11 @@
 {
     "name": "@pegjs/website",
-    "version": "1.3.0",
+    "version": "2.0.0",
     "private": true,
     "dependencies": {
-        "body-parser": "1.19.0",
-        "ejs": "2.7.2",
-        "express": "4.17.1",
-        "express-layout": "0.1.0",
-        "morgan": "1.9.1"
+        "@futagoza/child-process": "1.0.0",
+        "@tache/is-source-newer": "1.0.0-beta.5",
+        "bluebird": "3.7.1",
+        "fs-extra-plus": "0.5.11"
     }
 }

@@ -1,8 +1,8 @@
 !.eslintrc.js
 /.idea
 /.nyc_output
+/public
 /packages/pegjs/dist
 /coverage
 node_modules
-/website/*/**
-/dist
+/website/assets

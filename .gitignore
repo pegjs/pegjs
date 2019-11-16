@@ -1,12 +1,11 @@
 /.idea
 /packages/pegjs/dist
 /packages/pegjs/.npmrc
-/dist
+/public
 /examples/*.js
 node_modules
 /coverage
 /.nyc_output
-/website/js/*-bundle.js
 /*.log
 /sh.exe.stackdump
 /test/junit-results.xml
