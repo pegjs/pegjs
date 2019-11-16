@@ -29,7 +29,7 @@ describe( "compiler pass |removeProxyRules|", function () {
                         { name: "proxied" },
                     ],
                 },
-                { allowedStartRules: [ "start" ] }
+                { allowedStartRules: [ "start" ] },
             );
 
         } );
@@ -59,7 +59,7 @@ describe( "compiler pass |removeProxyRules|", function () {
                         { name: "proxied" },
                     ],
                 },
-                { allowedStartRules: [ "start", "proxy" ] }
+                { allowedStartRules: [ "start", "proxy" ] },
             );
 
         } );

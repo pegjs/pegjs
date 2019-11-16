@@ -39,7 +39,7 @@ const js = {
         return sourceEscape(
             s
                 .replace( /\\/g, "\\\\" )   // backslash
-                .replace( /"/g, "\\\"" )    // closing double quote
+                .replace( /"/g, "\\\"" ),    // closing double quote
         );
 
     },
@@ -57,7 +57,7 @@ const js = {
                 .replace( /\//g, "\\/" )    // closing slash
                 .replace( /]/g, "\\]" )     // closing bracket
                 .replace( /\^/g, "\\^" )    // caret
-                .replace( /-/g, "\\-" )     // dash
+                .replace( /-/g, "\\-" ),     // dash
         );
 
     },

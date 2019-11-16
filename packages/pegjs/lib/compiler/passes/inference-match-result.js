@@ -90,7 +90,7 @@ function inferenceMatchResult( ast, session ) {
 
                         session.error(
                             "Infinity cycle detected when trying to evaluate node match result",
-                            node.location
+                            node.location,
                         );
 
                     }

@@ -19,7 +19,7 @@ function reportUnusedRules( ast, session, options ) {
 
             session.warn(
                 `Rule "${ rule.name }" is not referenced.`,
-                rule.location
+                rule.location,
             );
 
         }

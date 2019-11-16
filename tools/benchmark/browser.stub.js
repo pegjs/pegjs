@@ -98,7 +98,7 @@ $( "#run" ).click( () => {
                 test.title,
                 `https://github.com/pegjs/pegjs/blob/${ BRANCH }/tools/benchmark/${ benchmark.id }/${ test.file }`,
                 inputSize,
-                parseTime
+                parseTime,
             );
 
         },
@@ -122,7 +122,7 @@ $( "#run" ).click( () => {
                 benchmark.title + " total",
                 null,
                 inputSize,
-                parseTime
+                parseTime,
             );
 
         },
@@ -143,7 +143,7 @@ $( "#run" ).click( () => {
                 "Total",
                 null,
                 inputSize,
-                parseTime
+                parseTime,
             );
 
             $.scrollTo( "max", { axis: "y", duration: 500 } );

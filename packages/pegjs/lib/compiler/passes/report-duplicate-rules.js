@@ -18,7 +18,7 @@ function reportDuplicateRules( ast, session ) {
 
                 session.error(
                     `Rule "${ name }" is already defined at line ${ start.line }, column ${ start.column }.`,
-                    node.location
+                    node.location,
                 );
 
             }

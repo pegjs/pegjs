@@ -1,5 +1,3 @@
-/* eslint-disable function-call-argument-newline */
-
 "use strict";
 
 const chai = require( "chai" );
@@ -63,7 +61,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     { type: "literal", value: "b", ignoreCase: false },
                     { type: "literal", value: "c", ignoreCase: false },
                 ],
-                []
+                [],
             ) );
 
         } );
@@ -119,19 +117,19 @@ describe( "compiler pass |generateBytecode|", function () {
                     [],
                     [],
                     [ { type: "rule", value: "start" } ],
-                    []
+                    [],
                 ) );
                 expect( pass ).to.changeAST( grammar2, constsDetails(
                     [ "a" ],
                     [],
                     [ { type: "rule", value: "start" } ],
-                    []
+                    [],
                 ) );
                 expect( pass ).to.changeAST( grammar3, constsDetails(
                     [],
                     [ { value: [ "a" ], inverted: false, ignoreCase: false } ],
                     [ { type: "rule", value: "start" } ],
-                    []
+                    [],
                 ) );
 
             } );
@@ -209,7 +207,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [ "a" ],
                     [],
                     [ { type: "literal", value: "a", ignoreCase: false } ],
-                    [ { predicate: false, params: [], body: " code " } ]
+                    [ { predicate: false, params: [], body: " code " } ],
                 ) );
 
             } );
@@ -239,7 +237,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     [ "a" ],
                     [],
                     [ { type: "literal", value: "a", ignoreCase: false } ],
-                    [ { predicate: false, params: [ "a" ], body: " code " } ]
+                    [ { predicate: false, params: [ "a" ], body: " code " } ],
                 ) );
 
             } );
@@ -285,7 +283,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         { type: "literal", value: "b", ignoreCase: false },
                         { type: "literal", value: "c", ignoreCase: false },
                     ],
-                    [ { predicate: false, params: [ "a", "b", "c" ], body: " code " } ]
+                    [ { predicate: false, params: [ "a", "b", "c" ], body: " code " } ],
                 ) );
 
             } );
@@ -333,7 +331,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     { type: "literal", value: "b", ignoreCase: false },
                     { type: "literal", value: "c", ignoreCase: false },
                 ],
-                []
+                [],
             ) );
 
         } );
@@ -441,7 +439,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
-                []
+                [],
             ) );
 
         } );
@@ -476,7 +474,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
-                []
+                [],
             ) );
 
         } );
@@ -504,7 +502,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
-                []
+                [],
             ) );
 
         } );
@@ -534,7 +532,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
-                []
+                [],
             ) );
 
         } );
@@ -568,7 +566,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
-                []
+                [],
             ) );
 
         } );
@@ -593,7 +591,7 @@ describe( "compiler pass |generateBytecode|", function () {
                 [ "a" ],
                 [],
                 [ { type: "literal", value: "a", ignoreCase: false } ],
-                []
+                [],
             ) );
 
         } );
@@ -624,7 +622,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 expect( pass ).to.changeAST(
                     grammar,
-                    constsDetails( [], [], [], [ { predicate: true, params: [], body: " code " } ] )
+                    constsDetails( [], [], [], [ { predicate: true, params: [], body: " code " } ] ),
                 );
 
             } );
@@ -681,7 +679,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         { type: "literal", value: "b", ignoreCase: false },
                         { type: "literal", value: "c", ignoreCase: false },
                     ],
-                    [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ]
+                    [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ],
                 ) );
 
             } );
@@ -714,7 +712,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 expect( pass ).to.changeAST(
                     grammar,
-                    constsDetails( [], [], [], [ { predicate: true, params: [], body: " code " } ] )
+                    constsDetails( [], [], [], [ { predicate: true, params: [], body: " code " } ] ),
                 );
 
             } );
@@ -771,7 +769,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         { type: "literal", value: "b", ignoreCase: false },
                         { type: "literal", value: "c", ignoreCase: false },
                     ],
-                    [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ]
+                    [ { predicate: true, params: [ "a", "b", "c" ], body: " code " } ],
                 ) );
 
             } );
@@ -845,7 +843,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         [ "a" ],
                         [],
                         [ { type: "literal", value: "a", ignoreCase: false } ],
-                        []
+                        [],
                     ) );
 
                 } );
@@ -873,7 +871,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         [ "a" ],
                         [],
                         [ { type: "literal", value: "A", ignoreCase: true } ],
-                        []
+                        [],
                     ) );
 
                 } );
@@ -975,7 +973,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         [],
                         [ { value: [ "a" ], inverted: false, ignoreCase: false } ],
                         [ { type: "class", value: [ "a" ], inverted: false, ignoreCase: false } ],
-                        []
+                        [],
                     ) );
 
                 } );
@@ -990,7 +988,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         [],
                         [ { value: [ "a" ], inverted: true, ignoreCase: false } ],
                         [ { type: "class", value: [ "a" ], inverted: true, ignoreCase: false } ],
-                        []
+                        [],
                     ) );
 
                 } );
@@ -1005,7 +1003,7 @@ describe( "compiler pass |generateBytecode|", function () {
                         [],
                         [ { value: [ "a" ], inverted: false, ignoreCase: true } ],
                         [ { type: "class", value: [ "a" ], inverted: false, ignoreCase: true } ],
-                        []
+                        [],
                     ) );
 
                 } );
@@ -1033,7 +1031,7 @@ describe( "compiler pass |generateBytecode|", function () {
                                 ignoreCase: false,
                             },
                         ],
-                        []
+                        [],
                     ) );
 
                 } );
@@ -1098,7 +1096,7 @@ describe( "compiler pass |generateBytecode|", function () {
                             },
                         ],
                         [],
-                        []
+                        [],
                     ), {}, { reportFailures: false } );
 
                 } );
@@ -1130,7 +1128,7 @@ describe( "compiler pass |generateBytecode|", function () {
 
                 expect( pass ).to.changeAST(
                     grammar,
-                    constsDetails( [], [], [ { type: "any" } ], [] )
+                    constsDetails( [], [], [ { type: "any" } ], [] ),
                 );
 
             } );
@@ -1157,7 +1155,7 @@ describe( "compiler pass |generateBytecode|", function () {
                     grammar,
                     constsDetails( [], [], [], [] ),
                     {},
-                    { reportFailures: false }
+                    { reportFailures: false },
                 );
 
             } );

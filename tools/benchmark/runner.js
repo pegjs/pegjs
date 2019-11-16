@@ -70,7 +70,7 @@ const Runner = {
 
                 state.parser = peg.generate(
                     callbacks.readFile( "examples/" + benchmark.id + ".pegjs" ),
-                    options
+                    options,
                 );
                 state.benchmarkInputSize = 0;
                 state.benchmarkParseTime = 0;
@@ -113,7 +113,7 @@ const Runner = {
                 callbacks.benchmarkFinish(
                     benchmark,
                     state.benchmarkInputSize,
-                    state.benchmarkParseTime
+                    state.benchmarkParseTime,
                 );
 
                 state.totalInputSize += state.benchmarkInputSize;

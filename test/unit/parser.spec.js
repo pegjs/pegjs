@@ -24,7 +24,7 @@ function varyParserOptions( block ) {
 
         describe(
             "with options " + chai.util.inspect( variant ),
-            () => block( variant )
+            () => block( variant ),
         );
 
     } );
@@ -103,7 +103,7 @@ describe( "PEG.js grammar parser", function () {
     function actionGrammar( code ) {
 
         return oneRuleGrammar(
-            { type: "action", expression: literalAbcd, code: code }
+            { type: "action", expression: literalAbcd, code: code },
         );
 
     }
@@ -111,7 +111,7 @@ describe( "PEG.js grammar parser", function () {
     function literalGrammar( value, ignoreCase ) {
 
         return oneRuleGrammar(
-            { type: "literal", value: value, ignoreCase: ignoreCase }
+            { type: "literal", value: value, ignoreCase: ignoreCase },
         );
 
     }
@@ -260,7 +260,7 @@ describe( "PEG.js grammar parser", function () {
                 "expected #{this} to not parse as #{exp}",
                 expected,
                 result,
-                ! utils.flag( this, "negate" )
+                ! utils.flag( this, "negate" ),
             );
 
         } );
@@ -292,7 +292,7 @@ describe( "PEG.js grammar parser", function () {
                 "expected #{this} to fail to parse but got #{act}",
                 "expected #{this} to not fail to parse but it failed with #{act}",
                 null,
-                result
+                result,
             );
 
             if ( ! passed && typeof props !== "undefined" ) {
@@ -340,13 +340,13 @@ describe( "PEG.js grammar parser", function () {
     it( "parses Grammar", function () {
 
         expect( "\na = 'abcd';\n" ).to.parseAs(
-            { type: "grammar", comments: null, initializer: null, rules: [ ruleA ] }
+            { type: "grammar", comments: null, initializer: null, rules: [ ruleA ] },
         );
         expect( "\na = 'abcd';\nb = 'efgh';\nc = 'ijkl';\n" ).to.parseAs(
-            { type: "grammar", comments: null, initializer: null, rules: [ ruleA, ruleB, ruleC ] }
+            { type: "grammar", comments: null, initializer: null, rules: [ ruleA, ruleB, ruleC ] },
         );
         expect( "\n{ code };\na = 'abcd';\n" ).to.parseAs(
-            { type: "grammar", comments: null, initializer: initializer, rules: [ ruleA ] }
+            { type: "grammar", comments: null, initializer: initializer, rules: [ ruleA ] },
         );
 
     } );
@@ -355,7 +355,7 @@ describe( "PEG.js grammar parser", function () {
     it( "parses Initializer", function () {
 
         expect( "{ code };start = 'abcd'" ).to.parseAs(
-            { type: "grammar", comments: null, initializer: initializer, rules: [ ruleStart ] }
+            { type: "grammar", comments: null, initializer: initializer, rules: [ ruleStart ] },
         );
 
     } );
@@ -364,10 +364,10 @@ describe( "PEG.js grammar parser", function () {
     it( "parses Rule", function () {
 
         expect( "start\n=\n'abcd';" ).to.parseAs(
-            oneRuleGrammar( literalAbcd )
+            oneRuleGrammar( literalAbcd ),
         );
         expect( "start\n'start rule'\n=\n'abcd';" ).to.parseAs(
-            oneRuleGrammar( named )
+            oneRuleGrammar( named ),
         );
 
     } );
@@ -376,7 +376,7 @@ describe( "PEG.js grammar parser", function () {
     it( "parses Expression", function () {
 
         expect( "start = 'abcd' / 'efgh' / 'ijkl'" ).to.parseAs(
-            oneRuleGrammar( choice )
+            oneRuleGrammar( choice ),
         );
 
     } );
@@ -385,15 +385,15 @@ describe( "PEG.js grammar parser", function () {
     it( "parses ChoiceExpression", function () {
 
         expect( "start = 'abcd' { code }" ).to.parseAs(
-            oneRuleGrammar( actionAbcd )
+            oneRuleGrammar( actionAbcd ),
         );
         expect( "start = 'abcd' { code }\n/\n'efgh' { code }" ).to.parseAs(
-            oneRuleGrammar( choice2 )
+            oneRuleGrammar( choice2 ),
         );
         expect(
-            "start = 'abcd' { code }\n/\n'efgh' { code }\n/\n'ijkl' { code }\n/\n'mnop' { code }"
+            "start = 'abcd' { code }\n/\n'efgh' { code }\n/\n'ijkl' { code }\n/\n'mnop' { code }",
         ).to.parseAs(
-            oneRuleGrammar( choice4 )
+            oneRuleGrammar( choice4 ),
         );
 
     } );
@@ -402,10 +402,10 @@ describe( "PEG.js grammar parser", function () {
     it( "parses ActionExpression", function () {
 
         expect( "start = 'abcd' 'efgh' 'ijkl'" ).to.parseAs(
-            oneRuleGrammar( sequence )
+            oneRuleGrammar( sequence ),
         );
         expect( "start = 'abcd' 'efgh' 'ijkl'\n{ code }" ).to.parseAs(
-            oneRuleGrammar( actionSequence )
+            oneRuleGrammar( actionSequence ),
         );
 
     } );
@@ -414,13 +414,13 @@ describe( "PEG.js grammar parser", function () {
     it( "parses SequenceExpression", function () {
 
         expect( "start = a:'abcd'" ).to.parseAs(
-            oneRuleGrammar( labeledAbcd )
+            oneRuleGrammar( labeledAbcd ),
         );
         expect( "start = a:'abcd'\nb:'efgh'" ).to.parseAs(
-            oneRuleGrammar( sequence2 )
+            oneRuleGrammar( sequence2 ),
         );
         expect( "start = a:'abcd'\nb:'efgh'\nc:'ijkl'\nd:'mnop'" ).to.parseAs(
-            oneRuleGrammar( sequence4 )
+            oneRuleGrammar( sequence4 ),
         );
 
     } );
@@ -448,22 +448,22 @@ describe( "PEG.js grammar parser", function () {
         }
 
         expect( "start = @'abcd'" ).to.parseAs(
-            $S( $P( null, literalAbcd ) )
+            $S( $P( null, literalAbcd ) ),
         );
         expect( "start = @a:'abcd'" ).to.parseAs(
-            $S( $P( "a", literalAbcd ) )
+            $S( $P( "a", literalAbcd ) ),
         );
         expect( "start = 'abcd' @'efgh'" ).to.parseAs(
-            $S( literalAbcd, $P( null, literalEfgh ) )
+            $S( literalAbcd, $P( null, literalEfgh ) ),
         );
         expect( "start = a:'abcd' @b:'efgh'" ).to.parseAs(
-            $S( labeledAbcd, $P( "b", literalEfgh ) )
+            $S( labeledAbcd, $P( "b", literalEfgh ) ),
         );
         expect( "start = @'abcd' b:'efgh'" ).to.parseAs(
-            $S( $P( null, literalAbcd ), labeledEfgh )
+            $S( $P( null, literalAbcd ), labeledEfgh ),
         );
         expect( "start = a:'abcd' @'efgh' 'ijkl' @d:'mnop'" ).to.parseAs(
-            $S( labeledAbcd, $P( null, literalEfgh ), literalIjkl, $P( "d", literalMnop ) )
+            $S( labeledAbcd, $P( null, literalEfgh ), literalIjkl, $P( "d", literalMnop ) ),
         );
 
     } );
@@ -723,30 +723,30 @@ describe( "PEG.js grammar parser", function () {
     it( "parses CharacterClassMatcher", function () {
 
         expect( "start = []" ).to.parseAs(
-            classGrammar( [], false, false )
+            classGrammar( [], false, false ),
         );
         expect( "start = [a-d]" ).to.parseAs(
-            classGrammar( [ [ "a", "d" ] ], false, false )
+            classGrammar( [ [ "a", "d" ] ], false, false ),
         );
         expect( "start = [a]" ).to.parseAs(
-            classGrammar( [ "a" ], false, false )
+            classGrammar( [ "a" ], false, false ),
         );
         expect( "start = [a-de-hi-l]" ).to.parseAs(
             classGrammar(
                 [ [ "a", "d" ], [ "e", "h" ], [ "i", "l" ] ],
                 false,
-                false
-            )
+                false,
+            ),
         );
         expect( "start = [^a-d]" ).to.parseAs(
-            classGrammar( [ [ "a", "d" ] ], true, false )
+            classGrammar( [ [ "a", "d" ] ], true, false ),
         );
         expect( "start = [a-d]i" ).to.parseAs(
-            classGrammar( [ [ "a", "d" ] ], false, true )
+            classGrammar( [ [ "a", "d" ] ], false, true ),
         );
 
         expect( "start = [\\\n]" ).to.parseAs(
-            classGrammar( [], false, false )
+            classGrammar( [], false, false ),
         );
 
     } );

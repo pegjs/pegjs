@@ -73,7 +73,7 @@ function runBenchmark() {
 
             // Trim the whitespaces and remove ` kB/s` from the end
             .trim()
-            .slice( 0, -5 )
+            .slice( 0, -5 ),
     );
 
 }

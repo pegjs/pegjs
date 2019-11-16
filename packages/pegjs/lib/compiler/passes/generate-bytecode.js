@@ -254,7 +254,7 @@ function generateBytecode( ast, session ) {
         return condCode.concat(
             [ thenCode.length, elseCode.length ],
             thenCode,
-            elseCode
+            elseCode,
         );
 
     }
@@ -291,14 +291,14 @@ function generateBytecode( ast, session ) {
                 buildSequence(
                     [ op.POP ],
                     [ negative ? op.POP : op.POP_CURR_POS ],
-                    [ op.PUSH_UNDEFINED ]
+                    [ op.PUSH_UNDEFINED ],
                 ),
                 buildSequence(
                     [ op.POP ],
                     [ negative ? op.POP_CURR_POS : op.POP ],
-                    [ op.PUSH_FAILED ]
-                )
-            )
+                    [ op.PUSH_FAILED ],
+                ),
+            ),
         );
 
     }
@@ -314,8 +314,8 @@ function generateBytecode( ast, session ) {
                 node.match|0,
                 [ op.IF ],
                 buildSequence( [ op.POP ], negative ? [ op.PUSH_FAILED ] : [ op.PUSH_UNDEFINED ] ),
-                buildSequence( [ op.POP ], negative ? [ op.PUSH_UNDEFINED ] : [ op.PUSH_FAILED ] )
-            )
+                buildSequence( [ op.POP ], negative ? [ op.PUSH_UNDEFINED ] : [ op.PUSH_FAILED ] ),
+            ),
         );
 
     }
@@ -324,7 +324,7 @@ function generateBytecode( ast, session ) {
 
         return buildLoop(
             [ op.WHILE_NOT_ERROR ],
-            buildSequence( [ op.APPEND ], expressionCode )
+            buildSequence( [ op.APPEND ], expressionCode ),
         );
 
     }
@@ -355,7 +355,7 @@ function generateBytecode( ast, session ) {
 
             // Do not generate unused constant, if no need it
             const nameIndex = context.reportFailures ? addExpectedConst(
-                { type: "rule", value: node.name }
+                { type: "rule", value: node.name },
             ) : null;
             const expressionCode = generate( node.expression, {
                 sp: context.sp,
@@ -369,7 +369,7 @@ function generateBytecode( ast, session ) {
                 [ op.EXPECT, nameIndex ],
                 [ op.SILENT_FAILS_ON ],
                 expressionCode,
-                [ op.SILENT_FAILS_OFF ]
+                [ op.SILENT_FAILS_OFF ],
             ) : expressionCode;
 
         },
@@ -393,10 +393,10 @@ function generateBytecode( ast, session ) {
                             [ op.IF_ERROR ],
                             buildSequence(
                                 [ op.POP ],
-                                buildAlternativesCode( alternatives.slice( 1 ), context )
+                                buildAlternativesCode( alternatives.slice( 1 ), context ),
                             ),
-                            []
-                        )
+                            [],
+                        ),
                 );
 
             }
@@ -430,11 +430,11 @@ function generateBytecode( ast, session ) {
                         [ op.IF_NOT_ERROR ],
                         buildSequence(
                             [ op.LOAD_SAVED_POS, 1 ],
-                            buildCall( functionIndex, 1, env, context.sp + 2 )
+                            buildCall( functionIndex, 1, env, context.sp + 2 ),
                         ),
-                        []
+                        [],
                     ),
-                    [ op.NIP ]
+                    [ op.NIP ],
                 );
 
         },
@@ -470,9 +470,9 @@ function generateBytecode( ast, session ) {
                             buildSequence(
                                 processedCount > 1 ? [ op.POP_N, processedCount ] : [ op.POP ],
                                 [ op.POP_CURR_POS ],
-                                [ op.PUSH_FAILED ]
-                            )
-                        )
+                                [ op.PUSH_FAILED ],
+                            ),
+                        ),
                     );
 
                 }
@@ -481,7 +481,7 @@ function generateBytecode( ast, session ) {
 
                     return buildSequence(
                         [ op.PLUCK, TOTAL_ELEMENTS + 1, context.pluck.length ],
-                        context.pluck.map( eSP => context.sp - eSP )
+                        context.pluck.map( eSP => context.sp - eSP ),
                     );
 
                 if ( context.action )
@@ -492,12 +492,12 @@ function generateBytecode( ast, session ) {
                             addFunctionConst( // functionIndex
                                 false,
                                 Object.keys( context.env ),
-                                context.action.code
+                                context.action.code,
                             ),
                             TOTAL_ELEMENTS + 1,
                             context.env,
-                            context.sp
-                        )
+                            context.sp,
+                        ),
                     );
 
                 return buildSequence( [ op.WRAP, TOTAL_ELEMENTS ], [ op.NIP ] );
@@ -512,7 +512,7 @@ function generateBytecode( ast, session ) {
                     pluck: [],
                     action: context.action,
                     reportFailures: context.reportFailures,
-                } )
+                } ),
             );
 
         },
@@ -557,8 +557,8 @@ function generateBytecode( ast, session ) {
                     node.expression.match|0,
                     [ op.IF_NOT_ERROR ],
                     buildSequence( [ op.POP ], [ op.TEXT ] ),
-                    [ op.NIP ]
-                )
+                    [ op.NIP ],
+                ),
             );
 
         },
@@ -589,8 +589,8 @@ function generateBytecode( ast, session ) {
                     -( node.expression.match|0 ),
                     [ op.IF_ERROR ],
                     buildSequence( [ op.POP ], [ op.PUSH_NULL ] ),
-                    []
-                )
+                    [],
+                ),
             );
 
         },
@@ -608,7 +608,7 @@ function generateBytecode( ast, session ) {
                 [ op.PUSH_EMPTY_ARRAY ],
                 expressionCode,
                 buildAppendLoop( expressionCode ),
-                [ op.POP ]
+                [ op.POP ],
             );
 
         },
@@ -629,8 +629,8 @@ function generateBytecode( ast, session ) {
                     node.expression.match|0,
                     [ op.IF_NOT_ERROR ],
                     buildSequence( buildAppendLoop( expressionCode ), [ op.POP ] ),
-                    buildSequence( [ op.POP ], [ op.POP ], [ op.PUSH_FAILED ] )
-                )
+                    buildSequence( [ op.POP ], [ op.POP ], [ op.PUSH_FAILED ] ),
+                ),
             );
 
         },
@@ -671,7 +671,7 @@ function generateBytecode( ast, session ) {
                 const match = node.match|0;
                 const needConst = match === 0 || ( match > 0 && ! node.ignoreCase );
                 const stringIndex = needConst ? addLiteralConst(
-                    node.ignoreCase ? node.value.toLowerCase() : node.value
+                    node.ignoreCase ? node.value.toLowerCase() : node.value,
                 ) : null;
                 // Do not generate unused constant, if no need it
                 const expectedIndex = context.reportFailures ? addExpectedConst( {
@@ -693,8 +693,8 @@ function generateBytecode( ast, session ) {
                         node.ignoreCase
                             ? [ op.ACCEPT_N, node.value.length ]
                             : [ op.ACCEPT_STRING, stringIndex ],
-                        [ op.PUSH_FAILED ]
-                    )
+                        [ op.PUSH_FAILED ],
+                    ),
                 );
 
             }
@@ -721,8 +721,8 @@ function generateBytecode( ast, session ) {
                     match,
                     [ op.MATCH_CLASS, classIndex ],
                     [ op.ACCEPT_N, 1 ],
-                    [ op.PUSH_FAILED ]
-                )
+                    [ op.PUSH_FAILED ],
+                ),
             );
 
         },
@@ -740,8 +740,8 @@ function generateBytecode( ast, session ) {
                     node.match|0,
                     [ op.MATCH_ANY ],
                     [ op.ACCEPT_N, 1 ],
-                    [ op.PUSH_FAILED ]
-                )
+                    [ op.PUSH_FAILED ],
+                ),
             );
 
         },

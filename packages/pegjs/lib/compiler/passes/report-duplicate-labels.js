@@ -43,7 +43,7 @@ function reportDuplicateLabels( ast, session ) {
 
                 session.error(
                     `Label "${ label }" is already defined at line ${ start.line }, column ${ start.column }.`,
-                    node.location
+                    node.location,
                 );
 
             }

@@ -31,7 +31,7 @@ describe( "compiler pass |reportUndefinedRules|", function () {
             },
             {
                 allowedStartRules: [ "missing" ],
-            }
+            },
         );
 
     } );

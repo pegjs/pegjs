@@ -44,7 +44,7 @@ const peg = {
         return compiler.compile(
             session.parse( grammar, options.parser || {} ),
             session,
-            options
+            options,
         );
 
     },

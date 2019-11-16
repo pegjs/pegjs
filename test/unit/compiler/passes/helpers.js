@@ -67,7 +67,7 @@ module.exports = function ( chai, utils ) {
             "expected #{this} to report an error but it didn't",
             "expected #{this} to not report an error but #{act} was reported",
             null,
-            result
+            result,
         );
 
         if ( ! passed && typeof props !== "undefined" ) {
@@ -118,7 +118,7 @@ module.exports = function ( chai, utils ) {
                 `expected #{this} to report ${ warningsCount } warnings, but it reported ${ messagesCount } warnings`,
                 `expected #{this} to not report ${ warningsCount } warnings`,
                 warnings,
-                messages
+                messages,
             );
 
         warnings.forEach( warning => {
@@ -127,7 +127,7 @@ module.exports = function ( chai, utils ) {
                 messages.indexOf( warning ) !== -1,
                 "expected #{this} to report the warning #{exp}, but it didn't",
                 "expected #{this} to not report the warning #{exp}",
-                warning
+                warning,
             );
 
         } );

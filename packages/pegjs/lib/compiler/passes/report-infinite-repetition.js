@@ -11,7 +11,7 @@ function reportInfiniteRepetition( ast, session ) {
 
                 session.error(
                     "Possible infinite loop when parsing (repetition used with an expression that may not consume any input).",
-                    node.location
+                    node.location,
                 );
 
             }
@@ -24,7 +24,7 @@ function reportInfiniteRepetition( ast, session ) {
 
                 session.error(
                     "Possible infinite loop when parsing (repetition used with an expression that may not consume any input).",
-                    node.location
+                    node.location,
                 );
 
             }

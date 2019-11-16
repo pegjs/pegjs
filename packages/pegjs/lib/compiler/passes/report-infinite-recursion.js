@@ -44,7 +44,7 @@ function reportInfiniteRecursion( ast, session ) {
 
                 session.error(
                     `Possible infinite loop when parsing (left recursion: ${ rulePath }).`,
-                    node.location
+                    node.location,
                 );
 
             }

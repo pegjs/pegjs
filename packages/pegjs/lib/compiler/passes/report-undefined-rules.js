@@ -10,7 +10,7 @@ function reportUndefinedRules( ast, session, options ) {
 
                 session.error(
                     `Rule "${ node.name }" is not defined.`,
-                    node.location
+                    node.location,
                 );
 
             }

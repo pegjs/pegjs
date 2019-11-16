@@ -17,7 +17,7 @@ describe( "compiler pass |reportUnusedRules|", function () {
                 start = .
                 unused = .
             `,
-            `Rule "unused" is not referenced.`
+            `Rule "unused" is not referenced.`,
         );
 
         expect( pass ).to.reportWarning(
@@ -29,7 +29,7 @@ describe( "compiler pass |reportUnusedRules|", function () {
             [
                 `Rule "used" is not referenced.`,
                 `Rule "unused" is not referenced.`,
-            ]
+            ],
         );
 
     } );
@@ -56,7 +56,7 @@ describe( "compiler pass |reportUnusedRules|", function () {
             null,
             {
                 allowedStartRules: [ "b", "c" ],
-            }
+            },
         );
 
     } );

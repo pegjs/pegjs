@@ -29,7 +29,7 @@ describe( "generated parser behavior", function () {
 
                     block( peg.util.clone( variant ) );
 
-                }
+                },
             );
 
         } );
@@ -71,7 +71,7 @@ describe( "generated parser behavior", function () {
                     "expected #{this} to not parse input as #{exp}",
                     expected,
                     result,
-                    ! utils.flag( this, "negate" )
+                    ! utils.flag( this, "negate" ),
                 );
 
             }
@@ -102,7 +102,7 @@ describe( "generated parser behavior", function () {
                 "expected #{this} to fail to parse input but got #{act}",
                 "expected #{this} to not fail to parse input but #{act} was thrown",
                 null,
-                result
+                result,
             );
 
             if ( ! passed && typeof props !== "undefined" ) {
@@ -556,7 +556,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = a:'a' &{ return a === 'a'; }",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.parse( "a" );
@@ -567,7 +567,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = 'a' b:&{ return b === undefined; } 'c'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "ac" );
@@ -578,7 +578,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = &{ return a === 'a'; } a:'a'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "a" );
@@ -651,7 +651,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = a:'a' ('b' &{ return a === 'a'; })",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.parse( "ab" );
@@ -662,7 +662,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = 'a' b:('b' &{ return b === undefined; }) 'c'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "abc" );
@@ -673,7 +673,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = ('a' &{ return b === 'b'; }) b:'b'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "ab" );
@@ -815,7 +815,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = a:'a' !{ return a !== 'a'; }",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.parse( "a" );
@@ -826,7 +826,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = 'a' b:!{ return b !== undefined; } 'c'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "ac" );
@@ -837,7 +837,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = !{ return a !== 'a'; } a:'a'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "a" );
@@ -910,7 +910,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = a:'a' ('b' !{ return a !== 'a'; })",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.parse( "ab" );
@@ -921,7 +921,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = 'a' b:('b' !{ return b !== undefined; }) 'c'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "abc" );
@@ -932,7 +932,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = ('a' !{ return b !== 'b'; }) b:'b'",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.failToParse( "ab" );
@@ -1482,7 +1482,7 @@ describe( "generated parser behavior", function () {
 
                             const parser = peg.generate(
                                 "start = a:'a' b:'b' c:'c' { return [a, b, c]; }",
-                                options
+                                options,
                             );
 
                             expect( parser ).to.parse( "abc", [ "a", "b", "c" ] );
@@ -1555,7 +1555,7 @@ describe( "generated parser behavior", function () {
 
                             const parser = peg.generate(
                                 "start = a:'a' ('b' { return a; })",
-                                options
+                                options,
                             );
 
                             expect( parser ).to.parse( "ab", [ "a", "a" ] );
@@ -1566,7 +1566,7 @@ describe( "generated parser behavior", function () {
 
                             const parser = peg.generate(
                                 "start = 'a' b:('b' { return b; }) c:'c'",
-                                options
+                                options,
                             );
 
                             expect( parser ).to.failToParse( "abc" );
@@ -1577,7 +1577,7 @@ describe( "generated parser behavior", function () {
 
                             const parser = peg.generate(
                                 "start = ('a' { return b; }) b:'b'",
-                                options
+                                options,
                             );
 
                             expect( parser ).to.failToParse( "ab" );
@@ -1620,7 +1620,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = 'a' { return options; }",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.parse( "a", { a: 42 }, { a: 42 } );
@@ -1631,7 +1631,7 @@ describe( "generated parser behavior", function () {
 
                         const parser = peg.generate(
                             "start = 'a' { return text(); }",
-                            options
+                            options,
                         );
 
                         expect( parser ).to.parse( "a", "a" );
@@ -1673,7 +1673,7 @@ describe( "generated parser behavior", function () {
 
                             const parser = peg.generate(
                                 "start = 'a' { expected('a'); }",
-                                options
+                                options,
                             );
 
                             expect( parser ).to.failToParse( "a", {
@@ -1719,7 +1719,7 @@ describe( "generated parser behavior", function () {
 
                             const parser = peg.generate(
                                 "start = 'a' { error('a'); }",
-                                options
+                                options,
                             );
 
                             expect( parser ).to.failToParse( "a", {
@@ -1777,7 +1777,7 @@ describe( "generated parser behavior", function () {
 
                     const parser = peg.generate(
                         "start = 'a' { throw 'Boom!'; } / 'b'",
-                        options
+                        options,
                     );
 
                     expect( parser ).to.parse( "b" );
@@ -2195,7 +2195,7 @@ describe( "generated parser behavior", function () {
                 expect( parser ).to.parse( "(*(**)*)", "(*(**)*)" );
                 expect( parser ).to.parse(
                     "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)",
-                    "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)"
+                    "(*abc(*def*)ghi(*(*(*jkl*)*)*)mno*)",
                 );
 
             } );
