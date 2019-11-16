@@ -4,7 +4,14 @@ const dedent = require( "dedent" );
 const path = require( "path" );
 const webpack = require( "webpack" );
 
-function target( { banner, entry, library, minimize, output } ) {
+/**
+ * A wrapper function to help create a configuration for Webpack.
+ *
+ * @param {{banner?: string, entry: string, library: string, minimize?: boolean, name?: string, output: string}} param0
+ * @returns {{}}
+ */
+
+function target( { banner, entry, library, minimize, name, output } ) {
 
     const cwd = process.cwd();
     const plugins = [];
@@ -19,6 +26,7 @@ function target( { banner, entry, library, minimize, output } ) {
 
     return {
 
+        name,
         mode: process.argv.includes( "--mode=development" ) ? "development" : "production",
         entry,
         output: {
