@@ -843,6 +843,13 @@ describe( "PEG.js grammar parser", function () {
 
     } );
 
+    // Canonical super-BMP UnicodeEscapeSequence is "U0010FFFF".
+    it( "parses super-BMP UnicodeEscapeSequence", function () {
+
+        expect( "start = '\\U0010FFFF'" ).to.parseAs( literalGrammar( "\u{0010FFFF}", false ) );
+
+    } );
+
     // Digit rules are not tested.
 
     // Canonical AnyMatcher is ".".
