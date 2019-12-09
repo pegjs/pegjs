@@ -42,7 +42,6 @@ When using the CLI `pegjs`, you can pass the following options:
 * `--extra-options-file` — same as `--config` (was the only cli option for config files before PEG.js v0.11)
 * `-f`, `--format` — format of the generated parser: `amd`, `bare`, `commonjs`, `es`, `globals`, `umd` (default: `commonjs`)
 * `--no-cache` — opposite of `--cache` (default behavior)
-* `--no-coverage` — opposite of `--coverage` (default behavior)
 * `--no-trace` — opposite of `--trace` (default behavior)
 * `-O`, `--optimize` — selects between optimizing the generated parser for parsing speed (`speed`) or code size (`size`) (default: `speed`)
 * `-o`, `--output` — Output file

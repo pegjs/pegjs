@@ -182,10 +182,6 @@ while ( args.length > 0 ) {
             options.coverage = true;
             break;
 
-        case "--no-coverage":
-            options.coverage = false;
-            break;
-
         case "-d":
         case "--dependency":
             argument = nextArg( "-d/--dependency" );
