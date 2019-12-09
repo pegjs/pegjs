@@ -12,6 +12,7 @@ let outputFile = null;
 let options = {
     "--": [],
     "cache": false,
+    "coverage": false,
     "dependencies": {},
     "exportVar": null,
     "format": "commonjs",
@@ -175,6 +176,14 @@ while ( args.length > 0 ) {
 
         case "--no-cache":
             options.cache = false;
+            break;
+
+        case "--coverage":
+            options.coverage = true;
+            break;
+
+        case "--no-coverage":
+            options.coverage = false;
             break;
 
         case "-d":

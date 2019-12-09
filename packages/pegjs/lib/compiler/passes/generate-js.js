@@ -195,7 +195,7 @@ function generateJS( ast, session, options ) {
                 "  if (peg$silentFails === 0) peg$expect(expected);",
                 "  rule$expectations.push(expected);",
                 "}",
-                "",
+                options.coverage ? "// istanbul ignore next" : "",
                 "if (cached) {",
                 "  peg$currPos = cached.nextPos;",
                 "",
@@ -704,6 +704,11 @@ function generateJS( ast, session, options ) {
 
                 }
 
+                if ( options.coverage ) {
+
+                    parts.push( "// istanbul ignore else" );
+
+                }
                 parts.push( "if (" + cond + ") {" );
                 parts.push( indent2( thenCode ) );
                 if ( elseLength > 0 ) {
@@ -1039,14 +1044,14 @@ function generateJS( ast, session, options ) {
             "  this.location = location;",
             "  this.name = \"SyntaxError\";",
             "",
-            "  // istanbul ignore next",
+            options.coverage ? "  // istanbul ignore next" : "",
             "  if (typeof Error.captureStackTrace === \"function\") {",
             "    Error.captureStackTrace(this, peg$SyntaxError);",
             "  }",
             "}",
             "",
             "peg$subclass(peg$SyntaxError, Error);",
-            "",
+            options.coverage ? "// istanbul ignore next" : "",
             "peg$SyntaxError.buildMessage = function(expected, found, location) {",
             "  var DESCRIBE_EXPECTATION_FNS = {",
             "    literal: function(expectation) {",
@@ -1079,11 +1084,11 @@ function generateJS( ast, session, options ) {
             "      return \"not \" + describeExpectation(expectation.expected);",
             "    }",
             "  };",
-            "",
+            options.coverage ? "  // istanbul ignore next" : "",
             "  function hex(ch) {",
             "    return ch.charCodeAt(0).toString(16).toUpperCase();",
             "  }",
-            "",
+            options.coverage ? "  // istanbul ignore next" : "",
             "  function literalEscape(s) {",
             "    return s",
             "      .replace(/\\\\/g, \"\\\\\\\\\")",   // backslash
@@ -1095,7 +1100,7 @@ function generateJS( ast, session, options ) {
             "      .replace(/[\\x00-\\x0F]/g,          function(ch) { return \"\\\\x0\" + hex(ch); })",
             "      .replace(/[\\x10-\\x1F\\x7F-\\x9F]/g, function(ch) { return \"\\\\x\"  + hex(ch); });",
             "  }",
-            "",
+            options.coverage ? "  // istanbul ignore next" : "",
             "  function classEscape(s) {",
             "    return s",
             "      .replace(/\\\\/g, \"\\\\\\\\\")",   // backslash
@@ -1227,6 +1232,7 @@ function generateJS( ast, session, options ) {
 
         parts.push( [
             "function peg$parse(input, options) {",
+            options.coverage ? "  // istanbul ignore next" : "",
             "  options = options !== undefined ? options : {};",
             "",
             "  var peg$FAILED = {};",
@@ -1327,6 +1333,7 @@ function generateJS( ast, session, options ) {
         if ( options.optimize === "size" ) {
 
             parts.push( [
+                options.coverage ? "  // istanbul ignore next" : "",
                 "  if (\"startRule\" in options) {",
                 "    if (!(options.startRule in peg$startRuleIndices)) {",
                 "      throw new Error(\"Can't start parsing from rule \\\"\" + options.startRule + \"\\\".\");",
@@ -1339,6 +1346,7 @@ function generateJS( ast, session, options ) {
         } else {
 
             parts.push( [
+                options.coverage ? "  // istanbul ignore next" : "",
                 "  if (\"startRule\" in options) {",
                 "    if (!(options.startRule in peg$startRuleFunctions)) {",
                 "      throw new Error(\"Can't start parsing from rule \\\"\" + options.startRule + \"\\\".\");",
@@ -1353,7 +1361,7 @@ function generateJS( ast, session, options ) {
         if ( use( "text" ) ) {
 
             parts.push( [
-                "",
+                options.coverage ? "  // istanbul ignore next" : "",
                 "  function text() {",
                 "    return input.substring(peg$savedPos, peg$currPos);",
                 "  }",
@@ -1386,7 +1394,7 @@ function generateJS( ast, session, options ) {
         if ( use( "location" ) ) {
 
             parts.push( [
-                "",
+                options.coverage ? "  // istanbul ignore next" : "",
                 "  function location() {",
                 "    return peg$computeLocation(peg$savedPos, peg$currPos);",
                 "  }",
@@ -1397,7 +1405,7 @@ function generateJS( ast, session, options ) {
         if ( use( "expected" ) ) {
 
             parts.push( [
-                "",
+                options.coverage ? "  // istanbul ignore next" : "",
                 "  function expected(description, location) {",
                 "    location = location !== undefined",
                 "      ? location",
@@ -1416,7 +1424,7 @@ function generateJS( ast, session, options ) {
         if ( use( "error" ) ) {
 
             parts.push( [
-                "",
+                options.coverage ? "  // istanbul ignore next" : "",
                 "  function error(message, location) {",
                 "    location = location !== undefined",
                 "      ? location",
@@ -1445,7 +1453,7 @@ function generateJS( ast, session, options ) {
             "  function peg$endExpectation() {",
             "    return { type: \"end\" };",
             "  }",
-            "",
+            options.coverage ? "  // istanbul ignore next" : "",
             "  function peg$otherExpectation(description) {",
             "    return { type: \"other\", description: description };",
             "  }",
@@ -1540,7 +1548,7 @@ function generateJS( ast, session, options ) {
             "",
             "    Array.prototype.push.apply(top.variants, variants);",
             "  }",
-            "",
+            options.coverage ? "  // istanbul ignore next" : "",
             "  function peg$buildSimpleError(message, location) {",
             "    return new peg$SyntaxError(message, null, null, location);",
             "  }",
