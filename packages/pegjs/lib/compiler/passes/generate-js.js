@@ -1604,15 +1604,27 @@ function generateJS( ast, session, options ) {
 
         }
 
+        if (options.partialMatch) {
+            parts.push([
+                "",
+                "  if (peg$result !== peg$FAILED) {",
+                "    return peg$result;",
+                "  } else {",
+            ].join('\n'));
+        } else {
+            parts.push([
+                "",
+                "  if (peg$result !== peg$FAILED && peg$currPos === input.length) {",
+                "    return peg$result;",
+                "  } else {",
+                "    if (peg$result !== peg$FAILED && peg$currPos < input.length) {",
+                "      peg$expect(peg$endExpectation());",
+                "    }",
+                "",
+            ].join('\n'));
+        }
+
         parts.push( [
-            "",
-            "  if (peg$result !== peg$FAILED && peg$currPos === input.length) {",
-            "    return peg$result;",
-            "  } else {",
-            "    if (peg$result !== peg$FAILED && peg$currPos < input.length) {",
-            "      peg$expect(peg$endExpectation());",
-            "    }",
-            "",
             "    throw peg$buildError();",
             "  }",
             "}",
