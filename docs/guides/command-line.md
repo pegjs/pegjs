@@ -35,6 +35,7 @@ When using the CLI `pegjs`, you can pass the following options:
 * `-a`, `--allowed-start-rules` — comma-separated list of rules the parser will be allowed to start parsing from (default: the first rule in the grammar)
 * `--cache` — makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower
 * `-c`, `--config` — file with additional options (in JSON or JavaScript) to pass to `peg.generate`
+* `--coverage` — add istanbul coverage `ignore` directives in generated code
 * `-d`, `--dependency` — makes the parser require a specified dependency (can be specified multiple times)
 * `-e`, `--export-var` — name of a global variable into which the parser object is assigned to when no module loader is detected
 * `--extra-options` — additional options (in JSON format) to pass to `peg.generate`
