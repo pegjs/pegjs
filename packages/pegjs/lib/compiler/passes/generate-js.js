@@ -1604,15 +1604,18 @@ function generateJS( ast, session, options ) {
 
         }
 
-        if (options.partialMatch) {
-            parts.push([
+        if ( options.partialMatch ) {
+
+            parts.push( [
                 "",
                 "  if (peg$result !== peg$FAILED) {",
                 "    return peg$result;",
                 "  } else {",
-            ].join('\n'));
+            ].join( "\n" ) );
+
         } else {
-            parts.push([
+
+            parts.push( [
                 "",
                 "  if (peg$result !== peg$FAILED && peg$currPos === input.length) {",
                 "    return peg$result;",
@@ -1621,7 +1624,8 @@ function generateJS( ast, session, options ) {
                 "      peg$expect(peg$endExpectation());",
                 "    }",
                 "",
-            ].join('\n'));
+            ].join( "\n" ) );
+
         }
 
         parts.push( [
