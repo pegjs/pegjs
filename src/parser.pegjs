@@ -403,7 +403,6 @@ EscapeCharacter
   / DecimalDigit
   / "x"
   / "u"
-  / "U"
 
 HexEscapeSequence
   = "x" digits:$(HexDigit HexDigit) {
@@ -413,14 +412,29 @@ HexEscapeSequence
     }
 
 UnicodeEscapeSequence
-  = "u" digits:$(HexDigit HexDigit HexDigit HexDigit) {
+  = "u" @(Hex4Digits / "{" @CodePoint "}")
+
+Hex4Digits
+ = digits:$(HexDigit HexDigit HexDigit HexDigit) {
 
         return String.fromCharCode( parseInt( digits, 16 ) );
 
     }
-  / "U" digits:$(HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit) {
 
-        return String.fromCodePoint( parseInt(digits, 16 ) );
+CodePoint
+ = ("0"+ / &HexDigit) plane:$("10" &Hex4Digits / HexDigit &Hex4Digits)? digits:$(HexDigit? HexDigit? HexDigit? HexDigit?) {
+
+        if ( plane ) {
+
+            const surrogates = ( parseInt( plane, 16 ) - 1 ) * 65536 + parseInt( digits, 16 );
+
+            return String.fromCharCode( ( surrogates >> 10 ) + 0xD800, ( surrogates & 0x3FF ) + 0xDC00 );
+
+        } else {
+
+            return String.fromCharCode( parseInt( digits || 0, 16 ) );
+
+        }
 
   }
 

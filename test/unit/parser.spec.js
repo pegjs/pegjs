@@ -843,10 +843,17 @@ describe( "PEG.js grammar parser", function () {
 
     } );
 
-    // Canonical super-BMP UnicodeEscapeSequence is "U0010FFFF".
-    it( "parses super-BMP UnicodeEscapeSequence", function () {
+    // Canonical astral UnicodeEscapeSequence is "u{10FFFF}".
+    it( "parses astral UnicodeEscapeSequence", function () {
 
-        expect( "start = '\\U0010FFFF'" ).to.parseAs( literalGrammar( "\u{0010FFFF}", false ) );
+        expect( "start = '\\u{10FFFF}'" ).to.parseAs( literalGrammar( "\u{10FFFF}", false ) );
+
+    } );
+
+    // Canonical astral UnicodeEscapeSequence is "u{10FFF}".
+    it( "parses another astral UnicodeEscapeSequence", function () {
+
+        expect( "start = '\\u{10FFF}'" ).to.parseAs( literalGrammar( "\u{10FFF}", false ) );
 
     } );
 
