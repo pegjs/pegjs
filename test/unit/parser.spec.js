@@ -843,6 +843,20 @@ describe( "PEG.js grammar parser", function () {
 
     } );
 
+    // Canonical astral UnicodeEscapeSequence is "u{10FFFF}".
+    it( "parses astral UnicodeEscapeSequence", function () {
+
+        expect( "start = '\\u{10FFFF}'" ).to.parseAs( literalGrammar( "\u{10FFFF}", false ) );
+
+    } );
+
+    // Canonical astral UnicodeEscapeSequence is "u{10FFF}".
+    it( "parses another astral UnicodeEscapeSequence", function () {
+
+        expect( "start = '\\u{10FFF}'" ).to.parseAs( literalGrammar( "\u{10FFF}", false ) );
+
+    } );
+
     // Digit rules are not tested.
 
     // Canonical AnyMatcher is ".".
