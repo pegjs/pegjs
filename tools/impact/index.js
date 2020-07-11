@@ -34,7 +34,7 @@ function binfile( ...files ) {
 }
 
 const PEGJS_BIN = binfile( "packages/pegjs/bin/peg.js", "bin/peg.js", "bin/pegjs" );
-const BENCHMARK_BIN = binfile( "tools/benchmark/node.js", "test/benchmark/run", "benchmark/run" );
+const BENCHMARK_BIN = binfile( "tools/benchmark", "test/benchmark/run", "benchmark/run" );
 
 // Utils
 
@@ -58,7 +58,7 @@ function exec( command ) {
 
 function prepare( commit ) {
 
-    exec( `git checkout --quiet "${ commit }"` );
+    exec( `git checkout --quiet "${ commit.replace( /"/g, "\"\\\"\"" ) }"` );
 
 }
 
@@ -144,7 +144,7 @@ if ( argv.length === 1 ) {
 
 // Measure
 
-const branch = exec( "git rev-parse --abbrev-ref HEAD" );
+const branch = exec( "git rev-parse --abbrev-ref HEAD" ).trim();
 let speed1, size1, speed2, size2;
 
 print_empty_line();

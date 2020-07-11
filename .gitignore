@@ -5,6 +5,7 @@
 /examples/*.js
 node_modules
 /coverage
+/coverage.lcov
 /.nyc_output
 /*.log
 /sh.exe.stackdump
