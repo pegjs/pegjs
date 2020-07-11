@@ -58,7 +58,7 @@ function exec( command ) {
 
 function prepare( commit ) {
 
-    exec( `git checkout --quiet "${ commit.replace( /\"/g, "\"\\\"\"" ) }"` );
+    exec( `git checkout --quiet "${ commit.replace( /"/g, "\"\\\"\"" ) }"` );
 
 }
 
