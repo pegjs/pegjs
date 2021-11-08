@@ -303,7 +303,7 @@ describe( "PEG.js API", function () {
         } );
 
         // The |format|, |exportVars|, and |dependencies| options are not tested
-        // becasue there is no meaningful way to thest their effects without turning
+        // because there is no meaningful way to test their effects without turning
         // this into an integration test.
 
         // The |plugins| option is tested in plugin API tests.

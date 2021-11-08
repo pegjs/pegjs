@@ -67,7 +67,7 @@ function runBenchmark() {
     return parseFloat(
         exec( "node " + BENCHMARK_BIN )
 
-            // Split by table seprator, reverse and return the total bytes per second
+            // Split by table separator, reverse and return the total bytes per second
             .split( "│" )
             .reverse()[ 1 ]
 

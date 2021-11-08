@@ -12,7 +12,7 @@ function publish( id ) {
     const directory = path.dirname( packagejson );
     const npmrc = path.join( directory, ".npmrc" );
 
-    // variabes
+    // variables
 
     const APP = require( "./package.json" ).name;
     const VERSION = require( packagejson ).version;

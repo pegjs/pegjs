@@ -17,7 +17,7 @@ const path = require( "path" );
 const FRESH_BUILD = process.argv.includes( "--fresh" );
 
 /**
- * A conveniant object that has the following merged:
+ * A convenient object that has the following merged:
  * 
  * - The `fs-extra-plus` module
  * - The `path` module
@@ -43,7 +43,7 @@ const fs = Object.assign( {}, path, fse, {
 } );
 
 /**
- * A bundler wrapper that simplfies bundler interaction across child process's via async functions.
+ * A bundler wrapper that simplifies bundler interaction across child process's via async functions.
  */
 
 const Bundler = {
@@ -147,7 +147,7 @@ function expand( p = ".", cwd = [ __dirname, ".." ] ) {
 }
 
 /**
- * A cache of the expaneded paths.
+ * A cache of the expanded paths.
  * 
  * @type {{ [key: string]: string }}
  */

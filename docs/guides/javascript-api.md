@@ -23,7 +23,7 @@ var ast = peg.parser.parse(grammar);
 // Create a new compiler session
 var session = new peg.compiler.Session( { warn: customLogger } );
 
-// Generate parser from PEG.js AST using an exisiting session 
+// Generate parser from PEG.js AST using an existing session 
 var parserA = peg.compiler.compile(ast, session);
 
 // Generate parser from the grammar source using a new session
